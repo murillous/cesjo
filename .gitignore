@@ -1,0 +1,27 @@
+# Ferramentas locais opcionais de validação (não são requisitos do projeto)
+.tools/
+tmp/
+.run/
+
+# Dados locais do MVP
+data/*.db
+data/*.db-*
+data/uploads/*
+!data/.gitkeep
+!data/uploads/.gitkeep
+
+# Backend
+backend/target/
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+*.tsbuildinfo
+
+# IDE e sistema operacional
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
