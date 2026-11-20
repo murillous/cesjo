@@ -279,6 +279,11 @@ salvo quando o título diz o contrário. Critério comum a todas as issues de fu
 em cada uma: permissões conforme a seção 6, operações registradas no log de auditoria, testes de
 integração com Testcontainers e tela responsiva.
 
+No GitHub, os épicos são as issues #1 (Fundação), #2 (Operação), #3 (Lista de espera), #4 (Atendimento),
+#5 (Usuários atendidos), #6 (Atividades e atendimentos), #7 (Gestão institucional), #8 (Relatórios e
+dashboards) e #9 (Integrações e importação). O item N desta lista é a issue #N+9 (o item 17 é a #26, por
+exemplo). As referências entre issues nos critérios usam o número do GitHub.
+
 ### Épico 0 — Fundação (RNF 3.1, 3.3, seção 4)
 
 1. **Configurar CI no GitHub Actions** (M0). Critérios: `./mvnw verify` roda com Testcontainers a cada
