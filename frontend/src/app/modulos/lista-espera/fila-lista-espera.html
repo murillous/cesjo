@@ -1,0 +1,210 @@
+<section class="fila" aria-labelledby="titulo-fila">
+  <header class="cabecalho">
+    <div>
+      <h1 id="titulo-fila">Lista de espera</h1>
+      <p class="texto-secundario">
+        Candidatos na ordem da fila, pela data de cadastro. A posição conta só quem está aguardando.
+      </p>
+    </div>
+    @if (podeCadastrar) {
+      <a matButton="filled" routerLink="nova" class="cadastrar">
+        <mat-icon aria-hidden="true">person_add</mat-icon>
+        Cadastrar candidato
+      </a>
+    }
+  </header>
+
+  <form
+    class="filtros"
+    [formGroup]="filtros"
+    (ngSubmit)="buscar()"
+    role="search"
+    aria-label="Buscar na fila"
+  >
+    <mat-form-field class="busca" appearance="outline" subscriptSizing="dynamic">
+      <mat-label>Buscar pelo nome</mat-label>
+      <mat-icon matIconPrefix aria-hidden="true">search</mat-icon>
+      <input matInput formControlName="nome" type="search" autocomplete="off" />
+    </mat-form-field>
+
+    <button
+      matButton
+      type="button"
+      class="alternar-filtros"
+      [attr.aria-expanded]="filtrosAbertos()"
+      aria-controls="filtros-fila"
+      (click)="filtrosAbertos.set(!filtrosAbertos())"
+    >
+      <mat-icon aria-hidden="true">tune</mat-icon>
+      Filtros
+    </button>
+
+    <div id="filtros-fila" class="selecoes" [class.aberto]="filtrosAbertos()">
+      @if (completo) {
+        <mat-form-field appearance="outline" subscriptSizing="dynamic">
+          <mat-label>Tipo de deficiência</mat-label>
+          <mat-select formControlName="tipoDeficiencia" (selectionChange)="buscar()">
+            <mat-option [value]="null">Todos</mat-option>
+            @for (tipo of tipos; track tipo.valor) {
+              <mat-option [value]="tipo.valor">{{ tipo.rotulo }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" subscriptSizing="dynamic">
+          <mat-label>Origem</mat-label>
+          <mat-select formControlName="origem" (selectionChange)="buscar()">
+            <mat-option [value]="null">Todas</mat-option>
+            @for (origem of origens; track origem.valor) {
+              <mat-option [value]="origem.valor">{{ origem.rotulo }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      }
+
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Situação</mat-label>
+        <mat-select formControlName="situacao" (selectionChange)="buscar()">
+          <mat-option [value]="null">Todas</mat-option>
+          @for (situacao of situacoes; track situacao.valor) {
+            <mat-option [value]="situacao.valor">{{ situacao.rotulo }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      @if (temFiltro()) {
+        <button matButton type="button" class="limpar" (click)="limpar()">Limpar filtros</button>
+      }
+    </div>
+  </form>
+
+  <div class="resultado" [attr.aria-busy]="carregando()">
+    @if (carregando()) {
+      <mat-progress-bar mode="indeterminate" aria-label="Carregando a fila" />
+    }
+
+    @if (erro()) {
+      <div class="aviso" role="alert">
+        <p>Não foi possível carregar a fila. Confira a conexão e tente de novo.</p>
+        <button matButton="outlined" type="button" (click)="carregar()">Tentar de novo</button>
+      </div>
+    } @else if (!carregando() && itens().length === 0) {
+      <div class="aviso">
+        @if (temFiltro()) {
+          <p>Nenhum candidato com essa busca. Confira o nome ou limpe os filtros.</p>
+        } @else {
+          <p>A fila está vazia.</p>
+          @if (podeCadastrar) {
+            <a matButton="outlined" routerLink="nova">Cadastrar o primeiro candidato</a>
+          }
+        }
+      </div>
+    } @else {
+      <p class="total texto-secundario" aria-live="polite">
+        {{ total() }} {{ total() === 1 ? 'candidato' : 'candidatos' }}
+      </p>
+
+      <!-- Celular e tablet: um cartão por candidato, na ordem da fila. -->
+      <ol class="cartoes" aria-label="Fila de espera">
+        @for (item of itens(); track item.id) {
+          <li class="cartao">
+            <span
+              class="posicao"
+              [attr.aria-label]="item.posicao ? 'Posição ' + item.posicao : 'Sem posição'"
+            >
+              {{ item.posicao ?? '–' }}
+            </span>
+            <div class="corpo">
+              @if (completo) {
+                <a class="nome" [routerLink]="item.id">{{ item.nomeCompleto }}</a>
+              } @else {
+                <span class="nome">{{ item.nomeCompleto }}</span>
+              }
+              <span class="texto-secundario">
+                {{ situacao(item.situacao) }}, na lista desde
+                {{ item.dataCadastro | date: 'dd/MM/yyyy' }}
+              </span>
+              @if (item.tipoDeficiencia) {
+                <span class="detalhe">{{ tipo(item.tipoDeficiencia) }}</span>
+              }
+              @if (item.origemEncaminhamento) {
+                <span class="detalhe">Encaminhado por {{ origem(item.origemEncaminhamento) }}</span>
+              }
+              @if (item.cadastroCompleto === false) {
+                <a class="incompleto" [routerLink]="[item.id, 'documentos']">
+                  <mat-icon aria-hidden="true">error</mat-icon>
+                  Cadastro incompleto: anexar documentos
+                </a>
+              } @else if (item.cadastroCompleto) {
+                <a class="documentos" [routerLink]="[item.id, 'documentos']">Documentos</a>
+              }
+            </div>
+          </li>
+        }
+      </ol>
+
+      <!-- Telas largas: tabela. -->
+      <table class="tabela">
+        <caption class="cdk-visually-hidden">
+          Fila de espera
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col" class="coluna-posicao">Posição</th>
+            <th scope="col">Nome</th>
+            @if (completo) {
+              <th scope="col">Tipo de deficiência</th>
+              <th scope="col">Origem</th>
+            }
+            <th scope="col">Data de cadastro</th>
+            <th scope="col">Situação</th>
+            @if (completo) {
+              <th scope="col">Documentos</th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of itens(); track item.id) {
+            <tr>
+              <td class="coluna-posicao">{{ item.posicao ?? '–' }}</td>
+              <th scope="row" class="nome">
+                @if (completo) {
+                  <a [routerLink]="item.id">{{ item.nomeCompleto }}</a>
+                } @else {
+                  {{ item.nomeCompleto }}
+                }
+              </th>
+              @if (completo) {
+                <td>{{ tipo(item.tipoDeficiencia) }}</td>
+                <td>{{ origem(item.origemEncaminhamento) }}</td>
+              }
+              <td>{{ item.dataCadastro | date: 'dd/MM/yyyy' }}</td>
+              <td>{{ situacao(item.situacao) }}</td>
+              @if (completo) {
+                <td>
+                  @if (item.cadastroCompleto) {
+                    <a [routerLink]="[item.id, 'documentos']">Completo</a>
+                  } @else {
+                    <a class="incompleto" [routerLink]="[item.id, 'documentos']">
+                      <mat-icon aria-hidden="true">error</mat-icon>
+                      Incompleto
+                    </a>
+                  }
+                </td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      <mat-paginator
+        [length]="total()"
+        [pageIndex]="pagina()"
+        [pageSize]="tamanho()"
+        [pageSizeOptions]="tamanhos"
+        (page)="mudarPagina($event)"
+        aria-label="Páginas da fila"
+      />
+    }
+  </div>
+</section>

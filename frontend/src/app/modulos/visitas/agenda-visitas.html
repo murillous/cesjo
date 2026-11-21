@@ -1,0 +1,54 @@
+<section class="agenda" aria-labelledby="titulo-agenda">
+  <header class="cabecalho">
+    <h1 id="titulo-agenda">Visitas domiciliares</h1>
+    @if (podeAgendar) {
+      <a matButton="filled" routerLink="nova">
+        <mat-icon aria-hidden="true">event_available</mat-icon>
+        Agendar visita
+      </a>
+    }
+  </header>
+
+  <nav class="semana" aria-label="Escolher a semana">
+    <button matIconButton type="button" (click)="irPara(-1)" aria-label="Semana anterior">
+      <mat-icon aria-hidden="true">chevron_left</mat-icon>
+    </button>
+    <p class="periodo" aria-live="polite">
+      {{ inicio() | date: "d 'de' MMM" }} a {{ fim() | date: "d 'de' MMM 'de' y" }}
+    </p>
+    <button matIconButton type="button" (click)="irPara(1)" aria-label="Próxima semana">
+      <mat-icon aria-hidden="true">chevron_right</mat-icon>
+    </button>
+    @if (!ehSemanaAtual()) {
+      <button matButton type="button" class="esta-semana" (click)="irPara(null)">
+        Esta semana
+      </button>
+    }
+  </nav>
+
+  @if (carregando()) {
+    <mat-progress-bar mode="indeterminate" aria-label="Carregando agenda" />
+  }
+  @if (erro(); as mensagem) {
+    <p class="erro" role="alert">{{ mensagem }}</p>
+  }
+
+  <ol class="dias">
+    @for (dia of dias(); track dia.iso) {
+      <li class="dia" [class.hoje]="dia.hoje" [class.vazio]="dia.visitas.length === 0">
+        <h2>
+          <span class="dia-semana">{{ dia.data | date: 'EEEE' | titlecase }}</span>
+          <span class="data">{{ dia.data | date: "d 'de' MMMM" }}</span>
+          @if (dia.hoje) {
+            <span class="marca-hoje">Hoje</span>
+          }
+        </h2>
+        @if (dia.visitas.length) {
+          <app-visitas-do-dia [visitas]="dia.visitas" />
+        } @else {
+          <p class="sem-visitas">Sem visitas</p>
+        }
+      </li>
+    }
+  </ol>
+</section>

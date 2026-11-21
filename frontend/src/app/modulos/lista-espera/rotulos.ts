@@ -5,7 +5,43 @@ export type TipoDeficiencia = 'FISICA' | 'SENSORIAL' | 'INTELECTUAL' | 'MULTIPLA
 export type OrigemEncaminhamento =
   'CRAS' | 'CREAS' | 'JUDICIARIO' | 'SAUDE' | 'EDUCACAO' | 'DEMANDA_ESPONTANEA';
 
-export type SituacaoInscricao = 'AGUARDANDO';
+export type SituacaoInscricao = 'AGUARDANDO' | 'EM_AVALIACAO' | 'INSERIDO' | 'SAIU';
+
+/**
+ * Situações da inscrição, com os rótulos do backend (ADR 0091). Aguardando e em avaliação são as
+ * ativas: seguem na fila, com posição (ADR 0094).
+ */
+export const SITUACOES: readonly { valor: SituacaoInscricao; rotulo: string }[] = [
+  { valor: 'AGUARDANDO', rotulo: 'Aguardando' },
+  { valor: 'EM_AVALIACAO', rotulo: 'Em avaliação' },
+  { valor: 'INSERIDO', rotulo: 'Inserido no serviço' },
+  { valor: 'SAIU', rotulo: 'Saiu da lista' },
+];
+
+/** Situações de quem segue na fila, com os nomes de `SituacaoInscricao.ATIVAS` do backend. */
+export const SITUACOES_ATIVAS: ReadonlySet<SituacaoInscricao> = new Set([
+  'AGUARDANDO',
+  'EM_AVALIACAO',
+]);
+
+/** Motivos de saída da lista, com os nomes do enum `MotivoSaida` do backend. */
+export type MotivoSaida = 'DESISTENCIA' | 'NAO_LOCALIZADO' | 'FORA_DO_PERFIL' | 'OUTRO';
+
+// PENDENTE-CESJO(P4): lista provisória de motivos de saída (ADR 0091).
+export const MOTIVOS_SAIDA: readonly { valor: MotivoSaida; rotulo: string }[] = [
+  { valor: 'DESISTENCIA', rotulo: 'Desistência' },
+  { valor: 'NAO_LOCALIZADO', rotulo: 'Não localizado' },
+  { valor: 'FORA_DO_PERFIL', rotulo: 'Fora do perfil do serviço' },
+  { valor: 'OUTRO', rotulo: 'Outro motivo' },
+];
+
+/** Rótulo de um valor numa das listas acima, ou o próprio valor quando não houver. */
+export function rotuloDe<T extends string>(
+  lista: readonly { valor: T; rotulo: string }[],
+  valor: T | null | undefined,
+): string {
+  return lista.find((item) => item.valor === valor)?.rotulo ?? valor ?? '';
+}
 
 /** Na ordem em que aparecem no formulário. Rótulos iguais aos do backend. */
 export const TIPOS_DEFICIENCIA: readonly { valor: TipoDeficiencia; rotulo: string }[] = [
@@ -24,4 +60,13 @@ export const ORIGENS_ENCAMINHAMENTO: readonly { valor: OrigemEncaminhamento; rot
   { valor: 'SAUDE', rotulo: 'Saúde' },
   { valor: 'EDUCACAO', rotulo: 'Educação' },
   { valor: 'DEMANDA_ESPONTANEA', rotulo: 'Demanda espontânea' },
+];
+
+/** Documentos da pessoa, com os nomes do enum `TipoDocumento` do backend. */
+export type TipoDocumento = 'LAUDO_MEDICO' | 'COMPROVANTE_RESIDENCIA';
+
+/** Os dois documentos que o RF001 exige, na ordem em que aparecem nas telas (ADR 0056). */
+export const DOCUMENTOS_OBRIGATORIOS: readonly { valor: TipoDocumento; rotulo: string }[] = [
+  { valor: 'LAUDO_MEDICO', rotulo: 'Laudo médico' },
+  { valor: 'COMPROVANTE_RESIDENCIA', rotulo: 'Comprovante de residência' },
 ];

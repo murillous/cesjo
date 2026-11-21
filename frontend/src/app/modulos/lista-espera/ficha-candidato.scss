@@ -1,0 +1,233 @@
+@use 'styles/breakpoints' as bp;
+
+// Mobile first: tudo numa coluna, na ordem dados, documentos, situação e histórico. No desktop, duas
+// colunas: o que é do candidato à esquerda e o que aconteceu com a inscrição à direita. O lugar na
+// fila abre a ficha com o mesmo número grande da fila, para quem vem de lá reconhecer o candidato.
+
+.ficha {
+  max-width: 1080px;
+}
+
+.voltar {
+  margin: 0 0 var(--sgi-space-2) calc(-1 * var(--sgi-space-1));
+}
+
+.erro {
+  padding: var(--sgi-space-1-5) var(--sgi-space-2);
+  border-left: var(--sgi-space-0-5) solid var(--sgi-color-accent);
+  background: var(--sgi-color-background-secondary);
+}
+
+.cabecalho {
+  display: flex;
+  align-items: center;
+  gap: var(--sgi-space-2);
+  margin-bottom: var(--sgi-space-3);
+
+  h1 {
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+
+  p {
+    margin: var(--sgi-space-0-5) 0 0;
+  }
+}
+
+.lugar {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 5rem;
+  min-height: 5rem;
+  padding: var(--sgi-space-1);
+  border-radius: var(--sgi-radius-lg);
+  background: var(--sgi-color-accent-soft);
+  color: var(--sgi-color-primary);
+
+  &.fora {
+    background: var(--sgi-color-background-secondary);
+    color: var(--sgi-color-text-secondary);
+    text-align: center;
+  }
+}
+
+.numero {
+  font-size: var(--sgi-font-size-h1);
+  font-weight: var(--sgi-font-weight-bold);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.legenda {
+  font-size: var(--sgi-font-size-small);
+  font-weight: var(--sgi-font-weight-medium);
+}
+
+.colunas,
+.coluna {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sgi-space-3);
+}
+
+.bloco {
+  h2 {
+    margin: 0 0 var(--sgi-space-1-5);
+    font-size: var(--sgi-font-size-h3);
+  }
+}
+
+.bloco-topo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sgi-space-1);
+  margin-bottom: var(--sgi-space-1-5);
+
+  h2 {
+    margin: 0;
+  }
+
+  a {
+    min-height: var(--sgi-alvo-toque);
+  }
+}
+
+.dados {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--sgi-space-1-5);
+  margin: 0;
+
+  dt {
+    color: var(--sgi-color-text-secondary);
+    font-size: var(--sgi-font-size-small);
+  }
+
+  dd {
+    margin: 0;
+    font-weight: var(--sgi-font-weight-medium);
+    overflow-wrap: anywhere;
+  }
+}
+
+.estado {
+  display: flex;
+  align-items: center;
+  gap: var(--sgi-space-1);
+  margin: 0;
+
+  &.completo mat-icon {
+    color: var(--sgi-color-primary);
+  }
+
+  &.incompleto {
+    font-weight: var(--sgi-font-weight-medium);
+
+    mat-icon {
+      color: var(--sgi-color-accent);
+    }
+  }
+}
+
+.situacao-atual {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sgi-space-0-5);
+  margin: 0 0 var(--sgi-space-1-5);
+  font-weight: var(--sgi-font-weight-semibold);
+
+  span {
+    font-weight: var(--sgi-font-weight-regular);
+  }
+}
+
+.mudar,
+.inserir {
+  min-height: var(--sgi-alvo-toque);
+}
+
+.inserir {
+  margin-bottom: var(--sgi-space-1);
+}
+
+.mudanca {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sgi-space-1);
+  padding: var(--sgi-space-2);
+  border: var(--sgi-border);
+  border-radius: var(--sgi-radius-md);
+  background: var(--sgi-color-background-secondary);
+
+  p {
+    margin: 0;
+  }
+}
+
+.botoes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sgi-space-1);
+
+  button {
+    min-height: var(--sgi-alvo-toque);
+  }
+}
+
+// Linha do tempo: a data na margem esquerda e uma linha vertical ligando as mudanças.
+.historico {
+  margin: 0;
+  padding: 0 0 0 var(--sgi-space-2);
+  border-left: var(--sgi-space-0-5) solid var(--sgi-color-border);
+  list-style: none;
+
+  li {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sgi-space-0-5);
+    padding-bottom: var(--sgi-space-2);
+  }
+
+  li:last-child {
+    padding-bottom: 0;
+  }
+}
+
+.quando {
+  color: var(--sgi-color-text-secondary);
+  font-size: var(--sgi-font-size-small);
+  font-variant-numeric: tabular-nums;
+}
+
+.o-que {
+  font-weight: var(--sgi-font-weight-medium);
+}
+
+.observacao {
+  max-width: 60ch;
+  margin: 0;
+  white-space: pre-line;
+}
+
+@media (min-width: bp.$tablet) {
+  .dados {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .botoes {
+    flex-direction: row;
+  }
+}
+
+@media (min-width: bp.$desktop) {
+  .colunas {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    gap: var(--sgi-space-4);
+  }
+}
