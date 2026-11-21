@@ -95,6 +95,7 @@ Situação: provisória.
 | O Administrativo não vê crença religiosa nem dados de saúde (aplicado quando esses campos entrarem). | `acesso.Perfil` | [0015](adr/0015-matriz-de-perfis-da-fundacao.md) |
 | "Dados básicos" do Consulta são só nome, situação, turno e datas (aplicado quando as listagens entrarem). | `acesso.Perfil` | [0015](adr/0015-matriz-de-perfis-da-fundacao.md) |
 | Na fila da lista de espera, o Consulta vê posição, nome, situação e data de cadastro, sem tipo de deficiência, origem nem situação dos documentos, e não filtra por tipo nem origem (`LISTA_ESPERA_FILA_LER`). | `acesso.Perfil` (linha do `CONSULTA`), `ItemFila.basico()` e `ListaEsperaControlador.listar` | [0058](adr/0058-dados-basicos-da-fila-para-o-consulta.md) |
+| O Consulta não exporta a lista de espera (`LISTA_ESPERA_EXPORTAR` só para Coordenador, Equipe Técnica e Administrativo). | `acesso.Perfil` (linha do `CONSULTA`) | [0130](adr/0130-exportacao-da-lista-de-espera.md) |
 
 ## P9. Relatórios (RF016)
 

@@ -78,3 +78,4 @@ frente de trabalho paralela não é usado todo.
 - [0093](0093-contagem-de-vagas-ocupadas.md) — Contagem de vagas ocupadas atrás de uma interface
 - [0094](0094-em-avaliacao-segue-na-fila.md) — Candidato em avaliação segue na fila (provisório)
 - [0095](0095-aviso-de-vaga-aberta.md) — Aviso de vaga aberta (provisório)
+- [0130](0130-exportacao-da-lista-de-espera.md) — Exportação da lista de espera em PDF e Excel (provisório)
