@@ -39,3 +39,4 @@ frente de trabalho paralela não é usado todo.
 - [0026](0026-armazenamento-de-arquivos-cifrados.md) — Armazenamento dos arquivos cifrados e tabela `arquivo`
 - [0027](0027-validacao-de-tipo-e-tamanho-dos-arquivos.md) — Validação de tipo e tamanho dos arquivos enviados
 - [0028](0028-api-http-e-api-java-dos-arquivos.md) — API HTTP e API Java do módulo Arquivos
+- [0029](0029-componente-de-envio-de-arquivo-no-frontend.md) — Componente de envio de arquivo no frontend
