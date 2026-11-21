@@ -21,7 +21,11 @@ algo) ou **respondida**.
 > em ordem cronológica. Como a prioridade entra na fila? BPC e CadÚnico passam na frente, servem de
 > desempate ou são só informação?
 
-Situação: aberta.
+Situação: provisória.
+
+| Decisão provisória | Onde mudar | ADR |
+|---|---|---|
+| A fila é só cronológica: data de cadastro, com o momento do cadastro como desempate. Não há prioridade para BPC ou CadÚnico. | `listaespera.interno.OrdemDaFila` | [0057](adr/0057-ordem-e-posicao-na-fila.md) |
 
 ## P2. Faixa etária
 
@@ -46,11 +50,13 @@ Situação: aberta.
 > Quais motivos de saída da lista de espera existem (desistência, não localizado, fora do perfil,
 > inserido)? O candidato chamado que não comparece volta para a fila?
 
-Situação: provisória. As situações de saída entram com a issue #29 (marcador em
-`listaespera.SituacaoInscricao`).
+Situação: provisória.
 
 | Decisão provisória | Onde mudar | ADR |
 |---|---|---|
+| A saída da lista é a situação `SAIU`, com um motivo: desistência, não localizado, fora do perfil ou outro (este com observação obrigatória). | `listaespera.MotivoSaida`, `MOTIVOS_SAIDA` em `rotulos.ts` (frontend) e a restrição da `V7` | [0091](adr/0091-situacoes-motivos-e-historico-da-inscricao.md) |
+| Quem saiu pode voltar para a fila, na posição original (a da data de cadastro), com observação obrigatória. | `ServicoListaEspera.mudarSituacao` | [0091](adr/0091-situacoes-motivos-e-historico-da-inscricao.md) |
+| O candidato em avaliação (visita agendada) segue na fila com a mesma posição e pode sair da lista. | `SituacaoInscricao.ATIVAS` | [0094](adr/0094-em-avaliacao-segue-na-fila.md) |
 | O candidato com visita agendada fica `EM_AVALIACAO`, continua na fila na mesma ordem e não volta para `AGUARDANDO` quando a visita é cancelada. | `listaespera.SituacaoInscricao` (`ATIVAS`) e `listaespera.interno.ServicoCandidatos` | [0049](adr/0049-candidato-em-avaliacao-e-api-da-lista-de-espera.md) |
 
 ## P5. PIA
@@ -70,7 +76,11 @@ Situação: aberta.
 
 > O cuidador responsável do RF007 é sempre o mesmo responsável do RF001? Pode haver mais de um?
 
-Situação: aberta.
+Situação: provisória.
+
+| Decisão provisória | Onde mudar | ADR |
+|---|---|---|
+| Um cuidador familiar por inserção, escolhido entre os responsáveis da pessoa (o do RF001 vem marcado) ou cadastrado na hora como novo responsável. | `NovaInsercao` (backend, `atendidos.interno`) e `formulario-insercao.ts` (frontend) | [0080](adr/0080-insercao-no-servico.md) |
 
 ## P8. Acesso a dados sensíveis
 
@@ -85,6 +95,8 @@ Situação: provisória.
 | O Administrativo não vê crença religiosa nem dados de saúde (aplicado quando esses campos entrarem). | `acesso.Perfil` | [0015](adr/0015-matriz-de-perfis-da-fundacao.md) |
 | "Dados básicos" do Consulta são só nome, situação, turno e datas (aplicado quando as listagens entrarem). | `acesso.Perfil` | [0015](adr/0015-matriz-de-perfis-da-fundacao.md) |
 | O Administrativo agenda, cancela e reagenda visitas, mas não registra a realização nem lê as observações da visita. | `acesso.Perfil` (`VISITAS_REGISTRAR`) | [0074](adr/0074-permissoes-do-resultado-da-visita.md) |
+| Na fila da lista de espera, o Consulta vê posição, nome, situação e data de cadastro, sem tipo de deficiência, origem nem situação dos documentos, e não filtra por tipo nem origem (`LISTA_ESPERA_FILA_LER`). | `acesso.Perfil` (linha do `CONSULTA`), `ItemFila.basico()` e `ListaEsperaControlador.listar` | [0058](adr/0058-dados-basicos-da-fila-para-o-consulta.md) |
+| Administrativo e Consulta veem só os dados básicos dos usuários atendidos (`ATENDIDOS_LER_BASICO`). | `acesso.Perfil` | [0082](adr/0082-permissoes-dos-usuarios-atendidos.md) |
 
 ## P9. Relatórios (RF016)
 
@@ -130,6 +142,8 @@ Situação: provisória.
 | Decisão provisória | Onde mudar | ADR |
 |---|---|---|
 | O log de auditoria é guardado para sempre, sem expurgo. | `V1__cria_auditoria.sql` (gatilhos) | [0022](adr/0022-log-de-auditoria-so-de-insercao.md) |
+| Backups mantidos por 7 diários, 4 semanais e 6 mensais (cerca de seis meses). | padrões em `deploy/backup/backup.sh`; `SGI_BACKUP_MANTER_*` no `deploy/backup.env` | [0065](adr/0065-retencao-dos-backups.md) |
+| Laudo ou comprovante substituído continua guardado no módulo Arquivos, sem ligação com a pessoa. | `pessoas.interno.ServicoPessoas.anexarDocumento` | [0055](adr/0055-documentos-da-pessoa.md) |
 
 ## P15. Hospedagem
 
@@ -140,6 +154,8 @@ Situação: provisória.
 | Decisão provisória | Onde mudar | ADR |
 |---|---|---|
 | Uma VPS com Docker Compose (Caddy, aplicação e Postgres). | implantação (issue #20) | [0005](adr/0005-hospedagem-vps-docker-compose.md) |
+| Domínio, e-mail do Let's Encrypt e credenciais parametrizados; imagens construídas na própria VPS. | `deploy/.env` (a partir de `deploy/.env.example`), `deploy/compose.yaml` | [0050](adr/0050-empacotamento-e-compose-de-producao.md) |
+| Destino do backup é qualquer repositório restic fora da VPS, escolhido na implantação. | `RESTIC_REPOSITORY` e credenciais no `deploy/backup.env` | [0054](adr/0054-backup-diario-com-restic.md) |
 
 ## P16. Identidade visual
 
@@ -163,6 +179,7 @@ Situação: provisória.
 |---|---|---|
 | Nos pontos com (?), o perfil em dúvida fica sem acesso: Administrativo sem atividades, gestão institucional, relatórios e importação; Equipe Técnica sem gestão institucional e relatórios. | `acesso.Perfil` | [0015](adr/0015-matriz-de-perfis-da-fundacao.md) |
 | Só Coordenador e Administrativo cadastram candidatos na lista de espera; a Equipe Técnica lê e, quando a edição entrar, edita. | `acesso.Perfil` (`LISTA_ESPERA_CADASTRAR`) | [0039](adr/0039-permissoes-da-lista-de-espera.md) |
+| Só o Coordenador insere candidatos no serviço; a Equipe Técnica lê a ficha completa dos usuários atendidos. | `acesso.Perfil` (`ATENDIDOS_INSERIR`) | [0082](adr/0082-permissoes-dos-usuarios-atendidos.md) |
 | Equipe Técnica e Administrativo não veem nem gerenciam o cadastro de colaboradores; escolhem o profissional pelas telas de visita, escuta e atividade. | `acesso.Perfil` (`COLABORADORES_LER`, `COLABORADORES_GERENCIAR`) | [0047](adr/0047-permissoes-dos-colaboradores.md) |
 
 ## P18. Funções dos colaboradores

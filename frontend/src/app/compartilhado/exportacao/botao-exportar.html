@@ -1,0 +1,42 @@
+<div class="exportar">
+  <button
+    matButton="outlined"
+    type="button"
+    class="abrir"
+    aria-haspopup="menu"
+    [attr.aria-describedby]="erro() ? idErro : null"
+    [disabled]="gerando() !== null"
+    [matMenuTriggerFor]="formatos"
+  >
+    @if (gerando()) {
+      <mat-progress-spinner diameter="18" mode="indeterminate" aria-hidden="true" />
+    } @else {
+      <mat-icon aria-hidden="true">download</mat-icon>
+    }
+    {{ rotulo() }}
+  </button>
+
+  <span class="situacao" aria-live="polite">
+    @switch (gerando()) {
+      @case ('pdf') {
+        Gerando o PDF
+      }
+      @case ('xlsx') {
+        Gerando a planilha
+      }
+    }
+  </span>
+
+  <p class="erro" role="alert" [id]="idErro">{{ erro() }}</p>
+</div>
+
+<mat-menu #formatos="matMenu" xPosition="before">
+  <button mat-menu-item type="button" (click)="exportar('pdf')">
+    <mat-icon aria-hidden="true">picture_as_pdf</mat-icon>
+    <span>PDF, para imprimir</span>
+  </button>
+  <button mat-menu-item type="button" (click)="exportar('xlsx')">
+    <mat-icon aria-hidden="true">table_view</mat-icon>
+    <span>Planilha Excel</span>
+  </button>
+</mat-menu>
