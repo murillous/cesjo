@@ -46,8 +46,9 @@ Situação: aberta.
 > Quais motivos de saída da lista de espera existem (desistência, não localizado, fora do perfil,
 > inserido)? O candidato chamado que não comparece volta para a fila?
 
-Situação: aberta. Por enquanto a inscrição só tem a situação `AGUARDANDO`; as situações de saída
-entram com a issue #29 (marcador em `listaespera.SituacaoInscricao`).
+Situação: aberta. Por enquanto a inscrição tem as situações `AGUARDANDO` e `INSERIDO` (saída por
+inserção no serviço, ADR 0081); as outras situações de saída entram com a issue #29 (marcador em
+`listaespera.SituacaoInscricao`).
 
 ## P5. PIA
 
@@ -66,7 +67,11 @@ Situação: aberta.
 
 > O cuidador responsável do RF007 é sempre o mesmo responsável do RF001? Pode haver mais de um?
 
-Situação: aberta.
+Situação: provisória.
+
+| Decisão provisória | Onde mudar | ADR |
+|---|---|---|
+| Um cuidador familiar por inserção, escolhido entre os responsáveis da pessoa (o do RF001 vem marcado) ou cadastrado na hora como novo responsável. | `NovaInsercao` (backend, `atendidos.interno`) e `formulario-insercao.ts` (frontend) | [0080](adr/0080-insercao-no-servico.md) |
 
 ## P8. Acesso a dados sensíveis
 
@@ -80,6 +85,7 @@ Situação: provisória.
 | O Administrativo envia e lê laudos e comprovantes. | `acesso.Perfil`, linha do `ADMINISTRATIVO` | [0015](adr/0015-matriz-de-perfis-da-fundacao.md) |
 | O Administrativo não vê crença religiosa nem dados de saúde (aplicado quando esses campos entrarem). | `acesso.Perfil` | [0015](adr/0015-matriz-de-perfis-da-fundacao.md) |
 | "Dados básicos" do Consulta são só nome, situação, turno e datas (aplicado quando as listagens entrarem). | `acesso.Perfil` | [0015](adr/0015-matriz-de-perfis-da-fundacao.md) |
+| Administrativo e Consulta veem só os dados básicos dos usuários atendidos (`ATENDIDOS_LER_BASICO`). | `acesso.Perfil` | [0082](adr/0082-permissoes-dos-usuarios-atendidos.md) |
 
 ## P9. Relatórios (RF016)
 
@@ -135,6 +141,7 @@ Situação: provisória.
 | Decisão provisória | Onde mudar | ADR |
 |---|---|---|
 | Uma VPS com Docker Compose (Caddy, aplicação e Postgres). | implantação (issue #20) | [0005](adr/0005-hospedagem-vps-docker-compose.md) |
+| Domínio, e-mail do Let's Encrypt e credenciais parametrizados; imagens construídas na própria VPS. | `deploy/.env` (a partir de `deploy/.env.example`), `deploy/compose.yaml` | [0050](adr/0050-empacotamento-e-compose-de-producao.md) |
 
 ## P16. Identidade visual
 
@@ -158,3 +165,17 @@ Situação: provisória.
 |---|---|---|
 | Nos pontos com (?), o perfil em dúvida fica sem acesso: Administrativo sem atividades, gestão institucional, relatórios e importação; Equipe Técnica sem gestão institucional e relatórios. | `acesso.Perfil` | [0015](adr/0015-matriz-de-perfis-da-fundacao.md) |
 | Só Coordenador e Administrativo cadastram candidatos na lista de espera; a Equipe Técnica lê e, quando a edição entrar, edita. | `acesso.Perfil` (`LISTA_ESPERA_CADASTRAR`) | [0039](adr/0039-permissoes-da-lista-de-espera.md) |
+| Só o Coordenador insere candidatos no serviço; a Equipe Técnica lê a ficha completa dos usuários atendidos. | `acesso.Perfil` (`ATENDIDOS_INSERIR`) | [0082](adr/0082-permissoes-dos-usuarios-atendidos.md) |
+| Equipe Técnica e Administrativo não veem nem gerenciam o cadastro de colaboradores; escolhem o profissional pelas telas de visita, escuta e atividade. | `acesso.Perfil` (`COLABORADORES_LER`, `COLABORADORES_GERENCIAR`) | [0047](adr/0047-permissoes-dos-colaboradores.md) |
+
+## P18. Funções dos colaboradores
+
+> Quais funções os colaboradores do Centro-Dia podem ter? Além de assistente social, psicólogo(a) e
+> terapeuta ocupacional, há outras que precisam aparecer separadas nos relatórios (cuidador,
+> monitor, motorista, coordenação, estagiário)?
+
+Situação: provisória.
+
+| Decisão provisória | Onde mudar | ADR |
+|---|---|---|
+| Funções `ASSISTENTE_SOCIAL`, `PSICOLOGO`, `TERAPEUTA_OCUPACIONAL` e `OUTRA`, tiradas do planejamento. | `institucional.FuncaoColaborador`, `ck_colaborador_funcao` (migração nova) e `rotulos.ts` do módulo colaboradores (frontend) | [0045](adr/0045-cadastro-e-api-java-dos-colaboradores.md) |

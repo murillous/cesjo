@@ -29,6 +29,21 @@ public enum Permissao {
 	LISTA_ESPERA_LER,
 
 	/** Cadastrar candidato na lista de espera (RF001, ADR 0039). */
-	LISTA_ESPERA_CADASTRAR
+	LISTA_ESPERA_CADASTRAR,
+
+	/** Ver o cadastro de colaboradores (RF014, ADR 0047). */
+	COLABORADORES_LER,
+
+	/** Cadastrar e editar colaboradores, inclusive a situação e a conta ligada (RF014, ADR 0047). */
+	COLABORADORES_GERENCIAR,
+
+	/** Inserir no serviço um candidato da lista de espera (RF007, ADR 0082). */
+	ATENDIDOS_INSERIR,
+
+	/** Ler a ficha completa dos usuários atendidos (RF007, ADR 0082). */
+	ATENDIDOS_LER,
+
+	/** Ler só os dados básicos dos usuários atendidos: nome, situação, turno e datas (ADR 0082). */
+	ATENDIDOS_LER_BASICO
 
 }
