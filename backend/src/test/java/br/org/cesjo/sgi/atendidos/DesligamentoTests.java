@@ -37,7 +37,6 @@ import br.org.cesjo.sgi.acesso.ComConta;
 import br.org.cesjo.sgi.acesso.Perfil;
 import br.org.cesjo.sgi.auditoria.AcaoAuditoria;
 import br.org.cesjo.sgi.auditoria.Auditoria;
-import br.org.cesjo.sgi.listaespera.VagaLiberada;
 import tools.jackson.databind.json.JsonMapper;
 
 /**
@@ -88,7 +87,7 @@ class DesligamentoTests {
 			.andExpect(jsonPath("$.observacao").doesNotExist());
 
 		assertThat(usuariosAtendidos.contarAtivos()).as("a vaga é liberada").isEqualTo(ativosAntes - 1);
-		assertThat(eventos.stream(VagaLiberada.class)).singleElement()
+		assertThat(eventos.stream(UsuarioDesligado.class)).singleElement()
 			.satisfies(evento -> assertThat(evento.insercaoId()).hasToString(id))
 			.satisfies(evento -> assertThat(evento.data()).isEqualTo(HOJE));
 		String gravada = jdbc.queryForObject("select observacao from desligamento where insercao_id = ?::uuid",
@@ -137,11 +136,11 @@ class DesligamentoTests {
 			.andExpect(jsonPath("$.erros[*].campo").value(hasItem("data")))
 			.andExpect(jsonPath("$.erros[*].campo").value(hasItem("observacaoDoMotivo")));
 		desligar(UUID.randomUUID().toString(), dados(HOJE.toString(), "EVASAO", null)).andExpect(status().isNotFound());
-		assertThat(eventos.stream(VagaLiberada.class)).isEmpty();
+		assertThat(eventos.stream(UsuarioDesligado.class)).isEmpty();
 
 		desligar(id, dados(HOJE.toString(), "OUTROS", "Motivo fictício.")).andExpect(status().isCreated());
 		desligar(id, dados(HOJE.toString(), "EVASAO", null)).andExpect(status().isUnprocessableContent());
-		assertThat(eventos.stream(VagaLiberada.class)).hasSize(1);
+		assertThat(eventos.stream(UsuarioDesligado.class)).hasSize(1);
 	}
 
 	@Test

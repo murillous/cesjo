@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.org.cesjo.sgi.atendidos.SituacaoInsercao;
+import br.org.cesjo.sgi.atendidos.UsuarioDesligado;
 import br.org.cesjo.sgi.atendidos.UsuariosAtendidos;
 import br.org.cesjo.sgi.auditoria.Auditoria;
 import br.org.cesjo.sgi.auditoria.EventoAuditoria;
@@ -16,7 +17,6 @@ import br.org.cesjo.sgi.compartilhado.seguranca.Identidade;
 import br.org.cesjo.sgi.compartilhado.seguranca.IdentidadeAtual;
 import br.org.cesjo.sgi.compartilhado.web.RecursoNaoEncontradoException;
 import br.org.cesjo.sgi.compartilhado.web.RegraNegocioException;
-import br.org.cesjo.sgi.listaespera.VagaLiberada;
 
 /** Desligamento do usuário atendido (RF008, RF003, ADR 0110 e ADR 0111). */
 @Service
@@ -47,7 +47,7 @@ class ServicoDesligamento {
 
 	/**
 	 * Desliga numa transação só: grava o desligamento, muda a inserção para desligada e publica
-	 * {@link VagaLiberada}. Ouvintes síncronos participam da mesma transação (ADR 0111).
+	 * {@link UsuarioDesligado}. Ouvintes síncronos participam da mesma transação (ADR 0111).
 	 */
 	@Transactional
 	DesligamentoResposta desligar(UUID insercaoId, NovoDesligamento novo) {
@@ -67,7 +67,7 @@ class ServicoDesligamento {
 				novo.observacaoNormalizada(), autor, agora));
 		auditoria.registrar(EventoAuditoria.criacao(ENTIDADE, desligamento.getId()));
 		auditoria.registrar(EventoAuditoria.alteracao(UsuariosAtendidos.ENTIDADE, insercaoId, Set.of("situacao")));
-		eventos.publishEvent(new VagaLiberada(insercaoId, novo.data()));
+		eventos.publishEvent(new UsuarioDesligado(insercaoId, novo.data()));
 		return new DesligamentoResposta(desligamento.getId(), insercaoId, desligamento.getData(),
 				desligamento.getMotivo(), insercao.getSituacao());
 	}

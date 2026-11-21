@@ -18,7 +18,7 @@ atendidos e desligamentos", sem dizer se a Equipe Técnica registra desligamento
   de autoria.
 - Regras: só inserção `ATIVA`; data nem futura nem anterior à data de inserção; observação de até
   2000 caracteres, opcional, mas obrigatória no motivo "Outros", para o motivo ficar explicado.
-- Numa transação só: grava o desligamento, muda a inserção para `DESLIGADA` e publica `VagaLiberada`
+- Numa transação só: grava o desligamento, muda a inserção para `DESLIGADA` e publica `UsuarioDesligado`
   (ADR 0111).
 - API: `POST /api/atendidos/{id}/desligamento`, com a permissão nova `ATENDIDOS_DESLIGAR`, só do
   Coordenador. A resposta não traz a observação.
