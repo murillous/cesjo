@@ -1,0 +1,98 @@
+<section class="escuta" aria-labelledby="titulo-escuta">
+  <a matButton [routerLink]="['/atendimento', 'pessoas', pessoaDaFicha()]" class="voltar">
+    <mat-icon aria-hidden="true">arrow_back</mat-icon>
+    {{ nomePessoa() ?? 'Atendimento' }}
+  </a>
+
+  <h1 id="titulo-escuta">{{ nova() ? 'Registrar escuta' : 'Escuta ativa e qualificada' }}</h1>
+  <p class="texto-secundario aviso">
+    <mat-icon aria-hidden="true">lock</mat-icon>
+    Conteúdo sigiloso: guardado cifrado, e cada abertura fica no log de auditoria.
+  </p>
+
+  @if (erro(); as mensagem) {
+    <p class="erro" role="alert">{{ mensagem }}</p>
+  }
+
+  @if (escuta(); as atual) {
+    @if (!editando()) {
+      <dl class="cabecalho">
+        <div>
+          <dt>Data</dt>
+          <dd>{{ data(atual.dataEscuta) | date: "d 'de' MMMM 'de' y" }}</dd>
+        </div>
+        <div>
+          <dt>Profissional responsável</dt>
+          <dd>{{ atual.profissional.nome }}, {{ funcoes[atual.profissional.funcao] }}</dd>
+        </div>
+      </dl>
+      @for (campo of campos; track campo.nome) {
+        <section class="texto">
+          <h2>{{ campo.rotulo }}</h2>
+          @if (atual[campo.nome]; as conteudo) {
+            <p>{{ conteudo }}</p>
+          } @else {
+            <p class="texto-secundario">Não registrado.</p>
+          }
+        </section>
+      }
+      @if (podeRegistrar) {
+        <div class="botoes">
+          <button matButton="outlined" type="button" (click)="corrigir()">
+            <mat-icon aria-hidden="true">edit</mat-icon>
+            Corrigir escuta
+          </button>
+        </div>
+      }
+    }
+  }
+
+  @if (nova() || editando()) {
+    <form [formGroup]="formulario" (ngSubmit)="salvar()" novalidate>
+      <div class="linha">
+        <mat-form-field appearance="outline">
+          <mat-label>Data da escuta</mat-label>
+          <input matInput [matDatepicker]="seletorData" [max]="hoje" formControlName="dataEscuta" />
+          <mat-hint>DD/MM/AAAA</mat-hint>
+          <mat-datepicker-toggle matIconSuffix [for]="seletorData" />
+          <mat-datepicker #seletorData />
+          @if (formulario.controls.dataEscuta.hasError('matDatepickerMax')) {
+            <mat-error>A data não pode ser futura.</mat-error>
+          } @else if (formulario.controls.dataEscuta.invalid) {
+            <mat-error>Informe a data.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Profissional responsável</mat-label>
+          <mat-select formControlName="profissionalId">
+            @for (profissional of opcoes(); track profissional.id) {
+              <mat-option [value]="profissional.id">
+                {{ profissional.nome }} ({{ funcoes[profissional.funcao] }})
+              </mat-option>
+            }
+          </mat-select>
+          @if (formulario.controls.profissionalId.invalid) {
+            <mat-error>Escolha o profissional.</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      @for (campo of campos; track campo.nome) {
+        <mat-form-field appearance="outline">
+          <mat-label>{{ campo.rotulo }}</mat-label>
+          <textarea matInput [formControlName]="campo.nome" rows="5"></textarea>
+        </mat-form-field>
+      }
+
+      <div class="botoes">
+        <button matButton="filled" type="submit" [disabled]="enviando()">
+          {{ nova() ? 'Registrar escuta' : 'Salvar correção' }}
+        </button>
+        @if (editando()) {
+          <button matButton type="button" (click)="desistir()">Desistir</button>
+        }
+      </div>
+    </form>
+  }
+</section>

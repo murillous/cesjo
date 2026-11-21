@@ -11,7 +11,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { RouterLink } from '@angular/router';
 
 import { Sessao } from '../../acesso/sessao';
-import { PaginadorPtBr } from '../auditoria/paginador-pt-br';
+import { PaginadorPtBr } from '../../compartilhado/paginador-pt-br';
 import { TIPOS_DEFICIENCIA, TipoDeficiencia } from '../lista-espera/rotulos';
 import { Atendido, AtendidosApi, FiltrosAtendidos } from './atendidos-api';
 import {
