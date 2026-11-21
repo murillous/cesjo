@@ -1,0 +1,80 @@
+<section class="ficha">
+  <a matButton routerLink="/atendidos" class="voltar">
+    <mat-icon aria-hidden="true">arrow_back</mat-icon>
+    Usuários atendidos
+  </a>
+
+  @if (carregando()) {
+    <mat-progress-bar mode="indeterminate" aria-label="Carregando a ficha" />
+  }
+
+  @if (erro(); as mensagem) {
+    <p class="erro" role="alert">{{ mensagem }}</p>
+  }
+
+  @if (ficha(); as f) {
+    <header class="cabecalho">
+      <h1>{{ f.nomeCompleto }}</h1>
+      <p class="estado">
+        <span class="turno">{{ rotuloTurno(f.turno) }}</span>
+        <span>{{ situacoes[f.situacao] }} desde {{ f.dataInsercao | date: 'dd/MM/yyyy' }}</span>
+      </p>
+    </header>
+
+    @if (f.completo) {
+      <div class="blocos">
+        <section aria-labelledby="titulo-pessoa" class="bloco">
+          <h2 id="titulo-pessoa">Pessoa</h2>
+          <dl>
+            <dt>Tipo de deficiência</dt>
+            <dd>{{ rotuloTipo(f.tipoDeficiencia) }}</dd>
+            <dt>Data de nascimento</dt>
+            <dd>
+              @if (f.dataNascimento) {
+                {{ f.dataNascimento | date: 'dd/MM/yyyy' }}, {{ f.idade }} anos
+              } @else {
+                Não informada
+              }
+            </dd>
+            @if (f.dataNascimento) {
+              <dt>Faixa etária</dt>
+              <dd>{{ rotuloFaixa(f.faixaEtaria) }}</dd>
+            }
+            <dt>Telefone</dt>
+            <dd>
+              <a [href]="'tel:' + f.telefone">{{ telefone(f.telefone) }}</a>
+            </dd>
+          </dl>
+        </section>
+
+        <section aria-labelledby="titulo-servico" class="bloco">
+          <h2 id="titulo-servico">No serviço</h2>
+          <dl>
+            <dt>Turno</dt>
+            <dd>{{ rotuloTurno(f.turno) }}</dd>
+            <dt>Data de inserção</dt>
+            <dd>{{ f.dataInsercao | date: 'dd/MM/yyyy' }}</dd>
+            <dt>Cuidador familiar responsável</dt>
+            <dd>{{ f.nomeCuidador ?? 'Não informado' }}</dd>
+          </dl>
+        </section>
+
+        @if (f.inscricao; as inscricao) {
+          <section aria-labelledby="titulo-inscricao" class="bloco">
+            <h2 id="titulo-inscricao">Lista de espera</h2>
+            <dl>
+              <dt>Na fila desde</dt>
+              <dd>{{ inscricao.dataCadastro | date: 'dd/MM/yyyy' }}</dd>
+              <dt>Encaminhado por</dt>
+              <dd>{{ rotuloOrigem(inscricao.origemEncaminhamento) }}</dd>
+            </dl>
+          </section>
+        }
+      </div>
+    } @else {
+      <p class="texto-secundario basico">
+        Seu perfil vê só nome, situação, turno e datas dos usuários atendidos.
+      </p>
+    }
+  }
+</section>

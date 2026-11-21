@@ -19,3 +19,6 @@ Thumbs.db
 # Configuração local do backend (chaves de desenvolvimento) e arquivos enviados em desenvolvimento
 backend/config/
 backend/dados/
+
+# Segredos do backup da implantação
+deploy/backup.env
