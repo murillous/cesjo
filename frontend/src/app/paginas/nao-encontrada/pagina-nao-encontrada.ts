@@ -10,7 +10,9 @@ import { RouterLink } from '@angular/router';
   template: `
     <section class="nao-encontrada">
       <h1>Página não encontrada</h1>
-      <p class="texto-secundario">O endereço acessado não existe ou foi removido.</p>
+      <p class="texto-secundario">
+        O endereço digitado não existe ou foi removido. Volte para o início e use o menu.
+      </p>
       <a matButton="filled" routerLink="/">
         <mat-icon aria-hidden="true">home</mat-icon>
         Voltar para o início
@@ -19,7 +21,7 @@ import { RouterLink } from '@angular/router';
   `,
   styles: `
     .nao-encontrada {
-      padding: var(--sgi-space-3) 0;
+      max-width: 60ch;
     }
   `,
 })

@@ -31,7 +31,7 @@
               }
             ],
             "styles": [
-              "@fontsource-variable/inter/index.css",
+              "@fontsource-variable/atkinson-hyperlegible-next/index.css",
               "material-symbols/outlined.css",
               "src/styles.scss"
             ],

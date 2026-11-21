@@ -14,7 +14,9 @@ describe('Rotas', () => {
   it('carrega a página inicial na raiz', async () => {
     const harness = await RouterTestingHarness.create('/');
 
-    expect(harness.routeNativeElement?.textContent).toContain('Sistema de Gestão do Centro-Dia');
+    expect(harness.routeNativeElement?.textContent).toContain(
+      'Boas-vindas ao Sistema de Gestão do Centro-Dia',
+    );
   });
 
   it('mostra a página 404 para endereço inexistente', async () => {

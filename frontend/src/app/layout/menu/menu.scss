@@ -1,18 +1,171 @@
-// Cores do item (texto primary-dark, ícone turquesa, fundo ativo secundário) vêm do tema em
-// `styles/_tema.scss`. Aqui só o indicador lateral em accent e o peso do item ativo.
-.menu mat-nav-list {
-  padding: var(--sgi-space-2) var(--sgi-space-1-5);
-  display: flex;
-  flex-direction: column;
-  gap: var(--sgi-space-0-5);
+@use 'styles/breakpoints' as bp;
+
+// Mobile first. Base: barra inferior do celular. Tablet: trilho lateral. Desktop: menu lateral.
+// O item ativo é marcado por um disco amarelo atrás do ícone, tirado do selo da marca.
+
+:host {
+  display: block;
 }
 
-.menu-item {
-  border-left: var(--sgi-space-0-5) solid transparent;
+.itens {
+  display: grid;
+  grid-auto-columns: minmax(0, 1fr);
+  grid-auto-flow: column;
+  min-height: var(--sgi-nav-inferior-height);
+  margin: 0;
+  padding: 0 var(--sgi-space-0-5);
+  list-style: none;
+}
 
-  &.ativo {
-    --mat-list-list-item-label-text-weight: var(--sgi-font-weight-semibold);
+.posicao {
+  display: flex;
+  min-width: 0;
+}
 
-    border-left-color: var(--sgi-color-accent);
+.fora-da-barra {
+  display: none;
+}
+
+.item {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sgi-space-0-5);
+  min-width: 0;
+  min-height: var(--sgi-alvo-toque);
+  padding: var(--sgi-space-1) var(--sgi-space-0-5);
+  border: 0;
+  border-radius: var(--sgi-radius-md);
+  background: none;
+  color: var(--sgi-color-text-primary);
+  font: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.indicador {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: var(--sgi-indicador-ativo);
+  height: var(--sgi-indicador-ativo);
+  flex: none;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: var(--sgi-color-accent);
+    transform: scale(0);
+    transition: transform var(--sgi-duracao-curta) ease-out;
+  }
+
+  mat-icon {
+    position: relative;
+  }
+}
+
+// Na barra inferior cada item tem um quinto da largura: usa `rotuloCurto` do módulo e, se ainda
+// não couber, corta com reticências.
+.rotulo {
+  max-width: 100%;
+  overflow: hidden;
+  font-size: var(--sgi-font-size-legenda);
+  line-height: 1.15;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rotulo-completo {
+  display: none;
+}
+
+.item.ativo {
+  .indicador::before {
+    transform: scale(1);
+  }
+
+  .rotulo {
+    font-weight: var(--sgi-font-weight-semibold);
+  }
+}
+
+@media (hover: hover) {
+  .item:not(.ativo):hover .indicador::before {
+    background: var(--sgi-color-background-secondary);
+    transform: scale(1);
+  }
+}
+
+// Tablet: trilho lateral com todos os itens, ícone sobre o rótulo.
+@media (min-width: bp.$tablet) {
+  .itens {
+    grid-auto-flow: row;
+    align-content: start;
+    gap: var(--sgi-space-1);
+    min-height: 0;
+    padding: var(--sgi-space-2) var(--sgi-space-0-5);
+  }
+
+  .item {
+    padding-inline: 0;
+  }
+
+  .fora-da-barra {
+    display: flex;
+  }
+
+  .so-na-barra {
+    display: none;
+  }
+
+  // No trilho o rótulo completo quebra em linhas, com hifenização em pt-BR.
+  .rotulo {
+    overflow: visible;
+    white-space: normal;
+    hyphens: auto;
+  }
+
+  .rotulo-curto {
+    display: none;
+  }
+
+  .rotulo-completo {
+    display: block;
+  }
+}
+
+// Desktop: menu lateral com ícone e rótulo na mesma linha.
+@media (min-width: bp.$desktop) {
+  .itens {
+    gap: var(--sgi-space-0-5);
+    padding: var(--sgi-space-2) var(--sgi-space-1-5);
+  }
+
+  .item {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: var(--sgi-space-1);
+    padding: var(--sgi-space-0-5) var(--sgi-space-1);
+  }
+
+  .rotulo {
+    font-size: var(--sgi-font-size-body);
+    text-align: left;
+  }
+
+  @media (hover: hover) {
+    .item:not(.ativo):hover {
+      background: var(--sgi-color-background-secondary);
+
+      .indicador::before {
+        transform: scale(0);
+      }
+    }
   }
 }

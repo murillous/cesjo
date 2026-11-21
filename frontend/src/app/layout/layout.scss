@@ -1,17 +1,32 @@
 @use 'styles/breakpoints' as bp;
 
+// Mobile first. Base (celular): barra superior, conteúdo e barra de navegação inferior, todas na
+// rolagem da página; as barras ficam presas no topo e na base com `position: sticky`.
+// Tablet: a navegação vira trilho à esquerda. Desktop: menu lateral com rótulos.
+
 :host {
-  display: flex;
-  flex-direction: column;
-  height: 100dvh;
+  display: grid;
+  grid-template-areas:
+    'topo'
+    'conteudo'
+    'navegacao';
+  grid-template-rows: auto 1fr auto;
+  grid-template-columns: minmax(0, 1fr);
+  min-height: 100dvh;
 }
 
 .topbar {
-  flex: none;
-  height: var(--sgi-topbar-height);
+  grid-area: topo;
+  position: sticky;
+  top: 0;
+  z-index: var(--sgi-z-barras);
+  display: flex;
+  align-items: center;
   gap: var(--sgi-space-1);
-  padding: 0 var(--sgi-space-2);
+  height: calc(var(--sgi-topbar-height) + env(safe-area-inset-top));
+  padding: env(safe-area-inset-top) var(--sgi-space-1) 0 var(--sgi-space-2);
   border-bottom: var(--sgi-border);
+  background: var(--sgi-color-background-primary);
 }
 
 .marca {
@@ -32,26 +47,58 @@
   gap: var(--sgi-space-0-5);
 }
 
-.corpo {
-  flex: 1;
-}
-
-.sidebar {
-  border-right: var(--sgi-border);
+.navegacao {
+  grid-area: navegacao;
+  position: sticky;
+  bottom: 0;
+  z-index: var(--sgi-z-barras);
+  padding-bottom: env(safe-area-inset-bottom);
+  border-top: var(--sgi-border);
+  background: var(--sgi-color-background-primary);
 }
 
 .conteudo {
-  padding: var(--sgi-space-3) var(--sgi-space-2);
+  grid-area: conteudo;
+  width: 100%;
+  max-width: var(--sgi-conteudo-max-width);
+  padding: var(--sgi-space-3) var(--sgi-space-2) var(--sgi-space-4);
 }
 
-@media (min-width: bp.$desktop) {
+@media (min-width: bp.$tablet) {
+  :host {
+    grid-template-areas:
+      'topo topo'
+      'navegacao conteudo';
+    grid-template-rows: auto 1fr;
+    grid-template-columns: var(--sgi-rail-width) minmax(0, 1fr);
+  }
+
+  .topbar {
+    padding-left: var(--sgi-space-3);
+  }
+
+  .navegacao {
+    top: var(--sgi-topbar-height);
+    bottom: auto;
+    align-self: start;
+    height: calc(100dvh - var(--sgi-topbar-height));
+    overflow-y: auto;
+    padding-bottom: 0;
+    border-top: 0;
+    border-right: var(--sgi-border);
+  }
+
   .conteudo {
-    padding: var(--sgi-space-3) var(--sgi-space-4);
+    padding: var(--sgi-space-4) var(--sgi-space-4) var(--sgi-space-6);
   }
 }
 
-@media (max-width: calc(bp.$desktop - 1px)) {
-  .sidebar {
-    box-shadow: var(--sgi-shadow-overlay);
+@media (min-width: bp.$desktop) {
+  :host {
+    grid-template-columns: var(--sgi-sidebar-width) minmax(0, 1fr);
+  }
+
+  .conteudo {
+    padding: var(--sgi-space-4) var(--sgi-space-6) var(--sgi-space-8);
   }
 }
