@@ -1,0 +1,106 @@
+<section class="insercao">
+  <a matButton routerLink="/lista-espera" class="voltar">
+    <mat-icon aria-hidden="true">arrow_back</mat-icon>
+    Lista de espera
+  </a>
+
+  <h1>Inserir no serviço</h1>
+
+  @if (carregando()) {
+    <mat-progress-bar mode="indeterminate" aria-label="Carregando o candidato" />
+  }
+
+  @if (erro(); as mensagem) {
+    <p class="erro" role="alert">{{ mensagem }}</p>
+  }
+
+  @if (candidato(); as c) {
+    <div class="candidato">
+      <p class="nome">{{ c.nomeCompleto }}</p>
+      <p class="texto-secundario">
+        {{ rotuloTipo(c) }}. Na fila desde {{ c.dataCadastro | date: 'dd/MM/yyyy' }}.
+      </p>
+    </div>
+
+    @if (c.situacao !== 'AGUARDANDO') {
+      <p class="aviso" role="status">
+        Este candidato não está mais aguardando na fila e não pode ser inserido de novo.
+      </p>
+    } @else {
+      <form [formGroup]="formulario" (ngSubmit)="salvar()" novalidate>
+        <mat-form-field appearance="outline">
+          <mat-label>Data de inserção</mat-label>
+          <input
+            matInput
+            [matDatepicker]="seletorData"
+            [max]="hoje"
+            formControlName="dataInsercao"
+          />
+          <mat-hint>Primeiro dia no serviço. DD/MM/AAAA</mat-hint>
+          <mat-datepicker-toggle matIconSuffix [for]="seletorData" />
+          <mat-datepicker #seletorData />
+          @if (formulario.controls.dataInsercao.hasError('required')) {
+            <mat-error>Informe a data de inserção.</mat-error>
+          } @else if (formulario.controls.dataInsercao.hasError('matDatepickerMax')) {
+            <mat-error>A data de inserção não pode ser futura.</mat-error>
+          }
+        </mat-form-field>
+
+        <fieldset
+          [class.invalido]="formulario.controls.turno.touched && formulario.controls.turno.invalid"
+        >
+          <legend id="titulo-turno">Turno</legend>
+          <mat-radio-group formControlName="turno" aria-labelledby="titulo-turno" class="turnos">
+            @for (turno of turnos; track turno.valor) {
+              <mat-radio-button [value]="turno.valor">
+                <span class="opcao">{{ turno.rotulo }}</span>
+                <span class="dica">{{ turno.dica }}</span>
+              </mat-radio-button>
+            }
+          </mat-radio-group>
+          @if (formulario.controls.turno.touched && formulario.controls.turno.invalid) {
+            <p class="erro-campo" role="alert">Escolha o turno.</p>
+          }
+        </fieldset>
+
+        <fieldset>
+          <legend id="titulo-cuidador">Cuidador familiar responsável</legend>
+          <mat-radio-group
+            formControlName="cuidador"
+            aria-labelledby="titulo-cuidador"
+            class="cuidadores"
+          >
+            @for (responsavel of c.responsaveis; track responsavel.id) {
+              <mat-radio-button [value]="responsavel.id">
+                <span class="opcao">{{ responsavel.nomeCompleto }}</span>
+                @if (responsavel.principal) {
+                  <span class="dica">Responsável no cadastro da fila</span>
+                }
+              </mat-radio-button>
+            }
+            <mat-radio-button [value]="novoCuidador">
+              <span class="opcao">Outra pessoa</span>
+            </mat-radio-button>
+          </mat-radio-group>
+
+          @if (querNovoCuidador()) {
+            <mat-form-field appearance="outline" class="novo-cuidador">
+              <mat-label>Nome do cuidador</mat-label>
+              <input matInput formControlName="nomeNovoCuidador" autocomplete="off" />
+              <mat-hint>Fica cadastrado como responsável pela pessoa.</mat-hint>
+            </mat-form-field>
+            @if (formulario.touched && !formulario.controls.nomeNovoCuidador.value.trim()) {
+              <p class="erro-campo" role="alert">Informe o nome do cuidador.</p>
+            }
+          }
+        </fieldset>
+
+        <div class="botoes">
+          <button matButton="filled" type="submit" [disabled]="enviando()">
+            Inserir no serviço
+          </button>
+        </div>
+      </form>
+    }
+  }
+</section>

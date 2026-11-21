@@ -1,13 +1,27 @@
 <section class="inscricao">
-  <a matButton routerLink="/lista-espera" class="voltar">
-    <mat-icon aria-hidden="true">arrow_back</mat-icon>
-    Lista de espera
-  </a>
+  @if (editando()) {
+    <a matButton [routerLink]="['/lista-espera', id()]" class="voltar">
+      <mat-icon aria-hidden="true">arrow_back</mat-icon>
+      Ficha do candidato
+    </a>
+    <h1>Editar candidato</h1>
+    <p class="texto-secundario">
+      Mudar a data de cadastro muda a posição na fila. A mudança fica no log de auditoria.
+    </p>
+  } @else {
+    <a matButton routerLink="/lista-espera" class="voltar">
+      <mat-icon aria-hidden="true">arrow_back</mat-icon>
+      Lista de espera
+    </a>
+    <h1>Cadastrar candidato</h1>
+    <p class="texto-secundario">
+      O candidato entra na fila como aguardando, na ordem da data de cadastro.
+    </p>
+  }
 
-  <h1>Cadastrar candidato</h1>
-  <p class="texto-secundario">
-    O candidato entra na fila como aguardando, na ordem da data de cadastro.
-  </p>
+  @if (carregando()) {
+    <mat-progress-bar mode="indeterminate" aria-label="Carregando o candidato" />
+  }
 
   @if (erro(); as mensagem) {
     <p class="erro" role="alert">{{ mensagem }}</p>
@@ -120,8 +134,25 @@
       </mat-form-field>
     </fieldset>
 
+    @if (podeEnviarDocumentos && !editando()) {
+      <fieldset>
+        <legend>Documentos</legend>
+        <p class="texto-secundario orientacao-documentos">
+          Sem o laudo médico e o comprovante de residência, o candidato entra na fila com cadastro
+          incompleto. Dá para anexar depois.
+        </p>
+        <app-envio-arquivo rotulo="Laudo médico" formControlName="laudoMedicoArquivoId" />
+        <app-envio-arquivo
+          rotulo="Comprovante de residência"
+          formControlName="comprovanteResidenciaArquivoId"
+        />
+      </fieldset>
+    }
+
     <div class="botoes">
-      <button matButton="filled" type="submit" [disabled]="enviando()">Cadastrar candidato</button>
+      <button matButton="filled" type="submit" [disabled]="enviando() || carregando()">
+        {{ editando() ? 'Salvar dados' : 'Cadastrar candidato' }}
+      </button>
     </div>
   </form>
 </section>

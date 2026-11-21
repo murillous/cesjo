@@ -1,0 +1,119 @@
+<section class="atendidos" aria-labelledby="titulo-atendidos">
+  <header class="cabecalho">
+    <h1 id="titulo-atendidos">Usuários atendidos</h1>
+    <p class="texto-secundario">
+      Quem está ou esteve no serviço. Para inserir alguém, comece pelo candidato na fila da lista de
+      espera.
+    </p>
+  </header>
+
+  <form class="filtros" [formGroup]="filtros" (ngSubmit)="filtrar()" aria-label="Filtros">
+    <mat-form-field class="campo-nome">
+      <mat-label>Nome</mat-label>
+      <input matInput formControlName="nome" autocomplete="off" type="search" />
+      <mat-icon matIconSuffix aria-hidden="true">search</mat-icon>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Turno</mat-label>
+      <mat-select formControlName="turno">
+        <mat-option [value]="null">Todos</mat-option>
+        @for (turno of turnos; track turno.valor) {
+          <mat-option [value]="turno.valor">{{ turno.rotulo }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Situação</mat-label>
+      <mat-select formControlName="situacao">
+        <mat-option [value]="null">Ativos e desligados</mat-option>
+        <mat-option value="ATIVA">{{ situacoes.ATIVA }}</mat-option>
+        <mat-option value="DESLIGADA">{{ situacoes.DESLIGADA }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    @if (completo) {
+      <mat-form-field>
+        <mat-label>Tipo de deficiência</mat-label>
+        <mat-select formControlName="tipoDeficiencia">
+          <mat-option [value]="null">Todos</mat-option>
+          @for (tipo of tipos; track tipo.valor) {
+            <mat-option [value]="tipo.valor">{{ tipo.rotulo }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Faixa etária</mat-label>
+        <mat-select formControlName="faixaEtaria">
+          <mat-option [value]="null">Todas</mat-option>
+          @for (faixa of faixas; track faixa.valor) {
+            <mat-option [value]="faixa.valor">{{ faixa.rotulo }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    }
+
+    <div class="botoes">
+      <button matButton="filled" type="submit">
+        <mat-icon aria-hidden="true">filter_alt</mat-icon>
+        Filtrar
+      </button>
+      <button matButton type="button" (click)="limpar()">Limpar filtros</button>
+    </div>
+  </form>
+
+  <div class="resultado" [attr.aria-busy]="carregando()">
+    @if (carregando()) {
+      <mat-progress-bar mode="indeterminate" aria-label="Carregando usuários atendidos" />
+    }
+
+    @if (erro()) {
+      <div class="aviso" role="alert">
+        <p>Não foi possível carregar a lista. Verifique a conexão e tente de novo.</p>
+        <button matButton="outlined" type="button" (click)="carregar()">Tentar de novo</button>
+      </div>
+    } @else if (!carregando() && atendidos().length === 0) {
+      <div class="aviso">
+        <p>Ninguém com esses filtros. Mude ou limpe os filtros.</p>
+      </div>
+    } @else {
+      <p class="total texto-secundario" aria-live="polite">
+        {{ total() }} {{ total() === 1 ? 'pessoa' : 'pessoas' }}
+      </p>
+
+      <ul class="lista" aria-label="Usuários atendidos">
+        @for (atendido of atendidos(); track atendido.id) {
+          <li>
+            <a class="item" [routerLink]="atendido.id">
+              <span class="nome">{{ atendido.nomeCompleto }}</span>
+              <span class="turno">{{ rotuloTurno(atendido.turno) }}</span>
+              <span class="detalhes texto-secundario">
+                Desde {{ atendido.dataInsercao | date: 'dd/MM/yyyy' }}
+                @if (atendido.completo) {
+                  <span>, {{ rotuloTipo(atendido.tipoDeficiencia) }}</span>
+                  @if (atendido.idade !== null) {
+                    <span>, {{ atendido.idade }} anos</span>
+                  }
+                }
+              </span>
+              @if (atendido.situacao !== 'ATIVA') {
+                <span class="situacao">{{ situacoes[atendido.situacao] }}</span>
+              }
+            </a>
+          </li>
+        }
+      </ul>
+
+      <mat-paginator
+        [length]="total()"
+        [pageIndex]="pagina()"
+        [pageSize]="tamanho()"
+        [pageSizeOptions]="tamanhos"
+        (page)="mudarPagina($event)"
+        aria-label="Páginas da lista"
+      />
+    }
+  </div>
+</section>

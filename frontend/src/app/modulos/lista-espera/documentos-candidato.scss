@@ -1,0 +1,106 @@
+@use 'styles/breakpoints' as bp;
+
+.documentos {
+  max-width: 720px;
+}
+
+.voltar {
+  margin: 0 0 var(--sgi-space-2) calc(-1 * var(--sgi-space-1));
+}
+
+h1 {
+  margin-bottom: var(--sgi-space-1);
+}
+
+.nome {
+  margin: 0 0 var(--sgi-space-1);
+  font-size: var(--sgi-font-size-h3);
+  font-weight: var(--sgi-font-weight-semibold);
+}
+
+.erro {
+  padding: var(--sgi-space-1-5) var(--sgi-space-2);
+  border-left: var(--sgi-space-0-5) solid var(--sgi-color-accent);
+  background: var(--sgi-color-background-secondary);
+}
+
+.estado {
+  display: flex;
+  align-items: center;
+  gap: var(--sgi-space-1);
+  margin: 0 0 var(--sgi-space-3);
+
+  &.completo mat-icon {
+    color: var(--sgi-color-primary);
+  }
+
+  &.incompleto {
+    font-weight: var(--sgi-font-weight-medium);
+
+    mat-icon {
+      color: var(--sgi-color-accent);
+    }
+  }
+}
+
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sgi-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+// Cada documento é um bloco; o pendente ganha a borda de destaque à esquerda, igual ao aviso de erro,
+// para quem percorre a tela achar o que falta.
+.documento {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sgi-space-1-5);
+  padding: var(--sgi-space-2);
+  border: var(--sgi-border);
+  border-radius: var(--sgi-radius-md);
+  background: var(--sgi-color-background-primary);
+
+  &.pendente {
+    border-left: var(--sgi-space-0-5) solid var(--sgi-color-accent);
+  }
+
+  h2 {
+    margin: 0;
+    font-size: var(--sgi-font-size-h3);
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+.arquivo {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sgi-space-1);
+}
+
+.detalhes {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.nome-arquivo {
+  overflow-wrap: anywhere;
+  font-weight: var(--sgi-font-weight-medium);
+}
+
+// Celular: botão de baixar na largura toda, alvo de toque grande.
+.baixar {
+  min-height: var(--sgi-alvo-toque);
+}
+
+@media (min-width: bp.$tablet) {
+  .baixar {
+    align-self: flex-start;
+  }
+}

@@ -1,0 +1,134 @@
+# Compose de produção do CESJO SGI (issue #20, ADR 0050 a ADR 0053; backup: issue #21, ADR 0054 e 0065).
+# Uso, a partir desta pasta: cp .env.example .env e cp backup.env.example backup.env, preencha e rode
+#   docker compose up -d --build
+# Guia completo: docs/implantacao.md
+#
+# PENDENTE-CESJO(P15): VPS, provedor, domínio e administrador desconhecidos; tudo que depende deles
+# fica no .env (ADR 0050).
+
+name: cesjo
+
+services:
+  # Banco. Só na rede interna, sem porta publicada no host.
+  db:
+    image: postgres:18-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-cesjo}
+      POSTGRES_USER: ${POSTGRES_USER:-cesjo}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?defina POSTGRES_PASSWORD no .env}
+    volumes:
+      - pgdata:/var/lib/postgresql
+    networks:
+      - interna
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U "$${POSTGRES_USER}" -d "$${POSTGRES_DB}"']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  # Aplicação Spring Boot (backend/Dockerfile), perfil prod.
+  app:
+    build:
+      context: ../backend
+    image: ${SGI_IMAGEM_APP:-cesjo-sgi-backend:local}
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    # O .env inteiro entra na aplicação: as chaves de criptografia têm nomes variáveis
+    # (SGI_CRIPTOGRAFIA_CHAVES_<ID>) e não dá para listá-las uma a uma aqui (ADR 0052).
+    env_file:
+      - .env
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${POSTGRES_DB:-cesjo}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-cesjo}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:?defina POSTGRES_PASSWORD no .env}
+      SGI_ARQUIVOS_DIRETORIO: /var/lib/sgi/arquivos
+      SGI_CRIPTOGRAFIA_CHAVEATIVA: ${SGI_CRIPTOGRAFIA_CHAVEATIVA:?defina SGI_CRIPTOGRAFIA_CHAVEATIVA no .env}
+    volumes:
+      - arquivos:/var/lib/sgi/arquivos
+    networks:
+      - interna
+      - borda
+    # O healthcheck (Actuator) está no backend/Dockerfile; repetido aqui para ficar visível.
+    healthcheck:
+      test: ['CMD', 'curl', '-fsS', 'http://localhost:8080/actuator/health']
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 90s
+
+  # Caddy: TLS automático, estáticos do Angular (frontend/Dockerfile) e proxy de /api para a app.
+  caddy:
+    build:
+      context: ../frontend
+    image: ${SGI_IMAGEM_CADDY:-cesjo-sgi-caddy:local}
+    restart: unless-stopped
+    depends_on:
+      app:
+        condition: service_healthy
+    environment:
+      SGI_DOMINIO: ${SGI_DOMINIO:?defina SGI_DOMINIO no .env}
+      SGI_ACME_EMAIL: ${SGI_ACME_EMAIL:?defina SGI_ACME_EMAIL no .env}
+    ports:
+      - '80:80'
+      - '443:443'
+      - '443:443/udp'
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    networks:
+      - borda
+
+  # Backup diário cifrado com restic, enviado para fora da VPS (issue #21, ADR 0054 e ADR 0065), e
+  # alerta de disco cheio a cada 15 minutos (issue #23, ADR 0069).
+  # Lê o banco pela rede interna e o volume de arquivos em somente leitura. Os segredos do destino
+  # ficam no backup.env, separado do .env para a aplicação não recebê-los.
+  backup:
+    build:
+      context: ./backup
+    image: ${SGI_IMAGEM_BACKUP:-cesjo-sgi-backup:local}
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - backup.env
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-cesjo}
+      POSTGRES_USER: ${POSTGRES_USER:-cesjo}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?defina POSTGRES_PASSWORD no .env}
+      PGHOST: db
+    volumes:
+      - arquivos:/dados/arquivos:ro
+      - backup-cache:/root/.cache/restic
+    networks:
+      - interna
+      - saida
+
+volumes:
+  # Nomes fixos, para o backup e a restauração acharem os volumes sem depender do nome do projeto.
+  pgdata:
+    name: cesjo-pgdata
+  arquivos:
+    name: cesjo-arquivos
+  caddy-data:
+    name: cesjo-caddy-data
+  caddy-config:
+    name: cesjo-caddy-config
+  # Cache local do restic (só acelera; pode ser apagado).
+  backup-cache:
+    name: cesjo-backup-cache
+
+networks:
+  # Banco e aplicação. Sem saída para a internet.
+  interna:
+    internal: true
+  # Caddy e aplicação.
+  borda:
+  # Saída do backup para o repositório restic fora da VPS.
+  saida:
