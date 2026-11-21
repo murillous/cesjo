@@ -60,6 +60,12 @@ class FilaListaEspera {
 		return new PageImpl<>(itens, pagina, encontradas.size());
 	}
 
+	/** Posição da inscrição na fila, ou nula quando ela não está aguardando. */
+	@Transactional(readOnly = true)
+	Integer posicao(UUID inscricaoId) {
+		return posicoes().get(inscricaoId);
+	}
+
 	/** Posição de cada inscrição aguardando, a partir de 1. */
 	private Map<UUID, Integer> posicoes() {
 		List<InscricaoListaEspera> fila = inscricoes.findBySituacao(SituacaoInscricao.AGUARDANDO, OrdemDaFila.ORDEM);

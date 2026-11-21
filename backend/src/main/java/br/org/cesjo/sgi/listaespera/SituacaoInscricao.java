@@ -1,15 +1,19 @@
 package br.org.cesjo.sgi.listaespera;
 
 /**
- * Situação de uma inscrição na lista de espera (RF002). Só as inscrições {@link #AGUARDANDO} ocupam
- * posição na fila.
+ * Situação de uma inscrição na lista de espera (RF002, ADR 0091). Só as inscrições {@link #AGUARDANDO}
+ * ocupam posição na fila.
  */
 public enum SituacaoInscricao {
 
-	// PENDENTE-CESJO(P4): as situações de saída (desistência, não localizado, fora do perfil, inserido)
-	// entram com a issue #29, quando a lista de motivos for decidida.
+	AGUARDANDO("Aguardando"),
 
-	AGUARDANDO("Aguardando");
+	/** Entrou no serviço (RF007). Só o cadastro da inserção muda para esta situação. */
+	INSERIDO("Inserido no serviço"),
+
+	// PENDENTE-CESJO(P4): a saída da lista é uma situação só, com o motivo em MotivoSaida (ADR 0091).
+	/** Saiu da lista sem ser inserida, com um {@link MotivoSaida}. */
+	SAIU("Saiu da lista");
 
 	private final String rotulo;
 

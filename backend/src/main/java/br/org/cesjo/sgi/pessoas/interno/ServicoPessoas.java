@@ -82,6 +82,30 @@ class ServicoPessoas implements Pessoas {
 	}
 
 	@Override
+	@Transactional
+	public DadosPessoa atualizar(UUID id, NovaPessoa dados) {
+		Pessoa pessoa = pessoas.findById(id).orElseThrow(() -> new RecursoNaoEncontradoException("Pessoa não encontrada."));
+		UUID autor = identidadeAtual.obter().map(Identidade::id).orElse(null);
+		Instant agora = relogio.instant();
+		Set<String> campos = pessoa.atualizar(dados, autor, agora);
+		if (!campos.isEmpty()) {
+			auditoria.registrar(EventoAuditoria.alteracao(ENTIDADE, id, campos));
+		}
+		Optional<Responsavel> responsavel = responsaveis.findFirstByPessoaIdOrderByCriadoEmAsc(id);
+		if (responsavel.isPresent()) {
+			if (responsavel.get().renomear(dados.nomeResponsavel(), autor, agora)) {
+				auditoria.registrar(EventoAuditoria.alteracao(ENTIDADE_RESPONSAVEL, responsavel.get().getId(),
+						Set.of("nome_completo")));
+			}
+		}
+		else {
+			Responsavel novo = responsaveis.save(new Responsavel(id, dados.nomeResponsavel(), autor, agora));
+			auditoria.registrar(EventoAuditoria.criacao(ENTIDADE_RESPONSAVEL, novo.getId()));
+		}
+		return dados(pessoa);
+	}
+
+	@Override
 	@Transactional(readOnly = true)
 	public Optional<DadosPessoa> obter(UUID id) {
 		return pessoas.findById(id).map(this::dados);

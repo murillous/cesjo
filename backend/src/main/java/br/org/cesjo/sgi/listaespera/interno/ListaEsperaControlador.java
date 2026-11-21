@@ -84,6 +84,20 @@ class ListaEsperaControlador {
 		return servico.obter(id);
 	}
 
+	/** Edita os dados do candidato (ADR 0090). */
+	@PutMapping("/{id}")
+	@PreAuthorize("hasAuthority('LISTA_ESPERA_EDITAR')")
+	InscricaoResposta editar(@PathVariable UUID id, @Valid @RequestBody EdicaoInscricao edicao) {
+		return servico.editar(id, edicao);
+	}
+
+	/** Muda a situação, com data e motivo, e registra no histórico (ADR 0091). */
+	@PostMapping("/{id}/situacao")
+	@PreAuthorize("hasAuthority('LISTA_ESPERA_EDITAR')")
+	InscricaoResposta mudarSituacao(@PathVariable UUID id, @Valid @RequestBody MudancaSituacao mudanca) {
+		return servico.mudarSituacao(id, mudanca);
+	}
+
 	/** Anexa ou substitui o documento do tipo informado (ADR 0056). */
 	@PutMapping("/{id}/documentos/{tipo}")
 	@PreAuthorize("hasAuthority('LISTA_ESPERA_LER') and hasAuthority('DOCUMENTOS_ENVIAR')")

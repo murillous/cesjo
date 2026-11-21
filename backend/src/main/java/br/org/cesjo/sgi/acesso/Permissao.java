@@ -35,6 +35,9 @@ public enum Permissao {
 	 * Ver a fila da lista de espera só com os dados básicos: nome, situação, datas e posição, sem contato
 	 * nem documentos (RF002, ADR 0058).
 	 */
-	LISTA_ESPERA_FILA_LER
+	LISTA_ESPERA_FILA_LER,
+
+	/** Editar os dados do candidato e mudar a situação da inscrição (RF002, ADR 0090). */
+	LISTA_ESPERA_EDITAR
 
 }
