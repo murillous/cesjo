@@ -64,16 +64,22 @@ class ServicoVisitas {
 	 */
 	@Transactional
 	VisitaResposta agendar(NovaVisita nova) {
-		if (nova.dataHora().toLocalDate().isBefore(LocalDate.now(relogio))) {
-			throw new RegraNegocioException("A visita não pode ser agendada para um dia que já passou.");
-		}
-		Set<UUID> profissionais = new LinkedHashSet<>(nova.profissionais());
-		colaboradores.exigirAtivos(profissionais);
+		Set<UUID> profissionais = exigirAgendavel(nova.dataHora(), nova.profissionais());
 		listaEspera.colocarEmAvaliacao(nova.pessoaId());
 		VisitaDomiciliar visita = visitas
 			.save(new VisitaDomiciliar(nova.pessoaId(), nova.dataHora(), profissionais, autor(), relogio.instant()));
 		auditoria.registrar(EventoAuditoria.criacao(ENTIDADE, visita.getId()));
 		return respostas(List.of(visita)).getFirst();
+	}
+
+	/** Dia que não passou e profissionais ativos (ADR 0070). Devolve os profissionais sem repetição. */
+	Set<UUID> exigirAgendavel(java.time.LocalDateTime dataHora, Collection<UUID> profissionais) {
+		if (dataHora.toLocalDate().isBefore(LocalDate.now(relogio))) {
+			throw new RegraNegocioException("A visita não pode ser agendada para um dia que já passou.");
+		}
+		Set<UUID> distintos = new LinkedHashSet<>(profissionais);
+		colaboradores.exigirAtivos(distintos);
+		return distintos;
 	}
 
 	/** Agenda de {@code de} a {@code ate}, inclusive, em ordem de horário. */
@@ -113,7 +119,13 @@ class ServicoVisitas {
 		Map<UUID, String> nomes = pessoas.nomes(lista.stream().map(VisitaDomiciliar::getPessoaId).distinct().toList());
 		Map<UUID, ResumoColaborador> equipe = colaboradores
 			.obterVarios(lista.stream().flatMap(v -> v.getProfissionais().stream()).distinct().toList());
-		return lista.stream().map(v -> VisitaResposta.de(v, nomes.get(v.getPessoaId()), equipe)).toList();
+		Map<UUID, UUID> reagendamentos = visitas
+			.findByVisitaOrigemIdIn(lista.stream().map(VisitaDomiciliar::getId).toList())
+			.stream()
+			.collect(java.util.stream.Collectors.toMap(VisitaDomiciliar::getVisitaOrigemId, VisitaDomiciliar::getId));
+		return lista.stream()
+			.map(v -> VisitaResposta.de(v, nomes.get(v.getPessoaId()), equipe, reagendamentos.get(v.getId())))
+			.toList();
 	}
 
 	UUID autor() {
