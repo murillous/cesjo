@@ -64,7 +64,11 @@ Situação: provisória.
 > Qual a estrutura do PIA (objetivos, metas, ações, prazos, responsáveis)? Existe modelo em papel? O
 > PIA é revisado periodicamente, gerando nova versão?
 
-Situação: aberta.
+Situação: provisória.
+
+| Decisão provisória | Onde mudar | ADR |
+|---|---|---|
+| O PIA tem diagnóstico, objetivos (descrição, metas, ações, prazo e responsável) e observações, guardados como JSON cifrado. | `atendimento.interno.ConteudoPia` e `ficha-pia.ts` (frontend) | [0103](adr/0103-modelo-provisorio-e-versoes-do-pia.md) |
 
 ## P6. Dados pessoais completos (RF007)
 

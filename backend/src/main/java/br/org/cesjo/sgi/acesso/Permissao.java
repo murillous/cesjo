@@ -68,6 +68,12 @@ public enum Permissao {
 	ESCUTA_LER,
 
 	/** Registrar e corrigir escutas (RF005, ADR 0101). */
-	ESCUTA_REGISTRAR
+	ESCUTA_REGISTRAR,
+
+	/** Ler o PIA e as versões anteriores, com o conteúdo sensível (RF006, ADR 0104). */
+	PIA_LER,
+
+	/** Elaborar o PIA e editar a versão em elaboração (RF006, ADR 0104). */
+	PIA_EDITAR
 
 }

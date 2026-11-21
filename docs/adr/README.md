@@ -103,6 +103,9 @@ frente de trabalho paralela não é usado todo.
 - [0100](0100-escuta-ativa-e-qualificada.md) — Escuta ativa e qualificada com textos cifrados e leitura auditada
 - [0101](0101-permissoes-da-escuta.md) — Permissões da escuta ativa e qualificada
 - [0102](0102-telas-de-escuta.md) — Telas de escuta organizadas pela pessoa atendida
+- [0103](0103-modelo-provisorio-e-versoes-do-pia.md) — Modelo provisório do PIA, conteúdo em JSON cifrado e versões (provisório)
+- [0104](0104-permissoes-do-pia.md) — Permissões de leitura e edição do PIA
+- [0105](0105-tela-do-pia.md) — Tela de elaboração e leitura do PIA
 - [0120](0120-procedimento-de-restauracao.md) — Restauração por script na imagem de backup, numa pilha com só o banco no ar
 - [0121](0121-guarda-dos-segredos-fora-da-vps.md) — Cópia dos segredos da implantação fora da VPS (provisório)
 - [0122](0122-teste-de-restauracao-no-ci-e-exercicio.md) — Restauração testada no CI a cada PR e exercício trimestral

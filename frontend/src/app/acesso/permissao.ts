@@ -22,7 +22,9 @@ export type Permissao =
   | 'VISITAS_AGENDAR'
   | 'VISITAS_REGISTRAR'
   | 'ESCUTA_LER'
-  | 'ESCUTA_REGISTRAR';
+  | 'ESCUTA_REGISTRAR'
+  | 'PIA_LER'
+  | 'PIA_EDITAR';
 
 /** Perfis da seção 4 do documento de requisitos, com os nomes do enum `Perfil` do backend. */
 export type Perfil = 'COORDENADOR' | 'EQUIPE_TECNICA' | 'ADMINISTRATIVO' | 'CONSULTA';

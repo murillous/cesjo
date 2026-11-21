@@ -21,6 +21,18 @@ export const ATENDIMENTO_ROUTES: Routes = [
     loadComponent: () => import('./ficha-escuta').then((m) => m.FichaEscuta),
   },
   {
+    path: 'pessoas/:pessoaId/pia/novo',
+    title: 'Elaborar PIA | CESJO SGI',
+    canMatch: [exigePermissao('PIA_EDITAR')],
+    loadComponent: () => import('./ficha-pia').then((m) => m.FichaPia),
+  },
+  {
+    path: 'pias/:id',
+    title: 'PIA | CESJO SGI',
+    canMatch: [exigePermissao('PIA_LER')],
+    loadComponent: () => import('./ficha-pia').then((m) => m.FichaPia),
+  },
+  {
     path: 'escutas/:id',
     title: 'Escuta | CESJO SGI',
     loadComponent: () => import('./ficha-escuta').then((m) => m.FichaEscuta),
