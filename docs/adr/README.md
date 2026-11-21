@@ -35,3 +35,8 @@ frente de trabalho paralela não é usado todo.
 - [0007](0007-contratos-da-fundacao.md) — Contratos públicos da Fundação entre módulos
 - [0008](0008-postgres-nativo-nos-testes-sem-docker.md) — Postgres nativo nos testes quando não há Docker
 - [0009](0009-identidade-neutra-e-erros-de-seguranca.md) — Identidade da conta fora do módulo acesso e erros de segurança fora do tratador genérico
+- [0030](0030-modelo-das-notificacoes.md) — Notificação por perfil ou por conta, com leitura registrada por conta
+- [0031](0031-api-java-de-notificacoes.md) — API Java síncrona para outros módulos criarem notificações
+- [0032](0032-api-http-da-caixa-de-notificacoes.md) — API HTTP da caixa de notificações da conta logada
+- [0033](0033-auditoria-das-notificacoes.md) — O que é auditado nas notificações
+- [0034](0034-contador-por-consulta-periodica.md) — Contador de notificações por consulta periódica de 60 segundos

@@ -7,9 +7,10 @@ import java.util.regex.Pattern;
  * Conteúdo de uma notificação a criar pela API {@link Notificacoes} (ADR 0031).
  *
  * <p>
- * A mensagem é vista por todas as contas do destino e não é cifrada, então nunca leva dado sensível
- * (saúde, crença, violação de direitos, observações). Prefira mensagens como "Vaga aberta na lista de
- * espera" e deixe o detalhe para a tela de destino, que checa a permissão.
+ * A mensagem é vista por todas as contas do destino, não é cifrada e não expira, então nunca leva dado
+ * pessoal: nem nome de pessoa, nem saúde, crença, violação de direitos ou observações (ADR 0031).
+ * Prefira mensagens como "Uma vaga foi aberta no serviço." e deixe o detalhe para a tela da
+ * referência, que checa a permissão de quem abre.
  *
  * @param tipo código do tipo, em maiúsculas com sublinhado, por exemplo {@code VAGA_ABERTA}; cada
  *        módulo define as suas constantes
