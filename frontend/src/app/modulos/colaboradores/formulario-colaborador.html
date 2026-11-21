@@ -1,0 +1,72 @@
+<section class="colaborador">
+  <a matButton routerLink="/colaboradores" class="voltar">
+    <mat-icon aria-hidden="true">arrow_back</mat-icon>
+    Colaboradores
+  </a>
+
+  <h1>{{ edicao() ? (colaborador()?.nome ?? 'Colaborador') : 'Novo colaborador' }}</h1>
+  @if (colaborador(); as atual) {
+    <p class="situacao" [class.inativo]="!atual.ativo">{{ atual.ativo ? 'Ativo' : 'Inativo' }}</p>
+  } @else if (!edicao()) {
+    <p class="texto-secundario">
+      Colaboradores ativos aparecem como profissionais nas visitas, escutas e atividades.
+    </p>
+  }
+
+  @if (erro(); as mensagem) {
+    <p class="erro" role="alert">{{ mensagem }}</p>
+  }
+
+  <form [formGroup]="formulario" (ngSubmit)="salvar()" novalidate>
+    <mat-form-field appearance="outline">
+      <mat-label>Nome</mat-label>
+      <input matInput formControlName="nome" autocomplete="off" />
+      @if (formulario.controls.nome.hasError('required')) {
+        <mat-error>Informe o nome.</mat-error>
+      } @else if (formulario.controls.nome.hasError('maxlength')) {
+        <mat-error>Use até 150 caracteres.</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Função</mat-label>
+      <mat-select formControlName="funcao">
+        @for (funcao of funcoes; track funcao.valor) {
+          <mat-option [value]="funcao.valor">{{ funcao.rotulo }}</mat-option>
+        }
+      </mat-select>
+      @if (formulario.controls.funcao.hasError('required')) {
+        <mat-error>Escolha a função.</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Conta de acesso</mat-label>
+      <mat-select formControlName="contaId">
+        <mat-option value="">Sem conta de acesso</mat-option>
+        @for (conta of contas(); track conta.id) {
+          <mat-option [value]="conta.id">
+            {{ conta.nome }} ({{ conta.login }}){{ conta.ativa ? '' : ', desativada' }}
+          </mat-option>
+        }
+      </mat-select>
+      <mat-hint>Opcional. Liga o colaborador ao login que ele usa no sistema.</mat-hint>
+    </mat-form-field>
+
+    @if (edicao()) {
+      <mat-slide-toggle formControlName="ativo" class="ativo"> Ativo na equipe </mat-slide-toggle>
+      <p class="texto-secundario dica-ativo">
+        Colaborador inativo deixa de aparecer para novas visitas, escutas e atividades. Os registros
+        antigos continuam com o nome dele.
+      </p>
+    }
+
+    @if (podeGerenciar) {
+      <div class="botoes">
+        <button matButton="filled" type="submit" [disabled]="enviando()">
+          {{ edicao() ? 'Salvar colaborador' : 'Cadastrar colaborador' }}
+        </button>
+      </div>
+    }
+  </form>
+</section>

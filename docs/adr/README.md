@@ -65,3 +65,4 @@ frente de trabalho paralela não é usado todo.
 - [0045](0045-cadastro-e-api-java-dos-colaboradores.md) — Cadastro de colaboradores e API Java para os outros módulos (provisório)
 - [0046](0046-ligacao-entre-colaborador-e-conta-de-acesso.md) — Ligação entre colaborador e conta de acesso guardada no colaborador
 - [0047](0047-permissoes-dos-colaboradores.md) — Permissões do cadastro de colaboradores (provisório)
+- [0048](0048-telas-de-colaboradores.md) — Telas de listagem e cadastro de colaboradores
