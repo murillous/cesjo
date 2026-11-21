@@ -270,6 +270,9 @@ Nenhuma destas respostas foi inventada. Issues que dependem delas recebem o rót
     desligamento?
 15. **Hospedagem**: quem paga e administra a VPS? Já existe domínio para o sistema?
 16. **Identidade visual**: existe fonte institucional oficial?
+17. **Pontos em aberto da matriz de permissões (seção 6)**: o Administrativo vê as atividades
+    (RF010), registra a gestão institucional (RF012 a RF015) e importa planilhas? A Equipe Técnica lê a
+    gestão institucional e os relatórios? O Administrativo vê relatórios?
 
 ## 10. Backlog
 

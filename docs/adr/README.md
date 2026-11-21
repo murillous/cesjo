@@ -35,3 +35,9 @@ frente de trabalho paralela não é usado todo.
 - [0007](0007-contratos-da-fundacao.md) — Contratos públicos da Fundação entre módulos
 - [0008](0008-postgres-nativo-nos-testes-sem-docker.md) — Postgres nativo nos testes quando não há Docker
 - [0009](0009-identidade-neutra-e-erros-de-seguranca.md) — Identidade da conta fora do módulo acesso e erros de segurança fora do tratador genérico
+- [0010](0010-api-de-sessao-e-seguranca-web.md) — API de sessão e segurança web do backend
+- [0011](0011-expiracao-de-sessao-e-bloqueio-de-login.md) — Expiração da sessão por inatividade e bloqueio temporário de login
+- [0012](0012-regra-de-senha.md) — Regra de senha e senhas temporárias
+- [0013](0013-gestao-de-contas-de-acesso.md) — Gestão de contas de acesso pelo Coordenador
+- [0014](0014-primeira-conta-de-coordenador.md) — Primeira conta de Coordenador por variáveis de ambiente
+- [0015](0015-matriz-de-perfis-da-fundacao.md) — Matriz de perfis e permissões da Fundação (provisória)
