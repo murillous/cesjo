@@ -57,3 +57,5 @@ frente de trabalho paralela não é usado todo.
 - [0032](0032-api-http-da-caixa-de-notificacoes.md) — API HTTP da caixa de notificações da conta logada
 - [0033](0033-auditoria-das-notificacoes.md) — O que é auditado nas notificações
 - [0034](0034-contador-por-consulta-periodica.md) — Contador de notificações por consulta periódica de 60 segundos
+- [0035](0035-frontend-mobile-first-e-navegacao-inferior.md) — Frontend mobile first com navegação inferior no celular
+- [0036](0036-fonte-atkinson-hyperlegible.md) — Fonte Atkinson Hyperlegible Next enquanto não há fonte institucional (provisória)

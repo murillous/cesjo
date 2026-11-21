@@ -1,20 +1,37 @@
 <nav class="menu" aria-label="Menu principal">
-  <mat-nav-list>
-    @for (entrada of entradas(); track entrada.link) {
-      <a
-        mat-list-item
-        class="menu-item"
-        [routerLink]="entrada.link"
-        routerLinkActive="ativo"
-        #ativo="routerLinkActive"
-        [activated]="ativo.isActive"
-        ariaCurrentWhenActive="page"
-        [routerLinkActiveOptions]="{ exact: entrada.link === '/' }"
-        (click)="navegou.emit()"
-      >
-        <mat-icon matListItemIcon aria-hidden="true">{{ entrada.icone }}</mat-icon>
-        <span matListItemTitle>{{ entrada.rotulo }}</span>
-      </a>
+  <ul class="itens">
+    @for (entrada of entradas(); track entrada.link; let indice = $index) {
+      <li class="posicao" [class.fora-da-barra]="indice >= limiteBarra()">
+        <a
+          class="item"
+          [routerLink]="entrada.link"
+          routerLinkActive="ativo"
+          ariaCurrentWhenActive="page"
+          [routerLinkActiveOptions]="{ exact: exato(entrada) }"
+          [attr.aria-label]="entrada.rotulo"
+          (click)="navegou.emit()"
+        >
+          <span class="indicador"
+            ><mat-icon aria-hidden="true">{{ entrada.icone }}</mat-icon></span
+          >
+          <span class="rotulo rotulo-curto" aria-hidden="true">{{ entrada.rotuloCurto }}</span>
+          <span class="rotulo rotulo-completo" aria-hidden="true">{{ entrada.rotulo }}</span>
+        </a>
+      </li>
     }
-  </mat-nav-list>
+    @if (demais().length > 0) {
+      <li class="posicao so-na-barra">
+        <button
+          class="item"
+          type="button"
+          aria-haspopup="dialog"
+          [class.ativo]="maisAtivo()"
+          (click)="abrirMais()"
+        >
+          <span class="indicador"><mat-icon aria-hidden="true">more_horiz</mat-icon></span>
+          <span class="rotulo">Mais</span>
+        </button>
+      </li>
+    }
+  </ul>
 </nav>

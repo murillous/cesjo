@@ -155,20 +155,19 @@ A aplicação deverá possuir uma família tipográfica definida globalmente.
 
 A captura de tela não é suficiente para determinar com precisão a fonte original da marca. Portanto, a fonte oficial deverá ser confirmada com o material de identidade visual.
 
-Caso não exista uma fonte institucional definida, podem ser utilizadas famílias modernas e amplamente suportadas em interfaces web, como:
+Enquanto não existir uma fonte institucional definida, a aplicação usa **Atkinson Hyperlegible Next** em todos os textos. Ela foi desenhada pelo Braille Institute para leitura com baixa visão: distingue bem letras e números parecidos (como `0` e `O`, `1`, `l` e `I`). A escolha combina com um centro de referência da pessoa com deficiência. Ver ADR 0036 (provisório, pergunta 16 do planejamento).
 
-**Inter**, **Roboto**, **Open Sans** ou **Montserrat**.
+Deverão existir níveis tipográficos padronizados. Os tamanhos partem do celular; só o Heading 1 cresce a partir do desktop.
 
-Deverão existir níveis tipográficos padronizados.
-
-| Elemento  | Peso recomendado | Utilização             |
-| --------- | ---------------: | ---------------------- |
-| Heading 1 |          600–700 | Título principal       |
-| Heading 2 |              600 | Títulos de seções      |
-| Heading 3 |          500–600 | Subtítulos             |
-| Body      |              400 | Texto padrão           |
-| Small     |              400 | Informações auxiliares |
-| Button    |          500–600 | Botões                 |
+| Elemento  | Tamanho (celular) | A partir de 992px | Peso recomendado | Utilização                    |
+| --------- | ----------------: | ----------------: | ---------------: | ----------------------------- |
+| Heading 1 |              30px |              36px |          600–700 | Título principal              |
+| Heading 2 |              24px |              24px |              600 | Títulos de seções             |
+| Heading 3 |              20px |              20px |          500–600 | Subtítulos                    |
+| Body      |              17px |              17px |              400 | Texto padrão                  |
+| Small     |              15px |              15px |              400 | Informações auxiliares        |
+| Legenda   |              13px |              13px |          400–600 | Rótulos da barra de navegação |
+| Button    |                 — |                 — |          500–600 | Botões                        |
 
 Evitar definir tamanhos de fonte individualmente em cada página.
 
@@ -343,9 +342,15 @@ item ativo claramente identificado;
 
 utilização controlada da cor de destaque.
 
-Na referência apresentada, o item ativo utiliza uma linha inferior colorida.
+A navegação principal muda de formato conforme a largura da tela:
 
-Esse comportamento poderá ser adotado na aplicação quando existir navegação horizontal.
+* **celular (até 767px):** barra de navegação inferior, no alcance do polegar, com até cinco destinos. Se houver mais de cinco módulos, os quatro primeiros ficam na barra e o restante vai para o item "Mais", que abre uma folha inferior (bottom sheet) com a lista;
+* **tablet (768px a 991px):** trilho lateral com todos os módulos, ícone sobre o rótulo;
+* **desktop (992px ou mais):** menu lateral com ícone e rótulo na mesma linha.
+
+Na barra inferior cada item tem um quinto da largura da tela. Módulos com nome longo devem definir um rótulo curto (por exemplo, "Fila" para "Lista de espera"). O nome completo continua sendo o nome acessível do link.
+
+O item ativo é marcado por um **disco** na cor `accent` atrás do ícone, retirado do selo circular da marca, e pelo rótulo em peso 600. O mesmo disco é usado na página inicial para destacar o dia de hoje. Esse é o único uso do disco: ele não deve virar decoração em outros componentes.
 
 ---
 
@@ -393,7 +398,16 @@ Não utilizar diferentes valores de border-radius arbitrariamente em cada tela.
 
 ## 14. Responsividade
 
-A aplicação deverá ser desenvolvida utilizando abordagem responsiva.
+A aplicação deverá ser desenvolvida com abordagem **mobile first** (ADR 0035). A equipe técnica usa o sistema no celular durante visitas domiciliares, escutas e contatos; o computador fica para relatórios e tarefas administrativas.
+
+Na prática:
+
+* os estilos base valem para o celular;
+* telas maiores são tratadas com media queries `min-width`, usando os breakpoints globais (`768px`, `992px`, `1440px`);
+* não usar media queries `max-width`;
+* alvos de toque com no mínimo `48px`;
+* respeitar as áreas seguras do aparelho (`env(safe-area-inset-*)`) nas barras fixas;
+* uma ação principal por tela.
 
 Os componentes devem se adaptar pelo menos aos seguintes contextos:
 

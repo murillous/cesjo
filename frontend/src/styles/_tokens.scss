@@ -1,9 +1,11 @@
 // Design tokens do guia de estilo (docs/frontend/guiaDeEstilo.md).
 // Único lugar com valores HEX. Componentes consomem as variáveis CSS `--sgi-*`;
 // o tema do Angular Material (`_tema.scss`) consome as variáveis Sass e as paletas abaixo.
-// Breakpoints ficam em `_breakpoints.scss`.
+// Breakpoints ficam em `_breakpoints.scss`. Mobile first: valores base valem para o celular e
+// media queries só com `min-width`.
 
 @use 'sass:map';
+@use 'breakpoints' as bp;
 
 // Cores do guia
 $background-primary: #ffffff;
@@ -17,7 +19,15 @@ $text-secondary: #6b6b6b;
 $border: #dbddd7;
 $white: #ffffff;
 
-$font-family: ('Inter Variable', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif);
+// Atkinson Hyperlegible Next: desenhada pelo Braille Institute para leitura com baixa visão.
+// PENDENTE-CESJO(P16): assume que não há fonte institucional oficial (ADR 0036).
+$font-family: (
+  'Atkinson Hyperlegible Next Variable',
+  system-ui,
+  -apple-system,
+  'Segoe UI',
+  sans-serif
+);
 
 // Paletas tonais do Material 3, geradas com `ng generate @angular/material:theme-color`
 // a partir de primary #10AAA6, secondary #34545C, tertiary #D2D180 e neutral #6B6B6B.
@@ -169,13 +179,15 @@ $paleta-terciaria: map.merge(map.get($_paletas, tertiary), $_demais-paletas);
   --sgi-color-border: #{$border};
   --sgi-color-white: #{$white};
 
-  // Tipografia
+  // Tipografia. Escala mobile first (15/17/20/24/30px); o h1 cresce a partir de 992px,
+  // no bloco de media query no fim deste arquivo.
   --sgi-font-family: #{$font-family};
-  --sgi-font-size-small: 0.875rem;
-  --sgi-font-size-body: 1rem;
-  --sgi-font-size-h3: 1.125rem;
-  --sgi-font-size-h2: 1.375rem;
-  --sgi-font-size-h1: 1.75rem;
+  --sgi-font-size-legenda: 0.8125rem;
+  --sgi-font-size-small: 0.9375rem;
+  --sgi-font-size-body: 1.0625rem;
+  --sgi-font-size-h3: 1.25rem;
+  --sgi-font-size-h2: 1.5rem;
+  --sgi-font-size-h1: 1.875rem;
   --sgi-font-weight-regular: 400;
   --sgi-font-weight-medium: 500;
   --sgi-font-weight-semibold: 600;
@@ -202,6 +214,30 @@ $paleta-terciaria: map.merge(map.get($_paletas, tertiary), $_demais-paletas);
   --sgi-shadow-overlay: 0 4px 16px rgb(0 0 0 / 12%);
 
   // Layout
-  --sgi-topbar-height: 64px;
-  --sgi-sidebar-width: 256px;
+  --sgi-topbar-height: 56px;
+  --sgi-nav-inferior-height: 72px;
+  --sgi-rail-width: 96px;
+  --sgi-sidebar-width: 248px;
+  --sgi-conteudo-max-width: 1200px;
+  --sgi-alvo-toque: 48px;
+  --sgi-indicador-ativo: 40px;
+
+  // Camadas
+  --sgi-z-barras: 10;
+
+  // Movimento
+  --sgi-duracao-curta: 150ms;
+}
+
+@media (min-width: bp.$desktop) {
+  :root {
+    --sgi-font-size-h1: 2.25rem;
+    --sgi-topbar-height: 64px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --sgi-duracao-curta: 0ms;
+  }
 }

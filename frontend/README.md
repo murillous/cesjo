@@ -21,16 +21,20 @@ npm run build       # build de produção em dist/sgi-frontend
 
 ## Organização
 
-- `src/styles/_tokens.scss`: tokens do guia (cores, tipografia, espaçamento base 8px, raios, sombras)
-  e paletas tonais do Material 3. É o único lugar com valores HEX; componentes usam só as variáveis `--sgi-*`.
+- Mobile first: estilos base para o celular e media queries só com `min-width`.
+- `src/styles/_tokens.scss`: tokens do guia (cores, tipografia, espaçamento base 8px, raios, sombras,
+  camadas, alturas das barras) e paletas tonais do Material 3. É o único lugar com valores HEX; componentes usam só as variáveis `--sgi-*`.
 - `src/styles/_breakpoints.scss`: breakpoints globais em Sass.
-- `src/styles/_tema.scss`: tema Material 3 (`mat.theme` com paletas próprias, fonte Inter, densidade
+- Fonte: Atkinson Hyperlegible Next (pacote `@fontsource-variable/atkinson-hyperlegible-next`).
+- `src/styles/_tema.scss`: tema Material 3 (`mat.theme` com paletas próprias, fonte do guia, densidade
   padrão) e overrides das cores de sistema com os tokens do guia. Ação, foco e seleção em
   primary-dark; turquesa só em ícones e indicadores. Sem modo escuro.
 - Ícones: Material Symbols (estilo outlined, pacote npm `material-symbols`), usados com `<mat-icon>nome</mat-icon>`.
 - Locale pt-BR: `LOCALE_ID`, `MAT_DATE_LOCALE` e `provideNativeDateAdapter` em `src/app/app.config.ts`.
-- `src/app/layout/`: `MatToolbar` (logo, notificações, conta) e `MatSidenav` (modo `side` a partir de
-  992px, modo `over` abaixo disso, fechando com Escape ou clique fora) e área de conteúdo.
+- `src/app/layout/`: barra superior (logo, notificações, conta), navegação principal e área de
+  conteúdo, num grid CSS. A navegação (`layout/menu/`) é barra inferior no celular, trilho a partir de
+  768px e menu lateral a partir de 992px. Com mais de cinco módulos, a barra inferior mostra quatro e
+  o item "Mais", que abre `layout/menu-mais/` num `MatBottomSheet`. A troca de formato é só CSS.
 - `src/app/modulos/`: um diretório por módulo. Cada módulo exporta um `ModuloFrontend` com caminho,
   rotas carregadas sob demanda e item de menu.
 
@@ -43,10 +47,11 @@ npm run build       # build de produção em dist/sgi-frontend
    export const listaEsperaModulo: ModuloFrontend = {
      caminho: 'lista-espera',
      rotas: () => import('./lista-espera.routes').then((m) => m.LISTA_ESPERA_ROUTES),
-     menu: { rotulo: 'Lista de espera', icone: 'list', ordem: 10 },
+     menu: { rotulo: 'Lista de espera', rotuloCurto: 'Fila', icone: 'list', ordem: 10 },
    };
    ```
 
 3. Acrescente o módulo à lista `MODULOS` em `src/app/modulos/registro.ts`.
 
-A rota e o item de menu passam a existir sem outras alterações.
+A rota e o item de menu passam a existir sem outras alterações. `rotuloCurto` é opcional: use quando
+o rótulo passar de uns 10 caracteres, porque é ele que aparece na barra inferior do celular.

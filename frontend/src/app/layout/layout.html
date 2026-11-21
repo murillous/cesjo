@@ -1,49 +1,22 @@
-<header>
-  <mat-toolbar class="topbar">
-    <button
-      matIconButton
-      type="button"
-      class="alternar-menu"
-      [attr.aria-label]="menuVisivel() ? 'Fechar menu' : 'Abrir menu'"
-      [attr.aria-expanded]="menuVisivel()"
-      aria-controls="menu-lateral"
-      (click)="alternarMenu()"
-    >
-      <mat-icon aria-hidden="true">menu</mat-icon>
-    </button>
+<header class="topbar">
+  <a class="marca" routerLink="/" aria-label="CESJO SGI, ir para o início">
+    <img
+      class="logo"
+      src="logo-pobres-servos-cesjo.png"
+      alt="Pobres Servos da Divina Providência, CESJO"
+      width="427"
+      height="192"
+    />
+  </a>
 
-    <a class="marca" routerLink="/" aria-label="CESJO SGI, ir para o início">
-      <img
-        class="logo"
-        src="logo-pobres-servos-cesjo.png"
-        alt="Pobres Servos da Divina Providência, CESJO"
-        width="427"
-        height="192"
-      />
-    </a>
-
-    <div class="acoes">
-      <app-sino-notificacoes />
-      <app-menu-conta />
-    </div>
-  </mat-toolbar>
+  <div class="acoes">
+    <app-sino-notificacoes />
+    <app-menu-conta />
+  </div>
 </header>
 
-<mat-sidenav-container class="corpo">
-  <mat-sidenav
-    id="menu-lateral"
-    class="sidebar"
-    [mode]="modo()"
-    [opened]="menuVisivel()"
-    [disableClose]="telaGrande()"
-    (openedChange)="aoMudarAbertura($event)"
-  >
-    <app-menu (navegou)="aoNavegar()" />
-  </mat-sidenav>
+<app-menu class="navegacao" />
 
-  <mat-sidenav-content>
-    <main class="conteudo">
-      <router-outlet />
-    </main>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+<main class="conteudo">
+  <router-outlet />
+</main>

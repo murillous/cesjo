@@ -56,31 +56,11 @@ html {
     )
   );
 
-  @include mat.toolbar-overrides(
+  @include mat.bottom-sheet-overrides(
     (
+      container-shape: var(--sgi-radius-xl) var(--sgi-radius-xl) 0 0,
       container-background-color: var(--sgi-color-background-primary),
       container-text-color: var(--sgi-color-text-primary),
-    )
-  );
-
-  @include mat.sidenav-overrides(
-    (
-      container-shape: 0,
-      container-width: var(--sgi-sidebar-width),
-      container-divider-color: var(--sgi-color-border),
-      content-background-color: var(--sgi-color-background-primary),
-    )
-  );
-
-  @include mat.list-overrides(
-    (
-      active-indicator-color: var(--sgi-color-background-secondary),
-      active-indicator-shape: var(--sgi-radius-md),
-      list-item-label-text-color: var(--sgi-color-text-primary),
-      list-item-hover-label-text-color: var(--sgi-color-text-primary),
-      list-item-focus-label-text-color: var(--sgi-color-text-primary),
-      list-item-label-text-weight: var(--sgi-font-weight-medium),
-      list-item-leading-icon-color: var(--sgi-color-primary),
     )
   );
 }

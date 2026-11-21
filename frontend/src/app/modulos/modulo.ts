@@ -5,6 +5,11 @@ import { Permissao } from '../acesso/permissao';
 /** Item exibido no menu lateral. `icone` é o nome de um ícone Material Symbols, por exemplo `home`. */
 export interface ItemMenu {
   rotulo: string;
+  /**
+   * Versão curta do rótulo para a barra inferior do celular, onde cada item tem um quinto da
+   * largura da tela (cabe por volta de 10 caracteres). Sem ela, a barra usa `rotulo`.
+   */
+  rotuloCurto?: string;
   icone: string;
   /** Posição no menu; menor aparece primeiro. */
   ordem: number;
