@@ -120,6 +120,21 @@
       </mat-form-field>
     </fieldset>
 
+    @if (podeEnviarDocumentos) {
+      <fieldset>
+        <legend>Documentos</legend>
+        <p class="texto-secundario orientacao-documentos">
+          Sem o laudo médico e o comprovante de residência, o candidato entra na fila com cadastro
+          incompleto. Dá para anexar depois.
+        </p>
+        <app-envio-arquivo rotulo="Laudo médico" formControlName="laudoMedicoArquivoId" />
+        <app-envio-arquivo
+          rotulo="Comprovante de residência"
+          formControlName="comprovanteResidenciaArquivoId"
+        />
+      </fieldset>
+    }
+
     <div class="botoes">
       <button matButton="filled" type="submit" [disabled]="enviando()">Cadastrar candidato</button>
     </div>

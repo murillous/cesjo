@@ -4,6 +4,8 @@ import { TestBed } from '@angular/core/testing';
 import { MATERIAL_ANIMATIONS, provideNativeDateAdapter } from '@angular/material/core';
 import { provideRouter, Router } from '@angular/router';
 
+import { contaDeTeste } from '../../acesso/conta-de-teste';
+import { Sessao } from '../../acesso/sessao';
 import { FormularioInscricao } from './formulario-inscricao';
 
 interface Componente {
@@ -52,6 +54,8 @@ describe('FormularioInscricao', () => {
       nomeResponsavel: 'Responsável Fictício',
       origemEncaminhamento: 'CRAS',
       dataCadastro: new Date(2026, 10, 2),
+      laudoMedicoArquivoId: 'arquivo-laudo',
+      comprovanteResidenciaArquivoId: null,
     });
     componente.salvar();
 
@@ -65,10 +69,28 @@ describe('FormularioInscricao', () => {
       nomeResponsavel: 'Responsável Fictício',
       origemEncaminhamento: 'CRAS',
       dataCadastro: '2026-11-02',
+      laudoMedicoArquivoId: 'arquivo-laudo',
+      comprovanteResidenciaArquivoId: null,
     });
-    pedido.flush({ id: 'i1', nomeCompleto: 'Pessoa Fictícia' });
+    pedido.flush({ id: 'i1', nomeCompleto: 'Pessoa Fictícia', cadastroCompleto: false });
 
     expect(navegar).toHaveBeenCalledWith(['/lista-espera']);
+  });
+
+  it('mostra os campos de documento só para quem envia documentos', async () => {
+    const sessao = TestBed.inject(Sessao);
+    sessao.definir(contaDeTeste({ permissoes: ['LISTA_ESPERA_CADASTRAR'] }));
+    let fixture = TestBed.createComponent(FormularioInscricao);
+    await fixture.whenStable();
+    expect((fixture.nativeElement as HTMLElement).querySelector('app-envio-arquivo')).toBeNull();
+
+    sessao.definir(contaDeTeste());
+    fixture = TestBed.createComponent(FormularioInscricao);
+    await fixture.whenStable();
+    const campos = (fixture.nativeElement as HTMLElement).querySelectorAll('app-envio-arquivo');
+    expect(campos.length).toBe(2);
+    expect(campos[0].textContent).toContain('Laudo médico');
+    expect(campos[1].textContent).toContain('Comprovante de residência');
   });
 
   it('não envia sem os campos obrigatórios', async () => {
@@ -101,6 +123,8 @@ describe('FormularioInscricao', () => {
       nomeResponsavel: 'Responsável Fictício',
       origemEncaminhamento: 'SAUDE',
       dataCadastro: new Date(2026, 10, 2),
+      laudoMedicoArquivoId: null,
+      comprovanteResidenciaArquivoId: null,
     });
     componente.salvar();
     controle
