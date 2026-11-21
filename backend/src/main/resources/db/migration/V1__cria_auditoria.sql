@@ -29,6 +29,7 @@ BEGIN
 END;
 $$;
 
+-- PENDENTE-CESJO(P14): o log é guardado para sempre, sem expurgo, até a equipe definir o prazo de guarda (ADR 0022).
 CREATE TRIGGER auditoria_sem_update_delete
     BEFORE UPDATE OR DELETE ON auditoria
     FOR EACH ROW EXECUTE FUNCTION auditoria_recusa_alteracao();

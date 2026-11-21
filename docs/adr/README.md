@@ -35,3 +35,8 @@ frente de trabalho paralela não é usado todo.
 - [0007](0007-contratos-da-fundacao.md) — Contratos públicos da Fundação entre módulos
 - [0008](0008-postgres-nativo-nos-testes-sem-docker.md) — Postgres nativo nos testes quando não há Docker
 - [0009](0009-identidade-neutra-e-erros-de-seguranca.md) — Identidade da conta fora do módulo acesso e erros de segurança fora do tratador genérico
+- [0020](0020-tabela-e-conteudo-da-auditoria.md) — Tabela e conteúdo do registro de auditoria
+- [0021](0021-transacao-e-falha-da-auditoria.md) — Transação do registro de auditoria e comportamento em falha
+- [0022](0022-log-de-auditoria-so-de-insercao.md) — Log de auditoria só de inserção, guardado sem prazo
+- [0023](0023-registro-de-leitura-sensivel-e-exportacao.md) — Leitura de dado sensível e exportação registradas por chamada explícita
+- [0024](0024-consulta-do-log-de-auditoria.md) — Consulta do log de auditoria: filtros, período e tela
