@@ -10,7 +10,7 @@ import { contaDeTeste } from '../../acesso/conta-de-teste';
 import { Sessao } from '../../acesso/sessao';
 import { DialogoSenhaTemporaria } from './dialogo-senha-temporaria';
 import { FormularioConta } from './formulario-conta';
-import { contaFicticia } from './lista-contas.spec';
+import { contaFicticia } from './conta-ficticia';
 
 describe('FormularioConta', () => {
   let controle: HttpTestingController;
