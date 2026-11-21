@@ -138,6 +138,10 @@ jobs:
     defaults:
       run:
         working-directory: deploy
+    env:
+      # compose.ci.yaml (gerado abaixo) guarda o repositório restic numa pasta do runner, que sobrevive
+      # ao "docker compose down -v" do teste de recuperação de desastres.
+      COMPOSE_FILE: compose.yaml:compose.ci.yaml
     steps:
       - uses: actions/checkout@v7
 
@@ -151,7 +155,7 @@ jobs:
         run: |
           cp .env.example .env
           cp backup.env.example backup.env
-          docker compose config --quiet
+          COMPOSE_FILE=compose.yaml docker compose config --quiet
 
       - name: Gerar .env de teste (dados fictícios, só para este job)
         run: |
@@ -161,12 +165,14 @@ jobs:
             -e "s|^POSTGRES_PASSWORD=.*|POSTGRES_PASSWORD=$(openssl rand -hex 24)|" \
             -e "s|^SGI_CRIPTOGRAFIA_CHAVES_PROD1=.*|SGI_CRIPTOGRAFIA_CHAVES_PROD1=$(openssl rand -base64 32)|" \
             .env
-          # O CI guarda o repositório restic dentro do contêiner; em produção o destino fica fora da VPS.
+          # O CI guarda o repositório restic numa pasta do runner; em produção o destino fica fora da VPS.
           cp backup.env.example backup.env
           sed -i \
-            -e "s|^RESTIC_REPOSITORY=.*|RESTIC_REPOSITORY=/tmp/repositorio-ci|" \
+            -e "s|^RESTIC_REPOSITORY=.*|RESTIC_REPOSITORY=/repositorio-ci|" \
             -e "s|^RESTIC_PASSWORD=.*|RESTIC_PASSWORD=$(openssl rand -hex 24)|" \
             backup.env
+          mkdir -p repositorio-ci
+          printf 'services:\n  backup:\n    volumes:\n      - ./repositorio-ci:/repositorio-ci\n' > compose.ci.yaml
 
       - name: Construir as imagens
         run: docker compose build
@@ -234,17 +240,47 @@ jobs:
         run: |
           set -euo pipefail
           sed -i "s|^SGI_BACKUP_HORARIO=.*|SGI_BACKUP_HORARIO=* * * * *|" backup.env
-          # Recriar o contêiner apaga o repositório de teste em /tmp; o crond precisa criá-lo de novo.
+          # O snapshot mais recente muda quando o crond roda um backup (a retenção pode podar os antigos).
+          ultimo() { docker compose exec -T backup restic snapshots --json latest | (grep -o '"id":"[^"]*"' || true) | head -1; }
+          antes="$(ultimo)"
           docker compose up -d backup
           for _ in $(seq 1 30); do
-            # Sem repositório ou sem snapshot, o grep não acha nada: o "|| true" segura o pipefail.
-            n="$( (docker compose exec -T backup restic snapshots --json 2>/dev/null || true) | (grep -o '"short_id"' || true) | wc -l)"
-            if [ "$n" -ge 1 ]; then echo "crond gerou o snapshot"; exit 0; fi
+            if [ "$(ultimo)" != "$antes" ]; then echo "crond gerou o snapshot"; exit 0; fi
             sleep 5
           done
           echo "o crond não rodou o backup em 150 segundos"
           docker compose exec -T backup sh -c 'ps; ls -la /etc/crontabs /var/spool/cron 2>&1; cat /etc/crontabs/root; date; busybox | head -3' || true
           exit 1
+
+      - name: Recuperação de desastres (issue #22)
+        run: |
+          set -euo pipefail
+          sql() { docker compose exec -T db sh -c "psql -v ON_ERROR_STOP=1 -tA -U \"\$POSTGRES_USER\" -d \"\$POSTGRES_DB\" -c \"$1\""; }
+          echo "Dados de referência: uma tabela no banco e um arquivo no volume"
+          sql "create table ci_marcador (valor text); insert into ci_marcador values ('antes-do-desastre')"
+          docker compose exec -T app sh -c 'mkdir -p /var/lib/sgi/arquivos/ci && echo conteudo-ficticio > /var/lib/sgi/arquivos/ci/marcador'
+          docker compose exec -T backup backup.sh
+
+          echo "Desastre: contêineres e volumes apagados; sobram o repositório restic e os .env"
+          docker compose down -v
+          inicio="$(date +%s)"
+
+          echo "VPS nova: sobe só o banco, restaura e sobe o resto"
+          docker compose up -d --wait db
+          docker compose run --rm --no-deps -v cesjo-arquivos:/restauro/arquivos --entrypoint restaurar.sh backup
+          docker compose up -d --wait --wait-timeout 240
+          fim="$(date +%s)"
+
+          echo "Banco restaurado"
+          test "$(sql 'select valor from ci_marcador')" = "antes-do-desastre"
+          test "$(sql 'select count(*) from conta_acesso')" = "1"
+          echo "Arquivos restaurados e legíveis pela aplicação"
+          test "$(docker compose exec -T app cat /var/lib/sgi/arquivos/ci/marcador)" = "conteudo-ficticio"
+          docker compose exec -T app sh -c 'echo gravavel > /var/lib/sgi/arquivos/ci/escrita'
+          echo "Sistema no ar"
+          curl -fsSk https://localhost/saude | grep '"status":"UP"' > /dev/null
+          echo "### Recuperação de desastres: $((fim - inicio)) s do banco vazio ao sistema no ar" >> "$GITHUB_STEP_SUMMARY"
+          echo "restauração completa em $((fim - inicio)) s"
 
       - name: Logs da pilha
         if: always()

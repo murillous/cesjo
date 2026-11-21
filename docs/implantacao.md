@@ -89,8 +89,8 @@ Actuator (`"status":"UP"`, sem detalhes). O resto do Actuator só é acessível 
    Edite também o `backup.env`: destino (`RESTIC_REPOSITORY` e credenciais), `RESTIC_PASSWORD` e as
    URLs de alerta (ver [Backup](#backup)).
 
-5. **Guarde uma cópia do `.env` e do `backup.env` fora da VPS** (gerenciador de senhas da
-   coordenação, por exemplo). Sem as chaves de criptografia e a `RESTIC_PASSWORD`, o banco e os
+5. **Guarde duas cópias do `.env` e do `backup.env` fora da VPS**, como manda a
+   [recuperação de desastres](recuperacao-de-desastres.md#segredos). Sem as chaves de criptografia e a `RESTIC_PASSWORD`, o banco e os
    arquivos cifrados ficam ilegíveis, inclusive nos backups.
 
 6. Construa as imagens e suba a pilha:
@@ -190,21 +190,10 @@ mudar o `backup.env`, recrie o serviço: `docker compose up -d backup`.
 | Conferir a integridade lendo todos os dados | `docker compose exec backup restic check --read-data` |
 | Logs dos backups | `docker compose logs backup` |
 
-### Restaurar (resumo)
+### Restaurar
 
-O procedimento completo de recuperação de desastres, numa VPS nova, é a issue #22. Em resumo, com o
-`backup.env` e o `.env` guardados fora da VPS:
-
-```bash
-docker compose stop app
-docker compose exec backup sh -c 'restic dump latest /var/backups/sgi/cesjo.dump > /tmp/cesjo.dump'
-docker compose exec backup sh -c 'PGPASSWORD="$POSTGRES_PASSWORD" pg_restore -h db -U "$POSTGRES_USER"   -d "$POSTGRES_DB" --clean --if-exists --no-owner /tmp/cesjo.dump && rm /tmp/cesjo.dump'
-docker compose run --rm --no-deps -v cesjo-arquivos:/destino --entrypoint sh backup -c   'restic restore latest --include /dados/arquivos --target /tmp/r && cp -a /tmp/r/dados/arquivos/. /destino/'
-docker compose start app
-```
-
-O volume de arquivos é montado só leitura no serviço `backup`; por isso a restauração dos arquivos
-usa um contêiner avulso com o volume montado para escrita.
+O procedimento completo, numa VPS nova ou só de um dado antigo, com a guarda dos segredos fora da VPS
+e o registro dos exercícios, está em [recuperacao-de-desastres.md](recuperacao-de-desastres.md).
 
 ## Monitoramento
 
@@ -297,7 +286,5 @@ PR ([ADR 0053](adr/0053-ci-das-imagens-de-implantacao.md)).
 
 ## Ainda não coberto
 
-- Procedimento completo de recuperação de desastres, com restauração testada: issue #22.
 - Alertas por WhatsApp ou Telegram e para a equipe toda: dependem do serviço de monitoramento que
   for escolhido (PENDENTE-CESJO P15).
-- Monitoramento externo e alertas: issue #23.
