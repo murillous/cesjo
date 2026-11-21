@@ -1,0 +1,18 @@
+// Cores do item (texto primary-dark, ícone turquesa, fundo ativo secundário) vêm do tema em
+// `styles/_tema.scss`. Aqui só o indicador lateral em accent e o peso do item ativo.
+.menu mat-nav-list {
+  padding: var(--sgi-space-2) var(--sgi-space-1-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sgi-space-0-5);
+}
+
+.menu-item {
+  border-left: var(--sgi-space-0-5) solid transparent;
+
+  &.ativo {
+    --mat-list-list-item-label-text-weight: var(--sgi-font-weight-semibold);
+
+    border-left-color: var(--sgi-color-accent);
+  }
+}

@@ -1,0 +1,57 @@
+@use 'styles/breakpoints' as bp;
+
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+}
+
+.topbar {
+  flex: none;
+  height: var(--sgi-topbar-height);
+  gap: var(--sgi-space-1);
+  padding: 0 var(--sgi-space-2);
+  border-bottom: var(--sgi-border);
+}
+
+.marca {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: var(--sgi-space-1) 0;
+}
+
+.logo {
+  height: 100%;
+  width: auto;
+}
+
+.acoes {
+  margin-left: auto;
+  display: flex;
+  gap: var(--sgi-space-0-5);
+}
+
+.corpo {
+  flex: 1;
+}
+
+.sidebar {
+  border-right: var(--sgi-border);
+}
+
+.conteudo {
+  padding: var(--sgi-space-3) var(--sgi-space-2);
+}
+
+@media (min-width: bp.$desktop) {
+  .conteudo {
+    padding: var(--sgi-space-3) var(--sgi-space-4);
+  }
+}
+
+@media (max-width: calc(bp.$desktop - 1px)) {
+  .sidebar {
+    box-shadow: var(--sgi-shadow-overlay);
+  }
+}

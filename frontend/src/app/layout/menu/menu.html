@@ -1,0 +1,20 @@
+<nav class="menu" aria-label="Menu principal">
+  <mat-nav-list>
+    @for (entrada of entradas; track entrada.link) {
+      <a
+        mat-list-item
+        class="menu-item"
+        [routerLink]="entrada.link"
+        routerLinkActive="ativo"
+        #ativo="routerLinkActive"
+        [activated]="ativo.isActive"
+        ariaCurrentWhenActive="page"
+        [routerLinkActiveOptions]="{ exact: entrada.link === '/' }"
+        (click)="navegou.emit()"
+      >
+        <mat-icon matListItemIcon aria-hidden="true">{{ entrada.icone }}</mat-icon>
+        <span matListItemTitle>{{ entrada.rotulo }}</span>
+      </a>
+    }
+  </mat-nav-list>
+</nav>

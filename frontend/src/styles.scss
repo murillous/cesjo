@@ -1,0 +1,67 @@
+@use 'styles/tokens';
+@use 'styles/tema';
+
+// Estilos globais: tipografia e base. Valores sempre vindos dos tokens.
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  margin: 0;
+  font-family: var(--sgi-font-family);
+  font-size: var(--sgi-font-size-body);
+  font-weight: var(--sgi-font-weight-regular);
+  line-height: 1.5;
+  color: var(--sgi-color-text-primary);
+  background: var(--sgi-color-background-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0 0 var(--sgi-space-2);
+  color: var(--sgi-color-text-primary);
+  line-height: 1.25;
+}
+
+h1 {
+  font-size: var(--sgi-font-size-h1);
+  font-weight: var(--sgi-font-weight-bold);
+}
+
+h2 {
+  font-size: var(--sgi-font-size-h2);
+  font-weight: var(--sgi-font-weight-semibold);
+}
+
+h3 {
+  font-size: var(--sgi-font-size-h3);
+  font-weight: var(--sgi-font-weight-semibold);
+}
+
+p {
+  margin: 0 0 var(--sgi-space-2);
+}
+
+small,
+.texto-secundario {
+  font-size: var(--sgi-font-size-small);
+  color: var(--sgi-color-text-secondary);
+}
+
+a {
+  color: var(--sgi-color-primary-dark);
+}
+
+:focus-visible {
+  outline: 2px solid var(--sgi-color-primary-dark);
+  outline-offset: 2px;
+}

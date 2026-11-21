@@ -23,7 +23,7 @@ A única fonte de requisitos é o
 | Backend | Java 25, Spring Boot 4.2 (Web MVC, Data JPA, Validation, Actuator) |
 | Banco | PostgreSQL 18, migrações com Flyway |
 | Testes | JUnit, Testcontainers com Postgres real |
-| Frontend | Angular 22, PrimeNG 22 com tema institucional |
+| Frontend | Angular 22, Angular Material 22 com tema institucional |
 
 O planejamento completo (arquitetura, modelo de dados, permissões, ordem de entrega e backlog) está em
 [docs/planejamento.md](docs/planejamento.md).

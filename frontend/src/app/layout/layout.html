@@ -1,0 +1,54 @@
+<header>
+  <mat-toolbar class="topbar">
+    <button
+      matIconButton
+      type="button"
+      class="alternar-menu"
+      [attr.aria-label]="menuVisivel() ? 'Fechar menu' : 'Abrir menu'"
+      [attr.aria-expanded]="menuVisivel()"
+      aria-controls="menu-lateral"
+      (click)="alternarMenu()"
+    >
+      <mat-icon aria-hidden="true">menu</mat-icon>
+    </button>
+
+    <a class="marca" routerLink="/" aria-label="CESJO SGI, ir para o início">
+      <img
+        class="logo"
+        src="logo-pobres-servos-cesjo.png"
+        alt="Pobres Servos da Divina Providência, CESJO"
+        width="427"
+        height="192"
+      />
+    </a>
+
+    <div class="acoes">
+      <!-- Espaço reservado: notificações (#19) e conta (#13). -->
+      <button matIconButton type="button" aria-label="Notificações">
+        <mat-icon aria-hidden="true">notifications</mat-icon>
+      </button>
+      <button matIconButton type="button" aria-label="Minha conta">
+        <mat-icon aria-hidden="true">account_circle</mat-icon>
+      </button>
+    </div>
+  </mat-toolbar>
+</header>
+
+<mat-sidenav-container class="corpo">
+  <mat-sidenav
+    id="menu-lateral"
+    class="sidebar"
+    [mode]="modo()"
+    [opened]="menuVisivel()"
+    [disableClose]="telaGrande()"
+    (openedChange)="aoMudarAbertura($event)"
+  >
+    <app-menu (navegou)="aoNavegar()" />
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <main class="conteudo">
+      <router-outlet />
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>

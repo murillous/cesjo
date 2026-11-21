@@ -1,0 +1,5 @@
+// Breakpoints globais. Ficam em Sass porque media queries não aceitam variáveis CSS.
+// Componentes importam com `@use 'styles/breakpoints' as bp;`.
+$tablet: 768px;
+$desktop: 992px;
+$desktop-large: 1440px;
