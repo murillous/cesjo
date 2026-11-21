@@ -1,0 +1,106 @@
+<section class="conta">
+  <a matButton routerLink="/contas" class="voltar">
+    <mat-icon aria-hidden="true">arrow_back</mat-icon>
+    Contas de acesso
+  </a>
+
+  <h1>{{ edicao() ? (conta()?.nome ?? 'Conta de acesso') : 'Nova conta' }}</h1>
+  @if (conta(); as atual) {
+    <p class="situacao" [class.inativa]="!atual.ativa">{{ situacao() }}</p>
+  } @else if (!edicao()) {
+    <p class="texto-secundario">
+      O sistema gera uma senha temporária para a conta nova. A pessoa troca essa senha no primeiro
+      acesso.
+    </p>
+  }
+
+  @if (erro(); as mensagem) {
+    <p class="erro" role="alert">{{ mensagem }}</p>
+  }
+
+  <form [formGroup]="formulario" (ngSubmit)="salvar()" novalidate>
+    <mat-form-field appearance="outline">
+      <mat-label>Login</mat-label>
+      <input matInput formControlName="login" autocapitalize="none" spellcheck="false" />
+      @if (edicao()) {
+        <mat-hint>O login não muda depois de criado.</mat-hint>
+      } @else {
+        <mat-hint>Letras sem acento, números, ponto, hífen ou sublinhado.</mat-hint>
+      }
+      @if (formulario.controls.login.hasError('required')) {
+        <mat-error>Informe o login.</mat-error>
+      } @else if (formulario.controls.login.hasError('pattern')) {
+        <mat-error>Use de 3 a 60 letras sem acento, números, ponto, hífen ou sublinhado.</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Nome</mat-label>
+      <input matInput formControlName="nome" autocomplete="off" />
+      @if (formulario.controls.nome.hasError('required')) {
+        <mat-error>Informe o nome.</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Perfil</mat-label>
+      <mat-select formControlName="perfil">
+        @for (perfil of perfis; track perfil) {
+          <mat-option [value]="perfil">{{ rotulos[perfil] }}</mat-option>
+        }
+      </mat-select>
+      @if (propria()) {
+        <mat-hint>Você não pode mudar o perfil da sua própria conta.</mat-hint>
+      }
+      @if (formulario.controls.perfil.hasError('required')) {
+        <mat-error>Escolha o perfil.</mat-error>
+      }
+    </mat-form-field>
+
+    <div class="botoes">
+      <button matButton="filled" type="submit" [disabled]="enviando()">
+        {{ edicao() ? 'Salvar conta' : 'Criar conta' }}
+      </button>
+    </div>
+  </form>
+
+  @if (conta(); as atual) {
+    <section class="acoes" aria-labelledby="titulo-acoes">
+      <h2 id="titulo-acoes">Acesso</h2>
+      <div class="botoes">
+        <button
+          matButton="outlined"
+          type="button"
+          [disabled]="enviando()"
+          (click)="redefinirSenha(atual)"
+        >
+          <mat-icon aria-hidden="true">lock_reset</mat-icon>
+          Redefinir senha
+        </button>
+        @if (atual.ativa) {
+          @if (!propria()) {
+            <button
+              matButton="outlined"
+              type="button"
+              [disabled]="enviando()"
+              (click)="desativar(atual)"
+            >
+              <mat-icon aria-hidden="true">person_off</mat-icon>
+              Desativar conta
+            </button>
+          }
+        } @else {
+          <button
+            matButton="outlined"
+            type="button"
+            [disabled]="enviando()"
+            (click)="reativar(atual)"
+          >
+            <mat-icon aria-hidden="true">person_check</mat-icon>
+            Reativar conta
+          </button>
+        }
+      </div>
+    </section>
+  }
+</section>
