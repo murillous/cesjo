@@ -69,7 +69,7 @@ describe('FormularioInsercao', () => {
     expect(componente.formulario.controls['cuidador'].value).toBe('resp-1');
   });
 
-  it('insere com o responsável escolhido e volta para os atendidos', async () => {
+  it('insere com o responsável escolhido e abre a ficha', async () => {
     const { componente } = await criar();
     componente.formulario.setValue({
       dataInsercao: new Date(2026, 10, 10),
@@ -91,7 +91,7 @@ describe('FormularioInsercao', () => {
       { id: 'ins-1', nomeCompleto: 'Pessoa Fictícia' },
       { status: 201, statusText: 'Created' },
     );
-    expect(navegar).toHaveBeenCalledWith(['/atendidos']);
+    expect(navegar).toHaveBeenCalledWith(['/atendidos', 'ins-1']);
   });
 
   it('manda o nome do cuidador novo e exige o nome', async () => {

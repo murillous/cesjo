@@ -19,3 +19,15 @@ export const ROTULOS_SITUACAO_INSERCAO: Readonly<Record<SituacaoInsercao, string
 export function rotuloTurno(turno: Turno): string {
   return TURNOS.find((t) => t.valor === turno)?.rotulo ?? turno;
 }
+
+/** Faixas etárias calculadas no backend (`FaixaEtaria`). */
+export type FaixaEtaria = 'JOVEM' | 'ADULTO';
+
+export const FAIXAS_ETARIAS: readonly { valor: FaixaEtaria; rotulo: string }[] = [
+  { valor: 'JOVEM', rotulo: 'Jovem (18 a 29 anos)' },
+  { valor: 'ADULTO', rotulo: 'Adulto (30 a 59 anos)' },
+];
+
+export function rotuloFaixa(faixa: FaixaEtaria | null): string {
+  return FAIXAS_ETARIAS.find((f) => f.valor === faixa)?.rotulo ?? 'Fora de 18 a 59 anos';
+}
