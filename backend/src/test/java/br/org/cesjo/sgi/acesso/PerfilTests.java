@@ -40,6 +40,12 @@ class PerfilTests {
 	}
 
 	@Test
+	void exportacaoDaListaDeEsperaSemOConsulta() {
+		assertThat(Arrays.stream(Perfil.values()).filter(perfil -> perfil.tem(Permissao.LISTA_ESPERA_EXPORTAR)))
+			.containsExactlyInAnyOrder(Perfil.COORDENADOR, Perfil.EQUIPE_TECNICA, Perfil.ADMINISTRATIVO);
+	}
+
+	@Test
 	void capacidadeConformeAMatriz() {
 		assertThat(Perfil.values()).allMatch(perfil -> perfil.tem(Permissao.CAPACIDADE_LER));
 		assertThat(Arrays.stream(Perfil.values()).filter(perfil -> perfil.tem(Permissao.CAPACIDADE_EDITAR)))

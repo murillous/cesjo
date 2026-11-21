@@ -43,22 +43,24 @@ class FilaListaEspera {
 
 	@Transactional(readOnly = true)
 	Page<ItemFila> listar(FiltroFila filtro, Pageable pagina) {
+		List<ItemFila> itens = todos(filtro);
+		int inicio = (int) Math.min(pagina.getOffset(), itens.size());
+		int fim = Math.min(inicio + pagina.getPageSize(), itens.size());
+		return new PageImpl<>(itens.subList(inicio, fim), pagina, itens.size());
+	}
+
+	/** Toda a fila que atende ao filtro, na ordem de {@link OrdemDaFila}, sem paginação (exportação). */
+	@Transactional(readOnly = true)
+	List<ItemFila> todos(FiltroFila filtro) {
 		Map<UUID, Integer> posicoes = posicoes();
 		List<InscricaoListaEspera> candidatas = inscricoes.findAll(filtrar(filtro), OrdemDaFila.ORDEM);
 		Map<UUID, ResumoPessoa> resumos = pessoas.resumos(
 				candidatas.stream().map(InscricaoListaEspera::getPessoaId).toList(),
 				new FiltroPessoas(filtro.nome(), filtro.tipoDeficiencia()));
-		List<InscricaoListaEspera> encontradas = candidatas.stream()
+		return candidatas.stream()
 			.filter(inscricao -> resumos.containsKey(inscricao.getPessoaId()))
-			.toList();
-
-		int inicio = (int) Math.min(pagina.getOffset(), encontradas.size());
-		int fim = Math.min(inicio + pagina.getPageSize(), encontradas.size());
-		List<ItemFila> itens = encontradas.subList(inicio, fim)
-			.stream()
 			.map(inscricao -> item(inscricao, posicoes.get(inscricao.getId()), resumos.get(inscricao.getPessoaId())))
 			.toList();
-		return new PageImpl<>(itens, pagina, encontradas.size());
 	}
 
 	/** Posição da inscrição na fila, ou nula quando ela não está ativa. */

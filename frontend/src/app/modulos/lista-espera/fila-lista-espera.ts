@@ -20,6 +20,8 @@ import { RouterLink } from '@angular/router';
 import { debounceTime, distinctUntilChanged, Subscription } from 'rxjs';
 
 import { Sessao } from '../../acesso/sessao';
+import { BotaoExportar } from '../../compartilhado/exportacao/botao-exportar';
+import { ParametrosExportacao } from '../../compartilhado/exportacao/exportacao-api';
 import { PaginadorPtBr } from '../../compartilhado/paginador-pt-br';
 import { FiltrosFila, ItemFila, ListaEsperaApi } from './lista-espera-api';
 import { PainelVagas } from './painel-vagas';
@@ -45,6 +47,7 @@ const ESPERA_BUSCA_MS = 300;
 @Component({
   selector: 'app-fila-lista-espera',
   imports: [
+    BotaoExportar,
     DatePipe,
     MatButtonModule,
     MatFormFieldModule,
@@ -69,6 +72,10 @@ export class FilaListaEspera implements OnInit {
 
   protected readonly podeCadastrar = this.sessao.temPermissao('LISTA_ESPERA_CADASTRAR');
   protected readonly podeVerVagas = this.sessao.temPermissao('CAPACIDADE_LER');
+  /** O Consulta não exporta (ADR 0130). */
+  protected readonly podeExportar = this.sessao.temPermissao('LISTA_ESPERA_EXPORTAR');
+  /** Filtros da última busca, para a exportação sair igual à tela (ADR 0130). */
+  protected readonly parametrosExportacao = signal<ParametrosExportacao>({});
   /** Ficha completa: vê tipo, origem e cadastro incompleto, e filtra por eles. */
   protected readonly completo = this.sessao.temPermissao('LISTA_ESPERA_LER');
 
@@ -131,21 +138,21 @@ export class FilaListaEspera implements OnInit {
     this.pedido?.unsubscribe();
     this.carregando.set(true);
     this.erro.set(false);
-    this.pedido = this.api
-      .listar(this.filtrosAplicados(), this.pagina(), this.tamanho())
-      .subscribe({
-        next: (resposta) => {
-          this.itens.set(resposta.content);
-          this.total.set(resposta.page.totalElements);
-          this.carregando.set(false);
-        },
-        error: () => {
-          this.itens.set([]);
-          this.total.set(0);
-          this.erro.set(true);
-          this.carregando.set(false);
-        },
-      });
+    const filtros = this.filtrosAplicados();
+    this.parametrosExportacao.set({ ...filtros, nome: filtros.nome?.trim() || null });
+    this.pedido = this.api.listar(filtros, this.pagina(), this.tamanho()).subscribe({
+      next: (resposta) => {
+        this.itens.set(resposta.content);
+        this.total.set(resposta.page.totalElements);
+        this.carregando.set(false);
+      },
+      error: () => {
+        this.itens.set([]);
+        this.total.set(0);
+        this.erro.set(true);
+        this.carregando.set(false);
+      },
+    });
   }
 
   protected tipo(valor: TipoDeficiencia | undefined): string {

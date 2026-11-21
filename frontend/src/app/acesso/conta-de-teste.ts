@@ -13,6 +13,7 @@ export function contaDeTeste(mudancas: Partial<ContaSessao> = {}): ContaSessao {
     'LISTA_ESPERA_CADASTRAR',
     'LISTA_ESPERA_FILA_LER',
     'LISTA_ESPERA_EDITAR',
+    'LISTA_ESPERA_EXPORTAR',
     'CAPACIDADE_LER',
     'CAPACIDADE_EDITAR',
     'COLABORADORES_LER',

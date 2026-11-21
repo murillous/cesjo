@@ -40,6 +40,8 @@ public enum Permissao {
 	/** Editar os dados do candidato e mudar a situação da inscrição (RF002, ADR 0090). */
 	LISTA_ESPERA_EDITAR,
 
+	/** Exportar a fila da lista de espera em PDF e Excel (seção 5.2, ADR 0130). */
+	LISTA_ESPERA_EXPORTAR,
 	/** Ver o cadastro de colaboradores (RF014, ADR 0047). */
 	COLABORADORES_LER,
 

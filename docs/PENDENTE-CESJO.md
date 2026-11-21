@@ -106,6 +106,7 @@ Situação: provisória.
 | "Dados básicos" do Consulta são só nome, situação, turno e datas (aplicado quando as listagens entrarem). | `acesso.Perfil` | [0015](adr/0015-matriz-de-perfis-da-fundacao.md) |
 | O Administrativo agenda, cancela e reagenda visitas, mas não registra a realização nem lê as observações da visita. | `acesso.Perfil` (`VISITAS_REGISTRAR`) | [0074](adr/0074-permissoes-do-resultado-da-visita.md) |
 | Na fila da lista de espera, o Consulta vê posição, nome, situação e data de cadastro, sem tipo de deficiência, origem nem situação dos documentos, e não filtra por tipo nem origem (`LISTA_ESPERA_FILA_LER`). | `acesso.Perfil` (linha do `CONSULTA`), `ItemFila.basico()` e `ListaEsperaControlador.listar` | [0058](adr/0058-dados-basicos-da-fila-para-o-consulta.md) |
+| O Consulta não exporta a lista de espera (`LISTA_ESPERA_EXPORTAR` só para Coordenador, Equipe Técnica e Administrativo). | `acesso.Perfil` (linha do `CONSULTA`) | [0130](adr/0130-exportacao-da-lista-de-espera.md) |
 | Administrativo e Consulta veem só os dados básicos dos usuários atendidos (`ATENDIDOS_LER_BASICO`). | `acesso.Perfil` | [0082](adr/0082-permissoes-dos-usuarios-atendidos.md) |
 | Na listagem e na ficha dos usuários atendidos, a visão básica traz só nome, situação, turno e data de inserção, e os filtros por tipo de deficiência e faixa etária são negados. | `VisoesAtendido.Basico` e `FiltroAtendidos.usaDadoCompleto` (backend, `atendidos.interno`) | [0083](adr/0083-listagem-e-ficha-dos-usuarios-atendidos.md) |
 

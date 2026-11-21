@@ -121,3 +121,4 @@ frente de trabalho paralela não é usado todo.
 - [0123](0123-auditoria-de-acessibilidade-no-ci.md) — Auditoria de acessibilidade com axe e Playwright no CI
 - [0124](0124-correcoes-de-acessibilidade.md) — Correções de acessibilidade achadas pela auditoria
 - [0125](0125-checklist-manual-de-navegadores.md) — Checklist manual para Safari no iPhone e leitor de tela
+- [0130](0130-exportacao-da-lista-de-espera.md) — Exportação da lista de espera em PDF e Excel (provisório)
