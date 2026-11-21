@@ -1,0 +1,101 @@
+@use 'styles/breakpoints' as bp;
+
+.cabecalho {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sgi-space-2);
+  margin-bottom: var(--sgi-space-3);
+
+  h1 {
+    margin: 0;
+  }
+}
+
+.erro {
+  padding: var(--sgi-space-1-5) var(--sgi-space-2);
+  border-left: var(--sgi-space-0-5) solid var(--sgi-color-accent);
+  background: var(--sgi-color-background-secondary);
+}
+
+.lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: var(--sgi-border);
+}
+
+// Celular: cada conta é um bloco com nome em destaque e os demais dados embaixo.
+.titulos {
+  display: none;
+}
+
+.linha {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--sgi-space-0-5) var(--sgi-space-2);
+  padding: var(--sgi-space-2) var(--sgi-space-1);
+  border-bottom: var(--sgi-border);
+  color: inherit;
+  text-decoration: none;
+
+  &:hover,
+  &:focus-visible {
+    background: var(--sgi-color-background-secondary);
+  }
+
+  &.inativa .nome {
+    color: var(--sgi-color-text-secondary);
+  }
+}
+
+.nome {
+  font-weight: var(--sgi-font-weight-semibold);
+  overflow-wrap: anywhere;
+}
+
+.login,
+.situacao {
+  font-size: var(--sgi-font-size-small);
+  color: var(--sgi-color-text-secondary);
+}
+
+.perfil {
+  text-align: right;
+}
+
+.situacao {
+  grid-column: 1 / -1;
+
+  &.alerta {
+    color: var(--sgi-color-text-primary);
+    font-weight: var(--sgi-font-weight-medium);
+  }
+}
+
+@media (min-width: bp.$tablet) {
+  .titulos,
+  .linha {
+    display: grid;
+    grid-template-columns: 2fr 1.5fr 1.2fr 1.5fr;
+    align-items: center;
+    gap: var(--sgi-space-2);
+  }
+
+  .titulos {
+    padding: var(--sgi-space-1) var(--sgi-space-1);
+    border-bottom: var(--sgi-border);
+    font-size: var(--sgi-font-size-small);
+    font-weight: var(--sgi-font-weight-semibold);
+    color: var(--sgi-color-text-secondary);
+  }
+
+  .perfil {
+    text-align: left;
+  }
+
+  .situacao {
+    grid-column: auto;
+  }
+}

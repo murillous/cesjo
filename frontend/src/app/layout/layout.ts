@@ -8,6 +8,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { map } from 'rxjs';
 
+import { MenuConta } from '../acesso/menu-conta/menu-conta';
 import { Menu } from './menu/menu';
 
 /** Mesmo valor de `$desktop` em `styles/_breakpoints.scss`. */
@@ -26,6 +27,7 @@ const TELA_GRANDE = '(min-width: 992px)';
     MatSidenavModule,
     MatToolbarModule,
     Menu,
+    MenuConta,
     RouterLink,
     RouterOutlet,
   ],
