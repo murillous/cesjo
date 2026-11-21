@@ -1,6 +1,6 @@
 # ADR 0007 — Contratos públicos da Fundação entre módulos
 
-**Status:** Aceito (2026-11-20)
+**Status:** Aceito (2026-11-20) · Identidade da conta na auditoria e erros 401/403: detalhado pelo [ADR 0009](0009-identidade-neutra-e-erros-de-seguranca.md)
 
 ## Contexto
 

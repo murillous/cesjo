@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -40,6 +42,15 @@ public class TratadorGlobalErros extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(RegraNegocioException.class)
 	ProblemDetail tratarRegraNegocio(RegraNegocioException ex) {
 		return problema(HttpStatus.UNPROCESSABLE_CONTENT, "Regra de negócio violada", ex.getMessage());
+	}
+
+	/**
+	 * Falhas de autenticação e de permissão voltam para o Spring Security, que responde 401 e 403. Sem
+	 * isto, o tratador genérico abaixo as transformaria em 500.
+	 */
+	@ExceptionHandler({ AccessDeniedException.class, AuthenticationException.class })
+	void repassarParaSpringSecurity(RuntimeException ex) {
+		throw ex;
 	}
 
 	@ExceptionHandler(Exception.class)

@@ -10,7 +10,8 @@ import java.util.UUID;
  * <p>
  * Nunca leva valores: {@code camposAlterados} guarda só nomes de campos. {@code contaId} e
  * {@code login} só são preenchidos quando a conta não vem da requisição autenticada (login e falha de
- * login); nos demais casos a implementação usa {@code ContaAtual}.
+ * login); nos demais casos a implementação usa {@code IdentidadeAtual}, de {@code compartilhado.seguranca}
+ * (ADR 0009).
  *
  * @param acao tipo da operação
  * @param entidade nome da entidade afetada, por exemplo {@code conta_acesso} ou {@code arquivo}
