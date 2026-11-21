@@ -12,19 +12,23 @@ import java.util.Set;
 
 /**
  * Perfis de acesso da seção 4 do documento de requisitos. Uma conta tem um perfil, e cada perfil é um
- * conjunto fixo de {@link Permissao}, conforme a matriz da seção 6 do planejamento (ADR 0007).
+ * conjunto fixo de {@link Permissao}, conforme a matriz da seção 6 do planejamento (ADR 0007). A
+ * matriz da Fundação e as suposições provisórias estão no ADR 0015.
  *
  * <p>
  * Este enum é o único lugar onde a matriz de permissões vive no backend.
  */
 public enum Perfil {
 
+	// PENDENTE-CESJO(P17): as áreas com (?) na matriz que ainda não têm permissões entram sem acesso para
+	// os perfis em dúvida, conforme a tabela de suposições do ADR 0015.
+
 	COORDENADOR("Coordenador",
 			EnumSet.of(CONTAS_GERENCIAR, AUDITORIA_LER, DOCUMENTOS_LER, DOCUMENTOS_ENVIAR, NOTIFICACOES_LER)),
 
 	EQUIPE_TECNICA("Equipe Técnica", EnumSet.of(DOCUMENTOS_LER, NOTIFICACOES_LER)),
 
-	// PENDENTE-CESJO(P8): o Administrativo envia e lê laudos e comprovantes até a equipe responder (ADR 0006).
+	// PENDENTE-CESJO(P8): o Administrativo envia e lê laudos e comprovantes até a equipe responder (ADR 0015).
 	ADMINISTRATIVO("Administrativo", EnumSet.of(DOCUMENTOS_LER, DOCUMENTOS_ENVIAR, NOTIFICACOES_LER)),
 
 	CONSULTA("Consulta", EnumSet.of(NOTIFICACOES_LER));

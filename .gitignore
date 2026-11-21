@@ -15,3 +15,7 @@ frontend/dist/
 *.iml
 .DS_Store
 Thumbs.db
+
+# Configuração local do backend (chaves de desenvolvimento) e arquivos enviados em desenvolvimento
+backend/config/
+backend/dados/

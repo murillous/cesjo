@@ -1,0 +1,87 @@
+@use 'styles/breakpoints' as bp;
+
+// Celular: logo em cima, formulário embaixo. Telas grandes: duas colunas, com a identidade
+// institucional num painel de fundo secundário à esquerda.
+.entrada {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.identidade {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--sgi-space-1);
+  padding: var(--sgi-space-3) var(--sgi-space-2) var(--sgi-space-2);
+}
+
+.logo {
+  height: 64px;
+  width: auto;
+}
+
+.sistema {
+  margin: 0;
+  padding-left: var(--sgi-space-1-5);
+  border-left: var(--sgi-space-0-5) solid var(--sgi-color-accent);
+  font-weight: var(--sgi-font-weight-semibold);
+}
+
+.painel {
+  flex: 1;
+  width: 100%;
+  max-width: 440px;
+  padding: var(--sgi-space-2);
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sgi-space-0-5);
+  margin-top: var(--sgi-space-3);
+}
+
+.erro {
+  margin: 0 0 var(--sgi-space-2);
+  padding: var(--sgi-space-1-5) var(--sgi-space-2);
+  border-left: var(--sgi-space-0-5) solid var(--sgi-color-accent);
+  background: var(--sgi-color-background-secondary);
+  border-radius: var(--sgi-radius-sm);
+}
+
+.enviar {
+  min-height: 48px;
+}
+
+.ajuda {
+  margin-top: var(--sgi-space-3);
+}
+
+@media (min-width: bp.$desktop) {
+  .entrada {
+    flex-direction: row;
+  }
+
+  .identidade {
+    flex: 0 0 44%;
+    justify-content: center;
+    gap: var(--sgi-space-3);
+    padding: var(--sgi-space-8) var(--sgi-space-6);
+    background: var(--sgi-color-background-secondary);
+  }
+
+  .logo {
+    height: 120px;
+  }
+
+  .sistema {
+    font-size: var(--sgi-font-size-h2);
+    max-width: 18ch;
+  }
+
+  .painel {
+    align-self: center;
+    padding: var(--sgi-space-6);
+  }
+}

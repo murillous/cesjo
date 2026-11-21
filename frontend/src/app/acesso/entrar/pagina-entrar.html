@@ -1,0 +1,74 @@
+<div class="entrada">
+  <section class="identidade" aria-label="CESJO SGI">
+    <img
+      class="logo"
+      src="logo-pobres-servos-cesjo.png"
+      alt="Pobres Servos da Divina Providência, CESJO"
+      width="427"
+      height="192"
+    />
+    <p class="sistema">Sistema de Gestão do Centro-Dia</p>
+  </section>
+
+  <main class="painel">
+    <h1>Entrar</h1>
+    <p class="texto-secundario">Use o login e a senha que a coordenação entregou para você.</p>
+
+    <form [formGroup]="formulario" (ngSubmit)="entrar()" novalidate>
+      <mat-form-field appearance="outline">
+        <mat-label>Login</mat-label>
+        <input
+          matInput
+          formControlName="login"
+          autocomplete="username"
+          autocapitalize="none"
+          spellcheck="false"
+        />
+        @if (formulario.controls.login.hasError('required')) {
+          <mat-error>Informe o login.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Senha</mat-label>
+        <input
+          matInput
+          formControlName="senha"
+          autocomplete="current-password"
+          [type]="senhaVisivel() ? 'text' : 'password'"
+        />
+        <button
+          matIconButton
+          matSuffix
+          type="button"
+          [attr.aria-label]="senhaVisivel() ? 'Ocultar senha' : 'Mostrar senha'"
+          [attr.aria-pressed]="senhaVisivel()"
+          (click)="senhaVisivel.set(!senhaVisivel())"
+        >
+          <mat-icon aria-hidden="true">{{
+            senhaVisivel() ? 'visibility_off' : 'visibility'
+          }}</mat-icon>
+        </button>
+        @if (formulario.controls.senha.hasError('required')) {
+          <mat-error>Informe a senha.</mat-error>
+        }
+      </mat-form-field>
+
+      @if (erro(); as mensagem) {
+        <p class="erro" role="alert">{{ mensagem }}</p>
+      }
+
+      <button matButton="filled" type="submit" class="enviar" [disabled]="enviando()">
+        @if (enviando()) {
+          <mat-spinner diameter="20" aria-label="Entrando" />
+        } @else {
+          Entrar
+        }
+      </button>
+    </form>
+
+    <p class="ajuda texto-secundario">
+      Esqueceu a senha ou a conta foi bloqueada? Peça à coordenação para redefinir a sua senha.
+    </p>
+  </main>
+</div>

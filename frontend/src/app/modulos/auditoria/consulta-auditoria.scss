@@ -1,0 +1,158 @@
+@use 'styles/breakpoints' as bp;
+
+// Mobile-first: no celular os filtros empilham e cada registro é um cartão. A partir do tablet os
+// filtros ficam em grade e os registros viram tabela, que rola dentro do próprio contêiner.
+
+.cabecalho p {
+  max-width: 70ch;
+}
+
+.filtros {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0 var(--sgi-space-2);
+  padding: var(--sgi-space-2);
+  margin-bottom: var(--sgi-space-3);
+  background: var(--sgi-color-background-secondary);
+  border-radius: var(--sgi-radius-lg);
+  border-left: var(--sgi-space-0-5) solid var(--sgi-color-primary);
+}
+
+.botoes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sgi-space-1);
+  padding-bottom: var(--sgi-space-2);
+}
+
+.resultado {
+  min-width: 0;
+}
+
+.total {
+  margin-bottom: var(--sgi-space-1);
+}
+
+.aviso {
+  padding: var(--sgi-space-3) var(--sgi-space-2);
+  border: var(--sgi-border);
+  border-radius: var(--sgi-radius-md);
+
+  p {
+    margin-bottom: var(--sgi-space-1);
+  }
+}
+
+// Rótulo da ação. As ações que pedem atenção usam o destaque suave do guia.
+.acao {
+  display: inline-block;
+  padding: var(--sgi-space-0-5) var(--sgi-space-1);
+  font-size: var(--sgi-font-size-small);
+  font-weight: var(--sgi-font-weight-medium);
+  color: var(--sgi-color-primary-dark);
+  border: var(--sgi-border);
+  border-radius: var(--sgi-radius-sm);
+  white-space: nowrap;
+}
+
+.acao-destaque {
+  background: var(--sgi-color-accent-soft);
+  border-color: var(--sgi-color-accent-soft);
+}
+
+.cartoes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sgi-space-1);
+}
+
+.cartao {
+  padding: var(--sgi-space-1-5) var(--sgi-space-2);
+  border: var(--sgi-border);
+  border-radius: var(--sgi-radius-md);
+  overflow-wrap: anywhere;
+}
+
+.cartao-topo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sgi-space-1);
+  margin-bottom: var(--sgi-space-1);
+}
+
+.entidade {
+  margin-bottom: var(--sgi-space-0-5);
+  font-weight: var(--sgi-font-weight-semibold);
+
+  span {
+    display: block;
+    font-weight: var(--sgi-font-weight-regular);
+  }
+}
+
+.detalhes {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0 var(--sgi-space-1-5);
+  margin: 0;
+  font-size: var(--sgi-font-size-small);
+
+  dt {
+    color: var(--sgi-color-text-secondary);
+  }
+
+  dd {
+    margin: 0;
+  }
+}
+
+.tabela-rolagem {
+  display: none;
+}
+
+@media (min-width: bp.$tablet) {
+  .filtros {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: var(--sgi-space-2) var(--sgi-space-3);
+  }
+
+  .campo-periodo,
+  .botoes {
+    grid-column: 1 / -1;
+  }
+
+  .cartoes {
+    display: none;
+  }
+
+  .tabela-rolagem {
+    display: block;
+    overflow-x: auto;
+    border: var(--sgi-border);
+    border-radius: var(--sgi-radius-md);
+  }
+
+  .tabela {
+    min-width: 760px;
+  }
+
+  .identificador {
+    display: block;
+  }
+}
+
+@media (min-width: bp.$desktop-large) {
+  .filtros {
+    grid-template-columns: minmax(0, 1.5fr) repeat(3, minmax(0, 1fr));
+  }
+
+  .campo-periodo {
+    grid-column: auto;
+  }
+}
