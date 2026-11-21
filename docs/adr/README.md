@@ -68,3 +68,7 @@ frente de trabalho paralela não é usado todo.
 - [0053](0053-ci-das-imagens-de-implantacao.md) — CI constrói as imagens e testa a pilha sem publicar
 - [0054](0054-backup-diario-com-restic.md) — Backup diário com restic para um repositório fora da VPS (provisório)
 - [0065](0065-retencao-dos-backups.md) — Retenção dos backups: 7 diários, 4 semanais e 6 mensais (provisório)
+- [0066](0066-saude-publica-em-saude.md) — Estado de saúde publicado em `/saude`
+- [0067](0067-monitor-externo-no-github-actions.md) — Monitor externo de disponibilidade no GitHub Actions (provisório)
+- [0068](0068-relatorio-mensal-de-uptime.md) — Relatório mensal de uptime a partir das execuções do monitor
+- [0069](0069-alerta-de-disco-cheio.md) — Alerta de disco cheio pelo contêiner de backup

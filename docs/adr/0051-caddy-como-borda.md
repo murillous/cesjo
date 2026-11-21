@@ -1,6 +1,6 @@
 # ADR 0051 — Caddy como borda: TLS, estáticos, proxy de `/api` e cabeçalhos
 
-**Status:** Aceito (2026-11-21)
+**Status:** Aceito (2026-11-21) · Complementado pelo [ADR 0066](0066-saude-publica-em-saude.md) (`/saude`)
 
 ## Contexto
 
