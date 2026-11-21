@@ -1,0 +1,19 @@
+<nav class="menu" aria-label="Menu principal">
+  <ul>
+    @for (entrada of entradas; track entrada.link) {
+      <li>
+        <a
+          class="menu-item"
+          [routerLink]="entrada.link"
+          routerLinkActive="ativo"
+          ariaCurrentWhenActive="page"
+          [routerLinkActiveOptions]="{ exact: entrada.link === '/' }"
+          (click)="navegou.emit()"
+        >
+          <i [class]="entrada.icone" aria-hidden="true"></i>
+          <span>{{ entrada.rotulo }}</span>
+        </a>
+      </li>
+    }
+  </ul>
+</nav>

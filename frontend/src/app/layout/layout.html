@@ -1,0 +1,53 @@
+<div class="layout" [class.menu-oculto]="!menuVisivel()">
+  <header class="topbar">
+    <p-button
+      icon="pi pi-bars"
+      [text]="true"
+      [rounded]="true"
+      severity="secondary"
+      [ariaLabel]="menuVisivel() ? 'Fechar menu' : 'Abrir menu'"
+      [pt]="{ root: { 'aria-expanded': menuVisivel(), 'aria-controls': 'menu-lateral' } }"
+      (onClick)="alternarMenu()"
+    />
+
+    <a class="marca" routerLink="/" aria-label="CESJO SGI, ir para o início">
+      <img
+        class="logo"
+        src="logo-pobres-servos-cesjo.png"
+        alt="Pobres Servos da Divina Providência, CESJO"
+        width="427"
+        height="192"
+      />
+    </a>
+
+    <div class="acoes">
+      <!-- Espaço reservado: notificações (#19) e conta (#13). -->
+      <p-button
+        icon="pi pi-bell"
+        [text]="true"
+        [rounded]="true"
+        severity="secondary"
+        ariaLabel="Notificações"
+      />
+      <p-button
+        icon="pi pi-user"
+        [text]="true"
+        [rounded]="true"
+        severity="secondary"
+        ariaLabel="Minha conta"
+      />
+    </div>
+  </header>
+
+  <aside id="menu-lateral" class="sidebar" [attr.inert]="menuVisivel() ? null : ''">
+    <app-menu (navegou)="fecharGaveta()" />
+  </aside>
+
+  @if (mostrarMascara()) {
+    <div class="mascara" aria-hidden="true" (click)="fecharGaveta()"></div>
+  }
+
+  <main class="conteudo">
+    <router-outlet />
+  </main>
+</div>
