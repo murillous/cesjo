@@ -66,3 +66,6 @@ frente de trabalho paralela não é usado todo.
 - [0046](0046-ligacao-entre-colaborador-e-conta-de-acesso.md) — Ligação entre colaborador e conta de acesso guardada no colaborador
 - [0047](0047-permissoes-dos-colaboradores.md) — Permissões do cadastro de colaboradores (provisório)
 - [0048](0048-telas-de-colaboradores.md) — Telas de listagem e cadastro de colaboradores
+- [0049](0049-candidato-em-avaliacao-e-api-da-lista-de-espera.md) — Candidato em avaliação e API Java da lista de espera (provisório)
+- [0070](0070-agendamento-e-agenda-das-visitas.md) — Agendamento e agenda das visitas domiciliares
+- [0071](0071-permissoes-das-visitas.md) — Permissões da agenda e do agendamento de visitas
