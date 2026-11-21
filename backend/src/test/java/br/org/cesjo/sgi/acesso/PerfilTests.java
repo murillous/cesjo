@@ -72,6 +72,14 @@ class PerfilTests {
 	}
 
 	@Test
+	void escutaSoParaCoordenadorEEquipeTecnica() {
+		assertThat(Arrays.stream(Perfil.values()).filter(perfil -> perfil.tem(Permissao.ESCUTA_LER)))
+			.containsExactlyInAnyOrder(Perfil.COORDENADOR, Perfil.EQUIPE_TECNICA);
+		assertThat(Arrays.stream(Perfil.values()).filter(perfil -> perfil.tem(Permissao.ESCUTA_REGISTRAR)))
+			.containsExactlyInAnyOrder(Perfil.COORDENADOR, Perfil.EQUIPE_TECNICA);
+	}
+
+	@Test
 	void todosVeemAsPropriasNotificacoes() {
 		assertThat(Perfil.values()).allMatch(perfil -> perfil.tem(Permissao.NOTIFICACOES_LER));
 	}

@@ -9,6 +9,8 @@ import static br.org.cesjo.sgi.acesso.Permissao.COLABORADORES_LER;
 import static br.org.cesjo.sgi.acesso.Permissao.CONTAS_GERENCIAR;
 import static br.org.cesjo.sgi.acesso.Permissao.DOCUMENTOS_ENVIAR;
 import static br.org.cesjo.sgi.acesso.Permissao.DOCUMENTOS_LER;
+import static br.org.cesjo.sgi.acesso.Permissao.ESCUTA_LER;
+import static br.org.cesjo.sgi.acesso.Permissao.ESCUTA_REGISTRAR;
 import static br.org.cesjo.sgi.acesso.Permissao.LISTA_ESPERA_CADASTRAR;
 import static br.org.cesjo.sgi.acesso.Permissao.LISTA_ESPERA_EDITAR;
 import static br.org.cesjo.sgi.acesso.Permissao.LISTA_ESPERA_FILA_LER;
@@ -39,14 +41,15 @@ public enum Perfil {
 			EnumSet.of(CONTAS_GERENCIAR, AUDITORIA_LER, DOCUMENTOS_LER, DOCUMENTOS_ENVIAR, NOTIFICACOES_LER,
 					LISTA_ESPERA_LER, LISTA_ESPERA_CADASTRAR, LISTA_ESPERA_FILA_LER, LISTA_ESPERA_EDITAR, COLABORADORES_LER,
 					COLABORADORES_GERENCIAR, ATENDIDOS_INSERIR, ATENDIDOS_LER, ATENDIDOS_LER_BASICO, VISITAS_LER,
-					VISITAS_AGENDAR, VISITAS_REGISTRAR)),
+					VISITAS_AGENDAR, VISITAS_REGISTRAR, ESCUTA_LER, ESCUTA_REGISTRAR)),
 
 	// PENDENTE-CESJO(P17): a Equipe Técnica não vê o cadastro de colaboradores (gestão institucional, ADR 0047).
 	// PENDENTE-CESJO(P17): a Equipe Técnica lê e edita a lista de espera mas não cadastra candidatos (ADR 0039) e
 	// lê os usuários atendidos mas não insere no serviço (ADR 0082).
 	EQUIPE_TECNICA("Equipe Técnica",
 			EnumSet.of(DOCUMENTOS_LER, NOTIFICACOES_LER, LISTA_ESPERA_LER, LISTA_ESPERA_FILA_LER, LISTA_ESPERA_EDITAR,
-					ATENDIDOS_LER, ATENDIDOS_LER_BASICO, VISITAS_LER, VISITAS_AGENDAR, VISITAS_REGISTRAR)),
+					ATENDIDOS_LER, ATENDIDOS_LER_BASICO, VISITAS_LER, VISITAS_AGENDAR, VISITAS_REGISTRAR, ESCUTA_LER,
+					ESCUTA_REGISTRAR)),
 
 	// PENDENTE-CESJO(P17): o Administrativo não vê o cadastro de colaboradores (gestão institucional, ADR 0047).
 	// PENDENTE-CESJO(P8): o Administrativo agenda, cancela e reagenda visitas, mas não registra a realização

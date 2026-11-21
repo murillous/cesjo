@@ -62,6 +62,12 @@ public enum Permissao {
 	VISITAS_AGENDAR,
 
 	/** Registrar a realização da visita e ler as observações, que são sensíveis (RF004, ADR 0074). */
-	VISITAS_REGISTRAR
+	VISITAS_REGISTRAR,
+
+	/** Ler as escutas ativas e qualificadas, com os textos sensíveis (RF005, ADR 0101). */
+	ESCUTA_LER,
+
+	/** Registrar e corrigir escutas (RF005, ADR 0101). */
+	ESCUTA_REGISTRAR
 
 }
