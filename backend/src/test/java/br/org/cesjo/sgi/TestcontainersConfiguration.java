@@ -22,7 +22,7 @@ import org.testcontainers.utility.DockerImageName;
  * embedded-postgres, compartilhado por todos os contextos da JVM (ADR 0008).
  */
 @TestConfiguration(proxyBeanMethods = false)
-class TestcontainersConfiguration {
+public class TestcontainersConfiguration {
 
 	@Bean
 	@ServiceConnection
