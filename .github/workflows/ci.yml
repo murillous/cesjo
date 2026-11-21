@@ -105,6 +105,12 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      # Os workflows agendados (monitoramento e relatório de uptime) só rodam na branch padrão;
+      # aqui eles são ao menos validados.
+      - name: Validar os workflows
+        working-directory: .
+        run: docker run --rm -v "$PWD:/repo" -w /repo rhysd/actionlint:1.7.7 -color
+
       - name: Validar o compose com o .env.example
         run: |
           cp .env.example .env
@@ -152,6 +158,9 @@ jobs:
           curl -sSkI https://localhost/ | grep -i '^cache-control: no-cache' > /dev/null
           bundle="$(curl -fsSk https://localhost/ | grep -o 'main-[A-Za-z0-9]*\.js' | head -1)"
           curl -sSkI "https://localhost/$bundle" | grep -i '^cache-control: public, max-age=31536000, immutable' > /dev/null
+          echo "Saúde pública em /saude, só com o estado agregado (issue #23)"
+          saude="$(curl -fsSk https://localhost/saude)"
+          test "$saude" = '{"status":"UP"}'
           echo "Actuator saudável dentro da rede"
           docker compose exec -T app curl -fsS http://localhost:8080/actuator/health | grep '"status":"UP"' > /dev/null
           echo "Aplicação roda sem root"
@@ -174,6 +183,14 @@ jobs:
           docker compose exec -T backup backup.sh
           echo "Falha do backup sai com erro"
           if docker compose exec -T -e RESTIC_PASSWORD=errada backup backup.sh; then exit 1; fi
+
+      - name: Alerta de disco (issue #23)
+        run: |
+          set -euo pipefail
+          echo "Disco abaixo do limite padrão"
+          docker compose exec -T backup disco.sh
+          echo "Limite de 1% dispara o alerta"
+          if docker compose exec -T -e SGI_DISCO_LIMITE_PERCENTUAL=1 backup disco.sh; then exit 1; fi
 
       - name: Backup agendado pelo crond (issue #21)
         run: |

@@ -19,6 +19,14 @@
 		-Server
 	}
 
+	# Saúde para o monitor externo (issue #23, ADR 0066): só o estado agregado do Actuator, sem
+	# detalhes, em /saude. O resto do Actuator não é publicado.
+	handle /saude {
+		rewrite * /actuator/health
+		reverse_proxy app:8080
+		header Cache-Control "no-store"
+	}
+
 	# API: repassada para a aplicação. O Actuator não é publicado (fica só na rede interna).
 	handle /api/* {
 		# Arquivos de até 10 MB mais o envelope multipart (spring.servlet.multipart.max-request-size).

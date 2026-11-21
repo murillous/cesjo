@@ -1,0 +1,44 @@
+# Monitor externo de disponibilidade do CESJO SGI (issue #23, ADR 0067).
+#
+# A cada 5 minutos consulta https://<domínio>/saude, fora da VPS. Uma falha deixa a execução
+# vermelha, e o GitHub avisa por e-mail quem ativou o agendamento (Settings > Notifications >
+# Actions). As execuções agendadas são a base do relatório mensal de uptime (relatorio-uptime.yml).
+#
+# PENDENTE-CESJO(P15): domínio desconhecido; a URL vem da variável de repositório SGI_URL_SAUDE,
+# e sem ela o monitor não roda (ADR 0067).
+name: Monitoramento
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: monitoramento
+  cancel-in-progress: false
+
+jobs:
+  saude:
+    name: saude
+    if: vars.SGI_URL_SAUDE != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Consultar a saúde do sistema
+        env:
+          URL: ${{ vars.SGI_URL_SAUDE }}
+        run: |
+          # Três tentativas espaçadas, para uma oscilação de rede isolada não virar alerta.
+          for tentativa in 1 2 3; do
+            corpo="$(curl -fsS -m 10 "$URL" || true)"
+            case "$corpo" in
+              *'"status":"UP"'*) echo "sistema no ar (tentativa $tentativa)"; exit 0 ;;
+            esac
+            echo "tentativa $tentativa falhou: ${corpo:-sem resposta}"
+            [ "$tentativa" = 3 ] || sleep 20
+          done
+          echo "::error::$URL não respondeu UP em 3 tentativas"
+          exit 1
