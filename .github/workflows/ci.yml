@@ -1,0 +1,98 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  backend:
+    name: backend
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Configurar JDK 25 (Temurin)
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: maven
+          cache-dependency-path: backend/pom.xml
+
+      # O mvnw está versionado sem o bit de execução.
+      - name: Permitir execução do Maven Wrapper
+        run: chmod +x mvnw
+
+      # Os runners Ubuntu do GitHub têm Docker, então os testes com Testcontainers rodam aqui.
+      - name: Build e testes
+        run: ./mvnw -B verify
+
+      - name: Publicar relatórios de teste
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: relatorios-de-teste-backend
+          path: |
+            backend/target/surefire-reports/
+            backend/target/failsafe-reports/
+          if-no-files-found: ignore
+          retention-days: 7
+
+  frontend:
+    name: frontend
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v7
+
+      # Enquanto frontend/package.json não existir (issue #11), os passos abaixo são pulados e o job passa.
+      - name: Verificar se o frontend existe
+        id: frontend
+        working-directory: .
+        run: |
+          if [ -f frontend/package.json ]; then
+            echo "existe=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "existe=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::frontend/package.json não encontrado; job do frontend sem nada a fazer."
+          fi
+
+      - name: Configurar Node
+        if: steps.frontend.outputs.existe == 'true'
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: frontend/.nvmrc
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Instalar dependências
+        if: steps.frontend.outputs.existe == 'true'
+        run: npm ci
+
+      - name: Lint
+        if: steps.frontend.outputs.existe == 'true'
+        run: npm run lint
+
+      - name: Testes
+        if: steps.frontend.outputs.existe == 'true'
+        run: npm run test:ci
+
+      - name: Build
+        if: steps.frontend.outputs.existe == 'true'
+        run: npm run build
