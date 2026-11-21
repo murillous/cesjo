@@ -80,6 +80,16 @@ class Insercao {
 		this.atualizadoPor = autor;
 	}
 
+	/** Tira do serviço: a inserção deixa de ocupar vaga (RF008). */
+	void desligar(UUID autor, Instant agora) {
+		if (situacao != SituacaoInsercao.ATIVA) {
+			throw new IllegalStateException("Inserção já desligada: " + id);
+		}
+		this.situacao = SituacaoInsercao.DESLIGADA;
+		this.atualizadoEm = agora;
+		this.atualizadoPor = autor;
+	}
+
 	UUID getId() {
 		return id;
 	}

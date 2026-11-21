@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 import br.org.cesjo.sgi.atendidos.FaixaEtaria;
+import br.org.cesjo.sgi.atendidos.MotivoDesligamento;
 import br.org.cesjo.sgi.atendidos.SituacaoInsercao;
 import br.org.cesjo.sgi.atendidos.Turno;
 import br.org.cesjo.sgi.listaespera.OrigemEncaminhamento;
@@ -21,24 +22,24 @@ final class VisoesAtendido {
 	// PENDENTE-CESJO(P8): "dados básicos" são só nome, situação, turno e datas (ADR 0015 e ADR 0082).
 	/** Item da listagem e ficha para quem só tem {@code ATENDIDOS_LER_BASICO}. */
 	record Basico(UUID id, String nomeCompleto, SituacaoInsercao situacao, Turno turno, LocalDate dataInsercao,
-			boolean completo) {
+			LocalDate dataDesligamento, boolean completo) {
 
 		static Basico de(LinhaAtendido linha) {
 			return new Basico(linha.id(), linha.nomeCompleto(), linha.situacao(), linha.turno(), linha.dataInsercao(),
-					false);
+					linha.dataDesligamento(), false);
 		}
 
 	}
 
 	/** Item da listagem para quem tem {@code ATENDIDOS_LER}. */
 	record Item(UUID id, UUID pessoaId, String nomeCompleto, SituacaoInsercao situacao, Turno turno,
-			LocalDate dataInsercao, TipoDeficiencia tipoDeficiencia, LocalDate dataNascimento, Integer idade,
+			LocalDate dataInsercao, LocalDate dataDesligamento, TipoDeficiencia tipoDeficiencia, LocalDate dataNascimento, Integer idade,
 			FaixaEtaria faixaEtaria, boolean completo) {
 
 		static Item de(LinhaAtendido linha, LocalDate hoje) {
 			LocalDate nascimento = linha.dataNascimento();
 			return new Item(linha.id(), linha.pessoaId(), linha.nomeCompleto(), linha.situacao(), linha.turno(),
-					linha.dataInsercao(), linha.tipoDeficiencia(), nascimento,
+					linha.dataInsercao(), linha.dataDesligamento(), linha.tipoDeficiencia(), nascimento,
 					nascimento == null ? null : FaixaEtaria.idade(nascimento, hoje),
 					FaixaEtaria.de(nascimento, hoje).orElse(null), true);
 		}
@@ -48,7 +49,12 @@ final class VisoesAtendido {
 	/** Ficha completa: inserção, pessoa, cuidador e inscrição de origem. */
 	record Ficha(UUID id, UUID pessoaId, String nomeCompleto, SituacaoInsercao situacao, Turno turno,
 			LocalDate dataInsercao, TipoDeficiencia tipoDeficiencia, LocalDate dataNascimento, Integer idade,
-			FaixaEtaria faixaEtaria, String telefone, String nomeCuidador, Inscricao inscricao, boolean completo) {
+			FaixaEtaria faixaEtaria, String telefone, String nomeCuidador, Inscricao inscricao,
+			Desligamento desligamento, boolean completo) {
+	}
+
+	/** Desligamento na ficha completa. Ler a observação é auditado (ADR 0110). */
+	record Desligamento(UUID id, LocalDate data, MotivoDesligamento motivo, String observacao) {
 	}
 
 	/** De onde a pessoa veio na lista de espera. */

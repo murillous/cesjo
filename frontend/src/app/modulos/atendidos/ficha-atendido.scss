@@ -69,6 +69,15 @@ dt {
   color: var(--sgi-color-text-secondary);
 }
 
+.desligar {
+  margin-top: var(--sgi-space-2);
+  min-height: var(--sgi-alvo-toque);
+}
+
+.observacao {
+  white-space: pre-line;
+}
+
 dd {
   margin: 0 0 var(--sgi-space-1-5);
   overflow-wrap: anywhere;

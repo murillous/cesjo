@@ -31,3 +31,19 @@ export const FAIXAS_ETARIAS: readonly { valor: FaixaEtaria; rotulo: string }[] =
 export function rotuloFaixa(faixa: FaixaEtaria | null): string {
   return FAIXAS_ETARIAS.find((f) => f.valor === faixa)?.rotulo ?? 'Fora de 18 a 59 anos';
 }
+
+/** Motivos de desligamento (RF008), com os nomes do enum `MotivoDesligamento` do backend. */
+export type MotivoDesligamento =
+  'EVASAO' | 'MUDANCA_MUNICIPIO' | 'SOLICITACAO_FAMILIA' | 'ALCANCE_OBJETIVOS' | 'OUTROS';
+
+export const MOTIVOS_DESLIGAMENTO: readonly { valor: MotivoDesligamento; rotulo: string }[] = [
+  { valor: 'EVASAO', rotulo: 'Evasão' },
+  { valor: 'MUDANCA_MUNICIPIO', rotulo: 'Mudança para outro município' },
+  { valor: 'SOLICITACAO_FAMILIA', rotulo: 'Solicitação da família' },
+  { valor: 'ALCANCE_OBJETIVOS', rotulo: 'Alcance dos objetivos' },
+  { valor: 'OUTROS', rotulo: 'Outros' },
+];
+
+export function rotuloMotivo(motivo: MotivoDesligamento): string {
+  return MOTIVOS_DESLIGAMENTO.find((m) => m.valor === motivo)?.rotulo ?? motivo;
+}

@@ -18,7 +18,16 @@
       <p class="estado">
         <span class="turno">{{ rotuloTurno(f.turno) }}</span>
         <span>{{ situacoes[f.situacao] }} desde {{ f.dataInsercao | date: 'dd/MM/yyyy' }}</span>
+        @if (!f.completo && f.dataDesligamento) {
+          <span>Desligado em {{ f.dataDesligamento | date: 'dd/MM/yyyy' }}</span>
+        }
       </p>
+      @if (podeDesligar && f.situacao === 'ATIVA') {
+        <a matButton="outlined" routerLink="desligar" class="desligar">
+          <mat-icon aria-hidden="true">logout</mat-icon>
+          Registrar desligamento
+        </a>
+      }
     </header>
 
     @if (f.completo) {
@@ -58,6 +67,22 @@
             <dd>{{ f.nomeCuidador ?? 'Não informado' }}</dd>
           </dl>
         </section>
+
+        @if (f.desligamento; as desligamento) {
+          <section aria-labelledby="titulo-desligamento" class="bloco">
+            <h2 id="titulo-desligamento">Desligamento</h2>
+            <dl>
+              <dt>Data</dt>
+              <dd>{{ desligamento.data | date: 'dd/MM/yyyy' }}</dd>
+              <dt>Motivo</dt>
+              <dd>{{ rotuloMotivo(desligamento.motivo) }}</dd>
+              @if (desligamento.observacao) {
+                <dt>Observação</dt>
+                <dd class="observacao">{{ desligamento.observacao }}</dd>
+              }
+            </dl>
+          </section>
+        }
 
         @if (f.inscricao; as inscricao) {
           <section aria-labelledby="titulo-inscricao" class="bloco">

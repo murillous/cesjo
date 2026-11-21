@@ -6,9 +6,10 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { RouterLink } from '@angular/router';
 
 import { mensagemDeErro } from '../../acesso/problema';
+import { Sessao } from '../../acesso/sessao';
 import { ORIGENS_ENCAMINHAMENTO, TIPOS_DEFICIENCIA } from '../lista-espera/rotulos';
 import { AtendidosApi, FichaAtendido } from './atendidos-api';
-import { ROTULOS_SITUACAO_INSERCAO, rotuloFaixa, rotuloTurno } from './rotulos';
+import { ROTULOS_SITUACAO_INSERCAO, rotuloFaixa, rotuloMotivo, rotuloTurno } from './rotulos';
 
 /**
  * Ficha do usuário atendido (`/atendidos/:id`, RF007, ADR 0083). Mostra o que a conta pode ver: a
@@ -34,6 +35,8 @@ export class FichaAtendidoPagina implements OnInit {
   protected readonly situacoes = ROTULOS_SITUACAO_INSERCAO;
   protected readonly rotuloTurno = rotuloTurno;
   protected readonly rotuloFaixa = rotuloFaixa;
+  protected readonly rotuloMotivo = rotuloMotivo;
+  protected readonly podeDesligar = inject(Sessao).temPermissao('ATENDIDOS_DESLIGAR');
 
   ngOnInit(): void {
     this.api.ficha(this.id()).subscribe({

@@ -1,35 +1,25 @@
 package br.org.cesjo.sgi.atendidos;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.authentication;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.UUID;
 
-import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import br.org.cesjo.sgi.TestcontainersConfiguration;
-import br.org.cesjo.sgi.acesso.AutenticacaoDeTeste;
 import br.org.cesjo.sgi.acesso.ComConta;
 import br.org.cesjo.sgi.acesso.Perfil;
-import tools.jackson.databind.json.JsonMapper;
 
 /**
  * Listagem e ficha dos usuários atendidos (issue #41): filtros, visão completa para quem tem
@@ -43,15 +33,13 @@ class ConsultaAtendidosTests {
 
 	private static final String URL = "/api/atendidos";
 
-	private static final LocalDate HOJE = LocalDate.now(ZoneId.of("America/Sao_Paulo"));
+	private static final LocalDate HOJE = AtendidosDeTeste.HOJE;
 
 	@Autowired
 	MockMvc mvc;
 
 	@Autowired
 	JdbcTemplate jdbc;
-
-	private final JsonMapper json = JsonMapper.builder().build();
 
 	@Test
 	@ComConta(perfil = Perfil.COORDENADOR, login = "atendidos-lista-coord")
@@ -172,41 +160,8 @@ class ConsultaAtendidosTests {
 		return "Teste" + UUID.randomUUID().toString().substring(0, 8);
 	}
 
-	/**
-	 * Cadastra na fila e insere no serviço pelas APIs, sempre como Coordenador, qualquer que seja a conta
-	 * do teste; devolve o id da inserção.
-	 */
 	private String inserirNoServico(String nome, LocalDate nascimento, String tipo, String turno) throws Exception {
-		Map<String, Object> inscricao = new LinkedHashMap<>();
-		inscricao.put("nomeCompleto", nome);
-		inscricao.put("dataNascimento", nascimento == null ? null : nascimento.toString());
-		inscricao.put("tipoDeficiencia", tipo);
-		inscricao.put("telefone", "31912345678");
-		inscricao.put("nomeResponsavel", "Responsável Fictício");
-		inscricao.put("origemEncaminhamento", "SAUDE");
-		inscricao.put("dataCadastro", HOJE.minusDays(10).toString());
-		String corpo = criar("/api/lista-espera/inscricoes", inscricao);
-		String inscricaoId = JsonPath.read(corpo, "$.id");
-		String responsavelId = jdbc.queryForObject("select id::text from responsavel where pessoa_id = ?::uuid",
-				String.class, (String) JsonPath.read(corpo, "$.pessoaId"));
-
-		Map<String, Object> insercao = new LinkedHashMap<>();
-		insercao.put("inscricaoId", inscricaoId);
-		insercao.put("dataInsercao", HOJE.minusDays(1).toString());
-		insercao.put("turno", turno);
-		insercao.put("cuidadorResponsavelId", responsavelId);
-		return JsonPath.read(criar("/api/atendidos/insercoes", insercao), "$.id");
-	}
-
-	private String criar(String url, Object corpo) throws Exception {
-		return mvc
-			.perform(post(url).with(csrf())
-				.with(authentication(AutenticacaoDeTeste.de(Perfil.COORDENADOR, "atendidos-coord-auxiliar")))
-				.contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(corpo)))
-			.andExpect(status().isCreated())
-			.andReturn()
-			.getResponse()
-			.getContentAsString();
+		return new AtendidosDeTeste(mvc, jdbc).inserirNoServico(nome, nascimento, tipo, turno);
 	}
 
 }

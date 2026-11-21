@@ -9,5 +9,6 @@ import br.org.cesjo.sgi.pessoas.TipoDeficiencia;
 
 /** Uma linha da consulta de leitura da listagem, antes de virar a visão básica ou a completa. */
 record LinhaAtendido(UUID id, UUID pessoaId, String nomeCompleto, LocalDate dataNascimento,
-		TipoDeficiencia tipoDeficiencia, Turno turno, SituacaoInsercao situacao, LocalDate dataInsercao) {
+		TipoDeficiencia tipoDeficiencia, Turno turno, SituacaoInsercao situacao, LocalDate dataInsercao,
+		LocalDate dataDesligamento) {
 }

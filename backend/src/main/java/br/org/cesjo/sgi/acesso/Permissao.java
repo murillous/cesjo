@@ -83,6 +83,9 @@ public enum Permissao {
 	CAPACIDADE_LER,
 
 	/** Definir a capacidade do serviço (RF003, ADR 0092). */
-	CAPACIDADE_EDITAR
+	CAPACIDADE_EDITAR,
+
+	/** Registrar o desligamento de um usuário atendido (RF008, ADR 0110). */
+	ATENDIDOS_DESLIGAR
 
 }

@@ -111,6 +111,8 @@ frente de trabalho paralela não é usado todo.
 - [0106](0106-status-e-novas-versoes-do-pia.md) — Status do PIA em ordem fixa, com data, e mudança por nova versão (provisório)
 - [0107](0107-aprovacao-do-pia-pelo-coordenador.md) — Aprovação do PIA só pelo Coordenador
 - [0108](0108-impressao-do-pia.md) — PIA impresso ou salvo em PDF pelo navegador
+- [0110](0110-desligamento-do-usuario-atendido.md) — Desligamento do usuário atendido (provisório)
+- [0111](0111-evento-de-vaga-liberada.md) — Evento UsuarioDesligado para a vaga liberada
 - [0120](0120-procedimento-de-restauracao.md) — Restauração por script na imagem de backup, numa pilha com só o banco no ar
 - [0121](0121-guarda-dos-segredos-fora-da-vps.md) — Cópia dos segredos da implantação fora da VPS (provisório)
 - [0122](0122-teste-de-restauracao-no-ci-e-exercicio.md) — Restauração testada no CI a cada PR e exercício trimestral

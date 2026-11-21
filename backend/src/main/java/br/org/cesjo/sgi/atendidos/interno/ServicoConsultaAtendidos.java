@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.org.cesjo.sgi.atendidos.FaixaEtaria;
+import br.org.cesjo.sgi.auditoria.Auditoria;
+import br.org.cesjo.sgi.auditoria.EventoAuditoria;
 import br.org.cesjo.sgi.compartilhado.web.RecursoNaoEncontradoException;
 import br.org.cesjo.sgi.listaespera.ListaEspera;
 import br.org.cesjo.sgi.pessoas.DadosPessoa;
@@ -33,14 +35,20 @@ class ServicoConsultaAtendidos {
 
 	private final ListaEspera listaEspera;
 
+	private final DesligamentoRepositorio desligamentos;
+
+	private final Auditoria auditoria;
+
 	private final Clock relogio = Clock.system(FUSO);
 
 	ServicoConsultaAtendidos(ConsultaAtendidos consulta, InsercaoRepositorio insercoes, Pessoas pessoas,
-			ListaEspera listaEspera) {
+			ListaEspera listaEspera, DesligamentoRepositorio desligamentos, Auditoria auditoria) {
 		this.consulta = consulta;
 		this.insercoes = insercoes;
 		this.pessoas = pessoas;
 		this.listaEspera = listaEspera;
+		this.desligamentos = desligamentos;
+		this.auditoria = auditoria;
 	}
 
 	Page<VisoesAtendido.Basico> listarBasico(FiltroAtendidos filtro, Pageable pagina) {
@@ -56,7 +64,8 @@ class ServicoConsultaAtendidos {
 		Insercao insercao = insercao(id);
 		DadosPessoa pessoa = pessoa(insercao);
 		return new VisoesAtendido.Basico(insercao.getId(), pessoa.nomeCompleto(), insercao.getSituacao(),
-				insercao.getTurno(), insercao.getDataInsercao(), false);
+				insercao.getTurno(), insercao.getDataInsercao(),
+				desligamentos.findByInsercaoId(id).map(Desligamento::getData).orElse(null), false);
 	}
 
 	VisoesAtendido.Ficha fichaCompleta(UUID id) {
@@ -73,10 +82,18 @@ class ServicoConsultaAtendidos {
 		VisoesAtendido.Inscricao inscricao = listaEspera.obter(insercao.getInscricaoId())
 			.map(i -> new VisoesAtendido.Inscricao(i.id(), i.dataCadastro(), i.origemEncaminhamento()))
 			.orElse(null);
+		VisoesAtendido.Desligamento desligamento = desligamentos.findByInsercaoId(id).map(d -> {
+			if (d.getObservacao() != null) {
+				// A observação cifrada é entregue: leitura de dado sensível (ADR 0023 e ADR 0110).
+				auditoria.registrar(EventoAuditoria.leituraSensivel(ServicoDesligamento.ENTIDADE, d.getId()));
+			}
+			return new VisoesAtendido.Desligamento(d.getId(), d.getData(), d.getMotivo(), d.getObservacao());
+		}).orElse(null);
 		return new VisoesAtendido.Ficha(insercao.getId(), pessoa.id(), pessoa.nomeCompleto(), insercao.getSituacao(),
 				insercao.getTurno(), insercao.getDataInsercao(), pessoa.tipoDeficiencia(), nascimento,
 				nascimento == null ? null : FaixaEtaria.idade(nascimento, hoje),
-				FaixaEtaria.de(nascimento, hoje).orElse(null), pessoa.telefone(), cuidador, inscricao, true);
+				FaixaEtaria.de(nascimento, hoje).orElse(null), pessoa.telefone(), cuidador, inscricao, desligamento,
+				true);
 	}
 
 	private Insercao insercao(UUID id) {

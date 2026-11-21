@@ -18,6 +18,7 @@ const COMPLETO: AtendidoCompleto = {
   situacao: 'ATIVA',
   turno: 'MATUTINO',
   dataInsercao: '2026-11-10',
+  dataDesligamento: null,
   tipoDeficiencia: 'TEA',
   dataNascimento: '1996-01-01',
   idade: 30,
@@ -31,6 +32,7 @@ const BASICO: AtendidoBasico = {
   situacao: 'DESLIGADA',
   turno: 'INTEGRAL',
   dataInsercao: '2026-10-01',
+  dataDesligamento: '2026-11-01',
 };
 
 function pagina(...itens: (AtendidoBasico | AtendidoCompleto)[]): Pagina {
