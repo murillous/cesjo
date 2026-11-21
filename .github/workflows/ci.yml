@@ -170,6 +170,18 @@ jobs:
           echo "Falha do backup sai com erro"
           if docker compose exec -T -e RESTIC_PASSWORD=errada backup backup.sh; then exit 1; fi
 
+      - name: Backup agendado pelo crond (issue #21)
+        run: |
+          set -euo pipefail
+          sed -i "s|^SGI_BACKUP_HORARIO=.*|SGI_BACKUP_HORARIO=* * * * *|" backup.env
+          docker compose up -d backup
+          for _ in $(seq 1 30); do
+            n="$(docker compose exec -T backup restic snapshots --json | grep -o '"short_id"' | wc -l)"
+            if [ "$n" -ge 3 ]; then echo "crond gerou o snapshot ($n no total)"; exit 0; fi
+            sleep 5
+          done
+          echo "o crond não rodou o backup em 150 segundos"; exit 1
+
       - name: Logs da pilha
         if: always()
         run: docker compose logs --no-color --tail 200
