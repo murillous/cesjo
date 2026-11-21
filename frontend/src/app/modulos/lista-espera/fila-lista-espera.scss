@@ -21,6 +21,12 @@
   }
 }
 
+.acoes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sgi-space-1);
+}
+
 .cadastrar {
   min-height: var(--sgi-alvo-toque);
 }
@@ -187,6 +193,11 @@ mat-paginator {
 
   .alternar-filtros {
     display: none;
+  }
+
+  .acoes {
+    flex-direction: row;
+    align-items: flex-start;
   }
 
   // Os filtros ficam sempre à vista: o contêiner some do layout e os campos entram na grade.

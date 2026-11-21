@@ -60,17 +60,15 @@ describe('FilaListaEspera', () => {
   });
 
   afterEach(() => {
-    http
-      .match('/api/lista-espera/vagas')
-      .forEach((pedido) =>
-        pedido.flush({
-          capacidade: 10,
-          ocupadas: 4,
-          disponiveis: 6,
-          tamanhoFila: 2,
-          definidaEm: null,
-        }),
-      );
+    http.match('/api/lista-espera/vagas').forEach((pedido) =>
+      pedido.flush({
+        capacidade: 10,
+        ocupadas: 4,
+        disponiveis: 6,
+        tamanhoFila: 2,
+        definidaEm: null,
+      }),
+    );
     http.verify();
   });
 
@@ -154,6 +152,27 @@ describe('FilaListaEspera', () => {
     pedido.flush(pagina([basico]));
   });
 
+  it('exporta com os filtros da última busca e esconde o botão do Consulta', async () => {
+    const { fixture, componente, elemento } = await renderizar([COMPLETO]);
+    expect(elemento.querySelector('app-botao-exportar')).not.toBeNull();
+    componente.filtros.patchValue({ nome: ' ana ', origem: 'CRAS' }, { emitEvent: false });
+    componente.buscar();
+    http.expectOne((r) => r.url === URL).flush(pagina([COMPLETO]));
+    await fixture.whenStable();
+    const parametros = (
+      fixture.componentInstance as unknown as { parametrosExportacao(): Record<string, unknown> }
+    ).parametrosExportacao();
+    expect(parametros['nome']).toBe('ana');
+    expect(parametros['origem']).toBe('CRAS');
+
+    TestBed.inject(Sessao).definir(contaDeTeste({ permissoes: ['LISTA_ESPERA_FILA_LER'] }));
+    const outra = TestBed.createComponent(FilaListaEspera);
+    outra.detectChanges();
+    http.expectOne((r) => r.url === URL).flush(pagina([]));
+    await outra.whenStable();
+    expect((outra.nativeElement as HTMLElement).querySelector('app-botao-exportar')).toBeNull();
+  });
+
   it('mostra a fila vazia com o convite para cadastrar', async () => {
     const { elemento } = await renderizar([]);
     expect(elemento.querySelector('.aviso')?.textContent).toContain('A fila está vazia.');
@@ -170,10 +189,10 @@ describe('FilaListaEspera', () => {
     await fixture.whenStable();
 
     const elemento = fixture.nativeElement as HTMLElement;
-    expect(elemento.querySelector('[role="alert"]')?.textContent).toContain(
+    expect(elemento.querySelector('.aviso[role="alert"]')?.textContent).toContain(
       'Não foi possível carregar a fila.',
     );
-    elemento.querySelector<HTMLButtonElement>('[role="alert"] button')!.click();
+    elemento.querySelector<HTMLButtonElement>('.aviso[role="alert"] button')!.click();
     http.expectOne((r) => r.url === URL).flush(pagina([COMPLETO]));
   });
 });

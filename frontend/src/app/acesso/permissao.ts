@@ -13,6 +13,7 @@ export type Permissao =
   | 'LISTA_ESPERA_CADASTRAR'
   | 'LISTA_ESPERA_FILA_LER'
   | 'LISTA_ESPERA_EDITAR'
+  | 'LISTA_ESPERA_EXPORTAR'
   | 'CAPACIDADE_LER'
   | 'CAPACIDADE_EDITAR'
   // Do módulo atendidos (issue #39); o backend só concede depois daquela junção.

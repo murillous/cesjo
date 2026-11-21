@@ -3,15 +3,24 @@
     <div>
       <h1 id="titulo-fila">Lista de espera</h1>
       <p class="texto-secundario">
-        Candidatos na ordem da fila, pela data de cadastro. A posição conta só quem está aguardando.
+        Candidatos na ordem da fila, pela data de cadastro. A posição conta só quem segue na fila.
       </p>
     </div>
-    @if (podeCadastrar) {
-      <a matButton="filled" routerLink="nova" class="cadastrar">
-        <mat-icon aria-hidden="true">person_add</mat-icon>
-        Cadastrar candidato
-      </a>
-    }
+    <div class="acoes">
+      @if (podeExportar) {
+        <app-botao-exportar
+          url="/api/lista-espera/exportacao"
+          rotulo="Exportar fila"
+          [parametros]="parametrosExportacao()"
+        />
+      }
+      @if (podeCadastrar) {
+        <a matButton="filled" routerLink="nova" class="cadastrar">
+          <mat-icon aria-hidden="true">person_add</mat-icon>
+          Cadastrar candidato
+        </a>
+      }
+    </div>
   </header>
 
   @if (podeVerVagas) {
