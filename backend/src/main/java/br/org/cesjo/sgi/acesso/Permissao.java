@@ -38,6 +38,9 @@ public enum Permissao {
 	ATENDIDOS_LER,
 
 	/** Ler só os dados básicos dos usuários atendidos: nome, situação, turno e datas (ADR 0082). */
-	ATENDIDOS_LER_BASICO
+	ATENDIDOS_LER_BASICO,
+
+	/** Registrar o desligamento de um usuário atendido (RF008, ADR 0110). */
+	ATENDIDOS_DESLIGAR
 
 }

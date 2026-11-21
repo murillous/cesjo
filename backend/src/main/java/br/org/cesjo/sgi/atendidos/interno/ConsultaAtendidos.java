@@ -29,6 +29,7 @@ class ConsultaAtendidos {
 	private static final String BASE = """
 			from insercao i
 			join pessoa p on p.id = i.pessoa_id
+			left join desligamento d on d.insercao_id = i.id
 			""";
 
 	private final JdbcClient jdbc;
@@ -51,13 +52,14 @@ class ConsultaAtendidos {
 		List<LinhaAtendido> linhas = jdbc
 			.sql("""
 					select i.id, i.pessoa_id, p.nome_completo, p.data_nascimento, p.tipo_deficiencia,
-					       i.turno, i.situacao, i.data_insercao
+					       i.turno, i.situacao, i.data_insercao, d.data as data_desligamento
 					""" + BASE + onde + " order by lower(p.nome_completo), i.id limit :limite offset :deslocamento")
 			.params(parametros)
 			.query((rs, n) -> new LinhaAtendido(rs.getObject("id", UUID.class), rs.getObject("pessoa_id", UUID.class),
 					rs.getString("nome_completo"), rs.getObject("data_nascimento", LocalDate.class),
 					TipoDeficiencia.valueOf(rs.getString("tipo_deficiencia")), Turno.valueOf(rs.getString("turno")),
-					SituacaoInsercao.valueOf(rs.getString("situacao")), rs.getObject("data_insercao", LocalDate.class)))
+					SituacaoInsercao.valueOf(rs.getString("situacao")), rs.getObject("data_insercao", LocalDate.class),
+					rs.getObject("data_desligamento", LocalDate.class)))
 			.list();
 		return new PageImpl<>(linhas, pagina, total);
 	}

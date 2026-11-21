@@ -1,5 +1,6 @@
 package br.org.cesjo.sgi.acesso;
 
+import static br.org.cesjo.sgi.acesso.Permissao.ATENDIDOS_DESLIGAR;
 import static br.org.cesjo.sgi.acesso.Permissao.ATENDIDOS_INSERIR;
 import static br.org.cesjo.sgi.acesso.Permissao.ATENDIDOS_LER;
 import static br.org.cesjo.sgi.acesso.Permissao.ATENDIDOS_LER_BASICO;
@@ -30,10 +31,11 @@ public enum Perfil {
 
 	COORDENADOR("Coordenador",
 			EnumSet.of(CONTAS_GERENCIAR, AUDITORIA_LER, DOCUMENTOS_LER, DOCUMENTOS_ENVIAR, NOTIFICACOES_LER,
-					LISTA_ESPERA_LER, LISTA_ESPERA_CADASTRAR, ATENDIDOS_INSERIR, ATENDIDOS_LER, ATENDIDOS_LER_BASICO)),
+					LISTA_ESPERA_LER, LISTA_ESPERA_CADASTRAR, ATENDIDOS_INSERIR, ATENDIDOS_LER, ATENDIDOS_LER_BASICO,
+					ATENDIDOS_DESLIGAR)),
 
 	// PENDENTE-CESJO(P17): a Equipe Técnica lê a lista de espera mas não cadastra candidatos (ADR 0039) e
-	// lê os usuários atendidos mas não insere no serviço (ADR 0082).
+	// lê os usuários atendidos mas não insere no serviço (ADR 0082) nem desliga (ADR 0110).
 	EQUIPE_TECNICA("Equipe Técnica",
 			EnumSet.of(DOCUMENTOS_LER, NOTIFICACOES_LER, LISTA_ESPERA_LER, ATENDIDOS_LER, ATENDIDOS_LER_BASICO)),
 

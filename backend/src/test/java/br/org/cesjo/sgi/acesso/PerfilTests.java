@@ -40,6 +40,8 @@ class PerfilTests {
 		assertThat(Arrays.stream(Perfil.values()).filter(perfil -> perfil.tem(Permissao.ATENDIDOS_LER)))
 			.containsExactlyInAnyOrder(Perfil.COORDENADOR, Perfil.EQUIPE_TECNICA);
 		assertThat(Perfil.values()).allMatch(perfil -> perfil.tem(Permissao.ATENDIDOS_LER_BASICO));
+		assertThat(Arrays.stream(Perfil.values()).filter(perfil -> perfil.tem(Permissao.ATENDIDOS_DESLIGAR)))
+			.containsExactly(Perfil.COORDENADOR);
 	}
 
 	@Test
