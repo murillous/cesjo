@@ -4,5 +4,5 @@
 # Base postgres:18-alpine para o pg_dump ter a mesma versão do servidor.
 FROM postgres:18-alpine
 RUN apk add --no-cache restic curl tzdata
-COPY --chmod=755 backup.sh disco.sh entrada.sh /usr/local/bin/
+COPY --chmod=755 backup.sh disco.sh restaurar.sh entrada.sh /usr/local/bin/
 ENTRYPOINT ["/usr/local/bin/entrada.sh"]
