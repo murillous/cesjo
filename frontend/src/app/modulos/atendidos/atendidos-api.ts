@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { OrigemEncaminhamento, SituacaoInscricao, TipoDeficiencia } from '../lista-espera/rotulos';
-import { FaixaEtaria, SituacaoInsercao, Turno } from './rotulos';
+import { FaixaEtaria, MotivoDesligamento, SituacaoInsercao, Turno } from './rotulos';
 
 /** Candidato da fila como `GET /api/atendidos/candidatos/{inscricaoId}` devolve (ADR 0080). */
 export interface CandidatoInsercao {
@@ -51,6 +51,7 @@ export interface AtendidoBasico {
   situacao: SituacaoInsercao;
   turno: Turno;
   dataInsercao: string;
+  dataDesligamento: string | null;
 }
 
 /** Usuário atendido na visão completa (`ATENDIDOS_LER`). */
@@ -74,6 +75,20 @@ export interface FichaCompleta extends AtendidoCompleto {
     dataCadastro: string;
     origemEncaminhamento: OrigemEncaminhamento;
   } | null;
+  /** Ler a observação fica registrado no log de auditoria (ADR 0110). */
+  desligamento: {
+    id: string;
+    data: string;
+    motivo: MotivoDesligamento;
+    observacao: string | null;
+  } | null;
+}
+
+/** Dados do desligamento (RF008, ADR 0110). Observação obrigatória no motivo `OUTROS`. */
+export interface NovoDesligamento {
+  data: string;
+  motivo: MotivoDesligamento;
+  observacao: string | null;
 }
 
 export type FichaAtendido = AtendidoBasico | FichaCompleta;
@@ -115,6 +130,13 @@ export class AtendidosApi {
 
   ficha(id: string): Observable<FichaAtendido> {
     return this.http.get<FichaAtendido>(`/api/atendidos/${encodeURIComponent(id)}`);
+  }
+
+  desligar(id: string, dados: NovoDesligamento): Observable<{ id: string }> {
+    return this.http.post<{ id: string }>(
+      `/api/atendidos/${encodeURIComponent(id)}/desligamento`,
+      dados,
+    );
   }
 
   inserir(dados: NovaInsercao): Observable<InsercaoCriada> {

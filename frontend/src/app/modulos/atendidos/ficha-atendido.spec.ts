@@ -21,6 +21,13 @@ const FICHA: FichaCompleta = {
   telefone: '31987654321',
   nomeCuidador: 'Cuidadora Fictícia',
   inscricao: { id: 'insc-1', dataCadastro: '2026-11-02', origemEncaminhamento: 'CREAS' },
+  dataDesligamento: '2026-11-20',
+  desligamento: {
+    id: 'des-1',
+    data: '2026-11-20',
+    motivo: 'MUDANCA_MUNICIPIO',
+    observacao: 'Observação fictícia.',
+  },
 };
 
 describe('FichaAtendidoPagina', () => {
@@ -58,6 +65,10 @@ describe('FichaAtendidoPagina', () => {
     expect(elemento.textContent).toContain('(31) 98765-4321');
     expect(elemento.textContent).toContain('Cuidadora Fictícia');
     expect(elemento.textContent).toContain('CREAS');
+    expect(elemento.textContent).toContain('Mudança para outro município');
+    expect(elemento.textContent).toContain('Observação fictícia.');
+    expect(elemento.textContent).toContain('Mudança para outro município');
+    expect(elemento.textContent).toContain('Observação fictícia.');
   });
 
   it('mostra só os dados básicos quando a API devolve a visão básica', async () => {
@@ -68,12 +79,15 @@ describe('FichaAtendidoPagina', () => {
       situacao: 'ATIVA',
       turno: 'MATUTINO',
       dataInsercao: '2026-11-10',
+      dataDesligamento: '2026-11-20',
     };
     const elemento = await abrir(basico);
 
     expect(elemento.textContent).toContain('Matutino');
     expect(elemento.textContent).toContain('Seu perfil vê só nome, situação, turno e datas');
     expect(elemento.textContent).not.toContain('Telefone');
+    expect(elemento.textContent).toContain('Desligado em 20/11/2026');
+    expect(elemento.textContent).toContain('Desligado em 20/11/2026');
   });
 
   it('mostra o erro quando a ficha não existe', async () => {
