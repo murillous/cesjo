@@ -62,3 +62,6 @@ frente de trabalho paralela não é usado todo.
 - [0037](0037-pessoa-e-inscricao-na-lista-de-espera.md) — Pessoa no módulo Pessoas e inscrição no módulo Lista de espera
 - [0038](0038-dados-do-cadastro-na-lista-de-espera.md) — Dados obrigatórios e validação do cadastro na lista de espera (provisório)
 - [0039](0039-permissoes-da-lista-de-espera.md) — Permissões do cadastro e da leitura da lista de espera (provisório)
+- [0080](0080-insercao-no-servico.md) — Inserção no serviço: modelo, regras e cuidador familiar (provisório)
+- [0081](0081-apis-entre-lista-de-espera-pessoas-e-atendidos.md) — APIs entre Lista de espera, Pessoas e Atendidos
+- [0082](0082-permissoes-dos-usuarios-atendidos.md) — Permissões dos usuários atendidos (provisório)
