@@ -84,6 +84,7 @@ Situação: provisória.
 | O Administrativo envia e lê laudos e comprovantes. | `acesso.Perfil`, linha do `ADMINISTRATIVO` | [0015](adr/0015-matriz-de-perfis-da-fundacao.md) |
 | O Administrativo não vê crença religiosa nem dados de saúde (aplicado quando esses campos entrarem). | `acesso.Perfil` | [0015](adr/0015-matriz-de-perfis-da-fundacao.md) |
 | "Dados básicos" do Consulta são só nome, situação, turno e datas (aplicado quando as listagens entrarem). | `acesso.Perfil` | [0015](adr/0015-matriz-de-perfis-da-fundacao.md) |
+| O Administrativo agenda, cancela e reagenda visitas, mas não registra a realização nem lê as observações da visita. | `acesso.Perfil` (`VISITAS_REGISTRAR`) | [0074](adr/0074-permissoes-do-resultado-da-visita.md) |
 
 ## P9. Relatórios (RF016)
 

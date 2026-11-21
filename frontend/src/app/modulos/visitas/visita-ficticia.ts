@@ -12,6 +12,10 @@ export function visitaFicticia(mudancas: Partial<Visita> = {}): Visita {
     dataHora: '2026-11-25T14:30:00',
     status: 'AGENDADA',
     profissionais: [{ id: 'c1', nome: 'Colaboradora Fictícia', funcao: 'ASSISTENTE_SOCIAL' }],
+    motivoCancelamento: null,
+    temObservacoes: false,
+    visitaOrigemId: null,
+    reagendamentoId: null,
     criadoEm: '2026-11-21T10:00:00Z',
     ...mudancas,
   };

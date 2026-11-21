@@ -20,6 +20,13 @@ export interface Visita {
   dataHora: string;
   status: StatusVisita;
   profissionais: Profissional[];
+  motivoCancelamento: string | null;
+  /** As observações têm leitura própria e auditada (ADR 0073); aqui só se elas existem. */
+  temObservacoes: boolean;
+  /** Visita cancelada que esta reagenda. */
+  visitaOrigemId: string | null;
+  /** Visita nova que reagenda esta. */
+  reagendamentoId: string | null;
   criadoEm: string;
 }
 
@@ -55,6 +62,31 @@ export class VisitasApi {
 
   agendar(dados: NovaVisita): Observable<Visita> {
     return this.http.post<Visita>('/api/visitas', dados);
+  }
+
+  realizar(id: string, observacoes: string | null): Observable<Visita> {
+    return this.http.post<Visita>(`/api/visitas/${encodeURIComponent(id)}/realizar`, {
+      observacoes,
+    });
+  }
+
+  cancelar(id: string, motivo: string): Observable<Visita> {
+    return this.http.post<Visita>(`/api/visitas/${encodeURIComponent(id)}/cancelar`, { motivo });
+  }
+
+  /** Cancela a visita com o motivo e devolve a visita nova. */
+  reagendar(
+    id: string,
+    dados: { dataHora: string; profissionais: string[]; motivo: string },
+  ): Observable<Visita> {
+    return this.http.post<Visita>(`/api/visitas/${encodeURIComponent(id)}/reagendar`, dados);
+  }
+
+  /** Observações decifradas. Cada leitura fica no log de auditoria. */
+  observacoes(id: string): Observable<{ observacoes: string | null }> {
+    return this.http.get<{ observacoes: string | null }>(
+      `/api/visitas/${encodeURIComponent(id)}/observacoes`,
+    );
   }
 
   candidatos(): Observable<Candidato[]> {
