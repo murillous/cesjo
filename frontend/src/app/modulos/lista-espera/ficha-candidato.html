@@ -17,7 +17,9 @@
       <div class="lugar" [class.fora]="!candidato.posicao">
         @if (candidato.posicao) {
           <span class="numero">{{ candidato.posicao }}º</span>
-          <span class="legenda">na fila</span>
+          <span class="legenda">{{
+            candidato.situacao === 'EM_AVALIACAO' ? 'em avaliação' : 'na fila'
+          }}</span>
         } @else {
           <span class="legenda">{{ situacao(candidato.situacao) }}</span>
         }

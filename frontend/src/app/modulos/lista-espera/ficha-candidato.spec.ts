@@ -163,6 +163,13 @@ describe('FichaCandidato', () => {
     expect(elemento.querySelector('.mudar')).toBeNull();
   });
 
+  it('em avaliação mantém a posição e pode sair da fila', async () => {
+    const { elemento } = await renderizar(inscricao({ situacao: 'EM_AVALIACAO', posicao: 2 }));
+    expect(elemento.querySelector('.lugar')?.textContent).toContain('2º');
+    expect(elemento.querySelector('.lugar')?.textContent).toContain('em avaliação');
+    expect(elemento.querySelector('.mudar')?.textContent).toContain('Tirar da fila');
+  });
+
   it('inserido não muda de situação pela ficha', async () => {
     const { elemento } = await renderizar(inscricao({ situacao: 'INSERIDO', posicao: null }));
     expect(elemento.querySelector('.mudar')).toBeNull();

@@ -1,5 +1,6 @@
 package br.org.cesjo.sgi.listaespera.interno;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -12,6 +13,6 @@ import br.org.cesjo.sgi.listaespera.SituacaoInscricao;
 interface InscricaoRepositorio
 		extends JpaRepository<InscricaoListaEspera, UUID>, JpaSpecificationExecutor<InscricaoListaEspera> {
 
-	List<InscricaoListaEspera> findBySituacao(SituacaoInscricao situacao, Sort ordem);
+	List<InscricaoListaEspera> findBySituacaoIn(Collection<SituacaoInscricao> situacoes, Sort ordem);
 
 }

@@ -13,7 +13,7 @@ import br.org.cesjo.sgi.pessoas.TipoDeficiencia;
  * Uma linha da fila. Para quem só vê os dados básicos (ADR 0058), {@code tipoDeficiencia},
  * {@code origemEncaminhamento} e {@code cadastroCompleto} vêm nulos e ficam fora do JSON.
  *
- * @param posicao posição na fila; nula quando a inscrição não está aguardando
+ * @param posicao posição na fila; nula quando a inscrição não está ativa
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 record ItemFila(UUID id, Integer posicao, String nomeCompleto, SituacaoInscricao situacao, LocalDate dataCadastro,

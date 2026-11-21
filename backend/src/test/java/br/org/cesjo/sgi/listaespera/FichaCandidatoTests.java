@@ -136,6 +136,23 @@ class FichaCandidatoTests {
 	}
 
 	@Test
+	@ComConta(perfil = Perfil.ADMINISTRATIVO, login = "ficha-avaliacao")
+	void emAvaliacaoSegueNaFilaESaiComMotivo() throws Exception {
+		String id = cadastrar("Avaliação Fictícia");
+		Integer posicao = JsonPath.read(mvc.perform(get(URL + "/{id}", id)).andReturn().getResponse().getContentAsString(),
+				"$.posicao");
+		jdbc.update("update inscricao_lista_espera set situacao = 'EM_AVALIACAO' where id = ?::uuid", id);
+
+		mvc.perform(get(URL + "/{id}", id)).andExpect(jsonPath("$.posicao").value(posicao));
+		mvc.perform(get(URL).param("nome", "avaliação fictícia").param("situacao", "EM_AVALIACAO"))
+			.andExpect(jsonPath("$.content[0].posicao").value(posicao));
+		mudar(id, Map.of("situacao", "EM_AVALIACAO", "data", "2025-07-01")).andExpect(status().isUnprocessableContent());
+		mudar(id, Map.of("situacao", "SAIU", "data", "2025-07-01", "motivoSaida", "FORA_DO_PERFIL"))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.historico[1].situacaoAnterior").value("EM_AVALIACAO"));
+	}
+
+	@Test
 	@ComConta(perfil = Perfil.ADMINISTRATIVO, login = "ficha-regras")
 	void recusaMudancasForaDasRegras() throws Exception {
 		String id = cadastrar("Regras Fictícia");

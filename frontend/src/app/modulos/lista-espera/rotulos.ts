@@ -5,14 +5,24 @@ export type TipoDeficiencia = 'FISICA' | 'SENSORIAL' | 'INTELECTUAL' | 'MULTIPLA
 export type OrigemEncaminhamento =
   'CRAS' | 'CREAS' | 'JUDICIARIO' | 'SAUDE' | 'EDUCACAO' | 'DEMANDA_ESPONTANEA';
 
-export type SituacaoInscricao = 'AGUARDANDO' | 'INSERIDO' | 'SAIU';
+export type SituacaoInscricao = 'AGUARDANDO' | 'EM_AVALIACAO' | 'INSERIDO' | 'SAIU';
 
-/** Situações da inscrição, com os rótulos do backend (ADR 0091). */
+/**
+ * Situações da inscrição, com os rótulos do backend (ADR 0091). Aguardando e em avaliação são as
+ * ativas: seguem na fila, com posição (ADR 0094).
+ */
 export const SITUACOES: readonly { valor: SituacaoInscricao; rotulo: string }[] = [
   { valor: 'AGUARDANDO', rotulo: 'Aguardando' },
+  { valor: 'EM_AVALIACAO', rotulo: 'Em avaliação' },
   { valor: 'INSERIDO', rotulo: 'Inserido no serviço' },
   { valor: 'SAIU', rotulo: 'Saiu da lista' },
 ];
+
+/** Situações de quem segue na fila, com os nomes de `SituacaoInscricao.ATIVAS` do backend. */
+export const SITUACOES_ATIVAS: ReadonlySet<SituacaoInscricao> = new Set([
+  'AGUARDANDO',
+  'EM_AVALIACAO',
+]);
 
 /** Motivos de saída da lista, com os nomes do enum `MotivoSaida` do backend. */
 export type MotivoSaida = 'DESISTENCIA' | 'NAO_LOCALIZADO' | 'FORA_DO_PERFIL' | 'OUTRO';

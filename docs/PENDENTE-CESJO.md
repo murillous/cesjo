@@ -56,6 +56,7 @@ Situação: provisória.
 |---|---|---|
 | A saída da lista é a situação `SAIU`, com um motivo: desistência, não localizado, fora do perfil ou outro (este com observação obrigatória). | `listaespera.MotivoSaida`, `MOTIVOS_SAIDA` em `rotulos.ts` (frontend) e a restrição da `V7` | [0091](adr/0091-situacoes-motivos-e-historico-da-inscricao.md) |
 | Quem saiu pode voltar para a fila, na posição original (a da data de cadastro), com observação obrigatória. | `ServicoListaEspera.mudarSituacao` | [0091](adr/0091-situacoes-motivos-e-historico-da-inscricao.md) |
+| O candidato em avaliação (visita agendada) segue na fila com a mesma posição e pode sair da lista. | `SituacaoInscricao.ATIVAS` | [0094](adr/0094-em-avaliacao-segue-na-fila.md) |
 
 ## P5. PIA
 

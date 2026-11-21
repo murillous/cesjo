@@ -19,7 +19,7 @@ import br.org.cesjo.sgi.pessoas.TipoDocumento;
  * @param documentos documentos anexados, sem o conteúdo
  * @param documentosPendentes documentos obrigatórios que faltam (ADR 0056)
  * @param cadastroCompleto {@code true} quando não falta nenhum documento obrigatório
- * @param posicao posição na fila; nula quando a inscrição não está aguardando
+ * @param posicao posição na fila; nula quando a inscrição não está ativa
  * @param historico mudanças de situação, da mais antiga para a mais recente (ADR 0091)
  */
 record InscricaoResposta(UUID id, UUID pessoaId, String nomeCompleto, LocalDate dataNascimento,

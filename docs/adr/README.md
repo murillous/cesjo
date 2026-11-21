@@ -69,3 +69,4 @@ frente de trabalho paralela não é usado todo.
 - [0059](0059-busca-em-lote-de-pessoas-para-a-fila.md) — Busca em lote de pessoas para montar a fila
 - [0090](0090-edicao-do-candidato.md) — Edição dos dados do candidato
 - [0091](0091-situacoes-motivos-e-historico-da-inscricao.md) — Situações, motivos de saída e histórico da inscrição (provisório)
+- [0094](0094-em-avaliacao-segue-na-fila.md) — Candidato em avaliação segue na fila (provisório)
