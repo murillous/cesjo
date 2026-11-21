@@ -5,7 +5,7 @@ export type TipoDeficiencia = 'FISICA' | 'SENSORIAL' | 'INTELECTUAL' | 'MULTIPLA
 export type OrigemEncaminhamento =
   'CRAS' | 'CREAS' | 'JUDICIARIO' | 'SAUDE' | 'EDUCACAO' | 'DEMANDA_ESPONTANEA';
 
-export type SituacaoInscricao = 'AGUARDANDO';
+export type SituacaoInscricao = 'AGUARDANDO' | 'INSERIDO';
 
 /** Na ordem em que aparecem no formulário. Rótulos iguais aos do backend. */
 export const TIPOS_DEFICIENCIA: readonly { valor: TipoDeficiencia; rotulo: string }[] = [
@@ -24,4 +24,13 @@ export const ORIGENS_ENCAMINHAMENTO: readonly { valor: OrigemEncaminhamento; rot
   { valor: 'SAUDE', rotulo: 'Saúde' },
   { valor: 'EDUCACAO', rotulo: 'Educação' },
   { valor: 'DEMANDA_ESPONTANEA', rotulo: 'Demanda espontânea' },
+];
+
+/** Documentos da pessoa, com os nomes do enum `TipoDocumento` do backend. */
+export type TipoDocumento = 'LAUDO_MEDICO' | 'COMPROVANTE_RESIDENCIA';
+
+/** Os dois documentos que o RF001 exige, na ordem em que aparecem nas telas (ADR 0056). */
+export const DOCUMENTOS_OBRIGATORIOS: readonly { valor: TipoDocumento; rotulo: string }[] = [
+  { valor: 'LAUDO_MEDICO', rotulo: 'Laudo médico' },
+  { valor: 'COMPROVANTE_RESIDENCIA', rotulo: 'Comprovante de residência' },
 ];

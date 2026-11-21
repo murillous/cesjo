@@ -93,6 +93,42 @@ jobs:
         if: steps.frontend.outputs.existe == 'true'
         run: npm run build
 
+  # Acessibilidade e teclado (issue #24, ADR 0123): axe e Playwright nas telas principais, em
+  # Chromium (celular e desktop), WebKit (iPhone) e Firefox, com a API simulada no navegador.
+  acessibilidade:
+    name: acessibilidade
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Configurar Node
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: frontend/.nvmrc
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Instalar navegadores do Playwright
+        run: npx playwright install --with-deps chromium webkit firefox
+
+      - name: Auditoria de acessibilidade e teclado
+        run: npm run test:e2e
+
+      - name: Publicar relatório do Playwright
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: relatorio-acessibilidade
+          path: frontend/playwright-report/
+          retention-days: 7
+
   # Imagens e compose de produção (issue #20, ADR 0053). Constrói as imagens sem publicar e sobe a
   # pilha inteira com domínio localhost para conferir Caddy, proxy de /api, Actuator e Postgres.
   implantacao:
