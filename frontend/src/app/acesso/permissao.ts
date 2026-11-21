@@ -13,8 +13,13 @@ export type Permissao =
   | 'LISTA_ESPERA_CADASTRAR'
   | 'LISTA_ESPERA_FILA_LER'
   | 'LISTA_ESPERA_EDITAR'
-  // Do módulo atendidos (issue #39); o backend só concede depois daquela junção.
-  | 'ATENDIDOS_INSERIR';
+  | 'COLABORADORES_LER'
+  | 'COLABORADORES_GERENCIAR'
+  | 'ATENDIDOS_INSERIR'
+  | 'ATENDIDOS_LER'
+  | 'ATENDIDOS_LER_BASICO'
+  | 'VISITAS_LER'
+  | 'VISITAS_AGENDAR';
 
 /** Perfis da seção 4 do documento de requisitos, com os nomes do enum `Perfil` do backend. */
 export type Perfil = 'COORDENADOR' | 'EQUIPE_TECNICA' | 'ADMINISTRATIVO' | 'CONSULTA';

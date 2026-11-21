@@ -1,13 +1,17 @@
 import { DatePipe, TitleCasePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+
+import { Sessao } from '../../acesso/sessao';
+import { VisitasDeHoje } from '../visitas/visitas-de-hoje';
 
 /**
  * Página inicial "Hoje". O número do dia dentro do disco amarelo repete o indicador de item
- * ativo da navegação. A agenda do dia entra aqui quando existirem visitas (#34).
+ * ativo da navegação. Abaixo, a agenda do dia: as visitas domiciliares de hoje, para quem vê
+ * visitas (ADR 0072).
  */
 @Component({
   selector: 'app-pagina-inicial',
-  imports: [DatePipe, TitleCasePipe],
+  imports: [DatePipe, TitleCasePipe, VisitasDeHoje],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="hoje" aria-labelledby="titulo-hoje">
@@ -18,9 +22,13 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
           <p class="data">{{ hoje | date: "d 'de' MMMM 'de' y" }}</p>
         </div>
       </header>
-      <p class="orientacao">
-        Boas-vindas ao Sistema de Gestão do Centro-Dia. Escolha um módulo no menu para começar.
-      </p>
+      @if (veVisitas) {
+        <app-visitas-de-hoje />
+      } @else {
+        <p class="orientacao">
+          Boas-vindas ao Sistema de Gestão do Centro-Dia. Escolha um módulo no menu para começar.
+        </p>
+      }
     </section>
   `,
   styles: `
@@ -72,4 +80,5 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 })
 export class PaginaInicial {
   protected readonly hoje = new Date();
+  protected readonly veVisitas = inject(Sessao).temPermissao('VISITAS_LER');
 }
