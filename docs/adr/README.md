@@ -67,3 +67,5 @@ frente de trabalho paralela não é usado todo.
 - [0057](0057-ordem-e-posicao-na-fila.md) — Ordem e posição na fila da lista de espera (provisório)
 - [0058](0058-dados-basicos-da-fila-para-o-consulta.md) — Dados básicos da fila para o perfil Consulta (provisório)
 - [0059](0059-busca-em-lote-de-pessoas-para-a-fila.md) — Busca em lote de pessoas para montar a fila
+- [0090](0090-edicao-do-candidato.md) — Edição dos dados do candidato
+- [0091](0091-situacoes-motivos-e-historico-da-inscricao.md) — Situações, motivos de saída e histórico da inscrição (provisório)
