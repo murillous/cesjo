@@ -39,3 +39,33 @@ cd backend
 ./mvnw spring-boot:run   # sobe o Postgres pelo compose.yaml (Spring Boot Docker Compose)
 ./mvnw verify            # testes de integração sobem o Postgres via Testcontainers
 ```
+
+### Chave de criptografia
+
+Texto sensível e arquivos são cifrados com AES-256-GCM na aplicação
+([ADR 0004](docs/adr/0004-criptografia-na-aplicacao.md), [ADR 0025](docs/adr/0025-formato-do-valor-cifrado-e-rotacao.md)).
+A aplicação não sobe sem uma chave ativa válida. Os testes já trazem uma chave própria; o
+`spring-boot:run` precisa de uma local.
+
+Para desenvolvimento, gere uma chave de 32 bytes e grave-a em `backend/config/application.properties`,
+que o git ignora e o Spring Boot lê automaticamente:
+
+```bash
+cd backend
+mkdir -p config
+CHAVE=$(openssl rand -base64 32)   # ou: head -c 32 /dev/urandom | base64
+printf 'sgi.criptografia.chave-ativa=dev1\nsgi.criptografia.chaves.dev1=%s\n' "$CHAVE" > config/application.properties
+```
+
+Em produção, as chaves vêm de variáveis de ambiente:
+
+| Variável | Conteúdo |
+|---|---|
+| `SGI_CRIPTOGRAFIA_CHAVEATIVA` | identificador da chave que cifra valores novos, por exemplo `prod1` |
+| `SGI_CRIPTOGRAFIA_CHAVES_<ID>` | a chave de cada identificador, 32 bytes em Base64, por exemplo `SGI_CRIPTOGRAFIA_CHAVES_PROD1` |
+| `SGI_ARQUIVOS_DIRETORIO` | diretório (volume) onde ficam os arquivos cifrados; obrigatório no perfil `prod` |
+
+Use identificadores só com letras minúsculas e dígitos nas variáveis de ambiente. Para trocar a chave,
+acrescente a nova, aponte `SGI_CRIPTOGRAFIA_CHAVEATIVA` para ela e mantenha a antiga enquanto houver
+dado cifrado com ela. Sem a chave, o backup do banco e dos arquivos é inútil: guarde uma cópia de
+todas as chaves fora da VPS.
