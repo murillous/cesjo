@@ -21,8 +21,9 @@ frontend sem reconstruir o backend).
   `/api/` é atendido pelos estáticos, e `/actuator` cai no `index.html` como qualquer rota da SPA.
 - Rota desconhecida vira `index.html` (`try_files`), para o roteamento do Angular funcionar ao
   recarregar a página.
-- Arquivos com hash no nome (gerados pelo `ng build`) vão com `Cache-Control: immutable` de um ano; o
-  resto, inclusive o `index.html`, com `no-cache`.
+- As saídas do `ng build` com hash no nome (`main-*.js`, `polyfills-*.js`, `chunk-*.js`,
+  `styles-*.css` e `media/*`) vão com `Cache-Control: immutable` de um ano; o resto, inclusive o
+  `index.html`, com `no-cache`.
 - Corpo de requisição em `/api` limitado a 12 MB (arquivo de 10 MB mais o envelope multipart,
   ADR 0027).
 - Cabeçalhos em toda resposta: HSTS de um ano, `X-Content-Type-Options: nosniff`,

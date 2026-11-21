@@ -32,9 +32,9 @@
 	# Só /api/ chega na aplicação: /actuator e qualquer outro caminho ficam aqui.
 	handle {
 		root * /srv
-		# Arquivos com hash no nome (gerados pelo ng build) nunca mudam; o resto é revalidado sempre.
-		@comHash path_regexp -[A-Z0-9]{8}\.(js|css|woff2?|ttf)$
-		@semHash not path_regexp -[A-Z0-9]{8}\.(js|css|woff2?|ttf)$
+		# Saídas do ng build com hash no nome nunca mudam; o resto (index.html, favicon, logo) é revalidado sempre.
+		@comHash path /main-*.js /polyfills-*.js /chunk-*.js /styles-*.css /media/*
+		@semHash not path /main-*.js /polyfills-*.js /chunk-*.js /styles-*.css /media/*
 		header @comHash Cache-Control "public, max-age=31536000, immutable"
 		header @semHash Cache-Control "no-cache"
 		try_files {path} /index.html
