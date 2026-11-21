@@ -85,3 +85,9 @@ h1 {
     align-items: baseline;
   }
 }
+
+// A versão atual do PIA aparece em destaque; as anteriores ficam discretas.
+.versoes li:not(.atual) .data {
+  font-weight: var(--sgi-font-weight-regular);
+  color: var(--sgi-color-text-secondary);
+}

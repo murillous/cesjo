@@ -10,9 +10,10 @@ import { mensagemDeErro } from '../../acesso/problema';
 import { Sessao } from '../../acesso/sessao';
 import { ROTULOS_FUNCAO } from '../colaboradores/rotulos';
 import { lerDataIso } from '../visitas/datas-visita';
-import { AtendimentoApi, PessoaAtendida, ResumoEscuta } from './atendimento-api';
+import { AtendimentoApi, PessoaAtendida, ResumoEscuta, ResumoPia } from './atendimento-api';
+import { ROTULOS_STATUS_PIA } from './rotulos';
 
-/** Atendimento de uma pessoa (`/atendimento/pessoas/:pessoaId`): escutas e, depois, o PIA (ADR 0102). */
+/** Atendimento de uma pessoa (`/atendimento/pessoas/:pessoaId`): escutas e PIA (ADR 0102, ADR 0105). */
 @Component({
   selector: 'app-pessoa-atendimento',
   imports: [DatePipe, MatButtonModule, MatIconModule, RouterLink],
@@ -29,7 +30,12 @@ export class PessoaAtendimento {
 
   protected readonly funcoes = ROTULOS_FUNCAO;
   protected readonly data = lerDataIso;
+  protected readonly statusPia = ROTULOS_STATUS_PIA;
+  protected readonly podeLerEscuta = this.sessao.temPermissao('ESCUTA_LER');
   protected readonly podeRegistrarEscuta = this.sessao.temPermissao('ESCUTA_REGISTRAR');
+  protected readonly podeLerPia = this.sessao.temPermissao('PIA_LER');
+  protected readonly podeEditarPia = this.sessao.temPermissao('PIA_EDITAR');
+  protected readonly pias = signal<ResumoPia[] | null>(null);
   protected readonly pessoa = signal<PessoaAtendida | null>(null);
   protected readonly escutas = signal<ResumoEscuta[] | null>(null);
   protected readonly erro = signal<string | null>(null);
@@ -41,10 +47,19 @@ export class PessoaAtendimento {
       error: (erro: unknown) =>
         this.erro.set(mensagemDeErro(erro, 'Não foi possível carregar a pessoa.')),
     });
-    id$.pipe(switchMap((id) => this.api.escutas(id))).subscribe({
-      next: (escutas) => this.escutas.set(escutas),
-      error: (erro: unknown) =>
-        this.erro.set(mensagemDeErro(erro, 'Não foi possível carregar as escutas.')),
-    });
+    if (this.podeLerEscuta) {
+      id$.pipe(switchMap((id) => this.api.escutas(id))).subscribe({
+        next: (escutas) => this.escutas.set(escutas),
+        error: (erro: unknown) =>
+          this.erro.set(mensagemDeErro(erro, 'Não foi possível carregar as escutas.')),
+      });
+    }
+    if (this.podeLerPia) {
+      id$.pipe(switchMap((id) => this.api.pias(id))).subscribe({
+        next: (pias) => this.pias.set(pias),
+        error: (erro: unknown) =>
+          this.erro.set(mensagemDeErro(erro, 'Não foi possível carregar o PIA.')),
+      });
+    }
   }
 }

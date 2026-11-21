@@ -36,6 +36,42 @@ export interface ResumoEscuta {
   profissional: Profissional;
 }
 
+export type StatusPia = 'ELABORADO' | 'APRESENTADO_FAMILIA' | 'APRESENTADO_EQUIPE' | 'APROVADO';
+
+/** Objetivo do PIA. Estrutura provisória (P5, ADR 0103). */
+export interface ObjetivoPia {
+  descricao: string;
+  metas: string | null;
+  acoes: string | null;
+  /** `AAAA-MM-DD`. */
+  prazo: string | null;
+  responsavel: string | null;
+}
+
+export interface ConteudoPia {
+  diagnostico: string | null;
+  objetivos: ObjetivoPia[];
+  observacoes: string | null;
+}
+
+/** Versão do PIA na lista da pessoa, sem o conteúdo. */
+export interface ResumoPia {
+  id: string;
+  pessoaId: string;
+  numeroVersao: number;
+  status: StatusPia;
+  criadoEm: string;
+  atualizadoEm: string;
+}
+
+export interface Pia extends ResumoPia {
+  nomePessoa: string;
+  conteudo: ConteudoPia;
+  /** Versão mais nova e em elaboração. */
+  editavel: boolean;
+  versaoAnteriorId: string | null;
+}
+
 @Injectable({ providedIn: 'root' })
 export class AtendimentoApi {
   private readonly http = inject(HttpClient);
@@ -65,6 +101,25 @@ export class AtendimentoApi {
 
   corrigirEscuta(id: string, dados: DadosEscuta): Observable<Escuta> {
     return this.http.put<Escuta>(`/api/escutas/${encodeURIComponent(id)}`, dados);
+  }
+
+  pias(pessoaId: string): Observable<ResumoPia[]> {
+    return this.http.get<ResumoPia[]>('/api/pias', {
+      params: new HttpParams().set('pessoaId', pessoaId),
+    });
+  }
+
+  /** Versão do PIA com o conteúdo. Cada leitura fica no log de auditoria. */
+  pia(id: string): Observable<Pia> {
+    return this.http.get<Pia>(`/api/pias/${encodeURIComponent(id)}`);
+  }
+
+  elaborarPia(pessoaId: string, conteudo: ConteudoPia): Observable<Pia> {
+    return this.http.post<Pia>('/api/pias', { pessoaId, conteudo });
+  }
+
+  editarPia(id: string, conteudo: ConteudoPia): Observable<Pia> {
+    return this.http.put<Pia>(`/api/pias/${encodeURIComponent(id)}`, conteudo);
   }
 
   profissionaisDaEscuta(): Observable<{

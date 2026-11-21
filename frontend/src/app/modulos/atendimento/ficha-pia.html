@@ -1,0 +1,171 @@
+<section class="pia" aria-labelledby="titulo-pia">
+  <a matButton [routerLink]="['/atendimento', 'pessoas', pessoaDaFicha()]" class="voltar">
+    <mat-icon aria-hidden="true">arrow_back</mat-icon>
+    {{ nomePessoa() ?? 'Atendimento' }}
+  </a>
+
+  @if (pia(); as atual) {
+    <header class="cabecalho">
+      <h1 id="titulo-pia">PIA, versão {{ atual.numeroVersao }}</h1>
+      <p class="status" [class.aprovado]="atual.status === 'APROVADO'">
+        {{ status[atual.status] }}
+      </p>
+    </header>
+    @if (!atual.editavel && atual.status === 'ELABORADO') {
+      <p class="texto-secundario">Versão substituída por uma mais nova. Fica só para consulta.</p>
+    }
+  } @else {
+    <h1 id="titulo-pia">{{ novo() ? 'Elaborar PIA' : 'PIA' }}</h1>
+  }
+  <p class="texto-secundario aviso">
+    <mat-icon aria-hidden="true">lock</mat-icon>
+    Conteúdo sigiloso: guardado cifrado, e cada abertura fica no log de auditoria.
+  </p>
+
+  @if (erro(); as mensagem) {
+    <p class="erro" role="alert">{{ mensagem }}</p>
+  }
+
+  @if (pia(); as atual) {
+    @if (!editando()) {
+      <article class="plano">
+        <section>
+          <h2>Diagnóstico</h2>
+          <p>{{ atual.conteudo.diagnostico ?? 'Não registrado.' }}</p>
+        </section>
+
+        <section>
+          <h2>Objetivos</h2>
+          @if (atual.conteudo.objetivos.length === 0) {
+            <p class="texto-secundario">Nenhum objetivo registrado.</p>
+          }
+          <ol class="objetivos">
+            @for (objetivo of atual.conteudo.objetivos; track $index) {
+              <li>
+                <h3>{{ objetivo.descricao }}</h3>
+                <dl>
+                  @if (objetivo.metas) {
+                    <div>
+                      <dt>Metas</dt>
+                      <dd>{{ objetivo.metas }}</dd>
+                    </div>
+                  }
+                  @if (objetivo.acoes) {
+                    <div>
+                      <dt>Ações</dt>
+                      <dd>{{ objetivo.acoes }}</dd>
+                    </div>
+                  }
+                  <div>
+                    <dt>Prazo</dt>
+                    <dd>
+                      {{
+                        objetivo.prazo ? (data(objetivo.prazo) | date: 'dd/MM/yyyy') : 'Sem prazo'
+                      }}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>Responsável</dt>
+                    <dd>{{ objetivo.responsavel ?? 'Não definido' }}</dd>
+                  </div>
+                </dl>
+              </li>
+            }
+          </ol>
+        </section>
+
+        @if (atual.conteudo.observacoes) {
+          <section>
+            <h2>Observações</h2>
+            <p>{{ atual.conteudo.observacoes }}</p>
+          </section>
+        }
+      </article>
+
+      @if (podeEditar && atual.editavel) {
+        <div class="botoes">
+          <button matButton="outlined" type="button" (click)="editar()">
+            <mat-icon aria-hidden="true">edit</mat-icon>
+            Editar PIA
+          </button>
+        </div>
+      }
+    }
+  }
+
+  @if (novo() || editando()) {
+    <form [formGroup]="formulario" (ngSubmit)="salvar()" novalidate>
+      <mat-form-field appearance="outline">
+        <mat-label>Diagnóstico</mat-label>
+        <textarea matInput formControlName="diagnostico" rows="5"></textarea>
+        <mat-hint>Situação da pessoa e da família que o plano quer mudar.</mat-hint>
+      </mat-form-field>
+
+      <fieldset formArrayName="objetivos">
+        <legend>Objetivos</legend>
+        @for (grupo of objetivos.controls; track grupo; let i = $index) {
+          <div class="objetivo" [formGroupName]="i">
+            <div class="titulo-objetivo">
+              <span>Objetivo {{ i + 1 }}</span>
+              <button
+                matIconButton
+                type="button"
+                (click)="removerObjetivo(i)"
+                [attr.aria-label]="'Remover objetivo ' + (i + 1)"
+              >
+                <mat-icon aria-hidden="true">delete</mat-icon>
+              </button>
+            </div>
+            <mat-form-field appearance="outline">
+              <mat-label>Objetivo</mat-label>
+              <textarea matInput formControlName="descricao" rows="2"></textarea>
+              @if (grupo.get('descricao')?.hasError('required')) {
+                <mat-error>Descreva o objetivo.</mat-error>
+              }
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Metas</mat-label>
+              <textarea matInput formControlName="metas" rows="2"></textarea>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Ações</mat-label>
+              <textarea matInput formControlName="acoes" rows="2"></textarea>
+            </mat-form-field>
+            <div class="linha">
+              <mat-form-field appearance="outline">
+                <mat-label>Prazo</mat-label>
+                <input matInput [matDatepicker]="seletorPrazo" formControlName="prazo" />
+                <mat-hint>Opcional. DD/MM/AAAA</mat-hint>
+                <mat-datepicker-toggle matIconSuffix [for]="seletorPrazo" />
+                <mat-datepicker #seletorPrazo />
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Responsável</mat-label>
+                <input matInput formControlName="responsavel" autocomplete="off" />
+                <mat-hint>Profissional, família ou outro serviço.</mat-hint>
+              </mat-form-field>
+            </div>
+          </div>
+        }
+        <button matButton="outlined" type="button" (click)="acrescentarObjetivo()">
+          <mat-icon aria-hidden="true">add</mat-icon>
+          Acrescentar objetivo
+        </button>
+      </fieldset>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Observações</mat-label>
+        <textarea matInput formControlName="observacoes" rows="3"></textarea>
+      </mat-form-field>
+
+      <div class="botoes">
+        <button matButton="filled" type="submit" [disabled]="enviando()">
+          {{ novo() ? 'Elaborar PIA' : 'Salvar PIA' }}
+        </button>
+        @if (editando()) {
+          <button matButton type="button" (click)="desistir()">Desistir</button>
+        }
+      </div>
+    </form>
+  }
+</section>
