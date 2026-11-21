@@ -1,0 +1,52 @@
+@use 'styles/breakpoints' as bp;
+
+// Mobile first: botão na largura toda, fácil de tocar, com o andamento e o erro embaixo. A partir do
+// tablet o botão volta à largura do texto e o andamento fica ao lado.
+:host {
+  display: block;
+}
+
+.exportar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sgi-space-1);
+}
+
+.abrir {
+  width: 100%;
+
+  mat-progress-spinner {
+    margin-right: var(--sgi-space-1);
+  }
+}
+
+.situacao {
+  font-size: var(--sgi-font-size-small);
+  color: var(--sgi-color-text-secondary);
+
+  &:empty {
+    display: none;
+  }
+}
+
+.erro {
+  flex-basis: 100%;
+  margin: 0;
+  font-size: var(--sgi-font-size-small);
+  color: var(--mat-sys-error);
+
+  &:empty {
+    display: none;
+  }
+}
+
+@media (min-width: bp.$tablet) {
+  :host {
+    display: inline-block;
+  }
+
+  .abrir {
+    width: auto;
+  }
+}
