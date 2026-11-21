@@ -98,7 +98,7 @@ describe('FilaListaEspera', () => {
     expect(cartoes.length).toBe(2);
     expect(cartoes[0].querySelector('.posicao')?.getAttribute('aria-label')).toBe('Posição 1');
     expect(cartoes[0].textContent).toContain('Ana Fictícia');
-    expect(cartoes[0].textContent).toContain('Aguardando desde 02/11/2026');
+    expect(cartoes[0].textContent).toContain('Aguardando, na lista desde 02/11/2026');
     expect(cartoes[0].textContent).toContain('Encaminhado por CRAS');
     expect(cartoes[1].textContent).toContain('Síndrome de Down (T21)');
     expect(cartoes[1].querySelector('a.incompleto')?.getAttribute('href')).toBe('/i2/documentos');

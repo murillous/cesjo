@@ -23,7 +23,8 @@ import br.org.cesjo.sgi.pessoas.ResumoPessoa;
  * Listagem da fila com a posição de cada candidato (RF002, ADR 0057 e ADR 0059).
  *
  * <p>
- * A posição sai da ordem de {@link OrdemDaFila} entre todas as inscrições aguardando, sem olhar os
+ * A posição sai da ordem de {@link OrdemDaFila} entre todas as inscrições ativas
+ * ({@link SituacaoInscricao#ATIVAS}: aguardando e em avaliação), sem olhar os
  * filtros: filtrar por origem não muda a posição de ninguém. Nome e tipo de deficiência são do módulo
  * Pessoas e chegam pela busca em lote {@link Pessoas#resumos}; por isso a paginação é feita aqui,
  * depois do filtro, sobre as inscrições já em ordem.
@@ -60,15 +61,15 @@ class FilaListaEspera {
 		return new PageImpl<>(itens, pagina, encontradas.size());
 	}
 
-	/** Posição da inscrição na fila, ou nula quando ela não está aguardando. */
+	/** Posição da inscrição na fila, ou nula quando ela não está ativa. */
 	@Transactional(readOnly = true)
 	Integer posicao(UUID inscricaoId) {
 		return posicoes().get(inscricaoId);
 	}
 
-	/** Posição de cada inscrição aguardando, a partir de 1. */
+	/** Posição de cada inscrição ativa, a partir de 1. */
 	private Map<UUID, Integer> posicoes() {
-		List<InscricaoListaEspera> fila = inscricoes.findBySituacao(SituacaoInscricao.AGUARDANDO, OrdemDaFila.ORDEM);
+		List<InscricaoListaEspera> fila = inscricoes.findBySituacaoIn(SituacaoInscricao.ATIVAS, OrdemDaFila.ORDEM);
 		Map<UUID, Integer> posicoes = new HashMap<>();
 		for (int i = 0; i < fila.size(); i++) {
 			posicoes.put(fila.get(i).getId(), i + 1);

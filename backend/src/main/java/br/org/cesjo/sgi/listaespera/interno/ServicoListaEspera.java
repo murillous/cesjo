@@ -113,12 +113,12 @@ class ServicoListaEspera {
 		UUID autor = autor();
 		Instant agora = agora();
 		MotivoSaida motivo = null;
-		// PENDENTE-CESJO(P4): só se sai da fila a partir de aguardando, e quem saiu pode voltar para a posição
-		// original, com observação (ADR 0091).
+		// PENDENTE-CESJO(P4): só sai da fila quem está ativo (aguardando ou em avaliação), e quem saiu pode
+		// voltar para a posição original, com observação (ADR 0091).
 		switch (mudanca.situacao()) {
 			case SAIU -> {
-				if (anterior != SituacaoInscricao.AGUARDANDO) {
-					throw new RegraNegocioException("Só sai da lista quem está aguardando.");
+				if (!anterior.ativa()) {
+					throw new RegraNegocioException("Só sai da lista quem está na fila.");
 				}
 				if (mudanca.motivoSaida() == null) {
 					throw new RegraNegocioException("Informe o motivo da saída.");
@@ -140,6 +140,8 @@ class ServicoListaEspera {
 			}
 			case INSERIDO -> throw new RegraNegocioException(
 					"A inserção no serviço é registrada no cadastro do usuário atendido.");
+			case EM_AVALIACAO -> throw new RegraNegocioException(
+					"O candidato fica em avaliação quando a visita domiciliar é agendada.");
 		}
 		auditoria.registrar(EventoAuditoria.alteracao(ENTIDADE, id, Set.of("situacao", "motivo_saida", "data_saida")));
 		registrarHistorico(new HistoricoSituacao(id, anterior, mudanca.situacao(), mudanca.data(), motivo,

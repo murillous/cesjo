@@ -125,7 +125,8 @@
                 <span class="nome">{{ item.nomeCompleto }}</span>
               }
               <span class="texto-secundario">
-                {{ situacao(item.situacao) }} desde {{ item.dataCadastro | date: 'dd/MM/yyyy' }}
+                {{ situacao(item.situacao) }}, na lista desde
+                {{ item.dataCadastro | date: 'dd/MM/yyyy' }}
               </span>
               @if (item.tipoDeficiencia) {
                 <span class="detalhe">{{ tipo(item.tipoDeficiencia) }}</span>

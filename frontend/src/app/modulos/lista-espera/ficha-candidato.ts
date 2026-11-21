@@ -30,6 +30,7 @@ import {
   ORIGENS_ENCAMINHAMENTO,
   rotuloDe,
   SITUACOES,
+  SITUACOES_ATIVAS,
   SituacaoInscricao,
   TIPOS_DEFICIENCIA,
 } from './rotulos';
@@ -87,10 +88,16 @@ export class FichaCandidato implements OnInit {
     observacao: new FormControl('', { nonNullable: true, validators: Validators.maxLength(1000) }),
   });
 
-  /** Situação para a qual o botão leva: quem aguarda sai; quem saiu volta. Inserido não muda aqui. */
+  /**
+   * Situação para a qual o botão leva: quem está na fila (aguardando ou em avaliação) sai; quem saiu
+   * volta. Inserido não muda aqui.
+   */
   protected readonly proxima = computed<SituacaoInscricao | null>(() => {
     const situacao = this.inscricao()?.situacao;
-    return situacao === 'AGUARDANDO' ? 'SAIU' : situacao === 'SAIU' ? 'AGUARDANDO' : null;
+    if (!situacao) {
+      return null;
+    }
+    return SITUACOES_ATIVAS.has(situacao) ? 'SAIU' : situacao === 'SAIU' ? 'AGUARDANDO' : null;
   });
 
   protected readonly historico = computed(() => [...(this.inscricao()?.historico ?? [])].reverse());
