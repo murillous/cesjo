@@ -15,4 +15,9 @@ export const ATENDIDOS_ROUTES: Routes = [
     canMatch: [exigePermissao('ATENDIDOS_INSERIR')],
     loadComponent: () => import('./formulario-insercao').then((m) => m.FormularioInsercao),
   },
+  {
+    path: ':id',
+    title: 'Ficha do usuário atendido | CESJO SGI',
+    loadComponent: () => import('./ficha-atendido').then((m) => m.FichaAtendidoPagina),
+  },
 ];

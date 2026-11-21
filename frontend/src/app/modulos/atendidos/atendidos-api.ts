@@ -1,9 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { SituacaoInscricao, TipoDeficiencia } from '../lista-espera/rotulos';
-import { SituacaoInsercao, Turno } from './rotulos';
+import { OrigemEncaminhamento, SituacaoInscricao, TipoDeficiencia } from '../lista-espera/rotulos';
+import { FaixaEtaria, SituacaoInsercao, Turno } from './rotulos';
 
 /** Candidato da fila como `GET /api/atendidos/candidatos/{inscricaoId}` devolve (ADR 0080). */
 export interface CandidatoInsercao {
@@ -40,6 +40,58 @@ export interface InsercaoCriada {
   situacao: SituacaoInsercao;
 }
 
+/**
+ * Usuário atendido na visão básica (perfil Consulta e Administrativo): só nome, situação, turno e
+ * datas (ADR 0082).
+ */
+export interface AtendidoBasico {
+  completo: false;
+  id: string;
+  nomeCompleto: string;
+  situacao: SituacaoInsercao;
+  turno: Turno;
+  dataInsercao: string;
+}
+
+/** Usuário atendido na visão completa (`ATENDIDOS_LER`). */
+export interface AtendidoCompleto extends Omit<AtendidoBasico, 'completo'> {
+  completo: true;
+  pessoaId: string;
+  tipoDeficiencia: TipoDeficiencia;
+  dataNascimento: string | null;
+  idade: number | null;
+  faixaEtaria: FaixaEtaria | null;
+}
+
+export type Atendido = AtendidoBasico | AtendidoCompleto;
+
+/** Ficha completa: a inserção, a pessoa, o cuidador e a inscrição de origem (ADR 0083). */
+export interface FichaCompleta extends AtendidoCompleto {
+  telefone: string;
+  nomeCuidador: string | null;
+  inscricao: {
+    id: string;
+    dataCadastro: string;
+    origemEncaminhamento: OrigemEncaminhamento;
+  } | null;
+}
+
+export type FichaAtendido = AtendidoBasico | FichaCompleta;
+
+/** Filtros da listagem. Tipo de deficiência e faixa etária só para quem tem `ATENDIDOS_LER`. */
+export interface FiltrosAtendidos {
+  nome?: string | null;
+  turno?: Turno | null;
+  situacao?: SituacaoInsercao | null;
+  tipoDeficiencia?: TipoDeficiencia | null;
+  faixaEtaria?: FaixaEtaria | null;
+}
+
+export interface PaginaAtendidos {
+  content: readonly Atendido[];
+  page: { size: number; number: number; totalElements: number; totalPages: number };
+}
+
 @Injectable({ providedIn: 'root' })
 export class AtendidosApi {
   private readonly http = inject(HttpClient);
@@ -48,6 +100,21 @@ export class AtendidosApi {
     return this.http.get<CandidatoInsercao>(
       `/api/atendidos/candidatos/${encodeURIComponent(inscricaoId)}`,
     );
+  }
+
+  listar(filtros: FiltrosAtendidos, pagina: number, tamanho: number): Observable<PaginaAtendidos> {
+    let params = new HttpParams().set('page', pagina).set('size', tamanho);
+    for (const [nome, valor] of Object.entries(filtros)) {
+      const texto = typeof valor === 'string' ? valor.trim() : valor;
+      if (texto) {
+        params = params.set(nome, texto);
+      }
+    }
+    return this.http.get<PaginaAtendidos>('/api/atendidos', { params });
+  }
+
+  ficha(id: string): Observable<FichaAtendido> {
+    return this.http.get<FichaAtendido>(`/api/atendidos/${encodeURIComponent(id)}`);
   }
 
   inserir(dados: NovaInsercao): Observable<InsercaoCriada> {

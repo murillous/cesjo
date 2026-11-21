@@ -120,7 +120,7 @@ export class FormularioInsercao implements OnInit {
           this.avisos.open(`${insercao.nomeCompleto} foi inserido no serviço.`, 'Fechar', {
             duration: 5000,
           });
-          void this.router.navigate(['/atendidos']);
+          void this.router.navigate(['/atendidos', insercao.id]);
         },
         error: (erro: unknown) => {
           this.enviando.set(false);
