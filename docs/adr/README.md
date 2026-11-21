@@ -66,3 +66,5 @@ frente de trabalho paralela não é usado todo.
 - [0051](0051-caddy-como-borda.md) — Caddy como borda: TLS, estáticos, proxy de `/api` e cabeçalhos
 - [0052](0052-segredos-da-implantacao-no-env.md) — Segredos da implantação num `.env` fora do repositório
 - [0053](0053-ci-das-imagens-de-implantacao.md) — CI constrói as imagens e testa a pilha sem publicar
+- [0054](0054-backup-diario-com-restic.md) — Backup diário com restic para um repositório fora da VPS (provisório)
+- [0065](0065-retencao-dos-backups.md) — Retenção dos backups: 7 diários, 4 semanais e 6 mensais (provisório)
