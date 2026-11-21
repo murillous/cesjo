@@ -36,3 +36,6 @@ frente de trabalho paralela não é usado todo.
 - [0008](0008-postgres-nativo-nos-testes-sem-docker.md) — Postgres nativo nos testes quando não há Docker
 - [0009](0009-identidade-neutra-e-erros-de-seguranca.md) — Identidade da conta fora do módulo acesso e erros de segurança fora do tratador genérico
 - [0025](0025-formato-do-valor-cifrado-e-rotacao.md) — Formato do valor cifrado, configuração das chaves e rotação
+- [0026](0026-armazenamento-de-arquivos-cifrados.md) — Armazenamento dos arquivos cifrados e tabela `arquivo`
+- [0027](0027-validacao-de-tipo-e-tamanho-dos-arquivos.md) — Validação de tipo e tamanho dos arquivos enviados
+- [0028](0028-api-http-e-api-java-dos-arquivos.md) — API HTTP e API Java do módulo Arquivos
