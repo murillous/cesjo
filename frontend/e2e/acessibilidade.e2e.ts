@@ -13,6 +13,11 @@ async function auditar(page: Page): Promise<void> {
   // Sem a fonte dos ícones carregada, a ligadura aparece como palavra ("visibility") e o axe a trata
   // como texto visível do botão.
   await page.evaluate(() => document.fonts.ready);
+  // As mensagens de erro do Material entram com fade: no meio da transição o axe mede a cor ainda
+  // clara e acusa contraste baixo que a tela parada não tem.
+  await page.waitForFunction(() =>
+    document.getAnimations().every((animacao) => animacao.playState !== 'running'),
+  );
   const resultado = await new AxeBuilder({ page }).withTags(REGRAS).analyze();
   // No celular, o axe acusa target-size em todo campo que, na posição de rolagem atual, passa por
   // baixo da navegação inferior presa. Isso não é falta de tamanho: o campo rola para fora dela e,
