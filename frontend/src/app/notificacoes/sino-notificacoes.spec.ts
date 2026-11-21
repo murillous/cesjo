@@ -126,16 +126,32 @@ describe('SinoNotificacoes', () => {
   });
 
   it('atualiza o contador pela consulta periódica', async () => {
-    TestBed.overrideProvider(INTERVALO_CONSULTA_NOTIFICACOES, { useValue: 50 });
-    sessao().definir(conta(['NOTIFICACOES_LER']));
-    const { fixture, elemento } = await renderizar();
-    await responderContagem(fixture, 1);
+    // Só o setInterval (usado pelo `interval` do RxJS) é falso: o agendador do Angular segue com o
+    // relógio real, e o intervalo avança só quando o teste manda.
+    vi.useFakeTimers({ toFake: ['setInterval', 'clearInterval'] });
+    try {
+      sessao().definir(conta(['NOTIFICACOES_LER']));
+      const { fixture, elemento } = await renderizar();
+      await responderContagem(fixture, 1);
+      http().expectNone(CONTAGEM);
 
-    await new Promise((resolver) => setTimeout(resolver, 80));
-    await responderContagem(fixture, 2);
+      vi.advanceTimersByTime(59_999);
+      http().expectNone(CONTAGEM);
 
-    expect(elemento.querySelector('.contador')?.textContent?.trim()).toBe('2');
-    fixture.destroy();
+      vi.advanceTimersByTime(1);
+      await responderContagem(fixture, 2);
+      expect(elemento.querySelector('.contador')?.textContent?.trim()).toBe('2');
+
+      vi.advanceTimersByTime(60_000);
+      await responderContagem(fixture, 4);
+      expect(elemento.querySelector('.contador')?.textContent?.trim()).toBe('4');
+
+      fixture.destroy();
+      vi.advanceTimersByTime(60_000);
+      http().expectNone(CONTAGEM);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it('abre o painel com a lista e marca uma como lida', async () => {
