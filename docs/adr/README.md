@@ -64,3 +64,6 @@ frente de trabalho paralela não é usado todo.
 - [0039](0039-permissoes-da-lista-de-espera.md) — Permissões do cadastro e da leitura da lista de espera (provisório)
 - [0055](0055-documentos-da-pessoa.md) — Documentos da pessoa no módulo Pessoas (provisório)
 - [0056](0056-anexos-na-lista-de-espera.md) — Anexos na lista de espera e cadastro incompleto
+- [0057](0057-ordem-e-posicao-na-fila.md) — Ordem e posição na fila da lista de espera (provisório)
+- [0058](0058-dados-basicos-da-fila-para-o-consulta.md) — Dados básicos da fila para o perfil Consulta (provisório)
+- [0059](0059-busca-em-lote-de-pessoas-para-a-fila.md) — Busca em lote de pessoas para montar a fila

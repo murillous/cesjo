@@ -21,7 +21,11 @@ algo) ou **respondida**.
 > em ordem cronológica. Como a prioridade entra na fila? BPC e CadÚnico passam na frente, servem de
 > desempate ou são só informação?
 
-Situação: aberta.
+Situação: provisória.
+
+| Decisão provisória | Onde mudar | ADR |
+|---|---|---|
+| A fila é só cronológica: data de cadastro, com o momento do cadastro como desempate. Não há prioridade para BPC ou CadÚnico. | `listaespera.interno.OrdemDaFila` | [0057](adr/0057-ordem-e-posicao-na-fila.md) |
 
 ## P2. Faixa etária
 
@@ -80,6 +84,7 @@ Situação: provisória.
 | O Administrativo envia e lê laudos e comprovantes. | `acesso.Perfil`, linha do `ADMINISTRATIVO` | [0015](adr/0015-matriz-de-perfis-da-fundacao.md) |
 | O Administrativo não vê crença religiosa nem dados de saúde (aplicado quando esses campos entrarem). | `acesso.Perfil` | [0015](adr/0015-matriz-de-perfis-da-fundacao.md) |
 | "Dados básicos" do Consulta são só nome, situação, turno e datas (aplicado quando as listagens entrarem). | `acesso.Perfil` | [0015](adr/0015-matriz-de-perfis-da-fundacao.md) |
+| Na fila da lista de espera, o Consulta vê posição, nome, situação e data de cadastro, sem tipo de deficiência, origem nem situação dos documentos, e não filtra por tipo nem origem (`LISTA_ESPERA_FILA_LER`). | `acesso.Perfil` (linha do `CONSULTA`), `ItemFila.basico()` e `ListaEsperaControlador.listar` | [0058](adr/0058-dados-basicos-da-fila-para-o-consulta.md) |
 
 ## P9. Relatórios (RF016)
 
