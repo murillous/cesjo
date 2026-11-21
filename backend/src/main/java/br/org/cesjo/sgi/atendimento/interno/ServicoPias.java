@@ -1,6 +1,7 @@
 package br.org.cesjo.sgi.atendimento.interno;
 
 import java.time.Clock;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -76,6 +77,37 @@ class ServicoPias {
 		return resposta(pia);
 	}
 
+	/** Apresentação à família, à equipe ou aprovação da versão mais nova (ADR 0106). */
+	@Transactional
+	PiaResposta avancar(UUID id, StatusPia novo, LocalDate data) {
+		Pia pia = buscar(id);
+		exigirMaisNova(pia);
+		if (data.isAfter(LocalDate.now(relogio))) {
+			throw new RegraNegocioException("A data não pode ser futura.");
+		}
+		String coluna = pia.avancar(novo, data, autor(), relogio.instant());
+		Set<String> campos = novo == StatusPia.APROVADO ? Set.of("status", coluna, "aprovado_por")
+				: Set.of("status", coluna);
+		auditoria.registrar(EventoAuditoria.alteracao(ENTIDADE, id, campos));
+		return resposta(pia);
+	}
+
+	/**
+	 * Nova versão em elaboração a partir da mais nova já apresentada ou aprovada, com o mesmo conteúdo. A
+	 * versão de origem fica como estava (ADR 0106).
+	 */
+	@Transactional
+	PiaResposta novaVersao(UUID id) {
+		Pia origem = buscar(id);
+		exigirMaisNova(origem);
+		if (origem.getStatus() == StatusPia.ELABORADO) {
+			throw new RegraNegocioException("Esta versão ainda está em elaboração. Edite-a em vez de criar outra.");
+		}
+		Pia nova = pias.save(new Pia(origem.getPessoaId(), origem, origem.getConteudo(), autor(), relogio.instant()));
+		auditoria.registrar(EventoAuditoria.criacao(ENTIDADE, nova.getId()));
+		return resposta(nova);
+	}
+
 	@Transactional(readOnly = true)
 	List<ResumoPia> versoes(UUID pessoaId) {
 		return pias.findByPessoaIdOrderByNumeroVersaoDesc(pessoaId).stream().map(ResumoPia::de).toList();
@@ -101,8 +133,9 @@ class ServicoPias {
 			.map(atual -> atual.getId().equals(pia.getId()))
 			.orElse(false);
 		return new PiaResposta(pia.getId(), pia.getPessoaId(), nome, pia.getNumeroVersao(), pia.getStatus(),
-				conteudo(pia.getConteudo()), maisNova && pia.getStatus() == StatusPia.ELABORADO,
-				pia.getVersaoAnteriorId(), pia.getCriadoEm(), pia.getAtualizadoEm());
+				conteudo(pia.getConteudo()), maisNova && pia.getStatus() == StatusPia.ELABORADO, maisNova,
+				pia.getVersaoAnteriorId(), pia.getApresentadoFamiliaEm(), pia.getApresentadoEquipeEm(),
+				pia.getAprovadoEm(), pia.getCriadoEm(), pia.getAtualizadoEm());
 	}
 
 	static String json(ConteudoPia conteudo) {
