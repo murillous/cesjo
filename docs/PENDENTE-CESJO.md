@@ -46,7 +46,8 @@ Situação: aberta.
 > Quais motivos de saída da lista de espera existem (desistência, não localizado, fora do perfil,
 > inserido)? O candidato chamado que não comparece volta para a fila?
 
-Situação: aberta.
+Situação: aberta. Por enquanto a inscrição só tem a situação `AGUARDANDO`; as situações de saída
+entram com a issue #29 (marcador em `listaespera.SituacaoInscricao`).
 
 ## P5. PIA
 
