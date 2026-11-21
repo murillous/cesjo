@@ -1,8 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
-import { OrigemEncaminhamento, SituacaoInscricao, TipoDeficiencia } from './rotulos';
+import {
+  ArquivoBaixado,
+  nomeDoContentDisposition,
+} from '../../compartilhado/arquivos/arquivos-api';
+import { OrigemEncaminhamento, SituacaoInscricao, TipoDeficiencia, TipoDocumento } from './rotulos';
 
 /** Dados do cadastro na lista de espera (RF001, ADR 0038). Datas no formato `AAAA-MM-DD`. */
 export interface NovaInscricao {
@@ -13,6 +17,18 @@ export interface NovaInscricao {
   nomeResponsavel: string;
   origemEncaminhamento: OrigemEncaminhamento;
   dataCadastro: string;
+  /** Opcionais: ids devolvidos por `POST /api/arquivos` (ADR 0056). */
+  laudoMedicoArquivoId?: string | null;
+  comprovanteResidenciaArquivoId?: string | null;
+}
+
+/** Documento anexado à inscrição, sem o conteúdo. */
+export interface DocumentoInscricao {
+  tipo: TipoDocumento;
+  nomeArquivo: string;
+  tipoMime: string;
+  tamanho: number;
+  anexadoEm: string;
 }
 
 /** Inscrição como `/api/lista-espera/inscricoes` devolve (ADR 0037). */
@@ -28,6 +44,10 @@ export interface Inscricao {
   dataCadastro: string;
   situacao: SituacaoInscricao;
   criadoEm: string;
+  documentos: DocumentoInscricao[];
+  /** Documentos obrigatórios que faltam; vazio quando o cadastro está completo. */
+  documentosPendentes: TipoDocumento[];
+  cadastroCompleto: boolean;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -39,6 +59,28 @@ export class ListaEsperaApi {
   }
 
   obter(id: string): Observable<Inscricao> {
-    return this.http.get<Inscricao>(`/api/lista-espera/inscricoes/${encodeURIComponent(id)}`);
+    return this.http.get<Inscricao>(urlInscricao(id));
   }
+
+  /** Liga um arquivo já enviado à inscrição, substituindo o documento do mesmo tipo. */
+  anexar(id: string, tipo: TipoDocumento, arquivoId: string): Observable<Inscricao> {
+    return this.http.put<Inscricao>(`${urlInscricao(id)}/documentos/${tipo}`, { arquivoId });
+  }
+
+  /** Baixa o documento. O backend registra a leitura no log de auditoria. */
+  baixarDocumento(id: string, tipo: TipoDocumento): Observable<ArquivoBaixado> {
+    return this.http
+      .get(`${urlInscricao(id)}/documentos/${tipo}`, { observe: 'response', responseType: 'blob' })
+      .pipe(
+        map((resposta) => ({
+          nome:
+            nomeDoContentDisposition(resposta.headers.get('Content-Disposition')) ?? 'documento',
+          conteudo: resposta.body ?? new Blob(),
+        })),
+      );
+  }
+}
+
+function urlInscricao(id: string): string {
+  return `/api/lista-espera/inscricoes/${encodeURIComponent(id)}`;
 }

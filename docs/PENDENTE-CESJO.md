@@ -131,6 +131,7 @@ Situação: provisória.
 | Decisão provisória | Onde mudar | ADR |
 |---|---|---|
 | O log de auditoria é guardado para sempre, sem expurgo. | `V1__cria_auditoria.sql` (gatilhos) | [0022](adr/0022-log-de-auditoria-so-de-insercao.md) |
+| Laudo ou comprovante substituído continua guardado no módulo Arquivos, sem ligação com a pessoa. | `pessoas.interno.ServicoPessoas.anexarDocumento` | [0055](adr/0055-documentos-da-pessoa.md) |
 
 ## P15. Hospedagem
 

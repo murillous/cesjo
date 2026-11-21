@@ -25,3 +25,12 @@ export const ORIGENS_ENCAMINHAMENTO: readonly { valor: OrigemEncaminhamento; rot
   { valor: 'EDUCACAO', rotulo: 'Educação' },
   { valor: 'DEMANDA_ESPONTANEA', rotulo: 'Demanda espontânea' },
 ];
+
+/** Documentos da pessoa, com os nomes do enum `TipoDocumento` do backend. */
+export type TipoDocumento = 'LAUDO_MEDICO' | 'COMPROVANTE_RESIDENCIA';
+
+/** Os dois documentos que o RF001 exige, na ordem em que aparecem nas telas (ADR 0056). */
+export const DOCUMENTOS_OBRIGATORIOS: readonly { valor: TipoDocumento; rotulo: string }[] = [
+  { valor: 'LAUDO_MEDICO', rotulo: 'Laudo médico' },
+  { valor: 'COMPROVANTE_RESIDENCIA', rotulo: 'Comprovante de residência' },
+];

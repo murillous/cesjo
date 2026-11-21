@@ -99,7 +99,7 @@ export function nomeDoContentDisposition(cabecalho: string | null): string | nul
   return simples ? simples[1].trim() : null;
 }
 
-/** Entrega o arquivo ao navegador para salvar com o nome informado. */
+/** Entrega o arquivo baixado ao navegador para salvar com o nome informado. */
 export function salvarNoNavegador({ nome, conteudo }: ArquivoBaixado): void {
   const url = URL.createObjectURL(conteudo);
   const link = document.createElement('a');

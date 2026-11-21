@@ -16,6 +16,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, RouterLink } from '@angular/router';
 
 import { mensagemDeErro } from '../../acesso/problema';
+import { Sessao } from '../../acesso/sessao';
+import { EnvioArquivo } from '../../compartilhado/arquivos/envio-arquivo';
 import { dataIso, hoje } from './datas';
 import { ListaEsperaApi } from './lista-espera-api';
 import {
@@ -29,12 +31,13 @@ import {
 const TELEFONE_VALIDO = /^[\s().+-]*(\d[\s().+-]*){10,11}$/;
 
 /**
- * Cadastro de candidato na lista de espera (`/lista-espera/nova`, RF001). Os anexos entram com a
- * issue #27.
+ * Cadastro de candidato na lista de espera (`/lista-espera/nova`, RF001). O laudo médico e o
+ * comprovante de residência são opcionais aqui; sem eles o cadastro fica incompleto (ADR 0056).
  */
 @Component({
   selector: 'app-formulario-inscricao',
   imports: [
+    EnvioArquivo,
     MatButtonModule,
     MatDatepickerModule,
     MatFormFieldModule,
@@ -54,6 +57,7 @@ export class FormularioInscricao {
   private readonly avisos = inject(MatSnackBar);
   private readonly router = inject(Router);
 
+  protected readonly podeEnviarDocumentos = inject(Sessao).temPermissao('DOCUMENTOS_ENVIAR');
   protected readonly tipos = TIPOS_DEFICIENCIA;
   protected readonly origens = ORIGENS_ENCAMINHAMENTO;
   protected readonly hoje = hoje();
@@ -69,6 +73,8 @@ export class FormularioInscricao {
     nomeResponsavel: ['', [Validators.required, Validators.maxLength(150)]],
     origemEncaminhamento: ['' as OrigemEncaminhamento | '', Validators.required],
     dataCadastro: new FormControl<Date | null>(hoje(), Validators.required),
+    laudoMedicoArquivoId: new FormControl<string | null>(null),
+    comprovanteResidenciaArquivoId: new FormControl<string | null>(null),
   });
 
   protected salvar(): void {
@@ -88,13 +94,16 @@ export class FormularioInscricao {
         nomeResponsavel: dados.nomeResponsavel.trim(),
         origemEncaminhamento: dados.origemEncaminhamento as OrigemEncaminhamento,
         dataCadastro: dataIso(dados.dataCadastro!),
+        laudoMedicoArquivoId: dados.laudoMedicoArquivoId,
+        comprovanteResidenciaArquivoId: dados.comprovanteResidenciaArquivoId,
       })
       .subscribe({
         next: (inscricao) => {
           this.enviando.set(false);
-          this.avisos.open(`${inscricao.nomeCompleto} entrou na lista de espera.`, 'Fechar', {
-            duration: 5000,
-          });
+          const aviso = inscricao.cadastroCompleto
+            ? `${inscricao.nomeCompleto} entrou na lista de espera.`
+            : `${inscricao.nomeCompleto} entrou na lista de espera com cadastro incompleto.`;
+          this.avisos.open(aviso, 'Fechar', { duration: 5000 });
           void this.router.navigate(['/lista-espera']);
         },
         error: (erro: unknown) => {
