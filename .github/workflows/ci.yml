@@ -121,7 +121,10 @@ jobs:
             .env
           # O CI guarda o repositório restic dentro do contêiner; em produção o destino fica fora da VPS.
           cp backup.env.example backup.env
-          sed -i             -e "s|^RESTIC_REPOSITORY=.*|RESTIC_REPOSITORY=/tmp/repositorio-ci|"             -e "s|^RESTIC_PASSWORD=.*|RESTIC_PASSWORD=$(openssl rand -hex 24)|"             backup.env
+          sed -i \
+            -e "s|^RESTIC_REPOSITORY=.*|RESTIC_REPOSITORY=/tmp/repositorio-ci|" \
+            -e "s|^RESTIC_PASSWORD=.*|RESTIC_PASSWORD=$(openssl rand -hex 24)|" \
+            backup.env
 
       - name: Construir as imagens
         run: docker compose build
@@ -161,7 +164,8 @@ jobs:
           echo "Um snapshot no repositório"
           test "$(docker compose exec -T backup restic snapshots --json | grep -o '"short_id"' | wc -l)" = "1"
           echo "O dump do snapshot é um backup válido do Postgres com as tabelas da aplicação"
-          docker compose exec -T backup sh -c             'restic dump latest /var/backups/sgi/cesjo.dump | pg_restore --list' | grep 'TABLE public conta_acesso' > /dev/null
+          docker compose exec -T backup sh -c \
+            'restic dump latest /var/backups/sgi/cesjo.dump | pg_restore --list' | grep 'TABLE public conta_acesso' > /dev/null
           echo "O volume de arquivos entrou no snapshot"
           docker compose exec -T backup restic ls latest | grep '^/dados/arquivos' > /dev/null
           echo "O dump em claro não ficou no contêiner"

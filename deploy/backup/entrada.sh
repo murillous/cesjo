@@ -13,4 +13,5 @@ mkdir -p /etc/crontabs
 echo "$SGI_BACKUP_HORARIO /usr/local/bin/backup.sh > /proc/1/fd/1 2>&1" > /etc/crontabs/root
 
 echo "backup agendado: '$SGI_BACKUP_HORARIO' (TZ=${TZ:-UTC}), repositório restic configurado"
-exec crond -f -l 8
+# -c explícito: a imagem do Postgres não tem o link /var/spool/cron/crontabs do Alpine.
+exec crond -f -l 8 -c /etc/crontabs
