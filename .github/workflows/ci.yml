@@ -108,6 +108,7 @@ jobs:
       - name: Validar o compose com o .env.example
         run: |
           cp .env.example .env
+          cp backup.env.example backup.env
           docker compose config --quiet
 
       - name: Gerar .env de teste (dados fictícios, só para este job)
@@ -118,6 +119,9 @@ jobs:
             -e "s|^POSTGRES_PASSWORD=.*|POSTGRES_PASSWORD=$(openssl rand -hex 24)|" \
             -e "s|^SGI_CRIPTOGRAFIA_CHAVES_PROD1=.*|SGI_CRIPTOGRAFIA_CHAVES_PROD1=$(openssl rand -base64 32)|" \
             .env
+          # O CI guarda o repositório restic dentro do contêiner; em produção o destino fica fora da VPS.
+          cp backup.env.example backup.env
+          sed -i             -e "s|^RESTIC_REPOSITORY=.*|RESTIC_REPOSITORY=/tmp/repositorio-ci|"             -e "s|^RESTIC_PASSWORD=.*|RESTIC_PASSWORD=$(openssl rand -hex 24)|"             backup.env
 
       - name: Construir as imagens
         run: docker compose build
@@ -148,6 +152,23 @@ jobs:
           docker compose exec -T app curl -fsS http://localhost:8080/actuator/health | grep -q '"status":"UP"'
           echo "Aplicação roda sem root"
           test "$(docker compose exec -T app id -u)" != "0"
+
+      - name: Backup e leitura de volta (issue #21)
+        run: |
+          set -euo pipefail
+          docker compose exec -T backup backup.sh
+          echo "Um snapshot no repositório"
+          test "$(docker compose exec -T backup restic snapshots --json | grep -o '"short_id"' | wc -l)" = "1"
+          echo "O dump do snapshot é um backup válido do Postgres com as tabelas da aplicação"
+          docker compose exec -T backup sh -c             'restic dump latest /var/backups/sgi/cesjo.dump | pg_restore --list' | grep -q 'TABLE public conta_acesso'
+          echo "O volume de arquivos entrou no snapshot"
+          docker compose exec -T backup restic ls latest | grep -q '^/dados/arquivos'
+          echo "O dump em claro não ficou no contêiner"
+          if docker compose exec -T backup test -e /var/backups/sgi/cesjo.dump; then exit 1; fi
+          echo "Segundo backup e retenção"
+          docker compose exec -T backup backup.sh
+          echo "Falha do backup sai com erro"
+          if docker compose exec -T -e RESTIC_PASSWORD=errada backup backup.sh; then exit 1; fi
 
       - name: Logs da pilha
         if: always()
