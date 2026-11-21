@@ -55,6 +55,22 @@ class DadosDeVisita {
 		return id;
 	}
 
+	/** Visita agendada gravada direto, inclusive em dia passado, que a API não deixa agendar. */
+	UUID visita(UUID pessoa, java.time.LocalDateTime dataHora, UUID profissional) {
+		UUID id = UUID.randomUUID();
+		Timestamp agora = Timestamp.from(Instant.now());
+		jdbc.update("""
+				insert into visita_domiciliar (id, pessoa_id, data_hora, status, criado_em, atualizado_em)
+				values (?, ?, ?, 'AGENDADA', ?, ?)""", id, pessoa, Timestamp.valueOf(dataHora), agora, agora);
+		jdbc.update("insert into visita_profissional (visita_id, colaborador_id) values (?, ?)", id, profissional);
+		return id;
+	}
+
+	/** Valor gravado na coluna, sem decifrar. */
+	String observacoesNoBanco(UUID visita) {
+		return jdbc.queryForObject("select observacoes from visita_domiciliar where id = ?", String.class, visita);
+	}
+
 	String situacao(UUID pessoa) {
 		return jdbc.queryForObject("select situacao from inscricao_lista_espera where pessoa_id = ?", String.class,
 				pessoa);

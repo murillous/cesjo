@@ -90,3 +90,84 @@ h2 {
     gap: var(--sgi-space-2);
   }
 }
+
+.ligacao {
+  margin: 0 0 var(--sgi-space-2);
+}
+
+.resultado {
+  margin: 0 0 var(--sgi-space-3);
+
+  dt {
+    font-size: var(--sgi-font-size-small);
+    color: var(--sgi-color-text-secondary);
+  }
+
+  dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+}
+
+// Texto livre da equipe: preserva as quebras de linha digitadas.
+.observacoes {
+  white-space: pre-line;
+  max-width: 70ch;
+  padding: var(--sgi-space-1-5) var(--sgi-space-2);
+  border-left: var(--sgi-space-0-5) solid var(--sgi-color-primary-dark);
+  background: var(--sgi-color-background-secondary);
+  overflow-wrap: anywhere;
+}
+
+.acoes {
+  margin-top: var(--sgi-space-4);
+  padding-top: var(--sgi-space-3);
+  border-top: var(--sgi-border);
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sgi-space-1);
+  }
+}
+
+.dica {
+  margin-top: var(--sgi-space-1);
+  font-size: var(--sgi-font-size-small);
+}
+
+// Celular: botões em coluna, na largura toda; data e hora um embaixo do outro.
+.botoes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sgi-space-1);
+
+  button {
+    min-height: var(--sgi-alvo-toque);
+  }
+}
+
+.quando-novo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sgi-space-1);
+}
+
+@media (min-width: bp.$tablet) {
+  .botoes {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .quando-novo {
+    flex-direction: row;
+
+    mat-form-field:first-child {
+      flex: 2;
+    }
+
+    mat-form-field:last-child {
+      flex: 1;
+    }
+  }
+}

@@ -86,6 +86,9 @@ frente de trabalho paralela não é usado todo.
 - [0070](0070-agendamento-e-agenda-das-visitas.md) — Agendamento e agenda das visitas domiciliares
 - [0071](0071-permissoes-das-visitas.md) — Permissões da agenda e do agendamento de visitas
 - [0072](0072-telas-de-visitas-e-agenda-do-dia.md) — Telas da agenda de visitas e agenda do dia na página inicial
+- [0073](0073-realizacao-cancelamento-e-reagendamento-da-visita.md) — Realização, cancelamento e reagendamento da visita, com observações cifradas
+- [0074](0074-permissoes-do-resultado-da-visita.md) — Permissões para registrar a realização e ler as observações da visita (provisório)
+- [0075](0075-acoes-na-ficha-da-visita.md) — Ações de realização, cancelamento e reagendamento na ficha da visita
 - [0080](0080-insercao-no-servico.md) — Inserção no serviço: modelo, regras e cuidador familiar (provisório)
 - [0081](0081-apis-entre-lista-de-espera-pessoas-e-atendidos.md) — APIs entre Lista de espera, Pessoas e Atendidos
 - [0082](0082-permissoes-dos-usuarios-atendidos.md) — Permissões dos usuários atendidos (provisório)

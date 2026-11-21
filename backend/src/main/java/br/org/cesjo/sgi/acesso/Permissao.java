@@ -59,6 +59,9 @@ public enum Permissao {
 	VISITAS_LER,
 
 	/** Agendar visita domiciliar (RF004, ADR 0071). */
-	VISITAS_AGENDAR
+	VISITAS_AGENDAR,
+
+	/** Registrar a realização da visita e ler as observações, que são sensíveis (RF004, ADR 0074). */
+	VISITAS_REGISTRAR
 
 }

@@ -24,6 +24,42 @@
       </p>
     </header>
 
+    @if (atual.visitaOrigemId) {
+      <p class="ligacao">
+        Reagenda uma visita cancelada.
+        <a [routerLink]="['/visitas', atual.visitaOrigemId]">Ver a visita anterior</a>
+      </p>
+    }
+    @if (atual.status === 'CANCELADA') {
+      <dl class="resultado">
+        <dt>Motivo do cancelamento</dt>
+        <dd>{{ atual.motivoCancelamento }}</dd>
+      </dl>
+      @if (atual.reagendamentoId) {
+        <p class="ligacao">
+          <a [routerLink]="['/visitas', atual.reagendamentoId]">Ver a visita reagendada</a>
+        </p>
+      }
+    }
+    @if (atual.status === 'REALIZADA' && podeRegistrar) {
+      <section class="resultado" aria-labelledby="titulo-observacoes">
+        <h2 id="titulo-observacoes">Observações</h2>
+        @if (!atual.temObservacoes) {
+          <p class="texto-secundario">Sem observações.</p>
+        } @else if (observacoes() === undefined) {
+          <p class="texto-secundario">
+            As observações são sigilosas. Cada leitura fica registrada no log de auditoria.
+          </p>
+          <button matButton="outlined" type="button" (click)="verObservacoes(atual)">
+            <mat-icon aria-hidden="true">visibility</mat-icon>
+            Ler observações
+          </button>
+        } @else {
+          <p class="observacoes">{{ observacoes() }}</p>
+        }
+      </section>
+    }
+
     <h2>Profissionais</h2>
     <ul class="profissionais">
       @for (profissional of atual.profissionais; track profissional.id) {
@@ -33,5 +69,137 @@
         </li>
       }
     </ul>
+
+    @if (agendada() && (podeRegistrar || podeAgendar)) {
+      <section class="acoes" aria-labelledby="titulo-acoes">
+        <h2 id="titulo-acoes">O que aconteceu com a visita?</h2>
+
+        @if (acao() === null) {
+          <div class="botoes">
+            @if (podeRegistrar) {
+              <button
+                matButton="filled"
+                type="button"
+                [disabled]="!jaPodeRealizar()"
+                (click)="abrir('realizar')"
+              >
+                <mat-icon aria-hidden="true">task_alt</mat-icon>
+                Registrar realização
+              </button>
+            }
+            @if (podeAgendar) {
+              <button matButton="outlined" type="button" (click)="abrir('reagendar')">
+                <mat-icon aria-hidden="true">event_repeat</mat-icon>
+                Reagendar
+              </button>
+              <button matButton="outlined" type="button" (click)="abrir('cancelar')">
+                <mat-icon aria-hidden="true">event_busy</mat-icon>
+                Cancelar visita
+              </button>
+            }
+          </div>
+          @if (podeRegistrar && !jaPodeRealizar()) {
+            <p class="texto-secundario dica">
+              A realização pode ser registrada a partir do dia da visita.
+            </p>
+          }
+        }
+
+        @if (acao() === 'realizar') {
+          <form [formGroup]="formRealizar" (ngSubmit)="realizar(atual)" novalidate>
+            <mat-form-field appearance="outline">
+              <mat-label>Observações da visita</mat-label>
+              <textarea matInput formControlName="observacoes" rows="6"></textarea>
+              <mat-hint
+                >Opcional. Guardadas cifradas; só a equipe técnica e a coordenação leem.</mat-hint
+              >
+              @if (formRealizar.controls.observacoes.hasError('maxlength')) {
+                <mat-error>Use até 5.000 caracteres.</mat-error>
+              }
+            </mat-form-field>
+            <div class="botoes">
+              <button matButton="filled" type="submit" [disabled]="enviando()">
+                Registrar realização
+              </button>
+              <button matButton type="button" (click)="abrir(null)">Voltar</button>
+            </div>
+          </form>
+        }
+
+        @if (acao() === 'cancelar') {
+          <form [formGroup]="formCancelar" (ngSubmit)="cancelar(atual)" novalidate>
+            <mat-form-field appearance="outline">
+              <mat-label>Motivo do cancelamento</mat-label>
+              <textarea matInput formControlName="motivo" rows="3"></textarea>
+              <mat-hint>Para marcar outra data, use "Reagendar".</mat-hint>
+              @if (formCancelar.controls.motivo.hasError('required')) {
+                <mat-error>Informe o motivo.</mat-error>
+              } @else if (formCancelar.controls.motivo.hasError('maxlength')) {
+                <mat-error>Use até 500 caracteres.</mat-error>
+              }
+            </mat-form-field>
+            <div class="botoes">
+              <button matButton="filled" type="submit" [disabled]="enviando()">
+                Cancelar visita
+              </button>
+              <button matButton type="button" (click)="abrir(null)">Voltar</button>
+            </div>
+          </form>
+        }
+
+        @if (acao() === 'reagendar') {
+          <form [formGroup]="formReagendar" (ngSubmit)="reagendar(atual)" novalidate>
+            <p class="texto-secundario">
+              Esta visita fica cancelada com o motivo abaixo, e uma visita nova é agendada.
+            </p>
+            <div class="quando-novo">
+              <mat-form-field appearance="outline">
+                <mat-label>Nova data</mat-label>
+                <input matInput [matDatepicker]="seletorData" [min]="hoje" formControlName="data" />
+                <mat-hint>DD/MM/AAAA</mat-hint>
+                <mat-datepicker-toggle matIconSuffix [for]="seletorData" />
+                <mat-datepicker #seletorData />
+                @if (formReagendar.controls.data.hasError('matDatepickerMin')) {
+                  <mat-error>Escolha hoje ou um dia futuro.</mat-error>
+                } @else if (formReagendar.controls.data.invalid) {
+                  <mat-error>Informe a data.</mat-error>
+                }
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Hora</mat-label>
+                <input matInput type="time" formControlName="hora" />
+                @if (formReagendar.controls.hora.invalid) {
+                  <mat-error>Informe a hora.</mat-error>
+                }
+              </mat-form-field>
+            </div>
+            <mat-form-field appearance="outline">
+              <mat-label>Profissionais</mat-label>
+              <mat-select formControlName="profissionais" multiple>
+                @for (profissional of profissionais(); track profissional.id) {
+                  <mat-option [value]="profissional.id">
+                    {{ profissional.nome }} ({{ funcoes[profissional.funcao] }})
+                  </mat-option>
+                }
+              </mat-select>
+              @if (formReagendar.controls.profissionais.hasError('required')) {
+                <mat-error>Escolha pelo menos um profissional.</mat-error>
+              }
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Motivo do reagendamento</mat-label>
+              <textarea matInput formControlName="motivo" rows="3"></textarea>
+              @if (formReagendar.controls.motivo.hasError('required')) {
+                <mat-error>Informe o motivo.</mat-error>
+              }
+            </mat-form-field>
+            <div class="botoes">
+              <button matButton="filled" type="submit" [disabled]="enviando()">Reagendar</button>
+              <button matButton type="button" (click)="abrir(null)">Voltar</button>
+            </div>
+          </form>
+        }
+      </section>
+    }
   }
 </section>
