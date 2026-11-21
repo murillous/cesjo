@@ -37,6 +37,9 @@ public enum Permissao {
 	 */
 	LISTA_ESPERA_FILA_LER,
 
+	/** Editar os dados do candidato e mudar a situação da inscrição (RF002, ADR 0090). */
+	LISTA_ESPERA_EDITAR,
+
 	/** Ver o cadastro de colaboradores (RF014, ADR 0047). */
 	COLABORADORES_LER,
 

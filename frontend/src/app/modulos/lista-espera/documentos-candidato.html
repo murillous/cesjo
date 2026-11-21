@@ -1,7 +1,7 @@
 <section class="documentos" aria-labelledby="titulo-documentos">
-  <a matButton routerLink="/lista-espera" class="voltar">
+  <a matButton [routerLink]="['/lista-espera', id()]" class="voltar">
     <mat-icon aria-hidden="true">arrow_back</mat-icon>
-    Lista de espera
+    Ficha do candidato
   </a>
 
   <h1 id="titulo-documentos">Documentos do candidato</h1>

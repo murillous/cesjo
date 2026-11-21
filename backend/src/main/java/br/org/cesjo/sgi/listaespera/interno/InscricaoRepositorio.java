@@ -14,7 +14,7 @@ import br.org.cesjo.sgi.listaespera.SituacaoInscricao;
 interface InscricaoRepositorio
 		extends JpaRepository<InscricaoListaEspera, UUID>, JpaSpecificationExecutor<InscricaoListaEspera> {
 
-	List<InscricaoListaEspera> findBySituacao(SituacaoInscricao situacao, Sort ordem);
+	List<InscricaoListaEspera> findBySituacaoIn(Collection<SituacaoInscricao> situacoes, Sort ordem);
 
 	/** Inscrições nas situações dadas, na ordem da fila (índice {@code ix_inscricao_fila}). */
 	List<InscricaoListaEspera> findBySituacaoInOrderByDataCadastroAscCriadoEmAsc(Collection<SituacaoInscricao> situacoes);

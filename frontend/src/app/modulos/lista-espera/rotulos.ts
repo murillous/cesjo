@@ -5,11 +5,34 @@ export type TipoDeficiencia = 'FISICA' | 'SENSORIAL' | 'INTELECTUAL' | 'MULTIPLA
 export type OrigemEncaminhamento =
   'CRAS' | 'CREAS' | 'JUDICIARIO' | 'SAUDE' | 'EDUCACAO' | 'DEMANDA_ESPONTANEA';
 
-export type SituacaoInscricao = 'AGUARDANDO' | 'EM_AVALIACAO' | 'INSERIDO';
+export type SituacaoInscricao = 'AGUARDANDO' | 'EM_AVALIACAO' | 'INSERIDO' | 'SAIU';
 
-/** Situações da inscrição; as de saída entram com a issue #29 (pergunta 4). */
+/**
+ * Situações da inscrição, com os rótulos do backend (ADR 0091). Aguardando e em avaliação são as
+ * ativas: seguem na fila, com posição (ADR 0094).
+ */
 export const SITUACOES: readonly { valor: SituacaoInscricao; rotulo: string }[] = [
   { valor: 'AGUARDANDO', rotulo: 'Aguardando' },
+  { valor: 'EM_AVALIACAO', rotulo: 'Em avaliação' },
+  { valor: 'INSERIDO', rotulo: 'Inserido no serviço' },
+  { valor: 'SAIU', rotulo: 'Saiu da lista' },
+];
+
+/** Situações de quem segue na fila, com os nomes de `SituacaoInscricao.ATIVAS` do backend. */
+export const SITUACOES_ATIVAS: ReadonlySet<SituacaoInscricao> = new Set([
+  'AGUARDANDO',
+  'EM_AVALIACAO',
+]);
+
+/** Motivos de saída da lista, com os nomes do enum `MotivoSaida` do backend. */
+export type MotivoSaida = 'DESISTENCIA' | 'NAO_LOCALIZADO' | 'FORA_DO_PERFIL' | 'OUTRO';
+
+// PENDENTE-CESJO(P4): lista provisória de motivos de saída (ADR 0091).
+export const MOTIVOS_SAIDA: readonly { valor: MotivoSaida; rotulo: string }[] = [
+  { valor: 'DESISTENCIA', rotulo: 'Desistência' },
+  { valor: 'NAO_LOCALIZADO', rotulo: 'Não localizado' },
+  { valor: 'FORA_DO_PERFIL', rotulo: 'Fora do perfil do serviço' },
+  { valor: 'OUTRO', rotulo: 'Outro motivo' },
 ];
 
 /** Rótulo de um valor numa das listas acima, ou o próprio valor quando não houver. */

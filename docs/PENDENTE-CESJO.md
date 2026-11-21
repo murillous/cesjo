@@ -50,12 +50,13 @@ Situação: aberta.
 > Quais motivos de saída da lista de espera existem (desistência, não localizado, fora do perfil,
 > inserido)? O candidato chamado que não comparece volta para a fila?
 
-Situação: provisória. A inscrição tem as situações `AGUARDANDO`, `EM_AVALIACAO` e `INSERIDO` (saída
-por inserção no serviço, ADR 0081); as outras situações de saída entram com a issue #29 (marcador em
-`listaespera.SituacaoInscricao`).
+Situação: provisória.
 
 | Decisão provisória | Onde mudar | ADR |
 |---|---|---|
+| A saída da lista é a situação `SAIU`, com um motivo: desistência, não localizado, fora do perfil ou outro (este com observação obrigatória). | `listaespera.MotivoSaida`, `MOTIVOS_SAIDA` em `rotulos.ts` (frontend) e a restrição da `V7` | [0091](adr/0091-situacoes-motivos-e-historico-da-inscricao.md) |
+| Quem saiu pode voltar para a fila, na posição original (a da data de cadastro), com observação obrigatória. | `ServicoListaEspera.mudarSituacao` | [0091](adr/0091-situacoes-motivos-e-historico-da-inscricao.md) |
+| O candidato em avaliação (visita agendada) segue na fila com a mesma posição e pode sair da lista. | `SituacaoInscricao.ATIVAS` | [0094](adr/0094-em-avaliacao-segue-na-fila.md) |
 | O candidato com visita agendada fica `EM_AVALIACAO`, continua na fila na mesma ordem e não volta para `AGUARDANDO` quando a visita é cancelada. | `listaespera.SituacaoInscricao` (`ATIVAS`) e `listaespera.interno.ServicoCandidatos` | [0049](adr/0049-candidato-em-avaliacao-e-api-da-lista-de-espera.md) |
 
 ## P5. PIA

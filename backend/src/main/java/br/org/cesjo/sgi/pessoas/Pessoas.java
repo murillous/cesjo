@@ -35,6 +35,14 @@ public interface Pessoas {
 	Map<UUID, String> nomes(Collection<UUID> ids);
 
 	/**
+	 * Atualiza os dados da pessoa e o nome do seu responsável (ADR 0090). Registra na auditoria só os
+	 * nomes dos campos que mudaram; sem mudança, não registra nada.
+	 *
+	 * @throws br.org.cesjo.sgi.compartilhado.web.RecursoNaoEncontradoException quando a pessoa não existe
+	 */
+	DadosPessoa atualizar(UUID id, NovaPessoa dados);
+
+	/**
 	 * Busca em lote para listagens de outros módulos (ADR 0059): devolve, por {@code id}, o resumo das
 	 * pessoas entre {@code ids} que atendem ao filtro. Os ids sem pessoa ou fora do filtro ficam de fora.
 	 * Não é auditado, porque não expõe contato nem documento.

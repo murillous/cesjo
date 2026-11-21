@@ -1,13 +1,14 @@
 package br.org.cesjo.sgi.listaespera;
 
+import java.util.EnumSet;
+import java.util.Set;
+
 /**
- * Situação de uma inscrição na lista de espera (RF002). As inscrições {@link #AGUARDANDO} e
- * {@link #EM_AVALIACAO} são de candidatos ativos e seguem na fila pela data de cadastro (ADR 0049).
+ * Situação de uma inscrição na lista de espera (RF002, ADR 0091). As inscrições {@link #AGUARDANDO} e
+ * {@link #EM_AVALIACAO} são de candidatos ativos: ocupam posição na fila, pela data de cadastro
+ * (ADR 0049 e ADR 0094).
  */
 public enum SituacaoInscricao {
-
-	// PENDENTE-CESJO(P4): as outras situações de saída (desistência, não localizado, fora do perfil)
-	// entram com a issue #29, quando a lista de motivos for decidida.
 
 	AGUARDANDO("Aguardando"),
 
@@ -17,10 +18,14 @@ public enum SituacaoInscricao {
 	EM_AVALIACAO("Em avaliação"),
 
 	/** Saiu da fila porque foi inserida no serviço (RF007, ADR 0081). */
-	INSERIDO("Inserido no serviço");
+	INSERIDO("Inserido no serviço"),
+
+	// PENDENTE-CESJO(P4): a saída da lista é uma situação só, com o motivo em MotivoSaida (ADR 0091).
+	/** Saiu da lista sem ser inserida, com um {@link MotivoSaida}. */
+	SAIU("Saiu da lista");
 
 	/** Situações de quem ainda é candidato, isto é, segue na lista de espera. */
-	public static final java.util.Set<SituacaoInscricao> ATIVAS = java.util.EnumSet.of(AGUARDANDO, EM_AVALIACAO);
+	public static final Set<SituacaoInscricao> ATIVAS = EnumSet.of(AGUARDANDO, EM_AVALIACAO);
 
 	private final String rotulo;
 
@@ -30,6 +35,11 @@ public enum SituacaoInscricao {
 
 	public String rotulo() {
 		return rotulo;
+	}
+
+	/** Diz se a inscrição segue na fila, com posição. */
+	public boolean ativa() {
+		return ATIVAS.contains(this);
 	}
 
 }
