@@ -7,7 +7,7 @@ export const LISTA_ESPERA_ROUTES: Routes = [
     path: '',
     pathMatch: 'full',
     title: 'Lista de espera | CESJO SGI',
-    loadComponent: () => import('./pagina-lista-espera').then((m) => m.PaginaListaEspera),
+    loadComponent: () => import('./fila-lista-espera').then((m) => m.FilaListaEspera),
   },
   {
     path: 'nova',
@@ -18,6 +18,7 @@ export const LISTA_ESPERA_ROUTES: Routes = [
   {
     path: ':id/documentos',
     title: 'Documentos do candidato | CESJO SGI',
+    canMatch: [exigePermissao('LISTA_ESPERA_LER')],
     loadComponent: () => import('./documentos-candidato').then((m) => m.DocumentosCandidato),
   },
 ];

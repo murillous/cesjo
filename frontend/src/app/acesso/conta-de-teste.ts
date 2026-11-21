@@ -11,6 +11,7 @@ export function contaDeTeste(mudancas: Partial<ContaSessao> = {}): ContaSessao {
     'NOTIFICACOES_LER',
     'LISTA_ESPERA_LER',
     'LISTA_ESPERA_CADASTRAR',
+    'LISTA_ESPERA_FILA_LER',
     'COLABORADORES_LER',
     'COLABORADORES_GERENCIAR',
   ];

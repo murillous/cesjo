@@ -31,6 +31,12 @@ public enum Permissao {
 	/** Cadastrar candidato na lista de espera (RF001, ADR 0039). */
 	LISTA_ESPERA_CADASTRAR,
 
+	/**
+	 * Ver a fila da lista de espera só com os dados básicos: nome, situação, datas e posição, sem contato
+	 * nem documentos (RF002, ADR 0058).
+	 */
+	LISTA_ESPERA_FILA_LER,
+
 	/** Ver o cadastro de colaboradores (RF014, ADR 0047). */
 	COLABORADORES_LER,
 

@@ -14,6 +14,7 @@ export const CONTA_COORDENADOR = {
     'NOTIFICACOES_LER',
     'LISTA_ESPERA_LER',
     'LISTA_ESPERA_CADASTRAR',
+    'LISTA_ESPERA_FILA_LER',
   ],
   trocaSenhaObrigatoria: false,
 };

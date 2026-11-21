@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 
@@ -50,9 +50,50 @@ export interface Inscricao {
   cadastroCompleto: boolean;
 }
 
+/**
+ * Uma linha da fila (`GET /api/lista-espera/inscricoes`). Para o perfil Consulta, que só vê os dados
+ * básicos, `tipoDeficiencia`, `origemEncaminhamento` e `cadastroCompleto` não vêm (ADR 0058).
+ */
+export interface ItemFila {
+  id: string;
+  /** Ausente quando a inscrição não está aguardando. */
+  posicao?: number;
+  nomeCompleto: string;
+  situacao: SituacaoInscricao;
+  dataCadastro: string;
+  tipoDeficiencia?: TipoDeficiencia;
+  origemEncaminhamento?: OrigemEncaminhamento;
+  cadastroCompleto?: boolean;
+}
+
+export interface PaginaFila {
+  content: readonly ItemFila[];
+  page: { size: number; number: number; totalElements: number; totalPages: number };
+}
+
+/** Filtros da fila. Tipo de deficiência e origem só para quem tem `LISTA_ESPERA_LER`. */
+export interface FiltrosFila {
+  nome?: string | null;
+  tipoDeficiencia?: TipoDeficiencia | null;
+  origem?: OrigemEncaminhamento | null;
+  situacao?: SituacaoInscricao | null;
+}
+
 @Injectable({ providedIn: 'root' })
 export class ListaEsperaApi {
   private readonly http = inject(HttpClient);
+
+  /** Fila em ordem, com a posição de cada candidato aguardando (RF002). */
+  listar(filtros: FiltrosFila, pagina: number, tamanho: number): Observable<PaginaFila> {
+    let params = new HttpParams().set('page', pagina).set('size', tamanho);
+    for (const [campo, valor] of Object.entries(filtros)) {
+      const texto = typeof valor === 'string' ? valor.trim() : '';
+      if (texto) {
+        params = params.set(campo, texto);
+      }
+    }
+    return this.http.get<PaginaFila>('/api/lista-espera/inscricoes', { params });
+  }
 
   inscrever(dados: NovaInscricao): Observable<Inscricao> {
     return this.http.post<Inscricao>('/api/lista-espera/inscricoes', dados);

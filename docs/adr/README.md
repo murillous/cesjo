@@ -78,6 +78,9 @@ frente de trabalho paralela não é usado todo.
 - [0054](0054-backup-diario-com-restic.md) — Backup diário com restic para um repositório fora da VPS (provisório)
 - [0055](0055-documentos-da-pessoa.md) — Documentos da pessoa no módulo Pessoas (provisório)
 - [0056](0056-anexos-na-lista-de-espera.md) — Anexos na lista de espera e cadastro incompleto
+- [0057](0057-ordem-e-posicao-na-fila.md) — Ordem e posição na fila da lista de espera (provisório)
+- [0058](0058-dados-basicos-da-fila-para-o-consulta.md) — Dados básicos da fila para o perfil Consulta (provisório)
+- [0059](0059-busca-em-lote-de-pessoas-para-a-fila.md) — Busca em lote de pessoas para montar a fila
 - [0065](0065-retencao-dos-backups.md) — Retenção dos backups: 7 diários, 4 semanais e 6 mensais (provisório)
 - [0080](0080-insercao-no-servico.md) — Inserção no serviço: modelo, regras e cuidador familiar (provisório)
 - [0081](0081-apis-entre-lista-de-espera-pessoas-e-atendidos.md) — APIs entre Lista de espera, Pessoas e Atendidos

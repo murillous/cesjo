@@ -34,6 +34,11 @@ class PerfilTests {
 	}
 
 	@Test
+	void todosVeemAFilaDaListaDeEspera() {
+		assertThat(Perfil.values()).allMatch(perfil -> perfil.tem(Permissao.LISTA_ESPERA_FILA_LER));
+	}
+
+	@Test
 	void soCoordenadorVeEGerenciaColaboradores() {
 		assertThat(Arrays.stream(Perfil.values()).filter(perfil -> perfil.tem(Permissao.COLABORADORES_LER)))
 			.containsExactly(Perfil.COORDENADOR);
@@ -56,9 +61,9 @@ class PerfilTests {
 	}
 
 	@Test
-	void consultaSoVeNotificacoesEDadosBasicosDosAtendidos() {
+	void consultaSoVeNotificacoesAFilaEDadosBasicosDosAtendidos() {
 		assertThat(Perfil.CONSULTA.permissoes()).containsExactlyInAnyOrder(Permissao.NOTIFICACOES_LER,
-				Permissao.ATENDIDOS_LER_BASICO);
+				Permissao.LISTA_ESPERA_FILA_LER, Permissao.ATENDIDOS_LER_BASICO);
 	}
 
 }

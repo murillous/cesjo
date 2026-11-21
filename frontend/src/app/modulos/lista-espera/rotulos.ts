@@ -7,6 +7,19 @@ export type OrigemEncaminhamento =
 
 export type SituacaoInscricao = 'AGUARDANDO' | 'INSERIDO';
 
+/** Situações da inscrição; as de saída entram com a issue #29 (pergunta 4). */
+export const SITUACOES: readonly { valor: SituacaoInscricao; rotulo: string }[] = [
+  { valor: 'AGUARDANDO', rotulo: 'Aguardando' },
+];
+
+/** Rótulo de um valor numa das listas acima, ou o próprio valor quando não houver. */
+export function rotuloDe<T extends string>(
+  lista: readonly { valor: T; rotulo: string }[],
+  valor: T | null | undefined,
+): string {
+  return lista.find((item) => item.valor === valor)?.rotulo ?? valor ?? '';
+}
+
 /** Na ordem em que aparecem no formulário. Rótulos iguais aos do backend. */
 export const TIPOS_DEFICIENCIA: readonly { valor: TipoDeficiencia; rotulo: string }[] = [
   { valor: 'FISICA', rotulo: 'Física' },
