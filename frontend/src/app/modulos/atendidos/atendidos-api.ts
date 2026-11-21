@@ -3,7 +3,14 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { OrigemEncaminhamento, SituacaoInscricao, TipoDeficiencia } from '../lista-espera/rotulos';
-import { FaixaEtaria, MotivoDesligamento, SituacaoInsercao, Turno } from './rotulos';
+import {
+  AmbitoViolacao,
+  FaixaEtaria,
+  MotivoDesligamento,
+  SituacaoInsercao,
+  TipoViolacao,
+  Turno,
+} from './rotulos';
 
 /** Candidato da fila como `GET /api/atendidos/candidatos/{inscricaoId}` devolve (ADR 0080). */
 export interface CandidatoInsercao {
@@ -91,6 +98,14 @@ export interface NovoDesligamento {
   observacao: string | null;
 }
 
+/** Dados do registro de violação de direitos (RF009, ADR 0112). */
+export interface NovaViolacao {
+  tipo: TipoViolacao;
+  ambito: AmbitoViolacao | null;
+  dataIdentificacao: string;
+  descricao: string;
+}
+
 export type FichaAtendido = AtendidoBasico | FichaCompleta;
 
 /** Filtros da listagem. Tipo de deficiência e faixa etária só para quem tem `ATENDIDOS_LER`. */
@@ -135,6 +150,13 @@ export class AtendidosApi {
   desligar(id: string, dados: NovoDesligamento): Observable<{ id: string }> {
     return this.http.post<{ id: string }>(
       `/api/atendidos/${encodeURIComponent(id)}/desligamento`,
+      dados,
+    );
+  }
+
+  registrarViolacao(id: string, dados: NovaViolacao): Observable<{ id: string }> {
+    return this.http.post<{ id: string }>(
+      `/api/atendidos/${encodeURIComponent(id)}/violacoes`,
       dados,
     );
   }

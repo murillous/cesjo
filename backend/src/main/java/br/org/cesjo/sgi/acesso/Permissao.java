@@ -86,6 +86,12 @@ public enum Permissao {
 	CAPACIDADE_EDITAR,
 
 	/** Registrar o desligamento de um usuário atendido (RF008, ADR 0110). */
-	ATENDIDOS_DESLIGAR
+	ATENDIDOS_DESLIGAR,
+
+	/** Registrar violação de direitos (RF009, ADR 0112). */
+	VIOLACOES_REGISTRAR,
+
+	/** Consultar violações de direitos e ler a descrição, com leitura auditada (RF009, ADR 0113). */
+	VIOLACOES_LER
 
 }

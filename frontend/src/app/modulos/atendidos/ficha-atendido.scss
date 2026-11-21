@@ -69,9 +69,20 @@ dt {
   color: var(--sgi-color-text-secondary);
 }
 
-.desligar {
+// Ações da ficha: empilhadas na largura toda no celular, lado a lado a partir do tablet.
+.acoes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sgi-space-1);
   margin-top: var(--sgi-space-2);
-  min-height: var(--sgi-alvo-toque);
+
+  &:empty {
+    display: none;
+  }
+
+  a {
+    min-height: var(--sgi-alvo-toque);
+  }
 }
 
 .observacao {
@@ -92,6 +103,11 @@ dd {
 }
 
 @media (min-width: bp.$tablet) {
+  .acoes {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
   .blocos {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }

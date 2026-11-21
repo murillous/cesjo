@@ -22,6 +22,12 @@ export const ATENDIDOS_ROUTES: Routes = [
     loadComponent: () => import('./formulario-desligamento').then((m) => m.FormularioDesligamento),
   },
   {
+    path: ':id/violacoes/nova',
+    title: 'Registrar violação de direitos | CESJO SGI',
+    canMatch: [exigePermissao('VIOLACOES_REGISTRAR')],
+    loadComponent: () => import('./formulario-violacao').then((m) => m.FormularioViolacao),
+  },
+  {
     path: ':id',
     title: 'Ficha do usuário atendido | CESJO SGI',
     loadComponent: () => import('./ficha-atendido').then((m) => m.FichaAtendidoPagina),
