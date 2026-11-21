@@ -2,7 +2,10 @@ package br.org.cesjo.sgi.pessoas.interno;
 
 import java.time.Clock;
 import java.time.Instant;
+import java.util.Collection;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -54,6 +57,12 @@ class ServicoPessoas implements Pessoas {
 	@Transactional(readOnly = true)
 	public Optional<DadosPessoa> obter(UUID id) {
 		return pessoas.findById(id).map(this::dados);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Map<UUID, String> nomes(Collection<UUID> ids) {
+		return pessoas.findAllById(ids).stream().collect(Collectors.toMap(Pessoa::getId, Pessoa::getNomeCompleto));
 	}
 
 	private DadosPessoa dados(Pessoa pessoa) {

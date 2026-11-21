@@ -35,6 +35,12 @@ public enum Permissao {
 	COLABORADORES_LER,
 
 	/** Cadastrar e editar colaboradores, inclusive a situação e a conta ligada (RF014, ADR 0047). */
-	COLABORADORES_GERENCIAR
+	COLABORADORES_GERENCIAR,
+
+	/** Ver a agenda e a ficha das visitas domiciliares (RF004, ADR 0071). */
+	VISITAS_LER,
+
+	/** Agendar visita domiciliar (RF004, ADR 0071). */
+	VISITAS_AGENDAR
 
 }

@@ -1,5 +1,7 @@
 package br.org.cesjo.sgi.pessoas;
 
+import java.util.Collection;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -22,5 +24,8 @@ public interface Pessoas {
 	UUID cadastrar(NovaPessoa nova);
 
 	Optional<DadosPessoa> obter(UUID id);
+
+	/** Nome completo de cada pessoa encontrada, pelo {@code id}. Ids inexistentes ficam de fora. */
+	Map<UUID, String> nomes(Collection<UUID> ids);
 
 }

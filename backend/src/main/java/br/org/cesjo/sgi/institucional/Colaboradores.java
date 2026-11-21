@@ -2,6 +2,7 @@ package br.org.cesjo.sgi.institucional;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -29,6 +30,12 @@ public interface Colaboradores {
 	 * @throws ColaboradorIndisponivelException se algum não existir ou estiver inativo
 	 */
 	void exigirAtivos(Collection<UUID> ids);
+
+	/**
+	 * Colaboradores pelo {@code id}, ativos ou não, para exibir os profissionais de registros já feitos.
+	 * Ids inexistentes ficam de fora.
+	 */
+	Map<UUID, ResumoColaborador> obterVarios(Collection<UUID> ids);
 
 	/** Colaborador ativo ligado à conta de acesso, por exemplo para sugerir o profissional da escuta. */
 	Optional<ResumoColaborador> obterAtivoPorConta(UUID contaId);
