@@ -62,14 +62,62 @@ frente de trabalho paralela não é usado todo.
 - [0037](0037-pessoa-e-inscricao-na-lista-de-espera.md) — Pessoa no módulo Pessoas e inscrição no módulo Lista de espera
 - [0038](0038-dados-do-cadastro-na-lista-de-espera.md) — Dados obrigatórios e validação do cadastro na lista de espera (provisório)
 - [0039](0039-permissoes-da-lista-de-espera.md) — Permissões do cadastro e da leitura da lista de espera (provisório)
+- [0040](0040-geracao-de-pdf-e-excel-no-modulo-relatorios.md) — Geração de PDF e Excel no módulo Relatórios
+- [0041](0041-tabela-simples-de-exportacao.md) — Tabela simples como contrato da exportação
+- [0042](0042-resposta-http-de-download-da-exportacao.md) — Resposta HTTP de download e parâmetro de formato da exportação
+- [0043](0043-auditoria-e-permissao-da-exportacao.md) — Auditoria e permissão da exportação
+- [0044](0044-exportacao-no-frontend.md) — Serviço e botão de exportação no frontend
+- [0045](0045-cadastro-e-api-java-dos-colaboradores.md) — Cadastro de colaboradores e API Java para os outros módulos (provisório)
+- [0046](0046-ligacao-entre-colaborador-e-conta-de-acesso.md) — Ligação entre colaborador e conta de acesso guardada no colaborador
+- [0047](0047-permissoes-dos-colaboradores.md) — Permissões do cadastro de colaboradores (provisório)
+- [0048](0048-telas-de-colaboradores.md) — Telas de listagem e cadastro de colaboradores
+- [0049](0049-candidato-em-avaliacao-e-api-da-lista-de-espera.md) — Candidato em avaliação e API Java da lista de espera (provisório)
+- [0050](0050-empacotamento-e-compose-de-producao.md) — Imagens Docker e compose de produção em `deploy/` (provisório)
+- [0051](0051-caddy-como-borda.md) — Caddy como borda: TLS, estáticos, proxy de `/api` e cabeçalhos
+- [0052](0052-segredos-da-implantacao-no-env.md) — Segredos da implantação num `.env` fora do repositório
+- [0053](0053-ci-das-imagens-de-implantacao.md) — CI constrói as imagens e testa a pilha sem publicar
+- [0054](0054-backup-diario-com-restic.md) — Backup diário com restic para um repositório fora da VPS (provisório)
 - [0055](0055-documentos-da-pessoa.md) — Documentos da pessoa no módulo Pessoas (provisório)
 - [0056](0056-anexos-na-lista-de-espera.md) — Anexos na lista de espera e cadastro incompleto
 - [0057](0057-ordem-e-posicao-na-fila.md) — Ordem e posição na fila da lista de espera (provisório)
 - [0058](0058-dados-basicos-da-fila-para-o-consulta.md) — Dados básicos da fila para o perfil Consulta (provisório)
 - [0059](0059-busca-em-lote-de-pessoas-para-a-fila.md) — Busca em lote de pessoas para montar a fila
+- [0065](0065-retencao-dos-backups.md) — Retenção dos backups: 7 diários, 4 semanais e 6 mensais (provisório)
+- [0066](0066-saude-publica-em-saude.md) — Estado de saúde publicado em `/saude`
+- [0067](0067-monitor-externo-no-github-actions.md) — Monitor externo de disponibilidade no GitHub Actions (provisório)
+- [0068](0068-relatorio-mensal-de-uptime.md) — Relatório mensal de uptime a partir das execuções do monitor
+- [0069](0069-alerta-de-disco-cheio.md) — Alerta de disco cheio pelo contêiner de backup
+- [0070](0070-agendamento-e-agenda-das-visitas.md) — Agendamento e agenda das visitas domiciliares
+- [0071](0071-permissoes-das-visitas.md) — Permissões da agenda e do agendamento de visitas
+- [0072](0072-telas-de-visitas-e-agenda-do-dia.md) — Telas da agenda de visitas e agenda do dia na página inicial
+- [0073](0073-realizacao-cancelamento-e-reagendamento-da-visita.md) — Realização, cancelamento e reagendamento da visita, com observações cifradas
+- [0074](0074-permissoes-do-resultado-da-visita.md) — Permissões para registrar a realização e ler as observações da visita (provisório)
+- [0075](0075-acoes-na-ficha-da-visita.md) — Ações de realização, cancelamento e reagendamento na ficha da visita
+- [0080](0080-insercao-no-servico.md) — Inserção no serviço: modelo, regras e cuidador familiar (provisório)
+- [0081](0081-apis-entre-lista-de-espera-pessoas-e-atendidos.md) — APIs entre Lista de espera, Pessoas e Atendidos
+- [0082](0082-permissoes-dos-usuarios-atendidos.md) — Permissões dos usuários atendidos (provisório)
+- [0083](0083-listagem-e-ficha-dos-usuarios-atendidos.md) — Listagem e ficha dos usuários atendidos (provisório)
 - [0090](0090-edicao-do-candidato.md) — Edição dos dados do candidato
 - [0091](0091-situacoes-motivos-e-historico-da-inscricao.md) — Situações, motivos de saída e histórico da inscrição (provisório)
 - [0092](0092-capacidade-e-painel-de-vagas.md) — Capacidade do serviço e painel de vagas (provisório)
 - [0093](0093-contagem-de-vagas-ocupadas.md) — Contagem de vagas ocupadas atrás de uma interface
 - [0094](0094-em-avaliacao-segue-na-fila.md) — Candidato em avaliação segue na fila (provisório)
 - [0095](0095-aviso-de-vaga-aberta.md) — Aviso de vaga aberta (provisório)
+- [0100](0100-escuta-ativa-e-qualificada.md) — Escuta ativa e qualificada com textos cifrados e leitura auditada
+- [0101](0101-permissoes-da-escuta.md) — Permissões da escuta ativa e qualificada
+- [0102](0102-telas-de-escuta.md) — Telas de escuta organizadas pela pessoa atendida
+- [0103](0103-modelo-provisorio-e-versoes-do-pia.md) — Modelo provisório do PIA, conteúdo em JSON cifrado e versões (provisório)
+- [0104](0104-permissoes-do-pia.md) — Permissões de leitura e edição do PIA
+- [0105](0105-tela-do-pia.md) — Tela de elaboração e leitura do PIA
+- [0106](0106-status-e-novas-versoes-do-pia.md) — Status do PIA em ordem fixa, com data, e mudança por nova versão (provisório)
+- [0107](0107-aprovacao-do-pia-pelo-coordenador.md) — Aprovação do PIA só pelo Coordenador
+- [0108](0108-impressao-do-pia.md) — PIA impresso ou salvo em PDF pelo navegador
+- [0110](0110-desligamento-do-usuario-atendido.md) — Desligamento do usuário atendido (provisório)
+- [0111](0111-evento-de-vaga-liberada.md) — Evento UsuarioDesligado para a vaga liberada
+- [0112](0112-registro-de-violacao-de-direitos.md) — Registro de violação de direitos
+- [0120](0120-procedimento-de-restauracao.md) — Restauração por script na imagem de backup, numa pilha com só o banco no ar
+- [0121](0121-guarda-dos-segredos-fora-da-vps.md) — Cópia dos segredos da implantação fora da VPS (provisório)
+- [0122](0122-teste-de-restauracao-no-ci-e-exercicio.md) — Restauração testada no CI a cada PR e exercício trimestral
+- [0123](0123-auditoria-de-acessibilidade-no-ci.md) — Auditoria de acessibilidade com axe e Playwright no CI
+- [0124](0124-correcoes-de-acessibilidade.md) — Correções de acessibilidade achadas pela auditoria
+- [0125](0125-checklist-manual-de-navegadores.md) — Checklist manual para Safari no iPhone e leitor de tela

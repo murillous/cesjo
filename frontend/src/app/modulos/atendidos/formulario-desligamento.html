@@ -1,0 +1,66 @@
+<section class="desligamento">
+  <a matButton [routerLink]="['/atendidos', id()]" class="voltar">
+    <mat-icon aria-hidden="true">arrow_back</mat-icon>
+    Ficha do usuário
+  </a>
+
+  <h1>Registrar desligamento</h1>
+  <p class="texto-secundario">
+    O usuário sai do serviço e a vaga fica livre para o próximo da fila.
+  </p>
+
+  @if (erro(); as mensagem) {
+    <p class="erro" role="alert">{{ mensagem }}</p>
+  }
+
+  <form [formGroup]="formulario" (ngSubmit)="salvar()" novalidate>
+    <mat-form-field appearance="outline">
+      <mat-label>Data do desligamento</mat-label>
+      <input matInput [matDatepicker]="seletorData" [max]="hoje" formControlName="data" />
+      <mat-hint>DD/MM/AAAA</mat-hint>
+      <mat-datepicker-toggle matIconSuffix [for]="seletorData" />
+      <mat-datepicker #seletorData />
+      @if (formulario.controls.data.hasError('required')) {
+        <mat-error>Informe a data do desligamento.</mat-error>
+      } @else if (formulario.controls.data.hasError('matDatepickerMax')) {
+        <mat-error>A data não pode ser futura.</mat-error>
+      }
+    </mat-form-field>
+
+    <fieldset
+      [class.invalido]="formulario.controls.motivo.touched && formulario.controls.motivo.invalid"
+    >
+      <legend id="titulo-motivo">Motivo</legend>
+      <mat-radio-group formControlName="motivo" aria-labelledby="titulo-motivo">
+        @for (motivo of motivos; track motivo.valor) {
+          <mat-radio-button [value]="motivo.valor">{{ motivo.rotulo }}</mat-radio-button>
+        }
+      </mat-radio-group>
+      @if (formulario.controls.motivo.touched && formulario.controls.motivo.invalid) {
+        <p class="erro-campo" role="alert">Escolha o motivo.</p>
+      }
+    </fieldset>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Observação</mat-label>
+      <textarea matInput formControlName="observacao" rows="4"></textarea>
+      <mat-hint>
+        @if (formulario.controls.motivo.value === 'OUTROS') {
+          Obrigatória para o motivo Outros.
+        } @else {
+          Opcional.
+        }
+        Guardada cifrada.
+      </mat-hint>
+    </mat-form-field>
+    @if (formulario.touched && faltaObservacao()) {
+      <p class="erro-campo" role="alert">Explique o motivo na observação.</p>
+    }
+
+    <div class="botoes">
+      <button matButton="filled" type="submit" [disabled]="enviando()">
+        Registrar desligamento
+      </button>
+    </div>
+  </form>
+</section>

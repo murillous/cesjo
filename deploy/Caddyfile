@@ -1,0 +1,51 @@
+# Caddy do CESJO SGI (issue #20, ADR 0050 e ADR 0051).
+# Domínio e e-mail do ACME vêm do .env (SGI_DOMINIO, SGI_ACME_EMAIL).
+# PENDENTE-CESJO(P15): domínio e responsável pela VPS desconhecidos; tudo parametrizado no .env (ADR 0050)
+
+{
+	email {$SGI_ACME_EMAIL}
+	# Sem log de acesso: as URLs da API podem levar identificadores de pessoas (LGPD).
+}
+
+{$SGI_DOMINIO} {
+	encode zstd gzip
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "same-origin"
+		Permissions-Policy "camera=(), microphone=(), geolocation=()"
+		-Server
+	}
+
+	# Saúde para o monitor externo (issue #23, ADR 0066): só o estado agregado do Actuator, sem
+	# detalhes, em /saude. O resto do Actuator não é publicado.
+	handle /saude {
+		rewrite * /actuator/health
+		reverse_proxy app:8080
+		header Cache-Control "no-store"
+	}
+
+	# API: repassada para a aplicação. O Actuator não é publicado (fica só na rede interna).
+	handle /api/* {
+		# Arquivos de até 10 MB mais o envelope multipart (spring.servlet.multipart.max-request-size).
+		request_body {
+			max_size 12MB
+		}
+		reverse_proxy app:8080
+	}
+
+	# Frontend: arquivos estáticos do Angular; rota desconhecida cai no index.html (roteamento da SPA).
+	# Só /api/ chega na aplicação: /actuator e qualquer outro caminho ficam aqui.
+	handle {
+		root * /srv
+		# Saídas do ng build com hash no nome nunca mudam; o resto (index.html, favicon, logo) é revalidado sempre.
+		@comHash path /main-*.js /polyfills-*.js /chunk-*.js /styles-*.css /media/*
+		@semHash not path /main-*.js /polyfills-*.js /chunk-*.js /styles-*.css /media/*
+		header @comHash Cache-Control "public, max-age=31536000, immutable"
+		header @semHash Cache-Control "no-cache"
+		try_files {path} /index.html
+		file_server
+	}
+}

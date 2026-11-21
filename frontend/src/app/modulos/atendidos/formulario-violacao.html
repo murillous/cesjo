@@ -1,0 +1,77 @@
+<section class="violacao">
+  <a matButton [routerLink]="['/atendidos', id()]" class="voltar">
+    <mat-icon aria-hidden="true">arrow_back</mat-icon>
+    Ficha do usuário
+  </a>
+
+  <h1>Registrar violação de direitos</h1>
+  <p class="texto-secundario">
+    A descrição fica cifrada e só Coordenação e Equipe Técnica podem lê-la. Cada leitura fica
+    registrada.
+  </p>
+
+  @if (erro(); as mensagem) {
+    <p class="erro" role="alert">{{ mensagem }}</p>
+  }
+
+  <form [formGroup]="formulario" (ngSubmit)="salvar()" novalidate>
+    <fieldset
+      [class.invalido]="formulario.controls.tipo.touched && formulario.controls.tipo.invalid"
+    >
+      <legend id="titulo-tipo">Categoria</legend>
+      <mat-radio-group formControlName="tipo" aria-labelledby="titulo-tipo">
+        @for (tipo of tipos; track tipo.valor) {
+          <mat-radio-button [value]="tipo.valor">{{ tipo.rotulo }}</mat-radio-button>
+        }
+      </mat-radio-group>
+      @if (formulario.controls.tipo.touched && formulario.controls.tipo.invalid) {
+        <p class="erro-campo" role="alert">Escolha a categoria.</p>
+      }
+    </fieldset>
+
+    @if (pedeAmbito()) {
+      <fieldset [class.invalido]="formulario.touched && faltaAmbito()">
+        <legend id="titulo-ambito">Âmbito</legend>
+        <mat-radio-group formControlName="ambito" aria-labelledby="titulo-ambito" class="ambitos">
+          @for (ambito of ambitos; track ambito.valor) {
+            <mat-radio-button [value]="ambito.valor">{{ ambito.rotulo }}</mat-radio-button>
+          }
+        </mat-radio-group>
+        @if (formulario.touched && faltaAmbito()) {
+          <p class="erro-campo" role="alert">Escolha se é intra ou extrafamiliar.</p>
+        }
+      </fieldset>
+    }
+
+    <mat-form-field appearance="outline">
+      <mat-label>Data de identificação</mat-label>
+      <input
+        matInput
+        [matDatepicker]="seletorData"
+        [max]="hoje"
+        formControlName="dataIdentificacao"
+      />
+      <mat-hint>DD/MM/AAAA</mat-hint>
+      <mat-datepicker-toggle matIconSuffix [for]="seletorData" />
+      <mat-datepicker #seletorData />
+      @if (formulario.controls.dataIdentificacao.hasError('required')) {
+        <mat-error>Informe a data de identificação.</mat-error>
+      } @else if (formulario.controls.dataIdentificacao.hasError('matDatepickerMax')) {
+        <mat-error>A data não pode ser futura.</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Descrição</mat-label>
+      <textarea matInput formControlName="descricao" rows="6"></textarea>
+      <mat-hint>O que foi identificado, por quem e as providências tomadas.</mat-hint>
+      @if (formulario.controls.descricao.hasError('required')) {
+        <mat-error>Descreva a violação.</mat-error>
+      }
+    </mat-form-field>
+
+    <div class="botoes">
+      <button matButton="filled" type="submit" [disabled]="enviando()">Registrar violação</button>
+    </div>
+  </form>
+</section>

@@ -17,6 +17,7 @@ npm run lint        # angular-eslint
 npm test            # testes unitários (Vitest) em modo watch
 npm run test:ci     # testes unitários uma vez, sem watch (usado no CI)
 npm run build       # build de produção em dist/sgi-frontend
+npm run test:e2e    # acessibilidade (axe) e teclado com Playwright; antes: npx playwright install
 ```
 
 ## Organização
