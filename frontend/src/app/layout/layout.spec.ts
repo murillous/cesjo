@@ -123,13 +123,13 @@ describe('Layout', () => {
     expect(elemento.querySelector('.so-na-barra .rotulo')?.textContent?.trim()).toBe('Mais');
   });
 
-  it('usa o rótulo curto na barra inferior e o completo como nome acessível', async () => {
+  it('usa o rótulo curto na barra inferior e os dois rótulos no nome acessível', async () => {
     const { elemento } = await renderizar(SETE_MODULOS);
     const item = elemento.querySelectorAll('a.item')[1];
 
     expect(item?.querySelector('.rotulo-curto')?.textContent?.trim()).toBe('Fila');
     expect(item?.querySelector('.rotulo-completo')?.textContent?.trim()).toBe('Lista de espera');
-    expect(item?.getAttribute('aria-label')).toBe('Lista de espera');
+    expect(item?.getAttribute('aria-label')).toBe('Fila, Lista de espera');
   });
 
   it('"Mais" abre um bottom sheet com os módulos que não couberam', async () => {

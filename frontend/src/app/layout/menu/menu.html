@@ -8,7 +8,7 @@
           routerLinkActive="ativo"
           ariaCurrentWhenActive="page"
           [routerLinkActiveOptions]="{ exact: exato(entrada) }"
-          [attr.aria-label]="entrada.rotulo"
+          [attr.aria-label]="entrada.nomeAcessivel"
           (click)="navegou.emit()"
         >
           <span class="indicador"
