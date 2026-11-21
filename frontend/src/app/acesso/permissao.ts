@@ -14,7 +14,9 @@ export type Permissao =
   | 'ATENDIDOS_INSERIR'
   | 'ATENDIDOS_LER'
   | 'ATENDIDOS_LER_BASICO'
-  | 'ATENDIDOS_DESLIGAR';
+  | 'ATENDIDOS_DESLIGAR'
+  | 'VIOLACOES_REGISTRAR'
+  | 'VIOLACOES_LER';
 
 /** Perfis da seção 4 do documento de requisitos, com os nomes do enum `Perfil` do backend. */
 export type Perfil = 'COORDENADOR' | 'EQUIPE_TECNICA' | 'ADMINISTRATIVO' | 'CONSULTA';

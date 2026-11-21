@@ -36,7 +36,9 @@ export class FichaAtendidoPagina implements OnInit {
   protected readonly rotuloTurno = rotuloTurno;
   protected readonly rotuloFaixa = rotuloFaixa;
   protected readonly rotuloMotivo = rotuloMotivo;
-  protected readonly podeDesligar = inject(Sessao).temPermissao('ATENDIDOS_DESLIGAR');
+  private readonly sessao = inject(Sessao);
+  protected readonly podeDesligar = this.sessao.temPermissao('ATENDIDOS_DESLIGAR');
+  protected readonly podeRegistrarViolacao = this.sessao.temPermissao('VIOLACOES_REGISTRAR');
 
   ngOnInit(): void {
     this.api.ficha(this.id()).subscribe({

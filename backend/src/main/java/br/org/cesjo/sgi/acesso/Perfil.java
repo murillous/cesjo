@@ -11,6 +11,8 @@ import static br.org.cesjo.sgi.acesso.Permissao.DOCUMENTOS_LER;
 import static br.org.cesjo.sgi.acesso.Permissao.LISTA_ESPERA_CADASTRAR;
 import static br.org.cesjo.sgi.acesso.Permissao.LISTA_ESPERA_LER;
 import static br.org.cesjo.sgi.acesso.Permissao.NOTIFICACOES_LER;
+import static br.org.cesjo.sgi.acesso.Permissao.VIOLACOES_LER;
+import static br.org.cesjo.sgi.acesso.Permissao.VIOLACOES_REGISTRAR;
 
 import java.util.Collections;
 import java.util.EnumSet;
@@ -32,12 +34,13 @@ public enum Perfil {
 	COORDENADOR("Coordenador",
 			EnumSet.of(CONTAS_GERENCIAR, AUDITORIA_LER, DOCUMENTOS_LER, DOCUMENTOS_ENVIAR, NOTIFICACOES_LER,
 					LISTA_ESPERA_LER, LISTA_ESPERA_CADASTRAR, ATENDIDOS_INSERIR, ATENDIDOS_LER, ATENDIDOS_LER_BASICO,
-					ATENDIDOS_DESLIGAR)),
+					ATENDIDOS_DESLIGAR, VIOLACOES_REGISTRAR, VIOLACOES_LER)),
 
 	// PENDENTE-CESJO(P17): a Equipe Técnica lê a lista de espera mas não cadastra candidatos (ADR 0039) e
 	// lê os usuários atendidos mas não insere no serviço (ADR 0082) nem desliga (ADR 0110).
 	EQUIPE_TECNICA("Equipe Técnica",
-			EnumSet.of(DOCUMENTOS_LER, NOTIFICACOES_LER, LISTA_ESPERA_LER, ATENDIDOS_LER, ATENDIDOS_LER_BASICO)),
+			EnumSet.of(DOCUMENTOS_LER, NOTIFICACOES_LER, LISTA_ESPERA_LER, ATENDIDOS_LER, ATENDIDOS_LER_BASICO,
+					VIOLACOES_REGISTRAR, VIOLACOES_LER)),
 
 	// PENDENTE-CESJO(P8): o Administrativo envia e lê laudos e comprovantes até a equipe responder (ADR 0015).
 	ADMINISTRATIVO("Administrativo",

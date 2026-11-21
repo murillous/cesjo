@@ -22,12 +22,20 @@
           <span>Desligado em {{ f.dataDesligamento | date: 'dd/MM/yyyy' }}</span>
         }
       </p>
-      @if (podeDesligar && f.situacao === 'ATIVA') {
-        <a matButton="outlined" routerLink="desligar" class="desligar">
-          <mat-icon aria-hidden="true">logout</mat-icon>
-          Registrar desligamento
-        </a>
-      }
+      <div class="acoes">
+        @if (podeRegistrarViolacao) {
+          <a matButton="outlined" routerLink="violacoes/nova">
+            <mat-icon aria-hidden="true">report</mat-icon>
+            Registrar violação de direitos
+          </a>
+        }
+        @if (podeDesligar && f.situacao === 'ATIVA') {
+          <a matButton="outlined" routerLink="desligar">
+            <mat-icon aria-hidden="true">logout</mat-icon>
+            Registrar desligamento
+          </a>
+        }
+      </div>
     </header>
 
     @if (f.completo) {
