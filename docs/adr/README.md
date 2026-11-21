@@ -41,3 +41,4 @@ frente de trabalho paralela não é usado todo.
 - [0013](0013-gestao-de-contas-de-acesso.md) — Gestão de contas de acesso pelo Coordenador
 - [0014](0014-primeira-conta-de-coordenador.md) — Primeira conta de Coordenador por variáveis de ambiente
 - [0015](0015-matriz-de-perfis-da-fundacao.md) — Matriz de perfis e permissões da Fundação (provisória)
+- [0016](0016-sessao-no-frontend.md) — Sessão, telas de acesso e gestão de contas no frontend
