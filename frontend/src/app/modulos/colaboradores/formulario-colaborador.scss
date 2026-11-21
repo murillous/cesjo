@@ -1,0 +1,61 @@
+@use 'styles/breakpoints' as bp;
+
+.colaborador {
+  max-width: 560px;
+}
+
+.voltar {
+  margin: 0 0 var(--sgi-space-2) calc(-1 * var(--sgi-space-1));
+}
+
+.situacao {
+  display: inline-block;
+  padding: var(--sgi-space-0-5) var(--sgi-space-1-5);
+  border-radius: var(--sgi-radius-sm);
+  background: var(--sgi-color-background-secondary);
+  font-size: var(--sgi-font-size-small);
+  font-weight: var(--sgi-font-weight-medium);
+
+  &.inativo {
+    color: var(--sgi-color-text-secondary);
+  }
+}
+
+.erro {
+  padding: var(--sgi-space-1-5) var(--sgi-space-2);
+  border-left: var(--sgi-space-0-5) solid var(--sgi-color-accent);
+  background: var(--sgi-color-background-secondary);
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sgi-space-1);
+  margin-top: var(--sgi-space-2);
+}
+
+.ativo {
+  margin-top: var(--sgi-space-1);
+}
+
+.dica-ativo {
+  margin: 0 0 var(--sgi-space-2);
+  font-size: var(--sgi-font-size-small);
+}
+
+// Celular: o botão ocupa a largura toda.
+.botoes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sgi-space-1);
+
+  button {
+    min-height: 48px;
+  }
+}
+
+@media (min-width: bp.$tablet) {
+  .botoes {
+    flex-direction: row;
+  }
+}
