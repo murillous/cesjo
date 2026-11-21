@@ -72,3 +72,6 @@ frente de trabalho paralela não é usado todo.
 - [0067](0067-monitor-externo-no-github-actions.md) — Monitor externo de disponibilidade no GitHub Actions (provisório)
 - [0068](0068-relatorio-mensal-de-uptime.md) — Relatório mensal de uptime a partir das execuções do monitor
 - [0069](0069-alerta-de-disco-cheio.md) — Alerta de disco cheio pelo contêiner de backup
+- [0120](0120-procedimento-de-restauracao.md) — Restauração por script na imagem de backup, numa pilha com só o banco no ar
+- [0121](0121-guarda-dos-segredos-fora-da-vps.md) — Cópia dos segredos da implantação fora da VPS (provisório)
+- [0122](0122-teste-de-restauracao-no-ci-e-exercicio.md) — Restauração testada no CI a cada PR e exercício trimestral
