@@ -146,8 +146,13 @@
   }
 }
 
-.mudar {
+.mudar,
+.inserir {
   min-height: var(--sgi-alvo-toque);
+}
+
+.inserir {
+  margin-bottom: var(--sgi-space-1);
 }
 
 .mudanca {
