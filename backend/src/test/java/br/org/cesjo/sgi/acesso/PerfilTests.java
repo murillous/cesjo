@@ -26,6 +26,14 @@ class PerfilTests {
 	}
 
 	@Test
+	void listaDeEsperaConformeAMatriz() {
+		assertThat(Arrays.stream(Perfil.values()).filter(perfil -> perfil.tem(Permissao.LISTA_ESPERA_LER)))
+			.containsExactlyInAnyOrder(Perfil.COORDENADOR, Perfil.EQUIPE_TECNICA, Perfil.ADMINISTRATIVO);
+		assertThat(Arrays.stream(Perfil.values()).filter(perfil -> perfil.tem(Permissao.LISTA_ESPERA_CADASTRAR)))
+			.containsExactlyInAnyOrder(Perfil.COORDENADOR, Perfil.ADMINISTRATIVO);
+	}
+
+	@Test
 	void todosVeemAsPropriasNotificacoes() {
 		assertThat(Perfil.values()).allMatch(perfil -> perfil.tem(Permissao.NOTIFICACOES_LER));
 	}

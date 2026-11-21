@@ -59,3 +59,6 @@ frente de trabalho paralela não é usado todo.
 - [0034](0034-contador-por-consulta-periodica.md) — Contador de notificações por consulta periódica de 60 segundos
 - [0035](0035-frontend-mobile-first-e-navegacao-inferior.md) — Frontend mobile first com navegação inferior no celular
 - [0036](0036-fonte-atkinson-hyperlegible.md) — Fonte Atkinson Hyperlegible Next enquanto não há fonte institucional (provisória)
+- [0037](0037-pessoa-e-inscricao-na-lista-de-espera.md) — Pessoa no módulo Pessoas e inscrição no módulo Lista de espera
+- [0038](0038-dados-do-cadastro-na-lista-de-espera.md) — Dados obrigatórios e validação do cadastro na lista de espera (provisório)
+- [0039](0039-permissoes-da-lista-de-espera.md) — Permissões do cadastro e da leitura da lista de espera (provisório)
