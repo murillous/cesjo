@@ -104,4 +104,5 @@ docker compose up -d --build --wait
 ```
 
 O passo a passo completo, com requisitos da VPS, atualização, troca de chave e problemas comuns, está
-em [docs/implantacao.md](docs/implantacao.md).
+em [docs/implantacao.md](docs/implantacao.md). Para restaurar numa VPS nova a partir do backup, siga
+[docs/recuperacao-de-desastres.md](docs/recuperacao-de-desastres.md).
