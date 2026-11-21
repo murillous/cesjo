@@ -74,6 +74,9 @@ public enum Permissao {
 	PIA_LER,
 
 	/** Elaborar o PIA e editar a versão em elaboração (RF006, ADR 0104). */
-	PIA_EDITAR
+	PIA_EDITAR,
+
+	/** Aprovar o PIA apresentado à família e à equipe (RF006, seção 4.1, ADR 0107). */
+	PIA_APROVAR
 
 }

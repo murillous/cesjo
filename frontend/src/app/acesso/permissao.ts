@@ -24,7 +24,8 @@ export type Permissao =
   | 'ESCUTA_LER'
   | 'ESCUTA_REGISTRAR'
   | 'PIA_LER'
-  | 'PIA_EDITAR';
+  | 'PIA_EDITAR'
+  | 'PIA_APROVAR';
 
 /** Perfis da seção 4 do documento de requisitos, com os nomes do enum `Perfil` do backend. */
 export type Perfil = 'COORDENADOR' | 'EQUIPE_TECNICA' | 'ADMINISTRATIVO' | 'CONSULTA';

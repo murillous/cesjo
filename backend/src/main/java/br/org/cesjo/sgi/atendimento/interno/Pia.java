@@ -1,6 +1,7 @@
 package br.org.cesjo.sgi.atendimento.interno;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
@@ -42,6 +43,18 @@ class Pia {
 
 	@Column(name = "versao_anterior_id", updatable = false)
 	private UUID versaoAnteriorId;
+
+	@Column(name = "apresentado_familia_em")
+	private LocalDate apresentadoFamiliaEm;
+
+	@Column(name = "apresentado_equipe_em")
+	private LocalDate apresentadoEquipeEm;
+
+	@Column(name = "aprovado_em")
+	private LocalDate aprovadoEm;
+
+	@Column(name = "aprovado_por")
+	private UUID aprovadoPor;
 
 	@Column(name = "criado_em", nullable = false, updatable = false)
 	private Instant criadoEm;
@@ -109,8 +122,64 @@ class Pia {
 		return status;
 	}
 
-	void setStatus(StatusPia status) {
-		this.status = status;
+	// PENDENTE-CESJO(P5): os passos seguem sempre a ordem do RF006, um de cada vez (ADR 0106).
+	/**
+	 * Avança para o próximo status, na ordem do RF006 (ADR 0106), com a data do passo. A data não pode ser
+	 * anterior à do passo de antes. Devolve o nome da coluna da data.
+	 */
+	String avancar(StatusPia novo, LocalDate data, UUID autor, Instant agora) {
+		StatusPia esperado = StatusPia.values()[Math.min(status.ordinal() + 1, StatusPia.values().length - 1)];
+		if (status == StatusPia.APROVADO || novo != esperado) {
+			throw new RegraNegocioException(switch (status) {
+				case ELABORADO -> "O PIA em elaboração precisa ser apresentado à família primeiro.";
+				case APRESENTADO_FAMILIA -> "O PIA apresentado à família precisa ser apresentado à equipe antes.";
+				case APRESENTADO_EQUIPE -> "O PIA apresentado à equipe só pode ser aprovado.";
+				case APROVADO -> "O PIA já está aprovado. Para mudar, crie uma nova versão.";
+			});
+		}
+		LocalDate anterior = switch (status) {
+			case APRESENTADO_FAMILIA -> apresentadoFamiliaEm;
+			case APRESENTADO_EQUIPE -> apresentadoEquipeEm;
+			default -> null;
+		};
+		if (anterior != null && data.isBefore(anterior)) {
+			throw new RegraNegocioException("A data não pode ser anterior à do passo anterior do PIA.");
+		}
+		String coluna = switch (novo) {
+			case APRESENTADO_FAMILIA -> {
+				apresentadoFamiliaEm = data;
+				yield "apresentado_familia_em";
+			}
+			case APRESENTADO_EQUIPE -> {
+				apresentadoEquipeEm = data;
+				yield "apresentado_equipe_em";
+			}
+			case APROVADO -> {
+				aprovadoEm = data;
+				aprovadoPor = autor;
+				yield "aprovado_em";
+			}
+			case ELABORADO -> throw new IllegalStateException();
+		};
+		this.status = novo;
+		tocar(autor, agora);
+		return coluna;
+	}
+
+	LocalDate getApresentadoFamiliaEm() {
+		return apresentadoFamiliaEm;
+	}
+
+	LocalDate getApresentadoEquipeEm() {
+		return apresentadoEquipeEm;
+	}
+
+	LocalDate getAprovadoEm() {
+		return aprovadoEm;
+	}
+
+	UUID getAprovadoPor() {
+		return aprovadoPor;
 	}
 
 	String getConteudo() {

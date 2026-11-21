@@ -106,6 +106,9 @@ frente de trabalho paralela não é usado todo.
 - [0103](0103-modelo-provisorio-e-versoes-do-pia.md) — Modelo provisório do PIA, conteúdo em JSON cifrado e versões (provisório)
 - [0104](0104-permissoes-do-pia.md) — Permissões de leitura e edição do PIA
 - [0105](0105-tela-do-pia.md) — Tela de elaboração e leitura do PIA
+- [0106](0106-status-e-novas-versoes-do-pia.md) — Status do PIA em ordem fixa, com data, e mudança por nova versão (provisório)
+- [0107](0107-aprovacao-do-pia-pelo-coordenador.md) — Aprovação do PIA só pelo Coordenador
+- [0108](0108-impressao-do-pia.md) — PIA impresso ou salvo em PDF pelo navegador
 - [0120](0120-procedimento-de-restauracao.md) — Restauração por script na imagem de backup, numa pilha com só o banco no ar
 - [0121](0121-guarda-dos-segredos-fora-da-vps.md) — Cópia dos segredos da implantação fora da VPS (provisório)
 - [0122](0122-teste-de-restauracao-no-ci-e-exercicio.md) — Restauração testada no CI a cada PR e exercício trimestral

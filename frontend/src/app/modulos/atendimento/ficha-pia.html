@@ -1,5 +1,9 @@
 <section class="pia" aria-labelledby="titulo-pia">
-  <a matButton [routerLink]="['/atendimento', 'pessoas', pessoaDaFicha()]" class="voltar">
+  <a
+    matButton
+    [routerLink]="['/atendimento', 'pessoas', pessoaDaFicha()]"
+    class="voltar nao-imprimir"
+  >
     <mat-icon aria-hidden="true">arrow_back</mat-icon>
     {{ nomePessoa() ?? 'Atendimento' }}
   </a>
@@ -11,13 +15,14 @@
         {{ status[atual.status] }}
       </p>
     </header>
-    @if (!atual.editavel && atual.status === 'ELABORADO') {
+    <p class="so-impressao">{{ atual.nomePessoa }}</p>
+    @if (!atual.maisNova) {
       <p class="texto-secundario">Versão substituída por uma mais nova. Fica só para consulta.</p>
     }
   } @else {
     <h1 id="titulo-pia">{{ novo() ? 'Elaborar PIA' : 'PIA' }}</h1>
   }
-  <p class="texto-secundario aviso">
+  <p class="texto-secundario aviso nao-imprimir">
     <mat-icon aria-hidden="true">lock</mat-icon>
     Conteúdo sigiloso: guardado cifrado, e cada abertura fica no log de auditoria.
   </p>
@@ -28,6 +33,54 @@
 
   @if (pia(); as atual) {
     @if (!editando()) {
+      <section class="andamento" aria-labelledby="titulo-andamento">
+        <h2 id="titulo-andamento">Andamento</h2>
+        <ol class="passos">
+          <li class="feito">
+            <span class="passo">Elaborado</span>
+            <span class="quando">{{ atual.criadoEm | date: 'dd/MM/yyyy' }}</span>
+          </li>
+          @for (passo of passos; track passo.status) {
+            <li [class.feito]="atual[passo.campo]">
+              <span class="passo">{{ status[passo.status] }}</span>
+              <span class="quando">
+                {{
+                  atual[passo.campo] ? (data(atual[passo.campo]) | date: 'dd/MM/yyyy') : 'Pendente'
+                }}
+              </span>
+            </li>
+          }
+        </ol>
+
+        @if (proximo(); as passo) {
+          <div class="proximo nao-imprimir">
+            <mat-form-field appearance="outline">
+              <mat-label>Data</mat-label>
+              <input
+                matInput
+                [matDatepicker]="seletorPasso"
+                [max]="hojeData"
+                [value]="dataDoPasso()"
+                (dateChange)="dataDoPasso.set($event.value)"
+              />
+              <mat-datepicker-toggle matIconSuffix [for]="seletorPasso" />
+              <mat-datepicker #seletorPasso />
+            </mat-form-field>
+            <button
+              matButton="filled"
+              type="button"
+              [disabled]="enviando()"
+              (click)="avancar(atual, passo.passo)"
+            >
+              {{ passo.acao }}
+            </button>
+          </div>
+        }
+        @if (atual.status === 'APRESENTADO_EQUIPE' && !podeAprovar && atual.maisNova) {
+          <p class="texto-secundario nao-imprimir">Aguardando a aprovação da coordenação.</p>
+        }
+      </section>
+
       <article class="plano">
         <section>
           <h2>Diagnóstico</h2>
@@ -82,13 +135,34 @@
         }
       </article>
 
-      @if (podeEditar && atual.editavel) {
-        <div class="botoes">
+      <div class="botoes nao-imprimir">
+        @if (podeEditar && atual.editavel) {
           <button matButton="outlined" type="button" (click)="editar()">
             <mat-icon aria-hidden="true">edit</mat-icon>
             Editar PIA
           </button>
-        </div>
+        }
+        @if (podeEditar && atual.maisNova && atual.status !== 'ELABORADO') {
+          <button
+            matButton="outlined"
+            type="button"
+            [disabled]="enviando()"
+            (click)="novaVersao(atual)"
+          >
+            <mat-icon aria-hidden="true">content_copy</mat-icon>
+            Criar nova versão
+          </button>
+        }
+        <button matButton="outlined" type="button" (click)="imprimir()">
+          <mat-icon aria-hidden="true">print</mat-icon>
+          Imprimir ou salvar em PDF
+        </button>
+      </div>
+      @if (podeEditar && atual.maisNova && atual.status !== 'ELABORADO') {
+        <p class="texto-secundario nao-imprimir">
+          Este PIA já foi apresentado e não muda mais. Para alterar, crie uma nova versão; esta fica
+          guardada como está.
+        </p>
       }
     }
   }

@@ -121,7 +121,7 @@ class PiaTests {
 			.andExpect(status().isOk());
 		verify(auditoria, never()).registrar(any(EventoAuditoria.class));
 
-		jdbc.update("update pia set status = 'APRESENTADO_FAMILIA' where id = ?::uuid", id);
+		jdbc.update("update pia set status = 'APRESENTADO_FAMILIA', apresentado_familia_em = current_date where id = ?::uuid", id);
 		mvc.perform(put(URL + "/{id}", id).with(csrf())
 			.contentType(MediaType.APPLICATION_JSON)
 			.content(json(conteudo("Outra mudança"))))
