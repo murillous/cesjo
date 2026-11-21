@@ -56,6 +56,14 @@ html {
     )
   );
 
+  // O rótulo do campo preenchido fica sobre o fundo do campo (neutral-variant 90); com o cinza
+  // secundário o contraste era 4,1:1. O azul petróleo do texto dá 6:1 (WCAG 1.4.3, ADR 0124).
+  @include mat.form-field-overrides(
+    (
+      filled-label-text-color: var(--sgi-color-text-primary),
+    )
+  );
+
   @include mat.bottom-sheet-overrides(
     (
       container-shape: var(--sgi-radius-xl) var(--sgi-radius-xl) 0 0,
@@ -64,3 +72,13 @@ html {
     )
   );
 }
+
+// Os botões e controles do Material tiram o outline nativo e mostram o foco só por uma camada
+// translúcida, fraca demais para quem navega pelo teclado. O indicador forte desenha uma borda de
+// 2px em primary-dark em volta do controle focado pelo teclado (WCAG 2.4.7, ADR 0124).
+@include mat.strong-focus-indicators(
+  (
+    border-color: var(--sgi-color-primary-dark),
+    border-width: 2px,
+  )
+);

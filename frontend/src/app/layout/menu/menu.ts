@@ -46,6 +46,7 @@ export class Menu {
       .map(({ rotulo, rotuloCurto, icone, link }) => ({
         rotulo,
         rotuloCurto: rotuloCurto ?? rotulo,
+        nomeAcessivel: rotuloCurto && rotuloCurto !== rotulo ? `${rotuloCurto}, ${rotulo}` : rotulo,
         icone,
         link,
       })),

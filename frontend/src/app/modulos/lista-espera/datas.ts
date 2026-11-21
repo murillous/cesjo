@@ -10,3 +10,9 @@ export function hoje(): Date {
   const agora = new Date();
   return new Date(agora.getFullYear(), agora.getMonth(), agora.getDate());
 }
+
+/** Data local a partir de `AAAA-MM-DD`, sem passar por UTC (que mudaria o dia). */
+export function dataDeIso(texto: string): Date {
+  const [ano, mes, dia] = texto.split('-').map(Number);
+  return new Date(ano, mes - 1, dia);
+}

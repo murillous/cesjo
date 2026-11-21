@@ -1,0 +1,77 @@
+<section class="documentos" aria-labelledby="titulo-documentos">
+  <a matButton [routerLink]="['/lista-espera', id()]" class="voltar">
+    <mat-icon aria-hidden="true">arrow_back</mat-icon>
+    Ficha do candidato
+  </a>
+
+  <h1 id="titulo-documentos">Documentos do candidato</h1>
+
+  @if (carregando()) {
+    <mat-progress-bar mode="indeterminate" aria-label="Carregando o candidato" />
+  }
+
+  @if (erro(); as mensagem) {
+    <p class="erro" role="alert">{{ mensagem }}</p>
+  }
+
+  @if (inscricao(); as candidato) {
+    <p class="nome">{{ candidato.nomeCompleto }}</p>
+
+    @if (candidato.cadastroCompleto) {
+      <p class="estado completo">
+        <mat-icon aria-hidden="true">check_circle</mat-icon>
+        Cadastro completo.
+      </p>
+    } @else {
+      <p class="estado incompleto">
+        <mat-icon aria-hidden="true">error</mat-icon>
+        Cadastro incompleto: falta {{ pendentes() }}.
+      </p>
+    }
+
+    <ul class="lista" role="list">
+      @for (linha of linhas(); track linha.tipo) {
+        <li class="documento" [class.pendente]="!linha.documento">
+          <h2>{{ linha.rotulo }}</h2>
+          @if (linha.documento; as documento) {
+            <p class="arquivo">
+              <mat-icon aria-hidden="true">{{
+                documento.tipoMime === 'application/pdf' ? 'picture_as_pdf' : 'image'
+              }}</mat-icon>
+              <span class="detalhes">
+                <span class="nome-arquivo">{{ documento.nomeArquivo }}</span>
+                <span class="texto-secundario">
+                  {{ tamanho(documento.tamanho) }}, anexado em
+                  {{ documento.anexadoEm | date: 'dd/MM/yyyy' }}
+                </span>
+              </span>
+            </p>
+            @if (podeBaixar) {
+              <button
+                matButton="outlined"
+                type="button"
+                class="baixar"
+                [disabled]="baixando() === linha.tipo"
+                [attr.aria-label]="'Baixar ' + linha.rotulo.toLowerCase()"
+                (click)="baixar(linha.tipo)"
+              >
+                <mat-icon aria-hidden="true">download</mat-icon>
+                Baixar
+              </button>
+            }
+          } @else {
+            <p class="texto-secundario">Ainda não anexado.</p>
+          }
+
+          @if (podeEnviar) {
+            <app-envio-arquivo
+              [rotulo]="(linha.documento ? 'Substituir ' : 'Anexar ') + linha.rotulo.toLowerCase()"
+              [formControl]="linha.campo"
+              (enviado)="anexar(linha.tipo, $event.id, linha.rotulo)"
+            />
+          }
+        </li>
+      }
+    </ul>
+  }
+</section>
