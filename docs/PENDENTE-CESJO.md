@@ -43,7 +43,11 @@ Situação: provisória.
 > A capacidade é um número total ou separada por turno (matutino, vespertino, integral)? Quem deve ser
 > avisado de vaga aberta e por qual canal (só no sistema, e-mail, WhatsApp)?
 
-Situação: aberta.
+Situação: provisória.
+
+| Decisão provisória | Onde mudar | ADR |
+|---|---|---|
+| A capacidade é um número total, sem divisão por turno. | `ServicoVagas.painel` e `capacidade_servico` (`V8`) | [0092](adr/0092-capacidade-e-painel-de-vagas.md) |
 
 ## P4. Saída da lista
 

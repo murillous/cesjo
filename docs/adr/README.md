@@ -69,3 +69,5 @@ frente de trabalho paralela não é usado todo.
 - [0059](0059-busca-em-lote-de-pessoas-para-a-fila.md) — Busca em lote de pessoas para montar a fila
 - [0090](0090-edicao-do-candidato.md) — Edição dos dados do candidato
 - [0091](0091-situacoes-motivos-e-historico-da-inscricao.md) — Situações, motivos de saída e histórico da inscrição (provisório)
+- [0092](0092-capacidade-e-painel-de-vagas.md) — Capacidade do serviço e painel de vagas (provisório)
+- [0093](0093-contagem-de-vagas-ocupadas.md) — Contagem de vagas ocupadas atrás de uma interface
