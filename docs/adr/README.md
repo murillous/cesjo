@@ -68,3 +68,4 @@ frente de trabalho paralela não é usado todo.
 - [0083](0083-listagem-e-ficha-dos-usuarios-atendidos.md) — Listagem e ficha dos usuários atendidos (provisório)
 - [0110](0110-desligamento-do-usuario-atendido.md) — Desligamento do usuário atendido (provisório)
 - [0111](0111-evento-de-vaga-liberada.md) — Evento UsuarioDesligado para a vaga liberada
+- [0112](0112-registro-de-violacao-de-direitos.md) — Registro de violação de direitos
