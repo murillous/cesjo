@@ -52,3 +52,8 @@ frente de trabalho paralela não é usado todo.
 - [0027](0027-validacao-de-tipo-e-tamanho-dos-arquivos.md) — Validação de tipo e tamanho dos arquivos enviados
 - [0028](0028-api-http-e-api-java-dos-arquivos.md) — API HTTP e API Java do módulo Arquivos
 - [0029](0029-componente-de-envio-de-arquivo-no-frontend.md) — Componente de envio de arquivo no frontend
+- [0030](0030-modelo-das-notificacoes.md) — Notificação por perfil ou por conta, com leitura registrada por conta
+- [0031](0031-api-java-de-notificacoes.md) — API Java síncrona para outros módulos criarem notificações
+- [0032](0032-api-http-da-caixa-de-notificacoes.md) — API HTTP da caixa de notificações da conta logada
+- [0033](0033-auditoria-das-notificacoes.md) — O que é auditado nas notificações
+- [0034](0034-contador-por-consulta-periodica.md) — Contador de notificações por consulta periódica de 60 segundos

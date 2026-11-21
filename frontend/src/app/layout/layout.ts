@@ -8,6 +8,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { map } from 'rxjs';
 
+import { SinoNotificacoes } from '../notificacoes/sino-notificacoes';
 import { MenuConta } from '../acesso/menu-conta/menu-conta';
 import { Menu } from './menu/menu';
 
@@ -30,6 +31,7 @@ const TELA_GRANDE = '(min-width: 992px)';
     MenuConta,
     RouterLink,
     RouterOutlet,
+    SinoNotificacoes,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './layout.html',
