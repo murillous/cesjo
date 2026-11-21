@@ -34,13 +34,19 @@ class PerfilTests {
 	}
 
 	@Test
+	void todosVeemAFilaDaListaDeEspera() {
+		assertThat(Perfil.values()).allMatch(perfil -> perfil.tem(Permissao.LISTA_ESPERA_FILA_LER));
+	}
+
+	@Test
 	void todosVeemAsPropriasNotificacoes() {
 		assertThat(Perfil.values()).allMatch(perfil -> perfil.tem(Permissao.NOTIFICACOES_LER));
 	}
 
 	@Test
-	void consultaSoVeNotificacoes() {
-		assertThat(Perfil.CONSULTA.permissoes()).containsExactly(Permissao.NOTIFICACOES_LER);
+	void consultaSoVeNotificacoesEAFilaComDadosBasicos() {
+		assertThat(Perfil.CONSULTA.permissoes()).containsExactlyInAnyOrder(Permissao.NOTIFICACOES_LER,
+				Permissao.LISTA_ESPERA_FILA_LER);
 	}
 
 }

@@ -1,5 +1,6 @@
 package br.org.cesjo.sgi.pessoas.interno;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -15,5 +16,7 @@ interface DocumentoRepositorio extends JpaRepository<Documento, UUID> {
 	Optional<Documento> findByPessoaIdAndTipo(UUID pessoaId, TipoDocumento tipo);
 
 	boolean existsByArquivoId(UUID arquivoId);
+
+	List<Documento> findByPessoaIdIn(Collection<UUID> pessoaIds);
 
 }

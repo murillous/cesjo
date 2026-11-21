@@ -3,11 +3,19 @@ package br.org.cesjo.sgi.pessoas.interno;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+import jakarta.persistence.criteria.Predicate;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,12 +30,19 @@ import br.org.cesjo.sgi.compartilhado.web.RecursoNaoEncontradoException;
 import br.org.cesjo.sgi.pessoas.DadosPessoa;
 import br.org.cesjo.sgi.pessoas.DocumentoInvalidoException;
 import br.org.cesjo.sgi.pessoas.DocumentoPessoa;
+import br.org.cesjo.sgi.pessoas.FiltroPessoas;
 import br.org.cesjo.sgi.pessoas.NovaPessoa;
 import br.org.cesjo.sgi.pessoas.Pessoas;
+import br.org.cesjo.sgi.pessoas.ResumoPessoa;
 import br.org.cesjo.sgi.pessoas.TipoDocumento;
 
 @Service
 class ServicoPessoas implements Pessoas {
+
+	/** Ids por consulta na busca em lote, para não passar do limite de parâmetros do banco. */
+	static final int LOTE = 1000;
+
+	private static final char ESCAPE = '!';
 
 	private final PessoaRepositorio pessoas;
 
@@ -70,6 +85,48 @@ class ServicoPessoas implements Pessoas {
 	@Transactional(readOnly = true)
 	public Optional<DadosPessoa> obter(UUID id) {
 		return pessoas.findById(id).map(this::dados);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Map<UUID, ResumoPessoa> resumos(Collection<UUID> ids, FiltroPessoas filtro) {
+		List<UUID> lista = ids.stream().distinct().toList();
+		Map<UUID, ResumoPessoa> resumos = new HashMap<>();
+		for (int inicio = 0; inicio < lista.size(); inicio += LOTE) {
+			List<UUID> lote = lista.subList(inicio, Math.min(inicio + LOTE, lista.size()));
+			List<Pessoa> encontradas = pessoas.findAll(filtrar(lote, filtro));
+			Map<UUID, Set<TipoDocumento>> tipos = new HashMap<>();
+			documentos.findByPessoaIdIn(encontradas.stream().map(Pessoa::getId).toList())
+				.forEach(documento -> tipos.computeIfAbsent(documento.getPessoaId(), id -> EnumSet.noneOf(TipoDocumento.class))
+					.add(documento.getTipo()));
+			for (Pessoa pessoa : encontradas) {
+				resumos.put(pessoa.getId(), new ResumoPessoa(pessoa.getId(), pessoa.getNomeCompleto(),
+						pessoa.getTipoDeficiencia(), tipos.getOrDefault(pessoa.getId(), Set.of())));
+			}
+		}
+		return resumos;
+	}
+
+	private static Specification<Pessoa> filtrar(Collection<UUID> ids, FiltroPessoas filtro) {
+		return (raiz, consulta, cb) -> {
+			List<Predicate> condicoes = new ArrayList<>();
+			condicoes.add(raiz.get("id").in(ids));
+			if (filtro.tipoDeficiencia() != null) {
+				condicoes.add(cb.equal(raiz.get("tipoDeficiencia"), filtro.tipoDeficiencia()));
+			}
+			if (filtro.nome() != null) {
+				String padrao = "%" + escaparLike(filtro.nome().toLowerCase(Locale.ROOT)) + "%";
+				condicoes.add(cb.like(cb.lower(raiz.get("nomeCompleto")), padrao, ESCAPE));
+			}
+			return cb.and(condicoes.toArray(Predicate[]::new));
+		};
+	}
+
+	/** Busca por nome é por trecho: {@code %} e {@code _} digitados valem como texto. */
+	private static String escaparLike(String texto) {
+		return texto.replace(String.valueOf(ESCAPE), ESCAPE + "" + ESCAPE)
+			.replace("%", ESCAPE + "%")
+			.replace("_", ESCAPE + "_");
 	}
 
 	@Override

@@ -5,6 +5,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.CacheControl;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.MediaType;
@@ -19,22 +21,51 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.org.cesjo.sgi.arquivos.ConteudoArquivo;
+import br.org.cesjo.sgi.listaespera.OrigemEncaminhamento;
+import br.org.cesjo.sgi.listaespera.SituacaoInscricao;
+import br.org.cesjo.sgi.pessoas.TipoDeficiencia;
 import br.org.cesjo.sgi.pessoas.TipoDocumento;
 
-/** API das inscrições na lista de espera (RF001, RF002, ADR 0037 e ADR 0056). */
+/** API das inscrições na lista de espera (RF001, RF002, ADR 0037, ADR 0056 e ADR 0058). */
 @RestController
 @RequestMapping("/api/lista-espera/inscricoes")
 class ListaEsperaControlador {
 
 	private static final String DOCUMENTOS_ENVIAR = "DOCUMENTOS_ENVIAR";
 
+	private static final String LISTA_ESPERA_LER = "LISTA_ESPERA_LER";
+
 	private final ServicoListaEspera servico;
 
-	ListaEsperaControlador(ServicoListaEspera servico) {
+	private final FilaListaEspera fila;
+
+	ListaEsperaControlador(ServicoListaEspera servico, FilaListaEspera fila) {
 		this.servico = servico;
+		this.fila = fila;
+	}
+
+	/**
+	 * Fila paginada, na ordem de {@link OrdemDaFila}, com a posição. Quem não tem {@code LISTA_ESPERA_LER}
+	 * vê só os dados básicos e não filtra por tipo de deficiência nem por origem (ADR 0058).
+	 */
+	@GetMapping
+	@PreAuthorize("hasAnyAuthority('LISTA_ESPERA_LER', 'LISTA_ESPERA_FILA_LER')")
+	Page<ItemFila> listar(@RequestParam(required = false) String nome,
+			@RequestParam(required = false) TipoDeficiencia tipoDeficiencia,
+			@RequestParam(required = false) OrigemEncaminhamento origem,
+			@RequestParam(required = false) SituacaoInscricao situacao, Pageable pageable,
+			Authentication autenticacao) {
+		FiltroFila filtro = new FiltroFila(nome, tipoDeficiencia, origem, situacao);
+		boolean completo = tem(autenticacao, LISTA_ESPERA_LER);
+		if (!completo && filtro.usaDadoCompleto()) {
+			throw new AccessDeniedException("Sem permissão para filtrar por tipo de deficiência ou origem.");
+		}
+		Page<ItemFila> itens = fila.listar(filtro, pageable);
+		return completo ? itens : itens.map(ItemFila::basico);
 	}
 
 	@PostMapping

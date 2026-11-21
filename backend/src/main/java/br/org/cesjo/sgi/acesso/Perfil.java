@@ -5,6 +5,7 @@ import static br.org.cesjo.sgi.acesso.Permissao.CONTAS_GERENCIAR;
 import static br.org.cesjo.sgi.acesso.Permissao.DOCUMENTOS_ENVIAR;
 import static br.org.cesjo.sgi.acesso.Permissao.DOCUMENTOS_LER;
 import static br.org.cesjo.sgi.acesso.Permissao.LISTA_ESPERA_CADASTRAR;
+import static br.org.cesjo.sgi.acesso.Permissao.LISTA_ESPERA_FILA_LER;
 import static br.org.cesjo.sgi.acesso.Permissao.LISTA_ESPERA_LER;
 import static br.org.cesjo.sgi.acesso.Permissao.NOTIFICACOES_LER;
 
@@ -27,16 +28,19 @@ public enum Perfil {
 
 	COORDENADOR("Coordenador",
 			EnumSet.of(CONTAS_GERENCIAR, AUDITORIA_LER, DOCUMENTOS_LER, DOCUMENTOS_ENVIAR, NOTIFICACOES_LER,
-					LISTA_ESPERA_LER, LISTA_ESPERA_CADASTRAR)),
+					LISTA_ESPERA_LER, LISTA_ESPERA_CADASTRAR, LISTA_ESPERA_FILA_LER)),
 
 	// PENDENTE-CESJO(P17): a Equipe Técnica lê a lista de espera mas não cadastra candidatos (ADR 0039).
-	EQUIPE_TECNICA("Equipe Técnica", EnumSet.of(DOCUMENTOS_LER, NOTIFICACOES_LER, LISTA_ESPERA_LER)),
+	EQUIPE_TECNICA("Equipe Técnica", EnumSet.of(DOCUMENTOS_LER, NOTIFICACOES_LER, LISTA_ESPERA_LER, LISTA_ESPERA_FILA_LER)),
 
 	// PENDENTE-CESJO(P8): o Administrativo envia e lê laudos e comprovantes até a equipe responder (ADR 0015).
 	ADMINISTRATIVO("Administrativo",
-			EnumSet.of(DOCUMENTOS_LER, DOCUMENTOS_ENVIAR, NOTIFICACOES_LER, LISTA_ESPERA_LER, LISTA_ESPERA_CADASTRAR)),
+			EnumSet.of(DOCUMENTOS_LER, DOCUMENTOS_ENVIAR, NOTIFICACOES_LER, LISTA_ESPERA_LER, LISTA_ESPERA_CADASTRAR,
+					LISTA_ESPERA_FILA_LER)),
 
-	CONSULTA("Consulta", EnumSet.of(NOTIFICACOES_LER));
+	// PENDENTE-CESJO(P8): "dados básicos" do Consulta na lista de espera são nome, situação, datas e
+	// posição, sem tipo de deficiência, origem, contato nem documentos (ADR 0058).
+	CONSULTA("Consulta", EnumSet.of(NOTIFICACOES_LER, LISTA_ESPERA_FILA_LER));
 
 	private final String rotulo;
 

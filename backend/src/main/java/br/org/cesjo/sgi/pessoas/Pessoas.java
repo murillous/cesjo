@@ -1,6 +1,8 @@
 package br.org.cesjo.sgi.pessoas;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -28,6 +30,13 @@ public interface Pessoas {
 	UUID cadastrar(NovaPessoa nova);
 
 	Optional<DadosPessoa> obter(UUID id);
+
+	/**
+	 * Busca em lote para listagens de outros módulos (ADR 0059): devolve, por {@code id}, o resumo das
+	 * pessoas entre {@code ids} que atendem ao filtro. Os ids sem pessoa ou fora do filtro ficam de fora.
+	 * Não é auditado, porque não expõe contato nem documento.
+	 */
+	Map<UUID, ResumoPessoa> resumos(Collection<UUID> ids, FiltroPessoas filtro);
 
 	/**
 	 * Liga um arquivo já guardado no módulo Arquivos à pessoa, como documento do tipo informado (ADR 0055).
