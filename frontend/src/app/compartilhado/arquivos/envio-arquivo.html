@@ -1,0 +1,101 @@
+<div
+  class="envio"
+  role="group"
+  [attr.aria-labelledby]="ids.rotulo"
+  [class.arrastando]="arrastando()"
+  [class.com-erro]="erro()"
+  [class.desabilitado]="desabilitado()"
+  (dragover)="aoArrastar($event)"
+  (dragleave)="aoSairDoArraste()"
+  (drop)="aoSoltar($event)"
+>
+  <span class="rotulo" [id]="ids.rotulo">{{ rotulo() }}</span>
+
+  <input
+    #seletor
+    class="seletor"
+    type="file"
+    tabindex="-1"
+    aria-hidden="true"
+    [accept]="aceite"
+    (change)="aoEscolher($event)"
+  />
+
+  @if (arquivo(); as escolhido) {
+    <div class="arquivo">
+      <mat-icon class="icone" aria-hidden="true">{{ icone() }}</mat-icon>
+      <div class="detalhes">
+        <span class="nome" [title]="escolhido.nome">{{ escolhido.nome }}</span>
+        <span class="situacao" aria-live="polite">
+          @switch (estado()) {
+            @case ('validando') {
+              Conferindo o arquivo
+            }
+            @case ('enviando') {
+              Enviando, {{ progresso() }}%
+            }
+            @case ('enviado') {
+              {{ tamanho() }}, enviado
+            }
+            @case ('anexado') {
+              Já enviado
+            }
+            @default {
+              {{ tamanho() }}
+            }
+          }
+        </span>
+      </div>
+      <div class="acoes">
+        <button
+          matButton
+          type="button"
+          [disabled]="desabilitado() || ocupado()"
+          [attr.aria-label]="'Trocar ' + escolhido.nome"
+          (click)="escolher()"
+          (blur)="tocar()"
+        >
+          Trocar
+        </button>
+        <button
+          matIconButton
+          type="button"
+          class="remover"
+          [disabled]="desabilitado()"
+          [attr.aria-label]="'Remover ' + escolhido.nome"
+          (click)="remover()"
+          (blur)="tocar()"
+        >
+          <mat-icon aria-hidden="true">close</mat-icon>
+        </button>
+      </div>
+    </div>
+    @if (estado() === 'enviando' || estado() === 'validando') {
+      <mat-progress-bar
+        class="progresso"
+        [mode]="estado() === 'validando' ? 'indeterminate' : 'determinate'"
+        [value]="progresso()"
+        [attr.aria-label]="'Envio de ' + escolhido.nome"
+      />
+    }
+  } @else {
+    <div class="vazio">
+      <button
+        matButton="outlined"
+        type="button"
+        class="escolher"
+        [disabled]="desabilitado()"
+        [attr.aria-describedby]="ids.dica + ' ' + ids.erro"
+        [attr.aria-label]="'Escolher arquivo: ' + rotulo()"
+        (click)="escolher()"
+        (blur)="tocar()"
+      >
+        <mat-icon aria-hidden="true">upload_file</mat-icon>
+        Escolher arquivo
+      </button>
+      <span class="dica" [id]="ids.dica">{{ dica }}</span>
+    </div>
+  }
+
+  <p class="erro" role="alert" [id]="ids.erro">{{ erro() }}</p>
+</div>

@@ -47,3 +47,8 @@ frente de trabalho paralela não é usado todo.
 - [0022](0022-log-de-auditoria-so-de-insercao.md) — Log de auditoria só de inserção, guardado sem prazo
 - [0023](0023-registro-de-leitura-sensivel-e-exportacao.md) — Leitura de dado sensível e exportação registradas por chamada explícita
 - [0024](0024-consulta-do-log-de-auditoria.md) — Consulta do log de auditoria: filtros, período e tela
+- [0025](0025-formato-do-valor-cifrado-e-rotacao.md) — Formato do valor cifrado, configuração das chaves e rotação
+- [0026](0026-armazenamento-de-arquivos-cifrados.md) — Armazenamento dos arquivos cifrados e tabela `arquivo`
+- [0027](0027-validacao-de-tipo-e-tamanho-dos-arquivos.md) — Validação de tipo e tamanho dos arquivos enviados
+- [0028](0028-api-http-e-api-java-dos-arquivos.md) — API HTTP e API Java do módulo Arquivos
+- [0029](0029-componente-de-envio-de-arquivo-no-frontend.md) — Componente de envio de arquivo no frontend
