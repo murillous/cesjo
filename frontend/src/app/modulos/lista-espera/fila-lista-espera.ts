@@ -22,6 +22,7 @@ import { debounceTime, distinctUntilChanged, Subscription } from 'rxjs';
 import { Sessao } from '../../acesso/sessao';
 import { PaginadorPtBr } from '../../compartilhado/paginador-pt-br';
 import { FiltrosFila, ItemFila, ListaEsperaApi } from './lista-espera-api';
+import { PainelVagas } from './painel-vagas';
 import {
   ORIGENS_ENCAMINHAMENTO,
   OrigemEncaminhamento,
@@ -52,6 +53,7 @@ const ESPERA_BUSCA_MS = 300;
     MatPaginatorModule,
     MatProgressBarModule,
     MatSelectModule,
+    PainelVagas,
     ReactiveFormsModule,
     RouterLink,
   ],
@@ -66,6 +68,7 @@ export class FilaListaEspera implements OnInit {
   private readonly sessao = inject(Sessao);
 
   protected readonly podeCadastrar = this.sessao.temPermissao('LISTA_ESPERA_CADASTRAR');
+  protected readonly podeVerVagas = this.sessao.temPermissao('CAPACIDADE_LER');
   /** Ficha completa: vê tipo, origem e cadastro incompleto, e filtra por eles. */
   protected readonly completo = this.sessao.temPermissao('LISTA_ESPERA_LER');
 

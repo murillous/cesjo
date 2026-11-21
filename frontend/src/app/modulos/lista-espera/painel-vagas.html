@@ -1,0 +1,60 @@
+@if (erro()) {
+  <p class="aviso-erro" role="alert">Não foi possível carregar as vagas.</p>
+} @else if (painel(); as dados) {
+  <section class="painel" aria-labelledby="titulo-vagas">
+    <h2 id="titulo-vagas" class="cdk-visually-hidden">Vagas do serviço</h2>
+    <dl class="numeros">
+      <div class="principal" [class.sem-vaga]="dados.disponiveis === 0">
+        <dt>{{ dados.disponiveis === 1 ? 'Vaga disponível' : 'Vagas disponíveis' }}</dt>
+        <dd>{{ dados.disponiveis }}</dd>
+      </div>
+      <div>
+        <dt>Na fila</dt>
+        <dd>{{ dados.tamanhoFila }}</dd>
+      </div>
+      <div>
+        <dt>Capacidade</dt>
+        <dd>{{ dados.capacidade ?? '–' }}</dd>
+      </div>
+      <div>
+        <dt>Ocupadas</dt>
+        <dd>{{ dados.ocupadas }}</dd>
+      </div>
+    </dl>
+
+    @if (dados.capacidade === null) {
+      <p class="texto-secundario nota">
+        A capacidade do serviço ainda não foi definida{{
+          podeEditar ? '.' : '. O Coordenador define.'
+        }}
+      </p>
+    }
+
+    @if (podeEditar) {
+      @if (!editando()) {
+        <button matButton type="button" class="alterar" (click)="editar()">
+          {{ dados.capacidade === null ? 'Definir capacidade' : 'Alterar capacidade' }}
+        </button>
+      } @else {
+        <form class="edicao" (ngSubmit)="salvar()" novalidate aria-label="Capacidade do serviço">
+          <mat-form-field appearance="outline" subscriptSizing="dynamic">
+            <mat-label>Capacidade total (vagas)</mat-label>
+            <input matInput type="number" inputmode="numeric" min="0" [formControl]="vagas" />
+            @if (vagas.invalid && vagas.touched) {
+              <mat-error>Informe um número de 0 a 10000.</mat-error>
+            }
+          </mat-form-field>
+          @if (erroEdicao(); as mensagem) {
+            <p class="aviso-erro" role="alert">{{ mensagem }}</p>
+          }
+          <div class="botoes">
+            <button matButton="filled" type="submit" [disabled]="enviando()">
+              Salvar capacidade
+            </button>
+            <button matButton type="button" (click)="cancelar()">Cancelar</button>
+          </div>
+        </form>
+      }
+    }
+  </section>
+}

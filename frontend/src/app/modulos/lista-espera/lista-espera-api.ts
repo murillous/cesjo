@@ -114,6 +114,16 @@ export interface FiltrosFila {
   situacao?: SituacaoInscricao | null;
 }
 
+/** Painel de vagas (`GET /api/lista-espera/vagas`, ADR 0092). */
+export interface PainelVagas {
+  /** Nula enquanto o Coordenador não definir. */
+  capacidade: number | null;
+  ocupadas: number;
+  disponiveis: number;
+  tamanhoFila: number;
+  definidaEm: string | null;
+}
+
 @Injectable({ providedIn: 'root' })
 export class ListaEsperaApi {
   private readonly http = inject(HttpClient);
@@ -128,6 +138,15 @@ export class ListaEsperaApi {
       }
     }
     return this.http.get<PaginaFila>('/api/lista-espera/inscricoes', { params });
+  }
+
+  vagas(): Observable<PainelVagas> {
+    return this.http.get<PainelVagas>('/api/lista-espera/vagas');
+  }
+
+  /** Só o Coordenador (`CAPACIDADE_EDITAR`). */
+  definirCapacidade(vagas: number): Observable<PainelVagas> {
+    return this.http.put<PainelVagas>('/api/lista-espera/capacidade', { vagas });
   }
 
   inscrever(dados: NovaInscricao): Observable<Inscricao> {
