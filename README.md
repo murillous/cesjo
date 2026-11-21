@@ -93,7 +93,8 @@ A produção é uma VPS com Docker Compose: Caddy (TLS automático, frontend e p
 aplicação e o Postgres ([ADR 0005](docs/adr/0005-hospedagem-vps-docker-compose.md),
 [ADR 0050](docs/adr/0050-empacotamento-e-compose-de-producao.md)). Os segredos ficam num `.env` fora do
 repositório. O backup diário vai cifrado com restic para fora da VPS
-([ADR 0054](docs/adr/0054-backup-diario-com-restic.md)). Resumo:
+([ADR 0054](docs/adr/0054-backup-diario-com-restic.md)), e um monitor externo consulta `/saude` a cada 5
+minutos ([ADR 0067](docs/adr/0067-monitor-externo-no-github-actions.md)). Resumo:
 
 ```bash
 cd deploy
