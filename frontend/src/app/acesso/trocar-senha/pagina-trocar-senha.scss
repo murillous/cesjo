@@ -1,0 +1,43 @@
+@use 'styles/breakpoints' as bp;
+
+.troca {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: var(--sgi-space-4) var(--sgi-space-2);
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sgi-space-0-5);
+  margin-top: var(--sgi-space-3);
+}
+
+.erro {
+  margin: 0 0 var(--sgi-space-2);
+  padding: var(--sgi-space-1-5) var(--sgi-space-2);
+  border-left: var(--sgi-space-0-5) solid var(--sgi-color-accent);
+  background: var(--sgi-color-background-secondary);
+  border-radius: var(--sgi-radius-sm);
+}
+
+.acoes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sgi-space-1);
+
+  button,
+  a {
+    min-height: 48px;
+  }
+}
+
+@media (min-width: bp.$tablet) {
+  .troca {
+    padding-top: var(--sgi-space-8);
+  }
+
+  .acoes {
+    flex-direction: row;
+  }
+}

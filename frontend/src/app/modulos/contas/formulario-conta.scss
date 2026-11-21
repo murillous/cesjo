@@ -1,0 +1,59 @@
+@use 'styles/breakpoints' as bp;
+
+.conta {
+  max-width: 560px;
+}
+
+.voltar {
+  margin: 0 0 var(--sgi-space-2) calc(-1 * var(--sgi-space-1));
+}
+
+.situacao {
+  display: inline-block;
+  padding: var(--sgi-space-0-5) var(--sgi-space-1-5);
+  border-radius: var(--sgi-radius-sm);
+  background: var(--sgi-color-background-secondary);
+  font-size: var(--sgi-font-size-small);
+  font-weight: var(--sgi-font-weight-medium);
+
+  &.inativa {
+    color: var(--sgi-color-text-secondary);
+  }
+}
+
+.erro {
+  padding: var(--sgi-space-1-5) var(--sgi-space-2);
+  border-left: var(--sgi-space-0-5) solid var(--sgi-color-accent);
+  background: var(--sgi-color-background-secondary);
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sgi-space-1);
+  margin-top: var(--sgi-space-2);
+}
+
+.acoes {
+  margin-top: var(--sgi-space-4);
+  padding-top: var(--sgi-space-3);
+  border-top: var(--sgi-border);
+}
+
+// Celular: botões ocupam a largura toda, um embaixo do outro.
+.botoes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sgi-space-1);
+
+  button {
+    min-height: 48px;
+  }
+}
+
+@media (min-width: bp.$tablet) {
+  .botoes {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}

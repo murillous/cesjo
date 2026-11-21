@@ -1,3 +1,5 @@
+import { auditoriaModulo } from './auditoria/auditoria.modulo';
+import { contasModulo } from './contas/contas.modulo';
 import { inicioModulo } from './inicio/inicio.modulo';
 import { ModuloFrontend } from './modulo';
 
@@ -5,4 +7,4 @@ import { ModuloFrontend } from './modulo';
  * Módulos ativos do frontend. Para adicionar um módulo, crie `modulos/<modulo>/<modulo>.modulo.ts`
  * exportando um `ModuloFrontend` e acrescente-o a esta lista: uma linha por módulo.
  */
-export const MODULOS: readonly ModuloFrontend[] = [inicioModulo];
+export const MODULOS: readonly ModuloFrontend[] = [inicioModulo, contasModulo, auditoriaModulo];

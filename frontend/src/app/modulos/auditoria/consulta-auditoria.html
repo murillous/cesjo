@@ -1,0 +1,168 @@
+<section class="consulta">
+  <header class="cabecalho">
+    <h1>Log de auditoria</h1>
+    <p class="texto-secundario">
+      Quem criou, alterou, excluiu, leu dado sensível ou exportou, e cada entrada e saída do
+      sistema. O log mostra só os nomes dos campos alterados, nunca os valores.
+    </p>
+  </header>
+
+  <form class="filtros" [formGroup]="filtros" (ngSubmit)="filtrar()" aria-label="Filtros do log">
+    <mat-form-field class="campo-periodo">
+      <mat-label>Período</mat-label>
+      <mat-date-range-input [rangePicker]="seletorPeriodo">
+        <input matStartDate formControlName="inicio" placeholder="Início" />
+        <input matEndDate formControlName="fim" placeholder="Fim" />
+      </mat-date-range-input>
+      <mat-hint>dd/mm/aaaa – dd/mm/aaaa</mat-hint>
+      <mat-datepicker-toggle matIconSuffix [for]="seletorPeriodo" />
+      <mat-date-range-picker #seletorPeriodo />
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Login da conta</mat-label>
+      <input matInput formControlName="login" autocomplete="off" />
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Entidade</mat-label>
+      <mat-select formControlName="entidade">
+        <mat-option [value]="null">Todas</mat-option>
+        @for (entidade of entidades(); track entidade) {
+          <mat-option [value]="entidade">{{ entidade }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Ação</mat-label>
+      <mat-select formControlName="acao">
+        <mat-option [value]="null">Todas</mat-option>
+        @for (acao of acoes; track acao) {
+          <mat-option [value]="acao">{{ rotulosAcao[acao] }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <div class="botoes">
+      <button matButton="filled" type="submit">
+        <mat-icon aria-hidden="true">filter_alt</mat-icon>
+        Filtrar
+      </button>
+      <button matButton type="button" (click)="limpar()">Limpar filtros</button>
+    </div>
+  </form>
+
+  <div class="resultado" [attr.aria-busy]="carregando()">
+    @if (carregando()) {
+      <mat-progress-bar mode="indeterminate" aria-label="Carregando registros" />
+    }
+
+    @if (erro()) {
+      <div class="aviso" role="alert">
+        <p>Não foi possível carregar o log de auditoria. Verifique a conexão e tente de novo.</p>
+        <button matButton="outlined" type="button" (click)="carregar()">Tentar de novo</button>
+      </div>
+    } @else if (!carregando() && registros().length === 0) {
+      <div class="aviso">
+        <p>Nenhum registro com esses filtros. Amplie o período ou limpe os filtros.</p>
+      </div>
+    } @else {
+      <p class="total texto-secundario" aria-live="polite">
+        {{ total() }} {{ total() === 1 ? 'registro' : 'registros' }}
+      </p>
+
+      <ol class="cartoes" aria-label="Registros do log">
+        @for (registro of registros(); track registro.id) {
+          <li class="cartao">
+            <div class="cartao-topo">
+              <span class="acao" [class.acao-destaque]="emDestaque(registro.acao)">
+                {{ rotulo(registro.acao) }}
+              </span>
+              <time class="texto-secundario" [attr.datetime]="registro.ocorridoEm">
+                {{ registro.ocorridoEm | date: 'dd/MM/yyyy HH:mm:ss' }}
+              </time>
+            </div>
+            <p class="entidade">
+              {{ registro.entidade }}
+              @if (registro.entidadeId) {
+                <span class="texto-secundario">{{ registro.entidadeId }}</span>
+              }
+            </p>
+            <dl class="detalhes">
+              <dt>Conta</dt>
+              <dd>{{ registro.login ?? 'Sem conta' }}</dd>
+              @if (registro.camposAlterados.length) {
+                <dt>Campos</dt>
+                <dd>{{ registro.camposAlterados.join(', ') }}</dd>
+              }
+              @if (registro.ip) {
+                <dt>IP</dt>
+                <dd>{{ registro.ip }}</dd>
+              }
+            </dl>
+          </li>
+        }
+      </ol>
+
+      <div class="tabela-rolagem">
+        <table mat-table [dataSource]="registros()" class="tabela">
+          <ng-container matColumnDef="ocorridoEm">
+            <th mat-header-cell *matHeaderCellDef>Data e hora</th>
+            <td mat-cell *matCellDef="let registro">
+              <time [attr.datetime]="registro.ocorridoEm">
+                {{ registro.ocorridoEm | date: 'dd/MM/yyyy HH:mm:ss' }}
+              </time>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="acao">
+            <th mat-header-cell *matHeaderCellDef>Ação</th>
+            <td mat-cell *matCellDef="let registro">
+              <span class="acao" [class.acao-destaque]="emDestaque(registro.acao)">
+                {{ rotulo(registro.acao) }}
+              </span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="entidade">
+            <th mat-header-cell *matHeaderCellDef>Entidade</th>
+            <td mat-cell *matCellDef="let registro">
+              {{ registro.entidade }}
+              @if (registro.entidadeId) {
+                <span class="identificador texto-secundario">{{ registro.entidadeId }}</span>
+              }
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="login">
+            <th mat-header-cell *matHeaderCellDef>Conta</th>
+            <td mat-cell *matCellDef="let registro">{{ registro.login ?? 'Sem conta' }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="campos">
+            <th mat-header-cell *matHeaderCellDef>Campos alterados</th>
+            <td mat-cell *matCellDef="let registro">{{ registro.camposAlterados.join(', ') }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="ip">
+            <th mat-header-cell *matHeaderCellDef>IP</th>
+            <td mat-cell *matCellDef="let registro">{{ registro.ip }}</td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="colunas"></tr>
+          <tr mat-row *matRowDef="let registro; columns: colunas"></tr>
+        </table>
+      </div>
+    }
+
+    <mat-paginator
+      [length]="total()"
+      [pageIndex]="pagina()"
+      [pageSize]="tamanho()"
+      [pageSizeOptions]="tamanhos"
+      (page)="mudarPagina($event)"
+      aria-label="Páginas do log"
+    />
+  </div>
+</section>
