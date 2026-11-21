@@ -86,3 +86,19 @@ SGI_COORDENADOR_LOGIN=coordenacao SGI_COORDENADOR_SENHA='troque-esta-senha' ./mv
 ```
 
 Se já existe alguma conta, as variáveis são ignoradas e podem ser removidas do ambiente.
+
+## Implantar em produção
+
+A produção é uma VPS com Docker Compose: Caddy (TLS automático, frontend e proxy de `/api`), a
+aplicação e o Postgres ([ADR 0005](docs/adr/0005-hospedagem-vps-docker-compose.md),
+[ADR 0050](docs/adr/0050-empacotamento-e-compose-de-producao.md)). Os segredos ficam num `.env` fora do
+repositório. Resumo:
+
+```bash
+cd deploy
+cp .env.example .env && chmod 600 .env   # preencha domínio, senha do banco, chaves e Coordenador
+docker compose up -d --build --wait
+```
+
+O passo a passo completo, com requisitos da VPS, atualização, troca de chave e problemas comuns, está
+em [docs/implantacao.md](docs/implantacao.md).
