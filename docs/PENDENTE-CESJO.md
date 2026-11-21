@@ -86,6 +86,7 @@ Situação: provisória.
 | O Administrativo não vê crença religiosa nem dados de saúde (aplicado quando esses campos entrarem). | `acesso.Perfil` | [0015](adr/0015-matriz-de-perfis-da-fundacao.md) |
 | "Dados básicos" do Consulta são só nome, situação, turno e datas (aplicado quando as listagens entrarem). | `acesso.Perfil` | [0015](adr/0015-matriz-de-perfis-da-fundacao.md) |
 | Administrativo e Consulta veem só os dados básicos dos usuários atendidos (`ATENDIDOS_LER_BASICO`). | `acesso.Perfil` | [0082](adr/0082-permissoes-dos-usuarios-atendidos.md) |
+| Na listagem e na ficha dos usuários atendidos, a visão básica traz só nome, situação, turno e data de inserção, e os filtros por tipo de deficiência e faixa etária são negados. | `VisoesAtendido.Basico` e `FiltroAtendidos.usaDadoCompleto` (backend, `atendidos.interno`) | [0083](adr/0083-listagem-e-ficha-dos-usuarios-atendidos.md) |
 
 ## P9. Relatórios (RF016)
 

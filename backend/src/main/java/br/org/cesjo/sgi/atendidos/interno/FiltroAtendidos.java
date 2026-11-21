@@ -14,6 +14,7 @@ import br.org.cesjo.sgi.pessoas.TipoDeficiencia;
 record FiltroAtendidos(String nome, Turno turno, SituacaoInsercao situacao, TipoDeficiencia tipoDeficiencia,
 		FaixaEtaria faixaEtaria) {
 
+	// PENDENTE-CESJO(P8): tipo de deficiência e faixa etária não são dados básicos (ADR 0083).
 	/** Filtros que revelam dado além dos básicos e exigem a ficha completa (ADR 0082). */
 	boolean usaDadoCompleto() {
 		return tipoDeficiencia != null || faixaEtaria != null;
