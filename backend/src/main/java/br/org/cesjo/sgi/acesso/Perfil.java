@@ -1,5 +1,8 @@
 package br.org.cesjo.sgi.acesso;
 
+import static br.org.cesjo.sgi.acesso.Permissao.ATENDIDOS_INSERIR;
+import static br.org.cesjo.sgi.acesso.Permissao.ATENDIDOS_LER;
+import static br.org.cesjo.sgi.acesso.Permissao.ATENDIDOS_LER_BASICO;
 import static br.org.cesjo.sgi.acesso.Permissao.AUDITORIA_LER;
 import static br.org.cesjo.sgi.acesso.Permissao.CONTAS_GERENCIAR;
 import static br.org.cesjo.sgi.acesso.Permissao.DOCUMENTOS_ENVIAR;
@@ -27,16 +30,20 @@ public enum Perfil {
 
 	COORDENADOR("Coordenador",
 			EnumSet.of(CONTAS_GERENCIAR, AUDITORIA_LER, DOCUMENTOS_LER, DOCUMENTOS_ENVIAR, NOTIFICACOES_LER,
-					LISTA_ESPERA_LER, LISTA_ESPERA_CADASTRAR)),
+					LISTA_ESPERA_LER, LISTA_ESPERA_CADASTRAR, ATENDIDOS_INSERIR, ATENDIDOS_LER, ATENDIDOS_LER_BASICO)),
 
-	// PENDENTE-CESJO(P17): a Equipe Técnica lê a lista de espera mas não cadastra candidatos (ADR 0039).
-	EQUIPE_TECNICA("Equipe Técnica", EnumSet.of(DOCUMENTOS_LER, NOTIFICACOES_LER, LISTA_ESPERA_LER)),
+	// PENDENTE-CESJO(P17): a Equipe Técnica lê a lista de espera mas não cadastra candidatos (ADR 0039) e
+	// lê os usuários atendidos mas não insere no serviço (ADR 0082).
+	EQUIPE_TECNICA("Equipe Técnica",
+			EnumSet.of(DOCUMENTOS_LER, NOTIFICACOES_LER, LISTA_ESPERA_LER, ATENDIDOS_LER, ATENDIDOS_LER_BASICO)),
 
 	// PENDENTE-CESJO(P8): o Administrativo envia e lê laudos e comprovantes até a equipe responder (ADR 0015).
 	ADMINISTRATIVO("Administrativo",
-			EnumSet.of(DOCUMENTOS_LER, DOCUMENTOS_ENVIAR, NOTIFICACOES_LER, LISTA_ESPERA_LER, LISTA_ESPERA_CADASTRAR)),
+			EnumSet.of(DOCUMENTOS_LER, DOCUMENTOS_ENVIAR, NOTIFICACOES_LER, LISTA_ESPERA_LER, LISTA_ESPERA_CADASTRAR,
+					ATENDIDOS_LER_BASICO)),
 
-	CONSULTA("Consulta", EnumSet.of(NOTIFICACOES_LER));
+	// PENDENTE-CESJO(P8): o Consulta vê só os dados básicos dos usuários atendidos (ADR 0015 e ADR 0082).
+	CONSULTA("Consulta", EnumSet.of(NOTIFICACOES_LER, ATENDIDOS_LER_BASICO));
 
 	private final String rotulo;
 
