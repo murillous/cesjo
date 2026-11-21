@@ -10,7 +10,10 @@ export type Permissao =
   | 'DOCUMENTOS_ENVIAR'
   | 'NOTIFICACOES_LER'
   | 'LISTA_ESPERA_LER'
-  | 'LISTA_ESPERA_CADASTRAR';
+  | 'LISTA_ESPERA_CADASTRAR'
+  | 'ATENDIDOS_INSERIR'
+  | 'ATENDIDOS_LER'
+  | 'ATENDIDOS_LER_BASICO';
 
 /** Perfis da seção 4 do documento de requisitos, com os nomes do enum `Perfil` do backend. */
 export type Perfil = 'COORDENADOR' | 'EQUIPE_TECNICA' | 'ADMINISTRATIVO' | 'CONSULTA';
