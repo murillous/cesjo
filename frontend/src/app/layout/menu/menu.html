@@ -1,7 +1,7 @@
 <nav class="menu" aria-label="Menu principal">
   <ul class="itens">
-    @for (entrada of entradas; track entrada.link; let indice = $index) {
-      <li class="posicao" [class.fora-da-barra]="indice >= limiteBarra">
+    @for (entrada of entradas(); track entrada.link; let indice = $index) {
+      <li class="posicao" [class.fora-da-barra]="indice >= limiteBarra()">
         <a
           class="item"
           [routerLink]="entrada.link"
@@ -19,7 +19,7 @@
         </a>
       </li>
     }
-    @if (demais.length > 0) {
+    @if (demais().length > 0) {
       <li class="posicao so-na-barra">
         <button
           class="item"

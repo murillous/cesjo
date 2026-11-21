@@ -1,0 +1,112 @@
+@if (visivel()) {
+  <button
+    matIconButton
+    type="button"
+    class="sino"
+    cdkOverlayOrigin
+    #origem="cdkOverlayOrigin"
+    [attr.aria-label]="rotuloBotao()"
+    [attr.aria-expanded]="aberto()"
+    aria-haspopup="dialog"
+    aria-controls="painel-notificacoes"
+    (click)="alternar()"
+  >
+    <mat-icon aria-hidden="true">notifications</mat-icon>
+    @if (naoLidas() > 0) {
+      <span class="contador" aria-hidden="true">{{ contadorExibido() }}</span>
+    }
+  </button>
+  <span class="visualmente-oculto" aria-live="polite" aria-atomic="true">{{ anuncio() }}</span>
+
+  <ng-template
+    cdkConnectedOverlay
+    [cdkConnectedOverlayOrigin]="origem"
+    [cdkConnectedOverlayOpen]="aberto()"
+    [cdkConnectedOverlayPositions]="posicoes"
+    [cdkConnectedOverlayPush]="true"
+    [cdkConnectedOverlayViewportMargin]="16"
+    [cdkConnectedOverlayHasBackdrop]="true"
+    cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
+    (backdropClick)="fechar()"
+    (detach)="fechar()"
+    (overlayKeydown)="$event.key === 'Escape' && fechar()"
+  >
+    <section
+      id="painel-notificacoes"
+      class="painel"
+      role="dialog"
+      aria-labelledby="titulo-notificacoes"
+      cdkTrapFocus
+      [cdkTrapFocusAutoCapture]="true"
+    >
+      <header class="cabecalho">
+        <h2 id="titulo-notificacoes" class="titulo">Notificações</h2>
+        @if (naoLidas() > 0) {
+          <button matButton type="button" class="marcar-todas" (click)="marcarTodasComoLidas()">
+            Marcar todas como lidas
+          </button>
+        }
+      </header>
+
+      @switch (estado()) {
+        @case ('carregando') {
+          <p class="aviso" role="status">Carregando notificações…</p>
+        }
+        @case ('erro') {
+          <div class="aviso" role="alert">
+            <p>Não foi possível carregar as notificações.</p>
+            <button matButton type="button" (click)="tentarDeNovo()">Tentar de novo</button>
+          </div>
+        }
+        @default {
+          @if (notificacoes().length === 0) {
+            <p class="aviso">Nenhuma notificação por enquanto.</p>
+          } @else {
+            <ul class="lista">
+              @for (notificacao of notificacoes(); track notificacao.id) {
+                <li class="item" [class.nao-lida]="!notificacao.lida">
+                  <div class="texto">
+                    @if (notificacao.referencia) {
+                      <a
+                        class="mensagem"
+                        [href]="notificacao.referencia"
+                        (click)="$event.preventDefault(); abrir(notificacao)"
+                        >{{ notificacao.mensagem }}</a
+                      >
+                    } @else {
+                      <p class="mensagem">{{ notificacao.mensagem }}</p>
+                    }
+                    <p class="detalhe">
+                      @if (!notificacao.lida) {
+                        <span class="visualmente-oculto">Não lida. </span>
+                      }
+                      <time [attr.datetime]="notificacao.criadaEm">{{
+                        notificacao.criadaEm | date: "d 'de' MMM, HH:mm"
+                      }}</time>
+                    </p>
+                  </div>
+                  @if (!notificacao.lida) {
+                    <button
+                      matIconButton
+                      type="button"
+                      class="marcar"
+                      aria-label="Marcar como lida"
+                      (click)="marcarComoLida(notificacao)"
+                    >
+                      <mat-icon aria-hidden="true">done</mat-icon>
+                    </button>
+                  }
+                </li>
+              }
+            </ul>
+            @if (temMais()) {
+              <button matButton type="button" class="mais" (click)="carregarMais()">
+                Ver mais notificações
+              </button>
+            }
+          }
+        }
+      }
+    </section>
+  </ng-template>
+}

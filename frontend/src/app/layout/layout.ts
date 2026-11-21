@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
 import { RouterLink, RouterOutlet } from '@angular/router';
 
+import { MenuConta } from '../acesso/menu-conta/menu-conta';
+import { SinoNotificacoes } from '../notificacoes/sino-notificacoes';
 import { Menu } from './menu/menu';
 
 /**
@@ -12,7 +12,7 @@ import { Menu } from './menu/menu';
  */
 @Component({
   selector: 'app-layout',
-  imports: [MatButtonModule, MatIconModule, Menu, RouterLink, RouterOutlet],
+  imports: [Menu, MenuConta, RouterLink, RouterOutlet, SinoNotificacoes],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './layout.html',
   styleUrl: './layout.scss',

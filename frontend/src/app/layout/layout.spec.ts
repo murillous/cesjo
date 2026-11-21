@@ -1,3 +1,5 @@
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { MATERIAL_ANIMATIONS } from '@angular/material/core';
@@ -39,6 +41,8 @@ describe('Layout', () => {
     await TestBed.configureTestingModule({
       imports: [Layout],
       providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
         provideRouter(lista.map((m) => ({ path: m.caminho, loadChildren: m.rotas }))),
         { provide: MATERIAL_ANIMATIONS, useValue: { animationsDisabled: true } },
         ...(modulos ? [{ provide: MODULOS_FRONTEND, useValue: modulos }] : []),
@@ -66,12 +70,18 @@ describe('Layout', () => {
     expect(logo?.alt).toContain('CESJO');
   });
 
-  it('reserva espaço para notificações e conta', async () => {
+  it('reserva espaço para a conta', async () => {
     const { elemento } = await renderizar();
     const acoes = elemento.querySelector('.acoes');
 
-    expect(acoes?.querySelector('[aria-label="Notificações"]')).not.toBeNull();
     expect(acoes?.querySelector('[aria-label="Minha conta"]')).not.toBeNull();
+  });
+
+  it('esconde o sino de notificações sem sessão', async () => {
+    const { elemento } = await renderizar();
+
+    expect(elemento.querySelector('.acoes app-sino-notificacoes')).not.toBeNull();
+    expect(elemento.querySelector('.acoes button.sino')).toBeNull();
   });
 
   it('exibe a navegação principal e marca o item da página atual', async () => {
@@ -85,6 +95,15 @@ describe('Layout', () => {
     expect(itens[0]?.getAttribute('href')).toBe('/');
     expect(itens[0]?.classList).toContain('ativo');
     expect(itens[0]?.getAttribute('aria-current')).toBe('page');
+  });
+
+  it('esconde do menu o módulo que exige permissão que a conta não tem', async () => {
+    const { elemento } = await renderizar([
+      modulo('', 'Início', 0),
+      { ...modulo('contas', 'Contas', 10), permissao: 'CONTAS_GERENCIAR' },
+    ]);
+
+    expect(rotulos(elemento.querySelectorAll('a.item'))).toEqual(['Início']);
   });
 
   it('não mostra "Mais" quando todos os módulos cabem na barra inferior', async () => {
