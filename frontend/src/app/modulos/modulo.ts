@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 
-/** Item exibido no menu lateral. `icone` é uma classe do PrimeIcons, por exemplo `pi pi-home`. */
+/** Item exibido no menu lateral. `icone` é o nome de um ícone Material Symbols, por exemplo `home`. */
 export interface ItemMenu {
   rotulo: string;
   icone: string;

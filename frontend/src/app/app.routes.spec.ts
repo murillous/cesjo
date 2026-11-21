@@ -1,14 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
-import { providePrimeNG } from 'primeng/config';
 
 import { routes } from './app.routes';
 
 describe('Rotas', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideRouter(routes), providePrimeNG({ theme: 'none' })],
+      providers: [provideRouter(routes)],
     });
   });
 

@@ -1,26 +1,176 @@
 // Design tokens do guia de estilo (docs/frontend/guiaDeEstilo.md).
-// Única fonte dos valores de cor, espaçamento, raio e sombra. Componentes e o preset
-// do PrimeNG consomem estas variáveis CSS; nenhum HEX fora deste arquivo.
-
+// Único lugar com valores HEX. Componentes consomem as variáveis CSS `--sgi-*`;
+// o tema do Angular Material (`_tema.scss`) consome as variáveis Sass e as paletas abaixo.
 // Breakpoints ficam em `_breakpoints.scss`.
+
+@use 'sass:map';
+
+// Cores do guia
+$background-primary: #ffffff;
+$background-secondary: #f1f0e8;
+$primary: #10aaa6;
+$primary-dark: #34545c;
+$accent: #f2ea65;
+$accent-soft: #d2d180;
+$text-primary: #34545c;
+$text-secondary: #6b6b6b;
+$border: #dbddd7;
+$white: #ffffff;
+
+$font-family: ('Inter Variable', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif);
+
+// Paletas tonais do Material 3, geradas com `ng generate @angular/material:theme-color`
+// a partir de primary #10AAA6, secondary #34545C, tertiary #D2D180 e neutral #6B6B6B.
+// Só servem de base: as cores de sistema que aparecem na tela são sobrescritas em `_tema.scss`
+// com as variáveis do guia.
+$_paletas: (
+  primary: (
+    0: #000000,
+    10: #00201f,
+    20: #003735,
+    25: #004341,
+    30: #00504e,
+    35: #005d5a,
+    40: #006a67,
+    50: #008582,
+    60: #00a29e,
+    70: #37bdb9,
+    80: #5bd9d5,
+    90: #7af6f1,
+    95: #affffb,
+    98: #e3fffd,
+    99: #f2fffd,
+    100: #ffffff,
+  ),
+  secondary: (
+    0: #000000,
+    10: #001f26,
+    20: #13353c,
+    25: #1f4048,
+    30: #2b4b53,
+    35: #37575f,
+    40: #43636b,
+    50: #5c7c85,
+    60: #75969f,
+    70: #90b1ba,
+    80: #aaccd6,
+    90: #c6e8f2,
+    95: #d7f6ff,
+    98: #f0fbff,
+    99: #f8fdff,
+    100: #ffffff,
+  ),
+  tertiary: (
+    0: #000000,
+    10: #1d1d00,
+    20: #323200,
+    25: #3e3e00,
+    30: #494904,
+    35: #555511,
+    40: #61611d,
+    50: #7b7a33,
+    60: #95944a,
+    70: #b0af62,
+    80: #cccb7a,
+    90: #e8e793,
+    95: #f6f5a0,
+    98: #fffdb1,
+    99: #fffed8,
+    100: #ffffff,
+  ),
+  neutral: (
+    0: #000000,
+    10: #1b1c1c,
+    20: #303031,
+    25: #3b3b3c,
+    30: #464747,
+    35: #525252,
+    40: #5e5e5e,
+    50: #777777,
+    60: #919090,
+    70: #acabab,
+    80: #c7c6c6,
+    90: #e4e2e2,
+    95: #f2f0f0,
+    98: #fbf9f8,
+    99: #fefcfb,
+    100: #ffffff,
+    4: #0d0e0e,
+    6: #131314,
+    12: #1f2020,
+    17: #292a2a,
+    22: #343535,
+    24: #393939,
+    87: #dbdad9,
+    92: #e9e8e7,
+    94: #efeded,
+    96: #f5f3f3,
+  ),
+  neutral-variant: (
+    0: #000000,
+    10: #111e1d,
+    20: #263332,
+    25: #313e3d,
+    30: #3c4948,
+    35: #485554,
+    40: #546160,
+    50: #6c7a78,
+    60: #869392,
+    70: #a0aead,
+    80: #bbc9c8,
+    90: #d7e5e4,
+    95: #e6f4f2,
+    98: #eefcfa,
+    99: #f2fffd,
+    100: #ffffff,
+  ),
+  error: (
+    0: #000000,
+    10: #410002,
+    20: #690005,
+    25: #7e0007,
+    30: #93000a,
+    35: #a80710,
+    40: #ba1a1a,
+    50: #de3730,
+    60: #ff5449,
+    70: #ff897d,
+    80: #ffb4ab,
+    90: #ffdad6,
+    95: #ffedea,
+    98: #fff8f7,
+    99: #fffbff,
+    100: #ffffff,
+  ),
+);
+
+$_demais-paletas: (
+  secondary: map.get($_paletas, secondary),
+  neutral: map.get($_paletas, neutral),
+  neutral-variant: map.get($_paletas, neutral-variant),
+  error: map.get($_paletas, error),
+);
+
+$paleta-primaria: map.merge(map.get($_paletas, primary), $_demais-paletas);
+$paleta-terciaria: map.merge(map.get($_paletas, tertiary), $_demais-paletas);
 
 :root {
   color-scheme: light;
 
   // Cores semânticas
-  --sgi-color-background-primary: #ffffff;
-  --sgi-color-background-secondary: #f1f0e8;
-  --sgi-color-primary: #10aaa6;
-  --sgi-color-primary-dark: #34545c;
-  --sgi-color-accent: #f2ea65;
-  --sgi-color-accent-soft: #d2d180;
-  --sgi-color-text-primary: #34545c;
-  --sgi-color-text-secondary: #6b6b6b;
-  --sgi-color-border: #dbddd7;
-  --sgi-color-white: #ffffff;
+  --sgi-color-background-primary: #{$background-primary};
+  --sgi-color-background-secondary: #{$background-secondary};
+  --sgi-color-primary: #{$primary};
+  --sgi-color-primary-dark: #{$primary-dark};
+  --sgi-color-accent: #{$accent};
+  --sgi-color-accent-soft: #{$accent-soft};
+  --sgi-color-text-primary: #{$text-primary};
+  --sgi-color-text-secondary: #{$text-secondary};
+  --sgi-color-border: #{$border};
+  --sgi-color-white: #{$white};
 
   // Tipografia
-  --sgi-font-family: 'Inter Variable', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --sgi-font-family: #{$font-family};
   --sgi-font-size-small: 0.875rem;
   --sgi-font-size-body: 1rem;
   --sgi-font-size-h3: 1.125rem;
@@ -54,9 +204,4 @@
   // Layout
   --sgi-topbar-height: 64px;
   --sgi-sidebar-width: 256px;
-
-  // Camadas
-  --sgi-z-topbar: 1000;
-  --sgi-z-sidebar-mask: 1090;
-  --sgi-z-sidebar: 1100;
 }

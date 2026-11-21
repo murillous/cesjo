@@ -1,0 +1,86 @@
+// Tema Material 3 da aplicação, derivado dos tokens do guia de estilo.
+//
+// - Paletas próprias (geradas a partir das cores do guia) e densidade padrão.
+// - Cores de sistema sobrescritas com as variáveis `--sgi-*`: ação (botão primário, foco,
+//   seleção) em primary-dark, porque o turquesa não tem contraste WCAG AA com branco em texto
+//   pequeno; turquesa reservado a ícones e indicadores.
+// - Só esquema claro: nenhum modo escuro é gerado.
+@use '@angular/material' as mat;
+@use 'tokens';
+
+html {
+  @include mat.theme(
+    (
+      color: (
+        theme-type: light,
+        primary: tokens.$paleta-primaria,
+        tertiary: tokens.$paleta-terciaria,
+      ),
+      typography: (
+        plain-family: tokens.$font-family,
+        brand-family: tokens.$font-family,
+        bold-weight: 600,
+        medium-weight: 500,
+        regular-weight: 400,
+      ),
+      density: 0,
+    )
+  );
+
+  @include mat.theme-overrides(
+    (
+      primary: var(--sgi-color-primary-dark),
+      on-primary: var(--sgi-color-white),
+      primary-container: var(--sgi-color-background-secondary),
+      on-primary-container: var(--sgi-color-primary-dark),
+      secondary: var(--sgi-color-primary-dark),
+      on-secondary: var(--sgi-color-white),
+      secondary-container: var(--sgi-color-background-secondary),
+      on-secondary-container: var(--sgi-color-primary-dark),
+      tertiary: var(--sgi-color-primary-dark),
+      on-tertiary: var(--sgi-color-white),
+      tertiary-container: var(--sgi-color-accent-soft),
+      on-tertiary-container: var(--sgi-color-primary-dark),
+      background: var(--sgi-color-background-primary),
+      on-background: var(--sgi-color-text-primary),
+      surface: var(--sgi-color-background-primary),
+      on-surface: var(--sgi-color-text-primary),
+      on-surface-variant: var(--sgi-color-text-secondary),
+      surface-container-lowest: var(--sgi-color-background-primary),
+      surface-container-low: var(--sgi-color-background-primary),
+      surface-container: var(--sgi-color-background-secondary),
+      surface-container-high: var(--sgi-color-background-secondary),
+      surface-container-highest: var(--sgi-color-background-secondary),
+      outline: var(--sgi-color-text-secondary),
+      outline-variant: var(--sgi-color-border),
+    )
+  );
+
+  @include mat.toolbar-overrides(
+    (
+      container-background-color: var(--sgi-color-background-primary),
+      container-text-color: var(--sgi-color-text-primary),
+    )
+  );
+
+  @include mat.sidenav-overrides(
+    (
+      container-shape: 0,
+      container-width: var(--sgi-sidebar-width),
+      container-divider-color: var(--sgi-color-border),
+      content-background-color: var(--sgi-color-background-primary),
+    )
+  );
+
+  @include mat.list-overrides(
+    (
+      active-indicator-color: var(--sgi-color-background-secondary),
+      active-indicator-shape: var(--sgi-radius-md),
+      list-item-label-text-color: var(--sgi-color-text-primary),
+      list-item-hover-label-text-color: var(--sgi-color-text-primary),
+      list-item-focus-label-text-color: var(--sgi-color-text-primary),
+      list-item-label-text-weight: var(--sgi-font-weight-medium),
+      list-item-leading-icon-color: var(--sgi-color-primary),
+    )
+  );
+}

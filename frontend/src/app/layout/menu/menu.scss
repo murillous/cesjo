@@ -1,6 +1,6 @@
-.menu ul {
-  list-style: none;
-  margin: 0;
+// Cores do item (texto primary-dark, ícone turquesa, fundo ativo secundário) vêm do tema em
+// `styles/_tema.scss`. Aqui só o indicador lateral em accent e o peso do item ativo.
+.menu mat-nav-list {
   padding: var(--sgi-space-2) var(--sgi-space-1-5);
   display: flex;
   flex-direction: column;
@@ -8,29 +8,11 @@
 }
 
 .menu-item {
-  display: flex;
-  align-items: center;
-  gap: var(--sgi-space-1-5);
-  min-height: var(--sgi-space-6);
-  padding: var(--sgi-space-1) var(--sgi-space-2);
-  border-radius: var(--sgi-radius-md);
   border-left: var(--sgi-space-0-5) solid transparent;
-  color: var(--sgi-color-text-primary);
-  font-weight: var(--sgi-font-weight-medium);
-  text-decoration: none;
-  transition: background-color 0.2s;
-
-  i {
-    color: var(--sgi-color-primary);
-  }
-
-  &:hover {
-    background: var(--sgi-color-background-secondary);
-  }
 
   &.ativo {
-    background: var(--sgi-color-background-secondary);
+    --mat-list-list-item-label-text-weight: var(--sgi-font-weight-semibold);
+
     border-left-color: var(--sgi-color-accent);
-    font-weight: var(--sgi-font-weight-semibold);
   }
 }

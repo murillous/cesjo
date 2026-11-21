@@ -17,7 +17,7 @@ e não é decidido por conta própria.
 | Organização | Uma única organização (CESJO). Sem multi-tenancy. |
 | Backend | Java 25, Spring Boot 4.2, Spring Web MVC, Spring Data JPA, Spring Security, Flyway, PostgreSQL 18. Monólito modular. |
 | Testes backend | JUnit, Testcontainers com Postgres real, Spring Modulith para verificar fronteiras entre módulos. |
-| Frontend | Angular 22 (componentes standalone, signals, formulários reativos tipados), PrimeNG 22 com preset de tema construído a partir dos tokens do guia de estilo, gráficos com o componente Chart do PrimeNG (Chart.js). Testes com Vitest e alguns fluxos ponta a ponta com Playwright. |
+| Frontend | Angular 22 (componentes standalone, signals, formulários reativos tipados), Angular Material 22 e Angular CDK (licença MIT) com tema Material 3 construído a partir dos tokens do guia de estilo, ícones Material Symbols; biblioteca de gráficos a definir na issue de dashboards. Testes com Vitest e alguns fluxos ponta a ponta com Playwright. O PrimeNG foi descartado porque, a partir da versão 22, passou a exigir chave de licença PrimeUI. |
 | Repositório | Monorepo: `backend/` e `frontend/`. |
 | Autenticação | Sessão do Spring Security com contas locais no Postgres, senha com Argon2, cookie HttpOnly, proteção CSRF. Frontend e API no mesmo domínio (proxy). |
 | Criptografia | AES-256-GCM na aplicação para campos de texto livre sensíveis e para todos os arquivos enviados. Campos categóricos (tipo de violação, crença, tipo de deficiência) ficam em claro, protegidos por perfil, auditoria de leitura e disco cifrado, para que relatórios e dashboards agreguem direto em SQL. |
@@ -81,9 +81,10 @@ Convenções:
 
 - Projeto Angular em `frontend/`, rotas com carregamento sob demanda por módulo (as mesmas áreas do
   backend).
-- Layout institucional baseado no template Sakai do PrimeNG: barra superior com logo e notificações,
-  menu lateral recolhível no celular, fundo branco e destaques conforme o guia de estilo.
-- Preset de tema PrimeNG gerado a partir dos tokens semânticos do guia (`primary`, `primaryDark`,
+- Layout institucional com Angular Material (`MatToolbar` e `MatSidenav`): barra superior com logo e
+  notificações, menu lateral fixo em telas grandes e gaveta recolhível no celular, fundo branco e
+  destaques conforme o guia de estilo.
+- Tema Material 3 gerado a partir dos tokens semânticos do guia (`primary`, `primaryDark`,
   `accent`, `backgroundSecondary` etc.). Nenhum valor HEX dentro de componentes.
 - Contraste WCAG AA: texto em `primary-dark` sobre branco, nunca turquesa sobre branco em texto pequeno.
 - Locale `pt-BR` (datas, números, mensagens de validação).
@@ -289,7 +290,7 @@ exemplo). As referências entre issues nos critérios usam o número do GitHub.
 1. **Configurar CI no GitHub Actions** (M0). Critérios: `./mvnw verify` roda com Testcontainers a cada
    push e PR; build, lint e testes do frontend rodam no mesmo pipeline; PR com falha fica bloqueado.
 2. **Criar esqueleto do frontend Angular com tema institucional** (M0, RNF 3.1). Critérios: Angular 22
-   e PrimeNG 22 em `frontend/`; preset de tema com os tokens do guia de estilo; layout com barra
+   e Angular Material 22 em `frontend/`; tema Material 3 com os tokens do guia de estilo; layout com barra
    superior, logo e menu lateral recolhível no celular; locale pt-BR; proxy de `/api` em desenvolvimento.
 3. **Estruturar módulos e convenções do backend** (M0). Critérios: pacotes de módulo da seção 3; teste
    do Spring Modulith verificando fronteiras; erros em `ProblemDetail`; paginação padrão; springdoc

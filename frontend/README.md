@@ -1,6 +1,6 @@
 # CESJO SGI — frontend
 
-Aplicação Angular 22 (componentes standalone, sem SSR) com PrimeNG 22 e tema institucional
+Aplicação Angular 22 (componentes standalone, sem SSR) com Angular Material 22 + Angular CDK e tema institucional
 construído a partir do [guia de estilo](../docs/frontend/guiaDeEstilo.md).
 
 ## Pré-requisitos
@@ -21,11 +21,16 @@ npm run build       # build de produção em dist/sgi-frontend
 
 ## Organização
 
-- `src/styles/_tokens.scss`: tokens do guia (cores, tipografia, espaçamento base 8px, raios, sombras).
-  É o único lugar com valores HEX; componentes usam só as variáveis `--sgi-*`.
+- `src/styles/_tokens.scss`: tokens do guia (cores, tipografia, espaçamento base 8px, raios, sombras)
+  e paletas tonais do Material 3. É o único lugar com valores HEX; componentes usam só as variáveis `--sgi-*`.
 - `src/styles/_breakpoints.scss`: breakpoints globais em Sass.
-- `src/app/tema/preset-cesjo.ts`: preset do PrimeNG derivado dos tokens. Modo escuro desligado.
-- `src/app/layout/`: barra superior, menu lateral (gaveta em telas menores que 992px) e área de conteúdo.
+- `src/styles/_tema.scss`: tema Material 3 (`mat.theme` com paletas próprias, fonte Inter, densidade
+  padrão) e overrides das cores de sistema com os tokens do guia. Ação, foco e seleção em
+  primary-dark; turquesa só em ícones e indicadores. Sem modo escuro.
+- Ícones: Material Symbols (estilo outlined, pacote npm `material-symbols`), usados com `<mat-icon>nome</mat-icon>`.
+- Locale pt-BR: `LOCALE_ID`, `MAT_DATE_LOCALE` e `provideNativeDateAdapter` em `src/app/app.config.ts`.
+- `src/app/layout/`: `MatToolbar` (logo, notificações, conta) e `MatSidenav` (modo `side` a partir de
+  992px, modo `over` abaixo disso, fechando com Escape ou clique fora) e área de conteúdo.
 - `src/app/modulos/`: um diretório por módulo. Cada módulo exporta um `ModuloFrontend` com caminho,
   rotas carregadas sob demanda e item de menu.
 
@@ -38,7 +43,7 @@ npm run build       # build de produção em dist/sgi-frontend
    export const listaEsperaModulo: ModuloFrontend = {
      caminho: 'lista-espera',
      rotas: () => import('./lista-espera.routes').then((m) => m.LISTA_ESPERA_ROUTES),
-     menu: { rotulo: 'Lista de espera', icone: 'pi pi-list', ordem: 10 },
+     menu: { rotulo: 'Lista de espera', icone: 'list', ordem: 10 },
    };
    ```
 

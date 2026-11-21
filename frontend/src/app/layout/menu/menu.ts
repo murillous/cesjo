@@ -1,4 +1,6 @@
 import { ChangeDetectionStrategy, Component, output } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
 import { MODULOS } from '../../modulos/registro';
@@ -12,7 +14,7 @@ interface EntradaMenu {
 /** Menu lateral montado a partir dos módulos registrados em `modulos/registro.ts`. */
 @Component({
   selector: 'app-menu',
-  imports: [RouterLink, RouterLinkActive],
+  imports: [MatIconModule, MatListModule, RouterLink, RouterLinkActive],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './menu.html',
   styleUrl: './menu.scss',

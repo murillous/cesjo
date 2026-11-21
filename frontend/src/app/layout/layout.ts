@@ -1,8 +1,11 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterLink, RouterOutlet } from '@angular/router';
-import { ButtonModule } from 'primeng/button';
 import { map } from 'rxjs';
 
 import { Menu } from './menu/menu';
@@ -11,16 +14,24 @@ import { Menu } from './menu/menu';
 const TELA_GRANDE = '(min-width: 992px)';
 
 /**
- * Layout institucional (inspirado no Sakai): barra superior com logo, notificações e conta;
- * menu lateral fixo em telas grandes e gaveta recolhível em telas pequenas.
+ * Layout institucional: barra superior (MatToolbar) com logo, notificações e conta, e menu
+ * lateral (MatSidenav) fixo em telas grandes e gaveta em telas pequenas. A gaveta fecha com
+ * Escape, com clique fora e ao escolher um item.
  */
 @Component({
   selector: 'app-layout',
-  imports: [ButtonModule, Menu, RouterLink, RouterOutlet],
+  imports: [
+    MatButtonModule,
+    MatIconModule,
+    MatSidenavModule,
+    MatToolbarModule,
+    Menu,
+    RouterLink,
+    RouterOutlet,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './layout.html',
   styleUrl: './layout.scss',
-  host: { '(document:keydown.escape)': 'fecharGaveta()' },
 })
 export class Layout {
   protected readonly telaGrande = toSignal(
@@ -35,10 +46,10 @@ export class Layout {
   /** Em telas pequenas o menu é uma gaveta que começa fechada. */
   private readonly gavetaAberta = signal(false);
 
+  protected readonly modo = computed(() => (this.telaGrande() ? 'side' : 'over'));
   protected readonly menuVisivel = computed(() =>
     this.telaGrande() ? !this.recolhidoNaTelaGrande() : this.gavetaAberta(),
   );
-  protected readonly mostrarMascara = computed(() => !this.telaGrande() && this.gavetaAberta());
 
   protected alternarMenu(): void {
     if (this.telaGrande()) {
@@ -48,7 +59,14 @@ export class Layout {
     }
   }
 
-  protected fecharGaveta(): void {
+  /** Sincroniza o estado quando o próprio MatSidenav fecha (Escape ou clique fora). */
+  protected aoMudarAbertura(aberto: boolean): void {
+    if (!this.telaGrande()) {
+      this.gavetaAberta.set(aberto);
+    }
+  }
+
+  protected aoNavegar(): void {
     this.gavetaAberta.set(false);
   }
 }

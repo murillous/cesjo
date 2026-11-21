@@ -32,7 +32,7 @@
             ],
             "styles": [
               "@fontsource-variable/inter/index.css",
-              "primeicons/primeicons.css",
+              "material-symbols/outlined.css",
               "src/styles.scss"
             ],
             "stylePreprocessorOptions": {
@@ -44,8 +44,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "800kB",
-                  "maximumError": "1.5MB"
+                  "maximumWarning": "500kB",
+                  "maximumError": "1MB"
                 },
                 {
                   "type": "anyComponentStyle",
