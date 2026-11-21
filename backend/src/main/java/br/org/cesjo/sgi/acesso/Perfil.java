@@ -4,6 +4,8 @@ import static br.org.cesjo.sgi.acesso.Permissao.AUDITORIA_LER;
 import static br.org.cesjo.sgi.acesso.Permissao.CONTAS_GERENCIAR;
 import static br.org.cesjo.sgi.acesso.Permissao.DOCUMENTOS_ENVIAR;
 import static br.org.cesjo.sgi.acesso.Permissao.DOCUMENTOS_LER;
+import static br.org.cesjo.sgi.acesso.Permissao.LISTA_ESPERA_CADASTRAR;
+import static br.org.cesjo.sgi.acesso.Permissao.LISTA_ESPERA_LER;
 import static br.org.cesjo.sgi.acesso.Permissao.NOTIFICACOES_LER;
 
 import java.util.Collections;
@@ -24,12 +26,15 @@ public enum Perfil {
 	// os perfis em dúvida, conforme a tabela de suposições do ADR 0015.
 
 	COORDENADOR("Coordenador",
-			EnumSet.of(CONTAS_GERENCIAR, AUDITORIA_LER, DOCUMENTOS_LER, DOCUMENTOS_ENVIAR, NOTIFICACOES_LER)),
+			EnumSet.of(CONTAS_GERENCIAR, AUDITORIA_LER, DOCUMENTOS_LER, DOCUMENTOS_ENVIAR, NOTIFICACOES_LER,
+					LISTA_ESPERA_LER, LISTA_ESPERA_CADASTRAR)),
 
-	EQUIPE_TECNICA("Equipe Técnica", EnumSet.of(DOCUMENTOS_LER, NOTIFICACOES_LER)),
+	// PENDENTE-CESJO(P17): a Equipe Técnica lê a lista de espera mas não cadastra candidatos (ADR 0039).
+	EQUIPE_TECNICA("Equipe Técnica", EnumSet.of(DOCUMENTOS_LER, NOTIFICACOES_LER, LISTA_ESPERA_LER)),
 
 	// PENDENTE-CESJO(P8): o Administrativo envia e lê laudos e comprovantes até a equipe responder (ADR 0015).
-	ADMINISTRATIVO("Administrativo", EnumSet.of(DOCUMENTOS_LER, DOCUMENTOS_ENVIAR, NOTIFICACOES_LER)),
+	ADMINISTRATIVO("Administrativo",
+			EnumSet.of(DOCUMENTOS_LER, DOCUMENTOS_ENVIAR, NOTIFICACOES_LER, LISTA_ESPERA_LER, LISTA_ESPERA_CADASTRAR)),
 
 	CONSULTA("Consulta", EnumSet.of(NOTIFICACOES_LER));
 

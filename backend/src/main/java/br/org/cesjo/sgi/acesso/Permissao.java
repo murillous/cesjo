@@ -23,6 +23,12 @@ public enum Permissao {
 	DOCUMENTOS_ENVIAR,
 
 	/** Ver e marcar como lidas as próprias notificações internas (RF003). */
-	NOTIFICACOES_LER
+	NOTIFICACOES_LER,
+
+	/** Ler a ficha completa dos candidatos da lista de espera (RF001, RF002). */
+	LISTA_ESPERA_LER,
+
+	/** Cadastrar candidato na lista de espera (RF001, ADR 0039). */
+	LISTA_ESPERA_CADASTRAR
 
 }
