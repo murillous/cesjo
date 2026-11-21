@@ -18,7 +18,7 @@ import {
   RegistroAuditoria,
   ROTULOS_ACAO,
 } from './auditoria-api';
-import { PaginadorPtBr } from './paginador-pt-br';
+import { PaginadorPtBr } from '../../compartilhado/paginador-pt-br';
 
 /** Ações que pedem atenção de quem revisa o log: dado sensível, saída de dados e tentativa negada. */
 const ACOES_EM_DESTAQUE: ReadonlySet<AcaoAuditoria> = new Set([

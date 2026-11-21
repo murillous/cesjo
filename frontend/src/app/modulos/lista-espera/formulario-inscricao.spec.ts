@@ -4,6 +4,8 @@ import { TestBed } from '@angular/core/testing';
 import { MATERIAL_ANIMATIONS, provideNativeDateAdapter } from '@angular/material/core';
 import { provideRouter, Router } from '@angular/router';
 
+import { contaDeTeste } from '../../acesso/conta-de-teste';
+import { Sessao } from '../../acesso/sessao';
 import { FormularioInscricao } from './formulario-inscricao';
 
 interface Componente {
@@ -52,6 +54,8 @@ describe('FormularioInscricao', () => {
       nomeResponsavel: 'Responsável Fictício',
       origemEncaminhamento: 'CRAS',
       dataCadastro: new Date(2026, 10, 2),
+      laudoMedicoArquivoId: 'arquivo-laudo',
+      comprovanteResidenciaArquivoId: null,
     });
     componente.salvar();
 
@@ -65,10 +69,64 @@ describe('FormularioInscricao', () => {
       nomeResponsavel: 'Responsável Fictício',
       origemEncaminhamento: 'CRAS',
       dataCadastro: '2026-11-02',
+      laudoMedicoArquivoId: 'arquivo-laudo',
+      comprovanteResidenciaArquivoId: null,
     });
-    pedido.flush({ id: 'i1', nomeCompleto: 'Pessoa Fictícia' });
+    pedido.flush({ id: 'i1', nomeCompleto: 'Pessoa Fictícia', cadastroCompleto: false });
 
     expect(navegar).toHaveBeenCalledWith(['/lista-espera']);
+  });
+
+  it('mostra os campos de documento só para quem envia documentos', async () => {
+    const sessao = TestBed.inject(Sessao);
+    sessao.definir(contaDeTeste({ permissoes: ['LISTA_ESPERA_CADASTRAR'] }));
+    let fixture = TestBed.createComponent(FormularioInscricao);
+    await fixture.whenStable();
+    expect((fixture.nativeElement as HTMLElement).querySelector('app-envio-arquivo')).toBeNull();
+
+    sessao.definir(contaDeTeste());
+    fixture = TestBed.createComponent(FormularioInscricao);
+    await fixture.whenStable();
+    const campos = (fixture.nativeElement as HTMLElement).querySelectorAll('app-envio-arquivo');
+    expect(campos.length).toBe(2);
+    expect(campos[0].textContent).toContain('Laudo médico');
+    expect(campos[1].textContent).toContain('Comprovante de residência');
+  });
+
+  it('na edição, carrega o candidato, envia PUT sem anexos e volta para a ficha', async () => {
+    TestBed.inject(Sessao).definir(contaDeTeste());
+    const fixture = TestBed.createComponent(FormularioInscricao);
+    fixture.componentRef.setInput('id', 'i1');
+    fixture.detectChanges();
+    controle.expectOne('/api/lista-espera/inscricoes/i1').flush({
+      id: 'i1',
+      nomeCompleto: 'Pessoa Fictícia',
+      dataNascimento: null,
+      tipoDeficiencia: 'FISICA',
+      telefone: '3132345678',
+      nomeResponsavel: 'Responsável Fictício',
+      origemEncaminhamento: 'SAUDE',
+      dataCadastro: '2026-11-02',
+    });
+    await fixture.whenStable();
+    const elemento = fixture.nativeElement as HTMLElement;
+    expect(elemento.querySelector('h1')?.textContent).toContain('Editar candidato');
+    expect(elemento.querySelector('app-envio-arquivo')).toBeNull();
+
+    (fixture.componentInstance as unknown as Componente).salvar();
+    const pedido = controle.expectOne('/api/lista-espera/inscricoes/i1');
+    expect(pedido.request.method).toBe('PUT');
+    expect(pedido.request.body).toEqual({
+      nomeCompleto: 'Pessoa Fictícia',
+      dataNascimento: null,
+      tipoDeficiencia: 'FISICA',
+      telefone: '3132345678',
+      nomeResponsavel: 'Responsável Fictício',
+      origemEncaminhamento: 'SAUDE',
+      dataCadastro: '2026-11-02',
+    });
+    pedido.flush({ id: 'i1' });
+    expect(navegar).toHaveBeenCalledWith(['/lista-espera', 'i1']);
   });
 
   it('não envia sem os campos obrigatórios', async () => {
@@ -101,6 +159,8 @@ describe('FormularioInscricao', () => {
       nomeResponsavel: 'Responsável Fictício',
       origemEncaminhamento: 'SAUDE',
       dataCadastro: new Date(2026, 10, 2),
+      laudoMedicoArquivoId: null,
+      comprovanteResidenciaArquivoId: null,
     });
     componente.salvar();
     controle

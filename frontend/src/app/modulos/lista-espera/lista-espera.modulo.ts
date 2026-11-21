@@ -9,5 +9,6 @@ export const listaEsperaModulo: ModuloFrontend = {
     icone: 'format_list_numbered',
     ordem: 10,
   },
-  permissao: 'LISTA_ESPERA_LER',
+  // A fila é de todos os perfis; o Consulta vê só os dados básicos (ADR 0058).
+  permissao: 'LISTA_ESPERA_FILA_LER',
 };

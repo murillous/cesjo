@@ -2,6 +2,9 @@ package br.org.cesjo.sgi.pessoas.interno;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.LinkedHashSet;
+import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
@@ -64,6 +67,32 @@ class Pessoa {
 		this.criadoPor = autor;
 		this.atualizadoEm = agora;
 		this.atualizadoPor = autor;
+	}
+
+	/** Aplica os dados novos e devolve os nomes das colunas que mudaram. */
+	Set<String> atualizar(NovaPessoa dados, UUID autor, Instant agora) {
+		Set<String> campos = new LinkedHashSet<>();
+		if (!Objects.equals(nomeCompleto, dados.nomeCompleto())) {
+			nomeCompleto = dados.nomeCompleto();
+			campos.add("nome_completo");
+		}
+		if (!Objects.equals(dataNascimento, dados.dataNascimento())) {
+			dataNascimento = dados.dataNascimento();
+			campos.add("data_nascimento");
+		}
+		if (tipoDeficiencia != dados.tipoDeficiencia()) {
+			tipoDeficiencia = dados.tipoDeficiencia();
+			campos.add("tipo_deficiencia");
+		}
+		if (!Objects.equals(telefone, dados.telefone())) {
+			telefone = dados.telefone();
+			campos.add("telefone");
+		}
+		if (!campos.isEmpty()) {
+			atualizadoEm = agora;
+			atualizadoPor = autor;
+		}
+		return campos;
 	}
 
 	UUID getId() {

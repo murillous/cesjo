@@ -1,0 +1,86 @@
+# Relatório mensal de uptime do CESJO SGI (issue #23, ADR 0068).
+#
+# No dia 1 de cada mês, conta as execuções agendadas do monitor (monitoramento.yml) do mês anterior:
+# cada execução verde é uma amostra "no ar" e cada vermelha, "fora do ar". O resultado vai para o
+# resumo da execução e para um artefato, comparado com a meta de 99% (RNF 3.4).
+# Para outro mês: Actions > Relatório de uptime > Run workflow, com o mês no formato AAAA-MM
+# (o GitHub guarda as execuções por 90 dias).
+name: Relatório de uptime
+
+on:
+  schedule:
+    - cron: '0 12 1 * *'
+  workflow_dispatch:
+    inputs:
+      mes:
+        description: 'Mês do relatório (AAAA-MM). Vazio: mês anterior.'
+        required: false
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  relatorio:
+    name: relatorio
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      GH_TOKEN: ${{ github.token }}
+      MES: ${{ inputs.mes }}
+      META: '99'
+    steps:
+      - name: Calcular o uptime do mês
+        id: calculo
+        run: |
+          set -euo pipefail
+          if [ -z "$MES" ]; then MES="$(date -u -d "$(date -u +%Y-%m-01) -1 day" +%Y-%m)"; fi
+          echo "mes=$MES" >> "$GITHUB_OUTPUT"
+          inicio="$MES-01"
+          dias="$(date -u -d "$inicio +1 month -1 day" +%d)"
+
+          # A busca por data devolve no máximo 1000 execuções; um dia tem até 288 (uma a cada 5 min).
+          : > conclusoes.txt
+          for d in $(seq -w 1 "$dias"); do
+            gh api --paginate \
+              "repos/$GITHUB_REPOSITORY/actions/workflows/monitoramento.yml/runs?event=schedule&created=$MES-$d&per_page=100" \
+              -q '.workflow_runs[].conclusion' >> conclusoes.txt
+          done
+
+          no_ar="$(grep -cx 'success' conclusoes.txt || true)"
+          fora="$(grep -cx 'failure' conclusoes.txt || true)"
+          total=$((no_ar + fora))
+          esperado=$((dias * 288))
+
+          {
+            echo "# Uptime do CESJO SGI em $MES"
+            echo
+            if [ "$total" -eq 0 ]; then
+              echo "Nenhuma verificação no mês. Confira se a variável SGI_URL_SAUDE está definida e se o"
+              echo "agendamento do workflow Monitoramento está ativo."
+            else
+              uptime="$(awk -v a="$no_ar" -v t="$total" 'BEGIN { printf "%.2f", 100 * a / t }')"
+              if awk -v u="$uptime" -v m="$META" 'BEGIN { exit !(u >= m) }'; then
+                situacao="dentro da meta de $META%"
+              else
+                situacao="**abaixo da meta de $META%**"
+              fi
+              echo "| Medida | Valor |"
+              echo "|---|---|"
+              echo "| Uptime | $uptime% ($situacao) |"
+              echo "| Verificações no ar | $no_ar |"
+              echo "| Verificações fora do ar | $fora |"
+              echo "| Tempo fora do ar estimado | $((fora * 5)) min |"
+              echo "| Cobertura das verificações | $total de $esperado esperadas |"
+              echo
+              echo "Uma verificação a cada 5 minutos, quando o GitHub cumpre o agendamento. Verificações"
+              echo "que o GitHub atrasou ou pulou não entram na conta (ADR 0068)."
+            fi
+          } | tee relatorio.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Guardar o relatório
+        uses: actions/upload-artifact@v7
+        with:
+          name: uptime-${{ steps.calculo.outputs.mes }}
+          path: relatorio.md
+          retention-days: 90

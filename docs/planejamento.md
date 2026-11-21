@@ -102,8 +102,8 @@ migração.
 
 ### Acesso, auditoria, arquivos, notificações
 
-- `conta_acesso`: nome, login, senha_hash, perfil, ativa, colaborador_id (opcional), tentativas_falhas,
-  bloqueada_ate.
+- `conta_acesso`: nome, login, senha_hash, perfil, ativa, tentativas_falhas, bloqueada_ate. A ligação
+  com o colaborador fica em `colaborador.conta_acesso_id` (ADR 0046).
 - `auditoria`: ocorrido_em, conta_id, acao (criar, alterar, excluir, ler_sensivel, exportar, login,
   login_falho), entidade, entidade_id, campos_alterados (nomes, sem valores sensíveis), ip.
 - `arquivo`: nome_original, tipo_mime, tamanho, sha256, caminho_armazenamento, chave_id, enviado_por,
@@ -125,7 +125,8 @@ migração.
 
 ### Atendimento (RF004 a RF006)
 
-- `colaborador`: nome, funcao (assistente social, psicóloga, terapeuta ocupacional, outras), ativo.
+- `colaborador`: nome, funcao (assistente social, psicóloga, terapeuta ocupacional, outras), ativo,
+  conta_acesso_id (opcional; a ligação fica no colaborador, ADR 0046).
 - `visita_domiciliar`: pessoa_id, data_hora, status (agendada, realizada, cancelada),
   motivo_cancelamento, observacoes (C).
 - `visita_profissional`: visita_id, colaborador_id.
@@ -273,6 +274,9 @@ Nenhuma destas respostas foi inventada. Issues que dependem delas recebem o rót
 17. **Pontos em aberto da matriz de permissões (seção 6)**: o Administrativo vê as atividades
     (RF010), registra a gestão institucional (RF012 a RF015) e importa planilhas? A Equipe Técnica lê a
     gestão institucional e os relatórios? O Administrativo vê relatórios?
+18. **Funções dos colaboradores**: quais funções os colaboradores podem ter? Além de assistente
+    social, psicólogo(a) e terapeuta ocupacional, há outras que precisam aparecer separadas nos
+    relatórios (cuidador, monitor, motorista, coordenação, estagiário)?
 
 ## 10. Backlog
 

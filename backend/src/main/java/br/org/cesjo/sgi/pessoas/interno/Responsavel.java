@@ -54,6 +54,17 @@ class Responsavel {
 		this.atualizadoPor = autor;
 	}
 
+	/** Troca o nome e diz se mudou. */
+	boolean renomear(String nome, UUID autor, Instant agora) {
+		if (nomeCompleto.equals(nome)) {
+			return false;
+		}
+		nomeCompleto = nome;
+		atualizadoEm = agora;
+		atualizadoPor = autor;
+		return true;
+	}
+
 	UUID getId() {
 		return id;
 	}
