@@ -32,10 +32,6 @@ jobs:
           cache: maven
           cache-dependency-path: backend/pom.xml
 
-      # O mvnw está versionado sem o bit de execução.
-      - name: Permitir execução do Maven Wrapper
-        run: chmod +x mvnw
-
       # Os runners Ubuntu do GitHub têm Docker, então os testes com Testcontainers rodam aqui.
       - name: Build e testes
         run: ./mvnw -B verify
