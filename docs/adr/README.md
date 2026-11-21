@@ -66,3 +66,5 @@ frente de trabalho paralela não é usado todo.
 - [0081](0081-apis-entre-lista-de-espera-pessoas-e-atendidos.md) — APIs entre Lista de espera, Pessoas e Atendidos
 - [0082](0082-permissoes-dos-usuarios-atendidos.md) — Permissões dos usuários atendidos (provisório)
 - [0083](0083-listagem-e-ficha-dos-usuarios-atendidos.md) — Listagem e ficha dos usuários atendidos (provisório)
+- [0110](0110-desligamento-do-usuario-atendido.md) — Desligamento do usuário atendido (provisório)
+- [0111](0111-evento-de-vaga-liberada.md) — Evento de vaga liberada publicado por Atendidos e ouvido pela Lista de espera

@@ -166,3 +166,4 @@ Situação: provisória.
 | Nos pontos com (?), o perfil em dúvida fica sem acesso: Administrativo sem atividades, gestão institucional, relatórios e importação; Equipe Técnica sem gestão institucional e relatórios. | `acesso.Perfil` | [0015](adr/0015-matriz-de-perfis-da-fundacao.md) |
 | Só Coordenador e Administrativo cadastram candidatos na lista de espera; a Equipe Técnica lê e, quando a edição entrar, edita. | `acesso.Perfil` (`LISTA_ESPERA_CADASTRAR`) | [0039](adr/0039-permissoes-da-lista-de-espera.md) |
 | Só o Coordenador insere candidatos no serviço; a Equipe Técnica lê a ficha completa dos usuários atendidos. | `acesso.Perfil` (`ATENDIDOS_INSERIR`) | [0082](adr/0082-permissoes-dos-usuarios-atendidos.md) |
+| Só o Coordenador registra desligamento, porque ele libera vaga. | `acesso.Perfil` (`ATENDIDOS_DESLIGAR`) | [0110](adr/0110-desligamento-do-usuario-atendido.md) |
