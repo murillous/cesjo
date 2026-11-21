@@ -1,0 +1,127 @@
+<section class="inscricao">
+  <a matButton routerLink="/lista-espera" class="voltar">
+    <mat-icon aria-hidden="true">arrow_back</mat-icon>
+    Lista de espera
+  </a>
+
+  <h1>Cadastrar candidato</h1>
+  <p class="texto-secundario">
+    O candidato entra na fila como aguardando, na ordem da data de cadastro.
+  </p>
+
+  @if (erro(); as mensagem) {
+    <p class="erro" role="alert">{{ mensagem }}</p>
+  }
+
+  <form [formGroup]="formulario" (ngSubmit)="salvar()" novalidate>
+    <fieldset>
+      <legend>Pessoa</legend>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Nome completo</mat-label>
+        <input matInput formControlName="nomeCompleto" autocomplete="off" />
+        @if (formulario.controls.nomeCompleto.hasError('required')) {
+          <mat-error>Informe o nome da pessoa.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Data de nascimento</mat-label>
+        <input
+          matInput
+          [matDatepicker]="seletorNascimento"
+          [max]="hoje"
+          formControlName="dataNascimento"
+        />
+        <mat-hint>Opcional. DD/MM/AAAA</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="seletorNascimento" />
+        <mat-datepicker #seletorNascimento startView="multi-year" />
+        @if (formulario.controls.dataNascimento.hasError('matDatepickerMax')) {
+          <mat-error>A data de nascimento precisa ser anterior a hoje.</mat-error>
+        } @else if (formulario.controls.dataNascimento.hasError('matDatepickerParse')) {
+          <mat-error>Use o formato DD/MM/AAAA.</mat-error>
+        }
+      </mat-form-field>
+
+      <div
+        class="tipos"
+        [class.invalido]="
+          formulario.controls.tipoDeficiencia.touched && formulario.controls.tipoDeficiencia.invalid
+        "
+      >
+        <span id="titulo-tipo" class="rotulo-grupo">Tipo de deficiência</span>
+        <mat-radio-group formControlName="tipoDeficiencia" aria-labelledby="titulo-tipo">
+          @for (tipo of tipos; track tipo.valor) {
+            <mat-radio-button [value]="tipo.valor">{{ tipo.rotulo }}</mat-radio-button>
+          }
+        </mat-radio-group>
+        @if (
+          formulario.controls.tipoDeficiencia.touched && formulario.controls.tipoDeficiencia.invalid
+        ) {
+          <p class="erro-campo" role="alert">Escolha o tipo de deficiência.</p>
+        }
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Contato</legend>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Nome do responsável</mat-label>
+        <input matInput formControlName="nomeResponsavel" autocomplete="off" />
+        @if (formulario.controls.nomeResponsavel.hasError('required')) {
+          <mat-error>Informe o nome do responsável.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Telefone</mat-label>
+        <input matInput formControlName="telefone" type="tel" inputmode="tel" autocomplete="off" />
+        <mat-hint>Com DDD, por exemplo (31) 98765-4321</mat-hint>
+        @if (formulario.controls.telefone.hasError('required')) {
+          <mat-error>Informe o telefone.</mat-error>
+        } @else if (formulario.controls.telefone.hasError('pattern')) {
+          <mat-error>Informe DDD e número, com 10 ou 11 dígitos.</mat-error>
+        }
+      </mat-form-field>
+    </fieldset>
+
+    <fieldset>
+      <legend>Encaminhamento</legend>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Origem do encaminhamento</mat-label>
+        <mat-select formControlName="origemEncaminhamento">
+          @for (origem of origens; track origem.valor) {
+            <mat-option [value]="origem.valor">{{ origem.rotulo }}</mat-option>
+          }
+        </mat-select>
+        @if (formulario.controls.origemEncaminhamento.hasError('required')) {
+          <mat-error>Escolha a origem do encaminhamento.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Data de cadastro</mat-label>
+        <input
+          matInput
+          [matDatepicker]="seletorCadastro"
+          [max]="hoje"
+          formControlName="dataCadastro"
+        />
+        <mat-hint>Define a posição na fila. Use a data original para quem já esperava.</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="seletorCadastro" />
+        <mat-datepicker #seletorCadastro />
+        @if (formulario.controls.dataCadastro.hasError('required')) {
+          <mat-error>Informe a data de cadastro.</mat-error>
+        } @else if (formulario.controls.dataCadastro.hasError('matDatepickerMax')) {
+          <mat-error>A data de cadastro não pode ser futura.</mat-error>
+        }
+      </mat-form-field>
+    </fieldset>
+
+    <div class="botoes">
+      <button matButton="filled" type="submit" [disabled]="enviando()">Cadastrar candidato</button>
+    </div>
+  </form>
+</section>
