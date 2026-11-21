@@ -19,7 +19,7 @@ import br.org.cesjo.sgi.pessoas.Pessoas;
  */
 @RestController
 @RequestMapping("/api/atendimento/pessoas")
-@PreAuthorize("hasAuthority('ESCUTA_LER')")
+@PreAuthorize("hasAnyAuthority('ESCUTA_LER', 'PIA_LER')")
 class PessoasAtendimentoControlador {
 
 	private final ListaEspera listaEspera;
