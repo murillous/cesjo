@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
@@ -31,6 +32,7 @@ import br.org.cesjo.sgi.pessoas.DadosPessoa;
 import br.org.cesjo.sgi.pessoas.DocumentoInvalidoException;
 import br.org.cesjo.sgi.pessoas.DocumentoPessoa;
 import br.org.cesjo.sgi.pessoas.FiltroPessoas;
+import br.org.cesjo.sgi.pessoas.DadosResponsavel;
 import br.org.cesjo.sgi.pessoas.NovaPessoa;
 import br.org.cesjo.sgi.pessoas.Pessoas;
 import br.org.cesjo.sgi.pessoas.ResumoPessoa;
@@ -109,6 +111,37 @@ class ServicoPessoas implements Pessoas {
 	@Transactional(readOnly = true)
 	public Optional<DadosPessoa> obter(UUID id) {
 		return pessoas.findById(id).map(this::dados);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Map<UUID, String> nomes(Collection<UUID> ids) {
+		return pessoas.findAllById(ids).stream().collect(Collectors.toMap(Pessoa::getId, Pessoa::getNomeCompleto));
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<DadosResponsavel> responsaveis(UUID pessoaId) {
+		List<DadosResponsavel> dados = new ArrayList<>();
+		for (Responsavel responsavel : responsaveis.findByPessoaIdOrderByCriadoEmAscIdAsc(pessoaId)) {
+			dados.add(new DadosResponsavel(responsavel.getId(), pessoaId, responsavel.getNomeCompleto(),
+					dados.isEmpty()));
+		}
+		return dados;
+	}
+
+	@Override
+	@Transactional
+	public DadosResponsavel cadastrarResponsavel(UUID pessoaId, String nomeCompleto) {
+		if (!pessoas.existsById(pessoaId)) {
+			throw new IllegalArgumentException("Pessoa não encontrada: " + pessoaId);
+		}
+		boolean principal = responsaveis.findFirstByPessoaIdOrderByCriadoEmAsc(pessoaId).isEmpty();
+		UUID autor = identidadeAtual.obter().map(Identidade::id).orElse(null);
+		Responsavel responsavel = responsaveis
+			.save(new Responsavel(pessoaId, nomeCompleto.strip(), autor, relogio.instant()));
+		auditoria.registrar(EventoAuditoria.criacao(ENTIDADE_RESPONSAVEL, responsavel.getId()));
+		return new DadosResponsavel(responsavel.getId(), pessoaId, responsavel.getNomeCompleto(), principal);
 	}
 
 	@Override

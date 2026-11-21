@@ -129,6 +129,27 @@ class InscricaoListaEspera {
 		return motivoSaida;
 	}
 
+	/** Marca o candidato como em avaliação. Devolve se a situação mudou. */
+	boolean colocarEmAvaliacao(UUID autor, Instant agora) {
+		if (situacao == SituacaoInscricao.EM_AVALIACAO) {
+			return false;
+		}
+		this.situacao = SituacaoInscricao.EM_AVALIACAO;
+		this.atualizadoEm = agora;
+		this.atualizadoPor = autor;
+		return true;
+	}
+
+	/** Tira a inscrição da fila porque a pessoa foi inserida no serviço. */
+	void registrarInsercao(UUID autor, Instant agora) {
+		if (situacao != SituacaoInscricao.AGUARDANDO) {
+			throw new IllegalStateException("Inscrição fora da fila: " + situacao);
+		}
+		this.situacao = SituacaoInscricao.INSERIDO;
+		this.atualizadoEm = agora;
+		this.atualizadoPor = autor;
+	}
+
 	UUID getId() {
 		return id;
 	}

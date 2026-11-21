@@ -69,6 +69,10 @@ class Responsavel {
 		return id;
 	}
 
+	UUID getPessoaId() {
+		return pessoaId;
+	}
+
 	String getNomeCompleto() {
 		return nomeCompleto;
 	}

@@ -16,8 +16,22 @@ export type Permissao =
   | 'LISTA_ESPERA_EXPORTAR'
   | 'CAPACIDADE_LER'
   | 'CAPACIDADE_EDITAR'
-  // Do módulo atendidos (issue #39); o backend só concede depois daquela junção.
-  | 'ATENDIDOS_INSERIR';
+  | 'COLABORADORES_LER'
+  | 'COLABORADORES_GERENCIAR'
+  | 'ATENDIDOS_INSERIR'
+  | 'ATENDIDOS_LER'
+  | 'ATENDIDOS_LER_BASICO'
+  | 'VISITAS_LER'
+  | 'VISITAS_AGENDAR'
+  | 'VISITAS_REGISTRAR'
+  | 'ESCUTA_LER'
+  | 'ESCUTA_REGISTRAR'
+  | 'PIA_LER'
+  | 'PIA_EDITAR'
+  | 'PIA_APROVAR'
+  | 'ATENDIDOS_DESLIGAR'
+  | 'VIOLACOES_REGISTRAR'
+  | 'VIOLACOES_LER';
 
 /** Perfis da seção 4 do documento de requisitos, com os nomes do enum `Perfil` do backend. */
 export type Perfil = 'COORDENADOR' | 'EQUIPE_TECNICA' | 'ADMINISTRATIVO' | 'CONSULTA';

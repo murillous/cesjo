@@ -1,0 +1,245 @@
+<section class="pia" aria-labelledby="titulo-pia">
+  <a
+    matButton
+    [routerLink]="['/atendimento', 'pessoas', pessoaDaFicha()]"
+    class="voltar nao-imprimir"
+  >
+    <mat-icon aria-hidden="true">arrow_back</mat-icon>
+    {{ nomePessoa() ?? 'Atendimento' }}
+  </a>
+
+  @if (pia(); as atual) {
+    <header class="cabecalho">
+      <h1 id="titulo-pia">PIA, versão {{ atual.numeroVersao }}</h1>
+      <p class="status" [class.aprovado]="atual.status === 'APROVADO'">
+        {{ status[atual.status] }}
+      </p>
+    </header>
+    <p class="so-impressao">{{ atual.nomePessoa }}</p>
+    @if (!atual.maisNova) {
+      <p class="texto-secundario">Versão substituída por uma mais nova. Fica só para consulta.</p>
+    }
+  } @else {
+    <h1 id="titulo-pia">{{ novo() ? 'Elaborar PIA' : 'PIA' }}</h1>
+  }
+  <p class="texto-secundario aviso nao-imprimir">
+    <mat-icon aria-hidden="true">lock</mat-icon>
+    Conteúdo sigiloso: guardado cifrado, e cada abertura fica no log de auditoria.
+  </p>
+
+  @if (erro(); as mensagem) {
+    <p class="erro" role="alert">{{ mensagem }}</p>
+  }
+
+  @if (pia(); as atual) {
+    @if (!editando()) {
+      <section class="andamento" aria-labelledby="titulo-andamento">
+        <h2 id="titulo-andamento">Andamento</h2>
+        <ol class="passos">
+          <li class="feito">
+            <span class="passo">Elaborado</span>
+            <span class="quando">{{ atual.criadoEm | date: 'dd/MM/yyyy' }}</span>
+          </li>
+          @for (passo of passos; track passo.status) {
+            <li [class.feito]="atual[passo.campo]">
+              <span class="passo">{{ status[passo.status] }}</span>
+              <span class="quando">
+                {{
+                  atual[passo.campo] ? (data(atual[passo.campo]) | date: 'dd/MM/yyyy') : 'Pendente'
+                }}
+              </span>
+            </li>
+          }
+        </ol>
+
+        @if (proximo(); as passo) {
+          <div class="proximo nao-imprimir">
+            <mat-form-field appearance="outline">
+              <mat-label>Data</mat-label>
+              <input
+                matInput
+                [matDatepicker]="seletorPasso"
+                [max]="hojeData"
+                [value]="dataDoPasso()"
+                (dateChange)="dataDoPasso.set($event.value)"
+              />
+              <mat-datepicker-toggle matIconSuffix [for]="seletorPasso" />
+              <mat-datepicker #seletorPasso />
+            </mat-form-field>
+            <button
+              matButton="filled"
+              type="button"
+              [disabled]="enviando()"
+              (click)="avancar(atual, passo.passo)"
+            >
+              {{ passo.acao }}
+            </button>
+          </div>
+        }
+        @if (atual.status === 'APRESENTADO_EQUIPE' && !podeAprovar && atual.maisNova) {
+          <p class="texto-secundario nao-imprimir">Aguardando a aprovação da coordenação.</p>
+        }
+      </section>
+
+      <article class="plano">
+        <section>
+          <h2>Diagnóstico</h2>
+          <p>{{ atual.conteudo.diagnostico ?? 'Não registrado.' }}</p>
+        </section>
+
+        <section>
+          <h2>Objetivos</h2>
+          @if (atual.conteudo.objetivos.length === 0) {
+            <p class="texto-secundario">Nenhum objetivo registrado.</p>
+          }
+          <ol class="objetivos">
+            @for (objetivo of atual.conteudo.objetivos; track $index) {
+              <li>
+                <h3>{{ objetivo.descricao }}</h3>
+                <dl>
+                  @if (objetivo.metas) {
+                    <div>
+                      <dt>Metas</dt>
+                      <dd>{{ objetivo.metas }}</dd>
+                    </div>
+                  }
+                  @if (objetivo.acoes) {
+                    <div>
+                      <dt>Ações</dt>
+                      <dd>{{ objetivo.acoes }}</dd>
+                    </div>
+                  }
+                  <div>
+                    <dt>Prazo</dt>
+                    <dd>
+                      {{
+                        objetivo.prazo ? (data(objetivo.prazo) | date: 'dd/MM/yyyy') : 'Sem prazo'
+                      }}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>Responsável</dt>
+                    <dd>{{ objetivo.responsavel ?? 'Não definido' }}</dd>
+                  </div>
+                </dl>
+              </li>
+            }
+          </ol>
+        </section>
+
+        @if (atual.conteudo.observacoes) {
+          <section>
+            <h2>Observações</h2>
+            <p>{{ atual.conteudo.observacoes }}</p>
+          </section>
+        }
+      </article>
+
+      <div class="botoes nao-imprimir">
+        @if (podeEditar && atual.editavel) {
+          <button matButton="outlined" type="button" (click)="editar()">
+            <mat-icon aria-hidden="true">edit</mat-icon>
+            Editar PIA
+          </button>
+        }
+        @if (podeEditar && atual.maisNova && atual.status !== 'ELABORADO') {
+          <button
+            matButton="outlined"
+            type="button"
+            [disabled]="enviando()"
+            (click)="novaVersao(atual)"
+          >
+            <mat-icon aria-hidden="true">content_copy</mat-icon>
+            Criar nova versão
+          </button>
+        }
+        <button matButton="outlined" type="button" (click)="imprimir()">
+          <mat-icon aria-hidden="true">print</mat-icon>
+          Imprimir ou salvar em PDF
+        </button>
+      </div>
+      @if (podeEditar && atual.maisNova && atual.status !== 'ELABORADO') {
+        <p class="texto-secundario nao-imprimir">
+          Este PIA já foi apresentado e não muda mais. Para alterar, crie uma nova versão; esta fica
+          guardada como está.
+        </p>
+      }
+    }
+  }
+
+  @if (novo() || editando()) {
+    <form [formGroup]="formulario" (ngSubmit)="salvar()" novalidate>
+      <mat-form-field appearance="outline">
+        <mat-label>Diagnóstico</mat-label>
+        <textarea matInput formControlName="diagnostico" rows="5"></textarea>
+        <mat-hint>Situação da pessoa e da família que o plano quer mudar.</mat-hint>
+      </mat-form-field>
+
+      <fieldset formArrayName="objetivos">
+        <legend>Objetivos</legend>
+        @for (grupo of objetivos.controls; track grupo; let i = $index) {
+          <div class="objetivo" [formGroupName]="i">
+            <div class="titulo-objetivo">
+              <span>Objetivo {{ i + 1 }}</span>
+              <button
+                matIconButton
+                type="button"
+                (click)="removerObjetivo(i)"
+                [attr.aria-label]="'Remover objetivo ' + (i + 1)"
+              >
+                <mat-icon aria-hidden="true">delete</mat-icon>
+              </button>
+            </div>
+            <mat-form-field appearance="outline">
+              <mat-label>Objetivo</mat-label>
+              <textarea matInput formControlName="descricao" rows="2"></textarea>
+              @if (grupo.get('descricao')?.hasError('required')) {
+                <mat-error>Descreva o objetivo.</mat-error>
+              }
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Metas</mat-label>
+              <textarea matInput formControlName="metas" rows="2"></textarea>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Ações</mat-label>
+              <textarea matInput formControlName="acoes" rows="2"></textarea>
+            </mat-form-field>
+            <div class="linha">
+              <mat-form-field appearance="outline">
+                <mat-label>Prazo</mat-label>
+                <input matInput [matDatepicker]="seletorPrazo" formControlName="prazo" />
+                <mat-hint>Opcional. DD/MM/AAAA</mat-hint>
+                <mat-datepicker-toggle matIconSuffix [for]="seletorPrazo" />
+                <mat-datepicker #seletorPrazo />
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Responsável</mat-label>
+                <input matInput formControlName="responsavel" autocomplete="off" />
+                <mat-hint>Profissional, família ou outro serviço.</mat-hint>
+              </mat-form-field>
+            </div>
+          </div>
+        }
+        <button matButton="outlined" type="button" (click)="acrescentarObjetivo()">
+          <mat-icon aria-hidden="true">add</mat-icon>
+          Acrescentar objetivo
+        </button>
+      </fieldset>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Observações</mat-label>
+        <textarea matInput formControlName="observacoes" rows="3"></textarea>
+      </mat-form-field>
+
+      <div class="botoes">
+        <button matButton="filled" type="submit" [disabled]="enviando()">
+          {{ novo() ? 'Elaborar PIA' : 'Salvar PIA' }}
+        </button>
+        @if (editando()) {
+          <button matButton type="button" (click)="desistir()">Desistir</button>
+        }
+      </div>
+    </form>
+  }
+</section>
