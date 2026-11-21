@@ -174,10 +174,11 @@ jobs:
         run: |
           set -euo pipefail
           sed -i "s|^SGI_BACKUP_HORARIO=.*|SGI_BACKUP_HORARIO=* * * * *|" backup.env
+          # Recriar o contêiner apaga o repositório de teste em /tmp; o crond precisa criá-lo de novo.
           docker compose up -d backup
           for _ in $(seq 1 30); do
-            n="$(docker compose exec -T backup restic snapshots --json | grep -o '"short_id"' | wc -l)"
-            if [ "$n" -ge 3 ]; then echo "crond gerou o snapshot ($n no total)"; exit 0; fi
+            n="$( (docker compose exec -T backup restic snapshots --json 2>/dev/null || true) | grep -o '"short_id"' | wc -l)"
+            if [ "$n" -ge 1 ]; then echo "crond gerou o snapshot"; exit 0; fi
             sleep 5
           done
           echo "o crond não rodou o backup em 150 segundos"; exit 1
