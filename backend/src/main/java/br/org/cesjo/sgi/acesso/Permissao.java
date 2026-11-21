@@ -38,6 +38,12 @@ public enum Permissao {
 	LISTA_ESPERA_FILA_LER,
 
 	/** Editar os dados do candidato e mudar a situação da inscrição (RF002, ADR 0090). */
-	LISTA_ESPERA_EDITAR
+	LISTA_ESPERA_EDITAR,
+
+	/** Ver a capacidade do serviço, as vagas disponíveis e o tamanho da fila (RF003, ADR 0092). */
+	CAPACIDADE_LER,
+
+	/** Definir a capacidade do serviço (RF003, ADR 0092). */
+	CAPACIDADE_EDITAR
 
 }

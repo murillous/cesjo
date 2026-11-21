@@ -40,6 +40,13 @@ class PerfilTests {
 	}
 
 	@Test
+	void capacidadeConformeAMatriz() {
+		assertThat(Perfil.values()).allMatch(perfil -> perfil.tem(Permissao.CAPACIDADE_LER));
+		assertThat(Arrays.stream(Perfil.values()).filter(perfil -> perfil.tem(Permissao.CAPACIDADE_EDITAR)))
+			.containsExactly(Perfil.COORDENADOR);
+	}
+
+	@Test
 	void todosVeemAFilaDaListaDeEspera() {
 		assertThat(Perfil.values()).allMatch(perfil -> perfil.tem(Permissao.LISTA_ESPERA_FILA_LER));
 	}
@@ -52,7 +59,7 @@ class PerfilTests {
 	@Test
 	void consultaSoVeNotificacoesEAFilaComDadosBasicos() {
 		assertThat(Perfil.CONSULTA.permissoes()).containsExactlyInAnyOrder(Permissao.NOTIFICACOES_LER,
-				Permissao.LISTA_ESPERA_FILA_LER);
+				Permissao.LISTA_ESPERA_FILA_LER, Permissao.CAPACIDADE_LER);
 	}
 
 }

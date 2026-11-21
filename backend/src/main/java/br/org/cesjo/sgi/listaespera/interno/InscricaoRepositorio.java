@@ -14,4 +14,6 @@ interface InscricaoRepositorio
 
 	List<InscricaoListaEspera> findBySituacao(SituacaoInscricao situacao, Sort ordem);
 
+	long countBySituacao(SituacaoInscricao situacao);
+
 }
