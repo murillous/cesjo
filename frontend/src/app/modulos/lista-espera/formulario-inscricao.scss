@@ -37,6 +37,15 @@ legend {
   font-weight: var(--sgi-font-weight-semibold);
 }
 
+.orientacao-documentos {
+  max-width: 60ch;
+  margin: 0 0 var(--sgi-space-1);
+}
+
+fieldset app-envio-arquivo + app-envio-arquivo {
+  margin-top: var(--sgi-space-2);
+}
+
 .rotulo-grupo {
   display: block;
   margin-bottom: var(--sgi-space-1);

@@ -91,6 +91,8 @@ class ServicoPessoas implements Pessoas {
 		Instant agora = relogio.instant().truncatedTo(ChronoUnit.MICROS);
 		Documento documento;
 		if (atual.isPresent()) {
+			// PENDENTE-CESJO(P14): o arquivo substituído continua guardado no módulo Arquivos, sem ligação
+			// com a pessoa, até a equipe definir a regra de retenção (ADR 0055).
 			documento = atual.get();
 			documento.trocarArquivo(arquivoId, autor, agora);
 			auditoria.registrar(EventoAuditoria.alteracao(ENTIDADE_DOCUMENTO, documento.getId(), Set.of("arquivo_id")));

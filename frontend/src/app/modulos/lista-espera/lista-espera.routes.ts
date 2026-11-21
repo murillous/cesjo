@@ -15,4 +15,9 @@ export const LISTA_ESPERA_ROUTES: Routes = [
     canMatch: [exigePermissao('LISTA_ESPERA_CADASTRAR')],
     loadComponent: () => import('./formulario-inscricao').then((m) => m.FormularioInscricao),
   },
+  {
+    path: ':id/documentos',
+    title: 'Documentos do candidato | CESJO SGI',
+    loadComponent: () => import('./documentos-candidato').then((m) => m.DocumentosCandidato),
+  },
 ];
