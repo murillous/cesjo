@@ -39,14 +39,31 @@ class PerfilTests {
 	}
 
 	@Test
+	void soCoordenadorVeEGerenciaColaboradores() {
+		assertThat(Arrays.stream(Perfil.values()).filter(perfil -> perfil.tem(Permissao.COLABORADORES_LER)))
+			.containsExactly(Perfil.COORDENADOR);
+		assertThat(Arrays.stream(Perfil.values()).filter(perfil -> perfil.tem(Permissao.COLABORADORES_GERENCIAR)))
+			.containsExactly(Perfil.COORDENADOR);
+	}
+
+	@Test
+	void usuariosAtendidosConformeAMatriz() {
+		assertThat(Arrays.stream(Perfil.values()).filter(perfil -> perfil.tem(Permissao.ATENDIDOS_INSERIR)))
+			.containsExactly(Perfil.COORDENADOR);
+		assertThat(Arrays.stream(Perfil.values()).filter(perfil -> perfil.tem(Permissao.ATENDIDOS_LER)))
+			.containsExactlyInAnyOrder(Perfil.COORDENADOR, Perfil.EQUIPE_TECNICA);
+		assertThat(Perfil.values()).allMatch(perfil -> perfil.tem(Permissao.ATENDIDOS_LER_BASICO));
+	}
+
+	@Test
 	void todosVeemAsPropriasNotificacoes() {
 		assertThat(Perfil.values()).allMatch(perfil -> perfil.tem(Permissao.NOTIFICACOES_LER));
 	}
 
 	@Test
-	void consultaSoVeNotificacoesEAFilaComDadosBasicos() {
+	void consultaSoVeNotificacoesAFilaEDadosBasicosDosAtendidos() {
 		assertThat(Perfil.CONSULTA.permissoes()).containsExactlyInAnyOrder(Permissao.NOTIFICACOES_LER,
-				Permissao.LISTA_ESPERA_FILA_LER);
+				Permissao.LISTA_ESPERA_FILA_LER, Permissao.ATENDIDOS_LER_BASICO);
 	}
 
 }

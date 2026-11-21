@@ -5,7 +5,7 @@ export type TipoDeficiencia = 'FISICA' | 'SENSORIAL' | 'INTELECTUAL' | 'MULTIPLA
 export type OrigemEncaminhamento =
   'CRAS' | 'CREAS' | 'JUDICIARIO' | 'SAUDE' | 'EDUCACAO' | 'DEMANDA_ESPONTANEA';
 
-export type SituacaoInscricao = 'AGUARDANDO';
+export type SituacaoInscricao = 'AGUARDANDO' | 'INSERIDO';
 
 /** Situações da inscrição; as de saída entram com a issue #29 (pergunta 4). */
 export const SITUACOES: readonly { valor: SituacaoInscricao; rotulo: string }[] = [

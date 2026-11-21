@@ -59,4 +59,15 @@ public interface Pessoas {
 	 */
 	ConteudoArquivo lerDocumento(UUID pessoaId, TipoDocumento tipo);
 
+	/** Responsáveis da pessoa, o do cadastro (RF001) primeiro e os demais por ordem de cadastro. */
+	List<DadosResponsavel> responsaveis(UUID pessoaId);
+
+	/**
+	 * Cadastra mais um responsável para a pessoa, por exemplo o cuidador familiar informado na inserção
+	 * no serviço (RF007).
+	 *
+	 * @throws IllegalArgumentException quando a pessoa não existe
+	 */
+	DadosResponsavel cadastrarResponsavel(UUID pessoaId, String nomeCompleto);
+
 }
