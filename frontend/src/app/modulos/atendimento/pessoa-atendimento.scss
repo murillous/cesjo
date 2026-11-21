@@ -1,0 +1,87 @@
+@use 'styles/breakpoints' as bp;
+
+.atendimento {
+  max-width: 720px;
+}
+
+.voltar {
+  margin: 0 0 var(--sgi-space-2) calc(-1 * var(--sgi-space-1));
+}
+
+h1 {
+  margin: 0 0 var(--sgi-space-3);
+  overflow-wrap: anywhere;
+}
+
+.erro {
+  padding: var(--sgi-space-1-5) var(--sgi-space-2);
+  border-left: var(--sgi-space-0-5) solid var(--sgi-color-accent);
+  background: var(--sgi-color-background-secondary);
+}
+
+.bloco {
+  margin-bottom: var(--sgi-space-4);
+
+  // Celular: título e botão empilhados, botão na largura toda.
+  header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sgi-space-1);
+    padding-bottom: var(--sgi-space-1);
+    border-bottom: 2px solid var(--sgi-color-primary-dark);
+
+    h2 {
+      margin: 0;
+      font-size: var(--sgi-font-size-h3);
+    }
+
+    a {
+      min-height: var(--sgi-alvo-toque);
+    }
+  }
+}
+
+.escutas {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  a {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sgi-space-0-5);
+    min-height: var(--sgi-alvo-toque);
+    padding: var(--sgi-space-1-5) var(--sgi-space-1);
+    border-bottom: var(--sgi-border);
+    color: inherit;
+    text-decoration: none;
+
+    &:hover,
+    &:focus-visible {
+      background: var(--sgi-color-background-secondary);
+    }
+  }
+}
+
+.data {
+  font-weight: var(--sgi-font-weight-semibold);
+}
+
+.profissional {
+  font-size: var(--sgi-font-size-small);
+  color: var(--sgi-color-text-secondary);
+}
+
+@media (min-width: bp.$tablet) {
+  .bloco header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .escutas a {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+}

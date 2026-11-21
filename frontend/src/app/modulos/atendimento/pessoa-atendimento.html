@@ -1,0 +1,42 @@
+<section class="atendimento" aria-labelledby="titulo-pessoa">
+  <a matButton routerLink="/atendimento" class="voltar">
+    <mat-icon aria-hidden="true">arrow_back</mat-icon>
+    Escuta e PIA
+  </a>
+
+  <h1 id="titulo-pessoa">{{ pessoa()?.nomeCompleto ?? 'Atendimento' }}</h1>
+
+  @if (erro(); as mensagem) {
+    <p class="erro" role="alert">{{ mensagem }}</p>
+  }
+
+  <section class="bloco" aria-labelledby="titulo-escutas">
+    <header>
+      <h2 id="titulo-escutas">Escutas</h2>
+      @if (podeRegistrarEscuta) {
+        <a matButton="filled" [routerLink]="['escutas', 'nova']">
+          <mat-icon aria-hidden="true">add</mat-icon>
+          Registrar escuta
+        </a>
+      }
+    </header>
+    @if (escutas(); as lista) {
+      @if (lista.length === 0) {
+        <p class="texto-secundario">Nenhuma escuta registrada.</p>
+      } @else {
+        <ul class="escutas">
+          @for (escuta of lista; track escuta.id) {
+            <li>
+              <a [routerLink]="['/atendimento', 'escutas', escuta.id]">
+                <span class="data">{{ data(escuta.dataEscuta) | date: "d 'de' MMMM 'de' y" }}</span>
+                <span class="profissional">
+                  {{ escuta.profissional.nome }}, {{ funcoes[escuta.profissional.funcao] }}
+                </span>
+              </a>
+            </li>
+          }
+        </ul>
+      }
+    }
+  </section>
+</section>

@@ -1,5 +1,6 @@
 import { InjectionToken } from '@angular/core';
 
+import { atendimentoModulo } from './atendimento/atendimento.modulo';
 import { auditoriaModulo } from './auditoria/auditoria.modulo';
 import { colaboradoresModulo } from './colaboradores/colaboradores.modulo';
 import { contasModulo } from './contas/contas.modulo';
@@ -16,6 +17,7 @@ export const MODULOS: readonly ModuloFrontend[] = [
   inicioModulo,
   listaEsperaModulo,
   visitasModulo,
+  atendimentoModulo,
   colaboradoresModulo,
   contasModulo,
   auditoriaModulo,

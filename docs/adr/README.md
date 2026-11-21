@@ -73,3 +73,6 @@ frente de trabalho paralela não é usado todo.
 - [0073](0073-realizacao-cancelamento-e-reagendamento-da-visita.md) — Realização, cancelamento e reagendamento da visita, com observações cifradas
 - [0074](0074-permissoes-do-resultado-da-visita.md) — Permissões para registrar a realização e ler as observações da visita (provisório)
 - [0075](0075-acoes-na-ficha-da-visita.md) — Ações de realização, cancelamento e reagendamento na ficha da visita
+- [0100](0100-escuta-ativa-e-qualificada.md) — Escuta ativa e qualificada com textos cifrados e leitura auditada
+- [0101](0101-permissoes-da-escuta.md) — Permissões da escuta ativa e qualificada
+- [0102](0102-telas-de-escuta.md) — Telas de escuta organizadas pela pessoa atendida
