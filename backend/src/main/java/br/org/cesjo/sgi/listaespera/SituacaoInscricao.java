@@ -6,10 +6,13 @@ package br.org.cesjo.sgi.listaespera;
  */
 public enum SituacaoInscricao {
 
-	// PENDENTE-CESJO(P4): as situações de saída (desistência, não localizado, fora do perfil, inserido)
+	// PENDENTE-CESJO(P4): as outras situações de saída (desistência, não localizado, fora do perfil)
 	// entram com a issue #29, quando a lista de motivos for decidida.
 
-	AGUARDANDO("Aguardando");
+	AGUARDANDO("Aguardando"),
+
+	/** Saiu da fila porque foi inserida no serviço (RF007, ADR 0081). */
+	INSERIDO("Inserido no serviço");
 
 	private final String rotulo;
 

@@ -2,6 +2,8 @@ package br.org.cesjo.sgi.pessoas.interno;
 
 import java.time.Clock;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -13,6 +15,7 @@ import br.org.cesjo.sgi.auditoria.EventoAuditoria;
 import br.org.cesjo.sgi.compartilhado.seguranca.Identidade;
 import br.org.cesjo.sgi.compartilhado.seguranca.IdentidadeAtual;
 import br.org.cesjo.sgi.pessoas.DadosPessoa;
+import br.org.cesjo.sgi.pessoas.DadosResponsavel;
 import br.org.cesjo.sgi.pessoas.NovaPessoa;
 import br.org.cesjo.sgi.pessoas.Pessoas;
 
@@ -54,6 +57,31 @@ class ServicoPessoas implements Pessoas {
 	@Transactional(readOnly = true)
 	public Optional<DadosPessoa> obter(UUID id) {
 		return pessoas.findById(id).map(this::dados);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<DadosResponsavel> responsaveis(UUID pessoaId) {
+		List<DadosResponsavel> dados = new ArrayList<>();
+		for (Responsavel responsavel : responsaveis.findByPessoaIdOrderByCriadoEmAscIdAsc(pessoaId)) {
+			dados.add(new DadosResponsavel(responsavel.getId(), pessoaId, responsavel.getNomeCompleto(),
+					dados.isEmpty()));
+		}
+		return dados;
+	}
+
+	@Override
+	@Transactional
+	public DadosResponsavel cadastrarResponsavel(UUID pessoaId, String nomeCompleto) {
+		if (!pessoas.existsById(pessoaId)) {
+			throw new IllegalArgumentException("Pessoa não encontrada: " + pessoaId);
+		}
+		boolean principal = responsaveis.findFirstByPessoaIdOrderByCriadoEmAsc(pessoaId).isEmpty();
+		UUID autor = identidadeAtual.obter().map(Identidade::id).orElse(null);
+		Responsavel responsavel = responsaveis
+			.save(new Responsavel(pessoaId, nomeCompleto.strip(), autor, relogio.instant()));
+		auditoria.registrar(EventoAuditoria.criacao(ENTIDADE_RESPONSAVEL, responsavel.getId()));
+		return new DadosResponsavel(responsavel.getId(), pessoaId, responsavel.getNomeCompleto(), principal);
 	}
 
 	private DadosPessoa dados(Pessoa pessoa) {
