@@ -155,7 +155,7 @@ A aplicação deverá possuir uma família tipográfica definida globalmente.
 
 A captura de tela não é suficiente para determinar com precisão a fonte original da marca. Portanto, a fonte oficial deverá ser confirmada com o material de identidade visual.
 
-Enquanto não existir uma fonte institucional definida, a aplicação usa **Atkinson Hyperlegible Next** em todos os textos. Ela foi desenhada pelo Braille Institute para leitura com baixa visão: distingue bem letras e números parecidos (como `0` e `O`, `1`, `l` e `I`). A escolha combina com um centro de referência da pessoa com deficiência.
+Enquanto não existir uma fonte institucional definida, a aplicação usa **Atkinson Hyperlegible Next** em todos os textos. Ela foi desenhada pelo Braille Institute para leitura com baixa visão: distingue bem letras e números parecidos (como `0` e `O`, `1`, `l` e `I`). A escolha combina com um centro de referência da pessoa com deficiência. Ver ADR 0036 (provisório, pergunta 16 do planejamento).
 
 Deverão existir níveis tipográficos padronizados. Os tamanhos partem do celular; só o Heading 1 cresce a partir do desktop.
 
@@ -398,7 +398,7 @@ Não utilizar diferentes valores de border-radius arbitrariamente em cada tela.
 
 ## 14. Responsividade
 
-A aplicação deverá ser desenvolvida com abordagem **mobile first**. A equipe técnica usa o sistema no celular durante visitas domiciliares, escutas e contatos; o computador fica para relatórios e tarefas administrativas.
+A aplicação deverá ser desenvolvida com abordagem **mobile first** (ADR 0035). A equipe técnica usa o sistema no celular durante visitas domiciliares, escutas e contatos; o computador fica para relatórios e tarefas administrativas.
 
 Na prática:
 

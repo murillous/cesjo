@@ -20,6 +20,7 @@ $border: #dbddd7;
 $white: #ffffff;
 
 // Atkinson Hyperlegible Next: desenhada pelo Braille Institute para leitura com baixa visão.
+// PENDENTE-CESJO(P16): assume que não há fonte institucional oficial (ADR 0036).
 $font-family: (
   'Atkinson Hyperlegible Next Variable',
   system-ui,
