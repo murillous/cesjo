@@ -160,7 +160,9 @@ jobs:
           curl -sSkI "https://localhost/$bundle" | grep -i '^cache-control: public, max-age=31536000, immutable' > /dev/null
           echo "Saúde pública em /saude, só com o estado agregado (issue #23)"
           saude="$(curl -fsSk https://localhost/saude)"
-          test "$saude" = '{"status":"UP"}'
+          echo "$saude"
+          case "$saude" in *'"status":"UP"'*) ;; *) exit 1 ;; esac
+          case "$saude" in *components*|*details*) echo "detalhes expostos em /saude"; exit 1 ;; esac
           echo "Actuator saudável dentro da rede"
           docker compose exec -T app curl -fsS http://localhost:8080/actuator/health | grep '"status":"UP"' > /dev/null
           echo "Aplicação roda sem root"
