@@ -1,0 +1,78 @@
+<section class="colaboradores">
+  <header class="cabecalho">
+    <h1>Colaboradores</h1>
+    @if (podeGerenciar) {
+      <a matButton="filled" routerLink="novo">
+        <mat-icon aria-hidden="true">person_add</mat-icon>
+        Novo colaborador
+      </a>
+    }
+  </header>
+
+  <mat-button-toggle-group
+    class="filtro"
+    [value]="situacao()"
+    (change)="filtrar($event)"
+    hideSingleSelectionIndicator
+    aria-label="Situação dos colaboradores"
+  >
+    @for (opcao of situacoes; track opcao.valor) {
+      <mat-button-toggle [value]="opcao.valor">{{ opcao.rotulo }}</mat-button-toggle>
+    }
+  </mat-button-toggle-group>
+
+  @if (carregando()) {
+    <mat-progress-bar mode="indeterminate" aria-label="Carregando colaboradores" />
+  }
+  @if (erro(); as mensagem) {
+    <p class="erro" role="alert">{{ mensagem }}</p>
+  }
+
+  @if (pagina(); as dados) {
+    @if (dados.content.length === 0) {
+      <p class="vazio">
+        @if (situacao() === 'inativos') {
+          Nenhum colaborador inativo.
+        } @else if (podeGerenciar) {
+          Nenhum colaborador cadastrado nesta situação. Cadastre a equipe em "Novo colaborador".
+        } @else {
+          Nenhum colaborador cadastrado nesta situação.
+        }
+      </p>
+    } @else {
+      <ul class="lista" aria-label="Colaboradores">
+        <li class="titulos" aria-hidden="true">
+          <span>Nome</span>
+          <span>Função</span>
+          <span>Conta de acesso</span>
+          <span>Situação</span>
+        </li>
+        @for (colaborador of dados.content; track colaborador.id) {
+          <li>
+            <a class="linha" [routerLink]="colaborador.id" [class.inativo]="!colaborador.ativo">
+              <span class="nome">{{ colaborador.nome }}</span>
+              <span class="funcao">{{ funcoes[colaborador.funcao] }}</span>
+              <span class="conta">
+                @if (colaborador.conta; as conta) {
+                  <mat-icon aria-hidden="true">key</mat-icon>
+                  {{ conta.login }}
+                } @else {
+                  Sem conta de acesso
+                }
+              </span>
+              <span class="situacao">{{ colaborador.ativo ? 'Ativo' : 'Inativo' }}</span>
+            </a>
+          </li>
+        }
+      </ul>
+      <mat-paginator
+        [length]="dados.page.totalElements"
+        [pageIndex]="dados.page.number"
+        [pageSize]="tamanho()"
+        [pageSizeOptions]="[10, 20, 50]"
+        (page)="mudarPagina($event)"
+        aria-label="Páginas da lista de colaboradores"
+      />
+    }
+  }
+</section>

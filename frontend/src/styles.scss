@@ -1,3 +1,4 @@
+@use 'styles/breakpoints' as bp;
 @use 'styles/tokens';
 @use 'styles/tema';
 
@@ -11,6 +12,15 @@
 
 html {
   font-size: 16px;
+  // As barras superior e inferior são sticky: ao focar um campo pelo teclado, o navegador rola até
+  // ele deixando essas faixas livres, e o foco nunca fica escondido atrás delas (WCAG 2.4.11,
+  // ADR 0124). No tablet a navegação vira trilho lateral e só a barra superior conta.
+  scroll-padding-block: calc(var(--sgi-topbar-height) + var(--sgi-space-1))
+    calc(var(--sgi-nav-inferior-height) + var(--sgi-space-1));
+
+  @media (min-width: bp.$tablet) {
+    scroll-padding-block-end: var(--sgi-space-1);
+  }
 }
 
 body {
@@ -64,4 +74,17 @@ a {
 :focus-visible {
   outline: 2px solid var(--sgi-color-primary-dark);
   outline-offset: 2px;
+}
+
+// Impressão (ADR 0108): só o conteúdo da página, sem a barra superior e a navegação.
+@media print {
+  .topbar,
+  app-menu,
+  .navegacao {
+    display: none !important;
+  }
+
+  body {
+    background: var(--sgi-color-white);
+  }
 }

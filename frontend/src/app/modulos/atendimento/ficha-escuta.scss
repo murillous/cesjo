@@ -1,0 +1,108 @@
+@use 'styles/breakpoints' as bp;
+
+.escuta {
+  max-width: 720px;
+}
+
+.voltar {
+  margin: 0 0 var(--sgi-space-2) calc(-1 * var(--sgi-space-1));
+}
+
+h1 {
+  margin: 0;
+}
+
+.aviso {
+  display: flex;
+  align-items: center;
+  gap: var(--sgi-space-1);
+  margin: var(--sgi-space-1) 0 var(--sgi-space-3);
+  font-size: var(--sgi-font-size-small);
+
+  mat-icon {
+    flex: none;
+    width: 20px;
+    height: 20px;
+    font-size: 20px;
+  }
+}
+
+.erro {
+  padding: var(--sgi-space-1-5) var(--sgi-space-2);
+  border-left: var(--sgi-space-0-5) solid var(--sgi-color-accent);
+  background: var(--sgi-color-background-secondary);
+}
+
+.cabecalho {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sgi-space-1);
+  margin: 0 0 var(--sgi-space-3);
+
+  dt {
+    font-size: var(--sgi-font-size-small);
+    color: var(--sgi-color-text-secondary);
+  }
+
+  dd {
+    margin: 0;
+    font-weight: var(--sgi-font-weight-semibold);
+  }
+}
+
+// Cada texto da escuta é uma seção com título, para ler no celular como um relatório.
+.texto {
+  margin-bottom: var(--sgi-space-3);
+
+  h2 {
+    margin: 0 0 var(--sgi-space-1);
+    padding-bottom: var(--sgi-space-0-5);
+    border-bottom: var(--sgi-border);
+    font-size: var(--sgi-font-size-h3);
+  }
+
+  p {
+    margin: 0;
+    max-width: 70ch;
+    white-space: pre-line;
+    overflow-wrap: anywhere;
+  }
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sgi-space-1);
+}
+
+.linha {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sgi-space-1);
+}
+
+.botoes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sgi-space-1);
+
+  button {
+    min-height: var(--sgi-alvo-toque);
+  }
+}
+
+@media (min-width: bp.$tablet) {
+  .cabecalho,
+  .linha,
+  .botoes {
+    flex-direction: row;
+  }
+
+  .cabecalho {
+    gap: var(--sgi-space-4);
+  }
+
+  .linha mat-form-field {
+    flex: 1;
+  }
+}
