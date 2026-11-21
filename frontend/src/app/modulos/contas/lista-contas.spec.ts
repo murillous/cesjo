@@ -4,23 +4,9 @@ import { TestBed } from '@angular/core/testing';
 import { MATERIAL_ANIMATIONS } from '@angular/material/core';
 import { provideRouter } from '@angular/router';
 
+import { contaFicticia } from './conta-ficticia';
 import { Conta, Pagina } from './contas-api';
 import { ListaContas } from './lista-contas';
-
-export function contaFicticia(mudancas: Partial<Conta> = {}): Conta {
-  return {
-    id: '00000000-0000-0000-0000-0000000000a1',
-    login: 'pessoa.ficticia',
-    nome: 'Pessoa Fictícia',
-    perfil: 'EQUIPE_TECNICA',
-    ativa: true,
-    bloqueada: false,
-    trocaSenhaObrigatoria: false,
-    criadoEm: '2026-11-20T10:00:00Z',
-    atualizadoEm: '2026-11-20T10:00:00Z',
-    ...mudancas,
-  };
-}
 
 describe('ListaContas', () => {
   let controle: HttpTestingController;
