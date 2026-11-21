@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Modelo do PDF de exportação (ADR 0040). XHTML bem formado, processado pelo Thymeleaf em modo XML e
+  renderizado pelo openhtmltopdf. Todo dado entra por th:text (escapado); o único recurso externo é o
+  logo, embutido como data URI.
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<title th:text="${tabela.titulo}">Título</title>
+<style th:inline="text">
+@page {
+	size: A4 [[${paisagem} ? 'landscape' : 'portrait']];
+	margin: 18mm 12mm 16mm 12mm;
+	@bottom-left {
+		content: "CESJO SGI · Gerado em [[${geradoEm}]]";
+		font-family: sans-serif;
+		font-size: 8pt;
+		color: [[${cores.textoSecundario}]];
+	}
+	@bottom-right {
+		content: "Página " counter(page) " de " counter(pages);
+		font-family: sans-serif;
+		font-size: 8pt;
+		color: [[${cores.textoSecundario}]];
+	}
+}
+body {
+	font-family: sans-serif;
+	font-size: 9pt;
+	color: [[${cores.primariaEscura}]];
+	margin: 0;
+}
+.cabecalho {
+	border-bottom: 2pt solid [[${cores.primaria}]];
+	padding-bottom: 4mm;
+	margin-bottom: 4mm;
+}
+.cabecalho img {
+	height: 14mm;
+	float: left;
+	margin-right: 6mm;
+}
+.cabecalho h1 {
+	font-size: 15pt;
+	margin: 2mm 0 1mm 0;
+}
+.cabecalho .gerado {
+	color: [[${cores.textoSecundario}]];
+	font-size: 8pt;
+}
+.limpa {
+	clear: both;
+}
+.filtros {
+	margin: 0 0 4mm 0;
+	padding: 0;
+	list-style: none;
+}
+.filtros li {
+	display: inline;
+	margin-right: 5mm;
+}
+.filtros .nome {
+	font-weight: bold;
+}
+table {
+	width: 100%;
+	border-collapse: collapse;
+	-fs-table-paginate: paginate;
+}
+thead {
+	display: table-header-group;
+}
+th {
+	background-color: [[${cores.primariaEscura}]];
+	color: #FFFFFF;
+	text-align: left;
+	font-weight: bold;
+	padding: 2mm;
+	border: 0.5pt solid [[${cores.primariaEscura}]];
+}
+td {
+	padding: 1.5mm 2mm;
+	border: 0.5pt solid [[${cores.borda}]];
+	vertical-align: top;
+	word-wrap: break-word;
+}
+tr {
+	page-break-inside: avoid;
+}
+tbody tr:nth-child(even) td {
+	background-color: [[${cores.fundoSecundario}]];
+}
+.vazio {
+	text-align: center;
+	color: [[${cores.textoSecundario}]];
+	padding: 6mm;
+}
+.total {
+	margin-top: 3mm;
+	color: [[${cores.textoSecundario}]];
+	font-size: 8pt;
+}
+</style>
+</head>
+<body>
+	<div class="cabecalho">
+		<img th:src="${logo}" alt="Pobres Servos CESJO"/>
+		<h1 th:text="${tabela.titulo}">Título</h1>
+		<div class="gerado" th:text="|Gerado em ${geradoEm}|">Gerado em</div>
+		<div class="limpa"></div>
+	</div>
+	<p class="filtros" th:if="${tabela.filtros.isEmpty()}">Sem filtros: todos os registros.</p>
+	<ul class="filtros" th:unless="${tabela.filtros.isEmpty()}">
+		<li th:each="filtro : ${tabela.filtros}"><span class="nome" th:text="|${filtro.nome}:|">Filtro:</span> <span th:text="${filtro.valor}">valor</span></li>
+	</ul>
+	<table>
+		<thead>
+			<tr>
+				<th th:each="coluna : ${tabela.colunas}" th:text="${coluna}">Coluna</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:if="${linhas.isEmpty()}">
+				<td class="vazio" th:colspan="${tabela.colunas.size()}">Nenhum registro encontrado.</td>
+			</tr>
+			<tr th:each="linha : ${linhas}">
+				<td th:each="celula : ${linha}" th:text="${celula}">valor</td>
+			</tr>
+		</tbody>
+	</table>
+	<p class="total" th:text="${linhas.size() == 1} ? '1 registro' : |${linhas.size()} registros|">0 registros</p>
+</body>
+</html>

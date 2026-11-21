@@ -1,0 +1,97 @@
+<section class="visita">
+  <a matButton routerLink="/visitas" class="voltar">
+    <mat-icon aria-hidden="true">arrow_back</mat-icon>
+    Agenda de visitas
+  </a>
+
+  <h1>Agendar visita</h1>
+  <p class="texto-secundario">
+    Visita domiciliar para avaliação de perfil. Ao agendar, o candidato passa a constar como em
+    avaliação na lista de espera.
+  </p>
+
+  @if (erro(); as mensagem) {
+    <p class="erro" role="alert">{{ mensagem }}</p>
+  }
+
+  <form [formGroup]="formulario" (ngSubmit)="salvar()" novalidate>
+    <mat-form-field appearance="outline">
+      <mat-label>Candidato</mat-label>
+      <input
+        matInput
+        formControlName="candidato"
+        [matAutocomplete]="listaCandidatos"
+        autocomplete="off"
+      />
+      <mat-icon matIconSuffix aria-hidden="true">search</mat-icon>
+      <mat-autocomplete #listaCandidatos [displayWith]="nomeDoCandidato" autoActiveFirstOption>
+        @for (candidato of sugestoes(); track candidato.inscricaoId) {
+          <mat-option [value]="candidato">
+            {{ candidato.nomeCompleto }}
+            @if (candidato.situacao === 'EM_AVALIACAO') {
+              <span class="em-avaliacao">, em avaliação</span>
+            }
+          </mat-option>
+        } @empty {
+          <mat-option disabled>Nenhum candidato com esse nome na lista de espera.</mat-option>
+        }
+      </mat-autocomplete>
+      <mat-hint>Digite parte do nome e escolha na lista.</mat-hint>
+      @if (formulario.controls.candidato.hasError('naoEscolhido')) {
+        <mat-error>Escolha o candidato na lista.</mat-error>
+      } @else if (formulario.controls.candidato.hasError('required')) {
+        <mat-error>Escolha o candidato.</mat-error>
+      }
+    </mat-form-field>
+
+    <div class="quando">
+      <mat-form-field appearance="outline">
+        <mat-label>Data</mat-label>
+        <input matInput [matDatepicker]="seletorData" [min]="hoje" formControlName="data" />
+        <mat-hint>DD/MM/AAAA</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="seletorData" />
+        <mat-datepicker #seletorData />
+        @if (formulario.controls.data.hasError('matDatepickerMin')) {
+          <mat-error>Escolha hoje ou um dia futuro.</mat-error>
+        } @else if (formulario.controls.data.hasError('matDatepickerParse')) {
+          <mat-error>Use o formato DD/MM/AAAA.</mat-error>
+        } @else if (formulario.controls.data.hasError('required')) {
+          <mat-error>Informe a data.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Hora</mat-label>
+        <input matInput type="time" formControlName="hora" />
+        @if (formulario.controls.hora.invalid) {
+          <mat-error>Informe a hora.</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Profissionais</mat-label>
+      <mat-select formControlName="profissionais" multiple>
+        @for (profissional of profissionais(); track profissional.id) {
+          <mat-option [value]="profissional.id">
+            {{ profissional.nome }} ({{ funcoes[profissional.funcao] }})
+          </mat-option>
+        }
+      </mat-select>
+      @if (profissionais().length === 0) {
+        <mat-hint
+          >Nenhum colaborador ativo. O Coordenador cadastra a equipe em Colaboradores.</mat-hint
+        >
+      } @else {
+        <mat-hint>Escolha um ou mais.</mat-hint>
+      }
+      @if (formulario.controls.profissionais.hasError('required')) {
+        <mat-error>Escolha pelo menos um profissional.</mat-error>
+      }
+    </mat-form-field>
+
+    <div class="botoes">
+      <button matButton="filled" type="submit" [disabled]="enviando()">Agendar visita</button>
+    </div>
+  </form>
+</section>
