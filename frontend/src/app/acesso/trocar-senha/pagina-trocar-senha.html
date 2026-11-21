@@ -1,0 +1,62 @@
+<main class="troca">
+  <h1>{{ obrigatoria() ? 'Crie a sua senha' : 'Trocar senha' }}</h1>
+  @if (obrigatoria()) {
+    <p>
+      A senha que você recebeu é temporária. Defina uma senha só sua para continuar usando o
+      sistema.
+    </p>
+  }
+  <p class="texto-secundario">
+    Use pelo menos {{ tamanhoMinimo }} caracteres. Uma frase fácil de lembrar, com espaços, é uma
+    boa senha.
+  </p>
+
+  <form [formGroup]="formulario" (ngSubmit)="trocar()" novalidate>
+    <mat-form-field appearance="outline">
+      <mat-label>{{ obrigatoria() ? 'Senha temporária' : 'Senha atual' }}</mat-label>
+      <input
+        matInput
+        type="password"
+        formControlName="senhaAtual"
+        autocomplete="current-password"
+      />
+      @if (formulario.controls.senhaAtual.hasError('required')) {
+        <mat-error>Informe a senha atual.</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Nova senha</mat-label>
+      <input matInput type="password" formControlName="novaSenha" autocomplete="new-password" />
+      @if (formulario.controls.novaSenha.hasError('required')) {
+        <mat-error>Informe a nova senha.</mat-error>
+      } @else if (formulario.controls.novaSenha.hasError('minlength')) {
+        <mat-error>Use pelo menos {{ tamanhoMinimo }} caracteres.</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Repita a nova senha</mat-label>
+      <input matInput type="password" formControlName="confirmacao" autocomplete="new-password" />
+      @if (formulario.controls.confirmacao.hasError('required')) {
+        <mat-error>Repita a nova senha.</mat-error>
+      }
+    </mat-form-field>
+    @if (formulario.hasError('confirmacaoDiferente') && formulario.controls.confirmacao.touched) {
+      <p class="erro" role="alert">As duas senhas novas não são iguais.</p>
+    }
+
+    @if (erro(); as mensagem) {
+      <p class="erro" role="alert">{{ mensagem }}</p>
+    }
+
+    <div class="acoes">
+      <button matButton="filled" type="submit" [disabled]="enviando()">Salvar senha</button>
+      @if (obrigatoria()) {
+        <button matButton type="button" (click)="sair()">Sair</button>
+      } @else {
+        <a matButton routerLink="/">Cancelar</a>
+      }
+    </div>
+  </form>
+</main>

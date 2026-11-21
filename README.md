@@ -69,3 +69,20 @@ Use identificadores só com letras minúsculas e dígitos nas variáveis de ambi
 acrescente a nova, aponte `SGI_CRIPTOGRAFIA_CHAVEATIVA` para ela e mantenha a antiga enquanto houver
 dado cifrado com ela. Sem a chave, o backup do banco e dos arquivos é inútil: guarde uma cópia de
 todas as chaves fora da VPS.
+
+### Primeira conta de Coordenador
+
+Com o banco sem nenhuma conta, o backend cria na subida uma conta de Coordenador a partir destas
+variáveis de ambiente ([ADR 0014](docs/adr/0014-primeira-conta-de-coordenador.md)):
+
+| Variável | Obrigatória | Conteúdo |
+|---|---|---|
+| `SGI_COORDENADOR_LOGIN` | sim | Login, de 3 a 60 caracteres entre letras sem acento, números, `.`, `-` e `_`. |
+| `SGI_COORDENADOR_SENHA` | sim | Senha inicial, com pelo menos 12 caracteres. Precisa ser trocada no primeiro acesso. |
+| `SGI_COORDENADOR_NOME` | não | Nome exibido. Padrão: `Coordenador`. |
+
+```bash
+SGI_COORDENADOR_LOGIN=coordenacao SGI_COORDENADOR_SENHA='troque-esta-senha' ./mvnw spring-boot:run
+```
+
+Se já existe alguma conta, as variáveis são ignoradas e podem ser removidas do ambiente.
