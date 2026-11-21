@@ -33,7 +33,7 @@ internet ──80/443──► caddy ──/api/*──► app:8080 ──► db
 | `backup` | `deploy/backup/Dockerfile` (Postgres 18 cliente, restic) | nenhuma | `cesjo-arquivos` (só leitura), `cesjo-backup-cache` |
 
 O Caddy publica `/api/*`, os arquivos estáticos e `/saude`, que devolve só o estado agregado do
-Actuator (`{"status":"UP"}`). O resto do Actuator só é acessível de dentro da rede do Compose.
+Actuator (`"status":"UP"`, sem detalhes). O resto do Actuator só é acessível de dentro da rede do Compose.
 
 ## Requisitos da VPS
 
@@ -108,7 +108,7 @@ Actuator (`{"status":"UP"}`). O resto do Actuator só é acessível de dentro da
    docker compose ps                                   # todos "healthy"
    docker compose exec app curl -fsS http://localhost:8080/actuator/health
    curl -I https://SEU-DOMINIO/                        # 200 com HSTS
-   curl https://SEU-DOMINIO/saude                      # {"status":"UP"}
+   curl https://SEU-DOMINIO/saude                      # ..."status":"UP"
    ```
 
 8. Entre em `https://SEU-DOMINIO/` com o login do Coordenador e troque a senha inicial, como o sistema

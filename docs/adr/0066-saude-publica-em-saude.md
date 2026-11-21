@@ -16,9 +16,10 @@ faz, inclusive a verificação do banco e do disco).
 
 - O Caddy atende `GET /saude` reescrevendo para `/actuator/health` na aplicação, com
   `Cache-Control: no-store`. Nenhum outro caminho do Actuator é publicado.
-- A resposta é só o estado agregado (`{"status":"UP"}`, HTTP 200, ou `DOWN`, HTTP 503): o
-  `show-details` do Actuator continua no padrão `never`, então não aparecem componentes, versões nem
-  caminhos.
+- A resposta é só o estado agregado (`"status":"UP"`, HTTP 200, ou `DOWN`, HTTP 503), mais os
+  nomes dos grupos de prova que o Spring Boot 4 liga por padrão
+  (`{"groups":["liveness","readiness"],"status":"UP"}`). O `show-details` do Actuator continua
+  no padrão `never`, então não aparecem componentes, versões nem caminhos. O CI confere isso.
 - O estado agregado inclui o banco (`db`) e o espaço em disco (`diskSpace`) do Spring Boot.
 
 ## Consequências
