@@ -62,3 +62,7 @@ frente de trabalho paralela não é usado todo.
 - [0037](0037-pessoa-e-inscricao-na-lista-de-espera.md) — Pessoa no módulo Pessoas e inscrição no módulo Lista de espera
 - [0038](0038-dados-do-cadastro-na-lista-de-espera.md) — Dados obrigatórios e validação do cadastro na lista de espera (provisório)
 - [0039](0039-permissoes-da-lista-de-espera.md) — Permissões do cadastro e da leitura da lista de espera (provisório)
+- [0050](0050-empacotamento-e-compose-de-producao.md) — Imagens Docker e compose de produção em `deploy/` (provisório)
+- [0051](0051-caddy-como-borda.md) — Caddy como borda: TLS, estáticos, proxy de `/api` e cabeçalhos
+- [0052](0052-segredos-da-implantacao-no-env.md) — Segredos da implantação num `.env` fora do repositório
+- [0053](0053-ci-das-imagens-de-implantacao.md) — CI constrói as imagens e testa a pilha sem publicar

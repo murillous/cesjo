@@ -135,6 +135,7 @@ Situação: provisória.
 | Decisão provisória | Onde mudar | ADR |
 |---|---|---|
 | Uma VPS com Docker Compose (Caddy, aplicação e Postgres). | implantação (issue #20) | [0005](adr/0005-hospedagem-vps-docker-compose.md) |
+| Domínio, e-mail do Let's Encrypt e credenciais parametrizados; imagens construídas na própria VPS. | `deploy/.env` (a partir de `deploy/.env.example`), `deploy/compose.yaml` | [0050](adr/0050-empacotamento-e-compose-de-producao.md) |
 
 ## P16. Identidade visual
 
