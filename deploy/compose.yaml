@@ -1,5 +1,5 @@
-# Compose de produção do CESJO SGI (issue #20, ADR 0050 a ADR 0053).
-# Uso, a partir desta pasta: cp .env.example .env, preencha o .env e rode
+# Compose de produção do CESJO SGI (issue #20, ADR 0050 a ADR 0053; backup: issue #21, ADR 0054 e 0065).
+# Uso, a partir desta pasta: cp .env.example .env e cp backup.env.example backup.env, preencha e rode
 #   docker compose up -d --build
 # Guia completo: docs/implantacao.md
 #
@@ -84,9 +84,32 @@ services:
     networks:
       - borda
 
-  # Backup (issue #21) e monitoramento (issue #23) entram como serviços novos aqui. O backup lê os
-  # volumes pgdata e arquivos (somente leitura) e fala com o db pela rede interna; o monitor externo
-  # consulta https://SGI_DOMINIO/ e um healthcheck interno pode usar http://app:8080/actuator/health.
+  # Backup diário cifrado com restic, enviado para fora da VPS (issue #21, ADR 0054 e ADR 0065).
+  # Lê o banco pela rede interna e o volume de arquivos em somente leitura. Os segredos do destino
+  # ficam no backup.env, separado do .env para a aplicação não recebê-los.
+  backup:
+    build:
+      context: ./backup
+    image: ${SGI_IMAGEM_BACKUP:-cesjo-sgi-backup:local}
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - backup.env
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-cesjo}
+      POSTGRES_USER: ${POSTGRES_USER:-cesjo}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?defina POSTGRES_PASSWORD no .env}
+      PGHOST: db
+    volumes:
+      - arquivos:/dados/arquivos:ro
+      - backup-cache:/root/.cache/restic
+    networks:
+      - interna
+      - saida
+
+  # Monitoramento (issue #23) entra como serviço novo aqui ou reaproveita a imagem de backup.
 
 volumes:
   # Nomes fixos, para o backup e a restauração acharem os volumes sem depender do nome do projeto.
@@ -98,6 +121,9 @@ volumes:
     name: cesjo-caddy-data
   caddy-config:
     name: cesjo-caddy-config
+  # Cache local do restic (só acelera; pode ser apagado).
+  backup-cache:
+    name: cesjo-backup-cache
 
 networks:
   # Banco e aplicação. Sem saída para a internet.
@@ -105,3 +131,5 @@ networks:
     internal: true
   # Caddy e aplicação.
   borda:
+  # Saída do backup para o repositório restic fora da VPS.
+  saida:

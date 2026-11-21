@@ -131,6 +131,7 @@ Situação: provisória.
 | Decisão provisória | Onde mudar | ADR |
 |---|---|---|
 | O log de auditoria é guardado para sempre, sem expurgo. | `V1__cria_auditoria.sql` (gatilhos) | [0022](adr/0022-log-de-auditoria-so-de-insercao.md) |
+| Backups mantidos por 7 diários, 4 semanais e 6 mensais (cerca de seis meses). | padrões em `deploy/backup/backup.sh`; `SGI_BACKUP_MANTER_*` no `deploy/backup.env` | [0065](adr/0065-retencao-dos-backups.md) |
 | Laudo ou comprovante substituído continua guardado no módulo Arquivos, sem ligação com a pessoa. | `pessoas.interno.ServicoPessoas.anexarDocumento` | [0055](adr/0055-documentos-da-pessoa.md) |
 
 ## P15. Hospedagem
@@ -143,6 +144,7 @@ Situação: provisória.
 |---|---|---|
 | Uma VPS com Docker Compose (Caddy, aplicação e Postgres). | implantação (issue #20) | [0005](adr/0005-hospedagem-vps-docker-compose.md) |
 | Domínio, e-mail do Let's Encrypt e credenciais parametrizados; imagens construídas na própria VPS. | `deploy/.env` (a partir de `deploy/.env.example`), `deploy/compose.yaml` | [0050](adr/0050-empacotamento-e-compose-de-producao.md) |
+| Destino do backup é qualquer repositório restic fora da VPS, escolhido na implantação. | `RESTIC_REPOSITORY` e credenciais no `deploy/backup.env` | [0054](adr/0054-backup-diario-com-restic.md) |
 
 ## P16. Identidade visual
 

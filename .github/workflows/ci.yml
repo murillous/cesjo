@@ -144,6 +144,7 @@ jobs:
       - name: Validar o compose com o .env.example
         run: |
           cp .env.example .env
+          cp backup.env.example backup.env
           docker compose config --quiet
 
       - name: Gerar .env de teste (dados fictícios, só para este job)
@@ -154,6 +155,12 @@ jobs:
             -e "s|^POSTGRES_PASSWORD=.*|POSTGRES_PASSWORD=$(openssl rand -hex 24)|" \
             -e "s|^SGI_CRIPTOGRAFIA_CHAVES_PROD1=.*|SGI_CRIPTOGRAFIA_CHAVES_PROD1=$(openssl rand -base64 32)|" \
             .env
+          # O CI guarda o repositório restic dentro do contêiner; em produção o destino fica fora da VPS.
+          cp backup.env.example backup.env
+          sed -i \
+            -e "s|^RESTIC_REPOSITORY=.*|RESTIC_REPOSITORY=/tmp/repositorio-ci|" \
+            -e "s|^RESTIC_PASSWORD=.*|RESTIC_PASSWORD=$(openssl rand -hex 24)|" \
+            backup.env
 
       - name: Construir as imagens
         run: docker compose build
@@ -162,12 +169,13 @@ jobs:
         run: docker compose up -d --wait --wait-timeout 240
 
       - name: Testes de fumaça
+        # grep sem -q lê a entrada toda: com pipefail, o -q mataria o produtor com SIGPIPE.
         run: |
           set -euo pipefail
           echo "Frontend servido pelo Caddy"
-          curl -fsSk https://localhost/ | grep -q '<app-root'
+          curl -fsSk https://localhost/ | grep '<app-root' > /dev/null
           echo "Rota da SPA cai no index.html"
-          curl -fsSk https://localhost/lista-espera | grep -q '<app-root'
+          curl -fsSk https://localhost/lista-espera | grep '<app-root' > /dev/null
           echo "HTTP redireciona para HTTPS"
           test "$(curl -s -o /dev/null -w '%{http_code}' http://localhost/)" = "308"
           echo "Proxy de /api chega na aplicação"
@@ -175,15 +183,49 @@ jobs:
           echo "API exige sessão"
           test "$(curl -sk -o /dev/null -w '%{http_code}' https://localhost/api/notificacoes)" = "401"
           echo "Actuator não é publicado pelo Caddy"
-          if curl -sk https://localhost/actuator/health | grep -q '"status"'; then exit 1; fi
+          if curl -sk https://localhost/actuator/health | grep '"status"' > /dev/null; then exit 1; fi
           echo "Cache: index.html revalidado, bundle com hash imutável"
-          curl -sSkI https://localhost/ | grep -qi '^cache-control: no-cache'
+          curl -sSkI https://localhost/ | grep -i '^cache-control: no-cache' > /dev/null
           bundle="$(curl -fsSk https://localhost/ | grep -o 'main-[A-Za-z0-9]*\.js' | head -1)"
-          curl -sSkI "https://localhost/$bundle" | grep -qi '^cache-control: public, max-age=31536000, immutable'
+          curl -sSkI "https://localhost/$bundle" | grep -i '^cache-control: public, max-age=31536000, immutable' > /dev/null
           echo "Actuator saudável dentro da rede"
-          docker compose exec -T app curl -fsS http://localhost:8080/actuator/health | grep -q '"status":"UP"'
+          docker compose exec -T app curl -fsS http://localhost:8080/actuator/health | grep '"status":"UP"' > /dev/null
           echo "Aplicação roda sem root"
           test "$(docker compose exec -T app id -u)" != "0"
+
+      - name: Backup e leitura de volta (issue #21)
+        run: |
+          set -euo pipefail
+          docker compose exec -T backup backup.sh
+          echo "Um snapshot no repositório"
+          test "$(docker compose exec -T backup restic snapshots --json | grep -o '"short_id"' | wc -l)" = "1"
+          echo "O dump do snapshot é um backup válido do Postgres com as tabelas da aplicação"
+          docker compose exec -T backup sh -c \
+            'restic dump latest /var/backups/sgi/cesjo.dump | pg_restore --list' | grep 'TABLE public conta_acesso' > /dev/null
+          echo "O volume de arquivos entrou no snapshot"
+          docker compose exec -T backup restic ls latest | grep '^/dados/arquivos' > /dev/null
+          echo "O dump em claro não ficou no contêiner"
+          if docker compose exec -T backup test -e /var/backups/sgi/cesjo.dump; then exit 1; fi
+          echo "Segundo backup e retenção"
+          docker compose exec -T backup backup.sh
+          echo "Falha do backup sai com erro"
+          if docker compose exec -T -e RESTIC_PASSWORD=errada backup backup.sh; then exit 1; fi
+
+      - name: Backup agendado pelo crond (issue #21)
+        run: |
+          set -euo pipefail
+          sed -i "s|^SGI_BACKUP_HORARIO=.*|SGI_BACKUP_HORARIO=* * * * *|" backup.env
+          # Recriar o contêiner apaga o repositório de teste em /tmp; o crond precisa criá-lo de novo.
+          docker compose up -d backup
+          for _ in $(seq 1 30); do
+            # Sem repositório ou sem snapshot, o grep não acha nada: o "|| true" segura o pipefail.
+            n="$( (docker compose exec -T backup restic snapshots --json 2>/dev/null || true) | (grep -o '"short_id"' || true) | wc -l)"
+            if [ "$n" -ge 1 ]; then echo "crond gerou o snapshot"; exit 0; fi
+            sleep 5
+          done
+          echo "o crond não rodou o backup em 150 segundos"
+          docker compose exec -T backup sh -c 'ps; ls -la /etc/crontabs /var/spool/cron 2>&1; cat /etc/crontabs/root; date; busybox | head -3' || true
+          exit 1
 
       - name: Logs da pilha
         if: always()
