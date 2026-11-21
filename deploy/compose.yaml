@@ -84,7 +84,8 @@ services:
     networks:
       - borda
 
-  # Backup diário cifrado com restic, enviado para fora da VPS (issue #21, ADR 0054 e ADR 0065).
+  # Backup diário cifrado com restic, enviado para fora da VPS (issue #21, ADR 0054 e ADR 0065), e
+  # alerta de disco cheio a cada 15 minutos (issue #23, ADR 0069).
   # Lê o banco pela rede interna e o volume de arquivos em somente leitura. Os segredos do destino
   # ficam no backup.env, separado do .env para a aplicação não recebê-los.
   backup:
@@ -108,8 +109,6 @@ services:
     networks:
       - interna
       - saida
-
-  # Monitoramento (issue #23) entra como serviço novo aqui ou reaproveita a imagem de backup.
 
 volumes:
   # Nomes fixos, para o backup e a restauração acharem os volumes sem depender do nome do projeto.

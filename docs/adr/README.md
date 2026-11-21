@@ -83,6 +83,10 @@ frente de trabalho paralela não é usado todo.
 - [0058](0058-dados-basicos-da-fila-para-o-consulta.md) — Dados básicos da fila para o perfil Consulta (provisório)
 - [0059](0059-busca-em-lote-de-pessoas-para-a-fila.md) — Busca em lote de pessoas para montar a fila
 - [0065](0065-retencao-dos-backups.md) — Retenção dos backups: 7 diários, 4 semanais e 6 mensais (provisório)
+- [0066](0066-saude-publica-em-saude.md) — Estado de saúde publicado em `/saude`
+- [0067](0067-monitor-externo-no-github-actions.md) — Monitor externo de disponibilidade no GitHub Actions (provisório)
+- [0068](0068-relatorio-mensal-de-uptime.md) — Relatório mensal de uptime a partir das execuções do monitor
+- [0069](0069-alerta-de-disco-cheio.md) — Alerta de disco cheio pelo contêiner de backup
 - [0070](0070-agendamento-e-agenda-das-visitas.md) — Agendamento e agenda das visitas domiciliares
 - [0071](0071-permissoes-das-visitas.md) — Permissões da agenda e do agendamento de visitas
 - [0072](0072-telas-de-visitas-e-agenda-do-dia.md) — Telas da agenda de visitas e agenda do dia na página inicial

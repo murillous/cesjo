@@ -4,7 +4,9 @@ Roteiro para pôr o CESJO SGI no ar numa VPS (issue #20). As decisões estão no
 [0005](adr/0005-hospedagem-vps-docker-compose.md), [0050](adr/0050-empacotamento-e-compose-de-producao.md),
 [0051](adr/0051-caddy-como-borda.md), [0052](adr/0052-segredos-da-implantacao-no-env.md),
 [0053](adr/0053-ci-das-imagens-de-implantacao.md) e, para o backup (issue #21),
-[0054](adr/0054-backup-diario-com-restic.md) e [0065](adr/0065-retencao-dos-backups.md).
+[0054](adr/0054-backup-diario-com-restic.md) e [0065](adr/0065-retencao-dos-backups.md) e, para o
+monitoramento (issue #23), [0066](adr/0066-saude-publica-em-saude.md) a
+[0069](adr/0069-alerta-de-disco-cheio.md).
 
 > **Provisório (PENDENTE-CESJO P15).** Provedor, domínio e quem administra a VPS ainda não foram
 > definidos. Nada abaixo depende de um provedor específico; o que muda de uma VPS para outra fica no
@@ -30,8 +32,8 @@ internet ──80/443──► caddy ──/api/*──► app:8080 ──► db
 | `db` | `postgres:18-alpine` | nenhuma | `cesjo-pgdata` |
 | `backup` | `deploy/backup/Dockerfile` (Postgres 18 cliente, restic) | nenhuma | `cesjo-arquivos` (só leitura), `cesjo-backup-cache` |
 
-O Actuator (`/actuator/health`) só é acessível de dentro da rede do Compose; o Caddy publica apenas
-`/api/*` e os arquivos estáticos.
+O Caddy publica `/api/*`, os arquivos estáticos e `/saude`, que devolve só o estado agregado do
+Actuator (`"status":"UP"`, sem detalhes). O resto do Actuator só é acessível de dentro da rede do Compose.
 
 ## Requisitos da VPS
 
@@ -106,6 +108,7 @@ O Actuator (`/actuator/health`) só é acessível de dentro da rede do Compose; 
    docker compose ps                                   # todos "healthy"
    docker compose exec app curl -fsS http://localhost:8080/actuator/health
    curl -I https://SEU-DOMINIO/                        # 200 com HSTS
+   curl https://SEU-DOMINIO/saude                      # ..."status":"UP"
    ```
 
 8. Entre em `https://SEU-DOMINIO/` com o login do Coordenador e troque a senha inicial, como o sistema
@@ -120,6 +123,8 @@ O Actuator (`/actuator/health`) só é acessível de dentro da rede do Compose; 
     docker compose exec backup backup.sh
     docker compose exec backup restic snapshots
     ```
+
+11. Ligue o monitoramento externo (ver [Monitoramento](#monitoramento)).
 
 ## Atualizar para uma versão nova
 
@@ -201,6 +206,51 @@ docker compose start app
 O volume de arquivos é montado só leitura no serviço `backup`; por isso a restauração dos arquivos
 usa um contêiner avulso com o volume montado para escrita.
 
+## Monitoramento
+
+### Disponibilidade
+
+> **Provisório (PENDENTE-CESJO P15).** Enquanto não houver um responsável e um serviço de
+> monitoramento escolhidos, o monitor externo é um workflow agendado do GitHub Actions
+> ([ADR 0067](adr/0067-monitor-externo-no-github-actions.md)).
+
+1. No GitHub, em Settings, Secrets and variables, Actions, aba Variables, crie a variável de
+   repositório `SGI_URL_SAUDE` com `https://SEU-DOMINIO/saude`.
+2. O workflow **Monitoramento** passa a consultar essa URL a cada 5 minutos, a partir da branch
+   `main`. Para testar na hora: Actions, Monitoramento, Run workflow.
+3. Quando a verificação falha três vezes seguidas, a execução fica vermelha e o GitHub manda e-mail
+   para quem ativou o agendamento. Confira em Settings, Notifications, Actions, a opção de avisar só
+   falhas.
+4. O GitHub desliga agendamentos de repositório público depois de 60 dias sem atividade. Se isso
+   acontecer, religue em Actions, Monitoramento, Enable workflow.
+
+Para trocar por um serviço dedicado (UptimeRobot, Better Stack, Healthchecks.io), crie lá um monitor
+HTTP de `https://SEU-DOMINIO/saude` que espera a palavra `UP`, a cada 1 a 5 minutos, e apague a
+variável `SGI_URL_SAUDE`.
+
+### Relatório mensal de uptime
+
+O workflow **Relatório de uptime** roda no dia 1 de cada mês e mostra, no resumo da execução, o
+uptime do mês anterior contra a meta de 99%, calculado pelas verificações do monitor
+([ADR 0068](adr/0068-relatorio-mensal-de-uptime.md)). Para outro mês, rode à mão com o mês em
+`AAAA-MM`. O GitHub guarda as execuções por 90 dias: copie o resumo para a pasta da coordenação todo
+mês.
+
+### Disco cheio
+
+O serviço `backup` mede o disco a cada 15 minutos ([ADR 0069](adr/0069-alerta-de-disco-cheio.md)).
+Com 85% ou mais em uso, ele registra `ALERTA` no log e chama `SGI_DISCO_URL_FALHA`. Crie no mesmo
+serviço de ping do backup um monitor com período de 15 minutos e ponha as URLs no `backup.env`:
+
+```bash
+SGI_DISCO_URL_SUCESSO=https://hc-ping.com/<outro-uuid>
+SGI_DISCO_URL_FALHA=https://hc-ping.com/<outro-uuid>/fail
+```
+
+Para conferir na hora: `docker compose exec backup disco.sh`. O limite muda com
+`SGI_DISCO_LIMITE_PERCENTUAL`. Para liberar espaço: `docker image prune -f` e
+`docker builder prune -f` (as imagens antigas e o cache de build são os maiores vilões).
+
 ## Operação do dia a dia
 
 | Tarefa | Comando (em `deploy/`) |
@@ -248,4 +298,6 @@ PR ([ADR 0053](adr/0053-ci-das-imagens-de-implantacao.md)).
 ## Ainda não coberto
 
 - Procedimento completo de recuperação de desastres, com restauração testada: issue #22.
+- Alertas por WhatsApp ou Telegram e para a equipe toda: dependem do serviço de monitoramento que
+  for escolhido (PENDENTE-CESJO P15).
 - Monitoramento externo e alertas: issue #23.

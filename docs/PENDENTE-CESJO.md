@@ -156,6 +156,7 @@ Situação: provisória.
 | Uma VPS com Docker Compose (Caddy, aplicação e Postgres). | implantação (issue #20) | [0005](adr/0005-hospedagem-vps-docker-compose.md) |
 | Domínio, e-mail do Let's Encrypt e credenciais parametrizados; imagens construídas na própria VPS. | `deploy/.env` (a partir de `deploy/.env.example`), `deploy/compose.yaml` | [0050](adr/0050-empacotamento-e-compose-de-producao.md) |
 | Destino do backup é qualquer repositório restic fora da VPS, escolhido na implantação. | `RESTIC_REPOSITORY` e credenciais no `deploy/backup.env` | [0054](adr/0054-backup-diario-com-restic.md) |
+| Monitor externo no GitHub Actions a cada 5 minutos, com alerta por e-mail de workflow com falha, até haver um responsável e um serviço de monitoramento. | variável de repositório `SGI_URL_SAUDE`; `.github/workflows/monitoramento.yml` | [0067](adr/0067-monitor-externo-no-github-actions.md) |
 
 ## P16. Identidade visual
 
