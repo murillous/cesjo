@@ -1,15 +1,12 @@
 package br.org.cesjo.sgi.listaespera.interno;
 
-import org.springframework.stereotype.Component;
-
 import br.org.cesjo.sgi.listaespera.OcupacaoDeVagas;
 import br.org.cesjo.sgi.listaespera.SituacaoInscricao;
 
 /**
- * Ocupação provisória: inscrições inseridas no serviço (ADR 0093). Sai quando o módulo de atendidos
- * entrar com a contagem das inserções ativas.
+ * Ocupação provisória: inscrições inseridas no serviço (ADR 0093). Só vale enquanto nenhum outro módulo
+ * fornece {@link OcupacaoDeVagas} (ver {@link VagasConfig}).
  */
-@Component
 class OcupacaoPelasInscricoesInseridas implements OcupacaoDeVagas {
 
 	private final InscricaoRepositorio inscricoes;

@@ -31,7 +31,7 @@ Alternativas consideradas:
 
 - `GET /api/lista-espera/vagas` (`CAPACIDADE_LER`) devolve `capacidade` (nula enquanto não for
   definida), `ocupadas`, `disponiveis` (capacidade menos ocupadas, nunca negativo, e zero sem
-  capacidade), `tamanhoFila` (inscrições aguardando) e `definidaEm`.
+  capacidade), `tamanhoFila` (inscrições ativas: aguardando e em avaliação, ADR 0094) e `definidaEm`.
 - `PUT /api/lista-espera/capacidade` (`CAPACIDADE_EDITAR`) com `{ "vagas": n }` grava a nova
   capacidade e devolve o painel.
 - Frontend: o painel fica no topo da fila, com as vagas disponíveis em destaque. O Coordenador muda

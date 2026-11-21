@@ -83,8 +83,9 @@ class VagasListaEsperaTests {
 	void painelMostraOTamanhoDaFila() throws Exception {
 		long antes = numero(mvc.perform(get("/api/lista-espera/vagas")), "$.tamanhoFila");
 		inserirInscricao("AGUARDANDO");
+		inserirInscricao("EM_AVALIACAO");
 		inserirInscricao("INSERIDO");
-		assertThat(numero(mvc.perform(get("/api/lista-espera/vagas")), "$.tamanhoFila")).isEqualTo(antes + 1);
+		assertThat(numero(mvc.perform(get("/api/lista-espera/vagas")), "$.tamanhoFila")).isEqualTo(antes + 2);
 	}
 
 	@Test

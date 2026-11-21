@@ -8,7 +8,7 @@ import java.time.Instant;
  * @param capacidade vagas totais; nula enquanto o Coordenador não definir
  * @param ocupadas vagas ocupadas, pela {@link br.org.cesjo.sgi.listaespera.OcupacaoDeVagas}
  * @param disponiveis capacidade menos ocupadas, nunca negativo; zero sem capacidade definida
- * @param tamanhoFila inscrições aguardando
+ * @param tamanhoFila inscrições ativas (aguardando e em avaliação)
  * @param definidaEm quando a capacidade vigente foi definida
  */
 record PainelVagas(Integer capacidade, long ocupadas, long disponiveis, long tamanhoFila, Instant definidaEm) {

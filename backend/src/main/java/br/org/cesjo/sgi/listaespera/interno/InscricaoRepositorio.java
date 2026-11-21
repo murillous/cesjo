@@ -17,4 +17,6 @@ interface InscricaoRepositorio
 
 	long countBySituacao(SituacaoInscricao situacao);
 
+	long countBySituacaoIn(Collection<SituacaoInscricao> situacoes);
+
 }

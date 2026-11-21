@@ -48,7 +48,7 @@ class ServicoVagas {
 		// PENDENTE-CESJO(P3): capacidade total do serviço, sem divisão por turno (ADR 0092).
 		long disponiveis = vigente.map(c -> Math.max(0, c.getVagas() - ocupadas)).orElse(0L);
 		return new PainelVagas(vigente.map(CapacidadeServico::getVagas).orElse(null), ocupadas, disponiveis,
-				inscricoes.countBySituacao(SituacaoInscricao.AGUARDANDO),
+				inscricoes.countBySituacaoIn(SituacaoInscricao.ATIVAS),
 				vigente.map(CapacidadeServico::getDefinidaEm).orElse(null));
 	}
 
