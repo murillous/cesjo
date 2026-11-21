@@ -67,6 +67,10 @@ frente de trabalho paralela não é usado todo.
 - [0042](0042-resposta-http-de-download-da-exportacao.md) — Resposta HTTP de download e parâmetro de formato da exportação
 - [0043](0043-auditoria-e-permissao-da-exportacao.md) — Auditoria e permissão da exportação
 - [0044](0044-exportacao-no-frontend.md) — Serviço e botão de exportação no frontend
+- [0045](0045-cadastro-e-api-java-dos-colaboradores.md) — Cadastro de colaboradores e API Java para os outros módulos (provisório)
+- [0046](0046-ligacao-entre-colaborador-e-conta-de-acesso.md) — Ligação entre colaborador e conta de acesso guardada no colaborador
+- [0047](0047-permissoes-dos-colaboradores.md) — Permissões do cadastro de colaboradores (provisório)
+- [0048](0048-telas-de-colaboradores.md) — Telas de listagem e cadastro de colaboradores
 - [0050](0050-empacotamento-e-compose-de-producao.md) — Imagens Docker e compose de produção em `deploy/` (provisório)
 - [0051](0051-caddy-como-borda.md) — Caddy como borda: TLS, estáticos, proxy de `/api` e cabeçalhos
 - [0052](0052-segredos-da-implantacao-no-env.md) — Segredos da implantação num `.env` fora do repositório
