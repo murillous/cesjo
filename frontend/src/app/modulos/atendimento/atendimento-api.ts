@@ -69,8 +69,15 @@ export interface Pia extends ResumoPia {
   conteudo: ConteudoPia;
   /** Versão mais nova e em elaboração. */
   editavel: boolean;
+  /** Versão mais nova: a única que muda de status ou gera versão nova (ADR 0106). */
+  maisNova: boolean;
   versaoAnteriorId: string | null;
+  apresentadoFamiliaEm: string | null;
+  apresentadoEquipeEm: string | null;
+  aprovadoEm: string | null;
 }
+
+export type PassoPia = 'apresentar-a-familia' | 'apresentar-a-equipe' | 'aprovar';
 
 @Injectable({ providedIn: 'root' })
 export class AtendimentoApi {
@@ -120,6 +127,16 @@ export class AtendimentoApi {
 
   editarPia(id: string, conteudo: ConteudoPia): Observable<Pia> {
     return this.http.put<Pia>(`/api/pias/${encodeURIComponent(id)}`, conteudo);
+  }
+
+  /** Próximo passo do PIA, com a data `AAAA-MM-DD` em que aconteceu (ADR 0106). */
+  avancarPia(id: string, passo: PassoPia, data: string): Observable<Pia> {
+    return this.http.post<Pia>(`/api/pias/${encodeURIComponent(id)}/${passo}`, { data });
+  }
+
+  /** Versão nova em elaboração, com o conteúdo desta. */
+  novaVersaoPia(id: string): Observable<Pia> {
+    return this.http.post<Pia>(`/api/pias/${encodeURIComponent(id)}/nova-versao`, null);
   }
 
   profissionaisDaEscuta(): Observable<{

@@ -65,3 +65,16 @@ a {
   outline: 2px solid var(--sgi-color-primary-dark);
   outline-offset: 2px;
 }
+
+// Impressão (ADR 0108): só o conteúdo da página, sem a barra superior e a navegação.
+@media print {
+  .topbar,
+  app-menu,
+  .navegacao {
+    display: none !important;
+  }
+
+  body {
+    background: var(--sgi-color-white);
+  }
+}

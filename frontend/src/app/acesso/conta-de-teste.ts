@@ -20,6 +20,7 @@ export function contaDeTeste(mudancas: Partial<ContaSessao> = {}): ContaSessao {
     'ESCUTA_REGISTRAR',
     'PIA_LER',
     'PIA_EDITAR',
+    'PIA_APROVAR',
   ];
   return {
     id: '00000000-0000-0000-0000-000000000001',

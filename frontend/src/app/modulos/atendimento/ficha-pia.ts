@@ -14,8 +14,38 @@ import { filter, Observable, switchMap } from 'rxjs';
 import { mensagemDeErro } from '../../acesso/problema';
 import { Sessao } from '../../acesso/sessao';
 import { dataIso, lerDataIso } from '../visitas/datas-visita';
-import { AtendimentoApi, ConteudoPia, ObjetivoPia, Pia } from './atendimento-api';
+import {
+  AtendimentoApi,
+  ConteudoPia,
+  ObjetivoPia,
+  PassoPia,
+  Pia,
+  StatusPia,
+} from './atendimento-api';
 import { ROTULOS_STATUS_PIA } from './rotulos';
+import { hoje } from '../lista-espera/datas';
+
+/** Passos do RF006 depois da elaboração, na ordem (ADR 0106). */
+const PASSOS: readonly {
+  status: StatusPia;
+  passo: PassoPia;
+  acao: string;
+  campo: 'apresentadoFamiliaEm' | 'apresentadoEquipeEm' | 'aprovadoEm';
+}[] = [
+  {
+    status: 'APRESENTADO_FAMILIA',
+    passo: 'apresentar-a-familia',
+    acao: 'Registrar apresentação à família',
+    campo: 'apresentadoFamiliaEm',
+  },
+  {
+    status: 'APRESENTADO_EQUIPE',
+    passo: 'apresentar-a-equipe',
+    acao: 'Registrar apresentação à equipe',
+    campo: 'apresentadoEquipeEm',
+  },
+  { status: 'APROVADO', passo: 'aprovar', acao: 'Aprovar PIA', campo: 'aprovadoEm' },
+];
 
 /**
  * Elaboração (`/atendimento/pessoas/:pessoaId/pia/novo`) e leitura (`/atendimento/pias/:id`) do PIA
@@ -52,6 +82,28 @@ export class FichaPia {
   protected readonly status = ROTULOS_STATUS_PIA;
   protected readonly data = lerDataIso;
   protected readonly podeEditar = this.sessao.temPermissao('PIA_EDITAR');
+  protected readonly podeAprovar = this.sessao.temPermissao('PIA_APROVAR');
+  protected readonly passos = PASSOS;
+  protected readonly hojeData = hoje();
+  protected readonly dataDoPasso = signal<Date | null>(hoje());
+  /** Próximo passo da versão mais nova, se a conta pode dá-lo. */
+  protected readonly proximo = computed(() => {
+    const pia = this.pia();
+    if (!pia?.maisNova) {
+      return null;
+    }
+    const ordem: StatusPia[] = [
+      'ELABORADO',
+      'APRESENTADO_FAMILIA',
+      'APRESENTADO_EQUIPE',
+      'APROVADO',
+    ];
+    const passo = PASSOS.find((p) => ordem.indexOf(p.status) === ordem.indexOf(pia.status) + 1);
+    if (!passo) {
+      return null;
+    }
+    return (passo.status === 'APROVADO' ? this.podeAprovar : this.podeEditar) ? passo : null;
+  });
   protected readonly pia = signal<Pia | null>(null);
   protected readonly nomePessoa = signal<string | null>(null);
   protected readonly editando = signal(false);
@@ -126,6 +178,33 @@ export class FichaPia {
         }
       },
     );
+  }
+
+  protected avancar(pia: Pia, passo: PassoPia): void {
+    const data = this.dataDoPasso();
+    if (!data) {
+      this.erro.set('Informe a data.');
+      return;
+    }
+    this.executar(this.api.avancarPia(pia.id, passo, dataIso(data)), (atualizado) => {
+      this.mostrar(atualizado);
+      this.dataDoPasso.set(hoje());
+      this.avisos.open('Andamento do PIA registrado.', 'Fechar', { duration: 4000 });
+    });
+  }
+
+  protected novaVersao(pia: Pia): void {
+    this.executar(this.api.novaVersaoPia(pia.id), (nova) => {
+      this.avisos.open(`Versão ${nova.numeroVersao} criada para edição.`, 'Fechar', {
+        duration: 4000,
+      });
+      void this.router.navigate(['/atendimento', 'pias', nova.id]);
+    });
+  }
+
+  /** O navegador imprime ou salva em PDF a versão aberta, só com o plano (ADR 0108). */
+  protected imprimir(): void {
+    window.print();
   }
 
   protected executar(operacao: Observable<Pia>, sucesso: (pia: Pia) => void): void {

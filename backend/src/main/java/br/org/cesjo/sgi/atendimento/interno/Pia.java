@@ -122,6 +122,7 @@ class Pia {
 		return status;
 	}
 
+	// PENDENTE-CESJO(P5): os passos seguem sempre a ordem do RF006, um de cada vez (ADR 0106).
 	/**
 	 * Avança para o próximo status, na ordem do RF006 (ADR 0106), com a data do passo. A data não pode ser
 	 * anterior à do passo de antes. Devolve o nome da coluna da data.

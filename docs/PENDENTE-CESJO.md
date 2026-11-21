@@ -63,6 +63,7 @@ Situação: provisória.
 | Decisão provisória | Onde mudar | ADR |
 |---|---|---|
 | O PIA tem diagnóstico, objetivos (descrição, metas, ações, prazo e responsável) e observações, guardados como JSON cifrado. | `atendimento.interno.ConteudoPia` e `ficha-pia.ts` (frontend) | [0103](adr/0103-modelo-provisorio-e-versoes-do-pia.md) |
+| Os passos do PIA seguem sempre a ordem do RF006 (família, equipe, aprovação), cada um com data; PIA apresentado só muda por nova versão. | `atendimento.interno.Pia` (`avancar`) | [0106](adr/0106-status-e-novas-versoes-do-pia.md) |
 
 ## P6. Dados pessoais completos (RF007)
 

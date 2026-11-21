@@ -170,3 +170,107 @@ fieldset {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+.so-impressao {
+  display: none;
+}
+
+.andamento {
+  margin-bottom: var(--sgi-space-3);
+
+  h2 {
+    margin: 0 0 var(--sgi-space-1);
+    padding-bottom: var(--sgi-space-0-5);
+    border-bottom: var(--sgi-border);
+    font-size: var(--sgi-font-size-h3);
+  }
+}
+
+// Os quatro passos do RF006 numa linha do tempo vertical: o feito tem marcador cheio.
+.passos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  li {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0 var(--sgi-space-2);
+    padding: var(--sgi-space-1) 0 var(--sgi-space-1) var(--sgi-space-3);
+    color: var(--sgi-color-text-secondary);
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: calc(var(--sgi-space-1) + 0.35em);
+      left: 0;
+      width: 0.75rem;
+      height: 0.75rem;
+      border: 2px solid var(--sgi-color-primary-dark);
+      border-radius: 50%;
+      background: var(--sgi-color-white);
+    }
+
+    &.feito {
+      color: var(--sgi-color-text-primary);
+
+      &::before {
+        background: var(--sgi-color-primary-dark);
+      }
+    }
+  }
+}
+
+.passo {
+  font-weight: var(--sgi-font-weight-semibold);
+}
+
+.quando {
+  font-variant-numeric: tabular-nums;
+}
+
+.proximo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sgi-space-1);
+  margin-top: var(--sgi-space-2);
+
+  button {
+    min-height: var(--sgi-alvo-toque);
+  }
+}
+
+@media (min-width: bp.$tablet) {
+  .proximo {
+    flex-direction: row;
+    align-items: baseline;
+  }
+
+  .passos {
+    max-width: 28rem;
+  }
+}
+
+// Impressão: só o plano, sem botões nem avisos de tela.
+@media print {
+  .nao-imprimir {
+    display: none !important;
+  }
+
+  .so-impressao {
+    display: block;
+    margin: 0 0 var(--sgi-space-2);
+    font-weight: var(--sgi-font-weight-semibold);
+  }
+
+  .pia {
+    max-width: none;
+  }
+
+  .plano section,
+  .objetivos li {
+    break-inside: avoid;
+  }
+}

@@ -18,6 +18,9 @@ interface FichaExposta {
   removerObjetivo(i: number): void;
   editar(): void;
   salvar(): void;
+  dataDoPasso: { set(d: Date): void };
+  avancar(pia: unknown, passo: string): void;
+  novaVersao(pia: unknown): void;
 }
 
 describe('FichaPia', () => {
@@ -129,5 +132,82 @@ describe('FichaPia', () => {
     );
 
     expect((fixture.nativeElement as HTMLElement).textContent).not.toContain('Editar PIA');
+  });
+
+  it('registra a apresentação à família com a data', async () => {
+    const pia = piaFicticio({ id: 'pia3' });
+    const fixture = await abrir('pia3', pia);
+    expect((fixture.nativeElement as HTMLElement).textContent).toContain(
+      'Registrar apresentação à família',
+    );
+    const ficha = fixture.componentInstance as unknown as FichaExposta;
+    ficha.dataDoPasso.set(new Date(2026, 10, 18));
+    ficha.avancar(pia, 'apresentar-a-familia');
+
+    const pedido = controle.expectOne('/api/pias/pia3/apresentar-a-familia');
+    expect(pedido.request.body).toEqual({ data: '2026-11-18' });
+    pedido.flush(
+      piaFicticio({
+        id: 'pia3',
+        status: 'APRESENTADO_FAMILIA',
+        editavel: false,
+        apresentadoFamiliaEm: '2026-11-18',
+      }),
+    );
+    await fixture.whenStable();
+
+    const texto = (fixture.nativeElement as HTMLElement).textContent ?? '';
+    expect(texto).toContain('18/11/2026');
+    expect(texto).toContain('Registrar apresentação à equipe');
+    expect(texto).toContain('Criar nova versão');
+  });
+
+  it('só o Coordenador vê o botão de aprovar', async () => {
+    const apresentado = piaFicticio({
+      id: 'pia4',
+      status: 'APRESENTADO_EQUIPE',
+      editavel: false,
+      apresentadoFamiliaEm: '2026-11-10',
+      apresentadoEquipeEm: '2026-11-12',
+    });
+    TestBed.inject(Sessao).definir(
+      contaDeTeste({
+        perfil: 'EQUIPE_TECNICA',
+        permissoes: ['ESCUTA_LER', 'PIA_LER', 'PIA_EDITAR'],
+      }),
+    );
+    const fixture = await abrir('pia4', apresentado);
+
+    const texto = (fixture.nativeElement as HTMLElement).textContent ?? '';
+    expect(texto).not.toContain('Aprovar PIA');
+    expect(texto).toContain('Aguardando a aprovação da coordenação.');
+  });
+
+  it('cria nova versão de PIA aprovado e abre a nova', async () => {
+    const aprovado = piaFicticio({
+      id: 'pia5',
+      status: 'APROVADO',
+      editavel: false,
+      aprovadoEm: '2026-11-15',
+    });
+    const fixture = await abrir('pia5', aprovado);
+    (fixture.componentInstance as unknown as FichaExposta).novaVersao(aprovado);
+    controle
+      .expectOne('/api/pias/pia5/nova-versao')
+      .flush(piaFicticio({ id: 'pia6', numeroVersao: 2, versaoAnteriorId: 'pia5' }));
+
+    expect(navegar).toHaveBeenCalledWith(['/atendimento', 'pias', 'pia6']);
+  });
+
+  it('versão substituída não muda de status nem gera versão', async () => {
+    const fixture = await abrir(
+      'pia7',
+      piaFicticio({ id: 'pia7', status: 'APROVADO', editavel: false, maisNova: false }),
+    );
+
+    const texto = (fixture.nativeElement as HTMLElement).textContent ?? '';
+    expect(texto).toContain('Versão substituída');
+    expect(texto).not.toContain('Criar nova versão');
+    expect(texto).toContain('Imprimir ou salvar em PDF');
   });
 });
