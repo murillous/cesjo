@@ -1,5 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { MATERIAL_ANIMATIONS } from '@angular/material/core';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideRouter } from '@angular/router';
 
 import { Layout } from './layout';
@@ -10,6 +12,8 @@ describe('Layout', () => {
       imports: [Layout],
       providers: [
         provideRouter([]),
+        provideHttpClient(),
+        provideHttpClientTesting(),
         { provide: MATERIAL_ANIMATIONS, useValue: { animationsDisabled: true } },
       ],
     }).compileComponents();
@@ -40,12 +44,18 @@ describe('Layout', () => {
     expect(itens[0]?.getAttribute('href')).toBe('/');
   });
 
-  it('reserva espaço para notificações e conta', async () => {
+  it('reserva espaço para a conta', async () => {
     const { elemento } = await renderizar();
     const acoes = elemento.querySelector('.acoes');
 
-    expect(acoes?.querySelector('[aria-label="Notificações"]')).not.toBeNull();
     expect(acoes?.querySelector('[aria-label="Minha conta"]')).not.toBeNull();
+  });
+
+  it('esconde o sino de notificações sem sessão', async () => {
+    const { elemento } = await renderizar();
+
+    expect(elemento.querySelector('.acoes app-sino-notificacoes')).not.toBeNull();
+    expect(elemento.querySelector('.acoes button.sino')).toBeNull();
   });
 
   it('usa gaveta (modo over) em telas pequenas e abre pelo botão', async () => {

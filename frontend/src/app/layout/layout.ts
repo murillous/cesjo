@@ -8,6 +8,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { map } from 'rxjs';
 
+import { SinoNotificacoes } from '../notificacoes/sino-notificacoes';
 import { Menu } from './menu/menu';
 
 /** Mesmo valor de `$desktop` em `styles/_breakpoints.scss`. */
@@ -28,6 +29,7 @@ const TELA_GRANDE = '(min-width: 992px)';
     Menu,
     RouterLink,
     RouterOutlet,
+    SinoNotificacoes,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './layout.html',
