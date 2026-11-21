@@ -182,7 +182,8 @@ jobs:
           # Recriar o contêiner apaga o repositório de teste em /tmp; o crond precisa criá-lo de novo.
           docker compose up -d backup
           for _ in $(seq 1 30); do
-            n="$( (docker compose exec -T backup restic snapshots --json 2>/dev/null || true) | grep -o '"short_id"' | wc -l)"
+            # Sem repositório ou sem snapshot, o grep não acha nada: o "|| true" segura o pipefail.
+            n="$( (docker compose exec -T backup restic snapshots --json 2>/dev/null || true) | (grep -o '"short_id"' || true) | wc -l)"
             if [ "$n" -ge 1 ]; then echo "crond gerou o snapshot"; exit 0; fi
             sleep 5
           done
