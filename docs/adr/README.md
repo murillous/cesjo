@@ -62,3 +62,5 @@ frente de trabalho paralela não é usado todo.
 - [0037](0037-pessoa-e-inscricao-na-lista-de-espera.md) — Pessoa no módulo Pessoas e inscrição no módulo Lista de espera
 - [0038](0038-dados-do-cadastro-na-lista-de-espera.md) — Dados obrigatórios e validação do cadastro na lista de espera (provisório)
 - [0039](0039-permissoes-da-lista-de-espera.md) — Permissões do cadastro e da leitura da lista de espera (provisório)
+- [0055](0055-documentos-da-pessoa.md) — Documentos da pessoa no módulo Pessoas (provisório)
+- [0056](0056-anexos-na-lista-de-espera.md) — Anexos na lista de espera e cadastro incompleto
