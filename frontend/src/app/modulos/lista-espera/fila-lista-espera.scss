@@ -1,0 +1,211 @@
+@use 'styles/breakpoints' as bp;
+
+// Mobile first: no celular a busca fica sempre à vista, os filtros abrem por um botão e cada
+// candidato é um cartão. A partir do tablet os filtros ficam sempre abertos, em linha; a partir do
+// desktop a fila vira tabela. A posição é o dado principal da tela e por isso é o maior texto do
+// cartão, em algarismos de largura fixa para a coluna alinhar.
+
+.cabecalho {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sgi-space-2);
+  margin-bottom: var(--sgi-space-2);
+
+  h1 {
+    margin: 0 0 var(--sgi-space-1);
+  }
+
+  p {
+    max-width: 60ch;
+    margin: 0;
+  }
+}
+
+.cadastrar {
+  min-height: var(--sgi-alvo-toque);
+}
+
+.filtros {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--sgi-space-1);
+  margin-bottom: var(--sgi-space-2);
+}
+
+.alternar-filtros {
+  min-height: var(--sgi-alvo-toque);
+}
+
+.selecoes {
+  display: none;
+  grid-column: 1 / -1;
+  flex-direction: column;
+  gap: var(--sgi-space-1);
+
+  &.aberto {
+    display: flex;
+  }
+}
+
+.limpar {
+  align-self: flex-start;
+  min-height: var(--sgi-alvo-toque);
+}
+
+.resultado {
+  min-width: 0;
+}
+
+.total {
+  margin: 0 0 var(--sgi-space-1);
+}
+
+.aviso {
+  padding: var(--sgi-space-3) var(--sgi-space-2);
+  border: var(--sgi-border);
+  border-radius: var(--sgi-radius-md);
+
+  p {
+    margin: 0 0 var(--sgi-space-1);
+  }
+}
+
+.cartoes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sgi-space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cartao {
+  display: grid;
+  grid-template-columns: 3.5rem minmax(0, 1fr);
+  gap: var(--sgi-space-1-5);
+  padding: var(--sgi-space-1-5) var(--sgi-space-2) var(--sgi-space-1-5) var(--sgi-space-1);
+  border: var(--sgi-border);
+  border-radius: var(--sgi-radius-md);
+  background: var(--sgi-color-background-primary);
+}
+
+.posicao {
+  justify-self: end;
+  color: var(--sgi-color-primary);
+  font-size: var(--sgi-font-size-h1);
+  font-weight: var(--sgi-font-weight-bold);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.corpo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sgi-space-0-5);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.nome {
+  font-weight: var(--sgi-font-weight-semibold);
+}
+
+.detalhe {
+  font-size: var(--sgi-font-size-small);
+}
+
+.incompleto,
+.documentos {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sgi-space-0-5);
+  min-height: var(--sgi-alvo-toque);
+  font-weight: var(--sgi-font-weight-medium);
+}
+
+.incompleto mat-icon {
+  color: var(--sgi-color-accent);
+}
+
+.tabela {
+  display: none;
+  width: 100%;
+  border-collapse: collapse;
+
+  th,
+  td {
+    padding: var(--sgi-space-1) var(--sgi-space-1-5);
+    border-bottom: var(--sgi-border);
+    text-align: left;
+    vertical-align: middle;
+  }
+
+  thead th {
+    color: var(--sgi-color-text-secondary);
+    font-size: var(--sgi-font-size-small);
+    font-weight: var(--sgi-font-weight-medium);
+  }
+
+  tbody th {
+    font-weight: var(--sgi-font-weight-semibold);
+  }
+
+  .coluna-posicao {
+    width: 5rem;
+    padding-right: var(--sgi-space-2);
+    text-align: right;
+  }
+
+  td.coluna-posicao {
+    color: var(--sgi-color-primary);
+    font-size: var(--sgi-font-size-h3);
+    font-weight: var(--sgi-font-weight-bold);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .incompleto {
+    min-height: auto;
+  }
+}
+
+mat-paginator {
+  margin-top: var(--sgi-space-1);
+  background: transparent;
+}
+
+@media (min-width: bp.$tablet) {
+  .cabecalho {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
+  .filtros {
+    grid-template-columns: minmax(16rem, 1fr) repeat(3, minmax(10rem, 14rem));
+  }
+
+  .alternar-filtros {
+    display: none;
+  }
+
+  // Os filtros ficam sempre à vista: o contêiner some do layout e os campos entram na grade.
+  .selecoes,
+  .selecoes.aberto {
+    display: contents;
+  }
+
+  .limpar {
+    align-self: center;
+  }
+}
+
+@media (min-width: bp.$desktop) {
+  .cartoes {
+    display: none;
+  }
+
+  .tabela {
+    display: table;
+  }
+}

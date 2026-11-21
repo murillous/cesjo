@@ -1,0 +1,9 @@
+target/
+config/
+dados/
+.idea/
+.vscode/
+*.iml
+compose.yaml
+Dockerfile
+.dockerignore
