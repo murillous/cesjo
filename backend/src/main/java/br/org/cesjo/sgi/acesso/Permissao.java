@@ -50,6 +50,12 @@ public enum Permissao {
 	ATENDIDOS_LER,
 
 	/** Ler só os dados básicos dos usuários atendidos: nome, situação, turno e datas (ADR 0082). */
-	ATENDIDOS_LER_BASICO
+	ATENDIDOS_LER_BASICO,
+
+	/** Ver a agenda e a ficha das visitas domiciliares (RF004, ADR 0071). */
+	VISITAS_LER,
+
+	/** Agendar visita domiciliar (RF004, ADR 0071). */
+	VISITAS_AGENDAR
 
 }

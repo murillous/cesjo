@@ -1,0 +1,37 @@
+<section class="ficha" aria-labelledby="titulo-visita">
+  <a matButton routerLink="/visitas" [queryParams]="{ semana: semana() }" class="voltar">
+    <mat-icon aria-hidden="true">arrow_back</mat-icon>
+    Agenda de visitas
+  </a>
+
+  @if (erro(); as mensagem) {
+    <p class="erro" role="alert">{{ mensagem }}</p>
+  }
+
+  @if (visita(); as atual) {
+    <header class="cabecalho">
+      <p class="quando">
+        <span class="hora">{{ hora() }}</span>
+        <span>{{ data() | date: "EEEE, d 'de' MMMM 'de' y" | titlecase }}</span>
+      </p>
+      <h1 id="titulo-visita">{{ atual.nomePessoa }}</h1>
+      <p
+        class="status"
+        [class.realizada]="atual.status === 'REALIZADA'"
+        [class.cancelada]="atual.status === 'CANCELADA'"
+      >
+        {{ rotulos[atual.status] }}
+      </p>
+    </header>
+
+    <h2>Profissionais</h2>
+    <ul class="profissionais">
+      @for (profissional of atual.profissionais; track profissional.id) {
+        <li>
+          <span class="nome">{{ profissional.nome }}</span>
+          <span class="funcao">{{ funcoes[profissional.funcao] }}</span>
+        </li>
+      }
+    </ul>
+  }
+</section>

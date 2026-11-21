@@ -1,0 +1,61 @@
+@use 'styles/breakpoints' as bp;
+
+.visita {
+  max-width: 560px;
+}
+
+.voltar {
+  margin: 0 0 var(--sgi-space-2) calc(-1 * var(--sgi-space-1));
+}
+
+.erro {
+  padding: var(--sgi-space-1-5) var(--sgi-space-2);
+  border-left: var(--sgi-space-0-5) solid var(--sgi-color-accent);
+  background: var(--sgi-color-background-secondary);
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sgi-space-1);
+  margin-top: var(--sgi-space-2);
+}
+
+// Celular: data e hora um embaixo do outro; a partir do tablet, lado a lado.
+.quando {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sgi-space-1);
+}
+
+.em-avaliacao {
+  color: var(--sgi-color-text-secondary);
+}
+
+.botoes {
+  display: flex;
+  flex-direction: column;
+  margin-top: var(--sgi-space-1);
+
+  button {
+    min-height: var(--sgi-alvo-toque);
+  }
+}
+
+@media (min-width: bp.$tablet) {
+  .quando {
+    flex-direction: row;
+
+    mat-form-field:first-child {
+      flex: 2;
+    }
+
+    mat-form-field:last-child {
+      flex: 1;
+    }
+  }
+
+  .botoes {
+    flex-direction: row;
+  }
+}

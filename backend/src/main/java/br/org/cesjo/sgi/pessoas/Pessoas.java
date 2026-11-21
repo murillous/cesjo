@@ -31,6 +31,9 @@ public interface Pessoas {
 
 	Optional<DadosPessoa> obter(UUID id);
 
+	/** Nome completo de cada pessoa encontrada, pelo {@code id}. Ids inexistentes ficam de fora. */
+	Map<UUID, String> nomes(Collection<UUID> ids);
+
 	/**
 	 * Busca em lote para listagens de outros módulos (ADR 0059): devolve, por {@code id}, o resumo das
 	 * pessoas entre {@code ids} que atendem ao filtro. Os ids sem pessoa ou fora do filtro ficam de fora.

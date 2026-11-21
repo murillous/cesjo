@@ -71,6 +71,7 @@ frente de trabalho paralela não é usado todo.
 - [0046](0046-ligacao-entre-colaborador-e-conta-de-acesso.md) — Ligação entre colaborador e conta de acesso guardada no colaborador
 - [0047](0047-permissoes-dos-colaboradores.md) — Permissões do cadastro de colaboradores (provisório)
 - [0048](0048-telas-de-colaboradores.md) — Telas de listagem e cadastro de colaboradores
+- [0049](0049-candidato-em-avaliacao-e-api-da-lista-de-espera.md) — Candidato em avaliação e API Java da lista de espera (provisório)
 - [0050](0050-empacotamento-e-compose-de-producao.md) — Imagens Docker e compose de produção em `deploy/` (provisório)
 - [0051](0051-caddy-como-borda.md) — Caddy como borda: TLS, estáticos, proxy de `/api` e cabeçalhos
 - [0052](0052-segredos-da-implantacao-no-env.md) — Segredos da implantação num `.env` fora do repositório
@@ -82,6 +83,9 @@ frente de trabalho paralela não é usado todo.
 - [0058](0058-dados-basicos-da-fila-para-o-consulta.md) — Dados básicos da fila para o perfil Consulta (provisório)
 - [0059](0059-busca-em-lote-de-pessoas-para-a-fila.md) — Busca em lote de pessoas para montar a fila
 - [0065](0065-retencao-dos-backups.md) — Retenção dos backups: 7 diários, 4 semanais e 6 mensais (provisório)
+- [0070](0070-agendamento-e-agenda-das-visitas.md) — Agendamento e agenda das visitas domiciliares
+- [0071](0071-permissoes-das-visitas.md) — Permissões da agenda e do agendamento de visitas
+- [0072](0072-telas-de-visitas-e-agenda-do-dia.md) — Telas da agenda de visitas e agenda do dia na página inicial
 - [0080](0080-insercao-no-servico.md) — Inserção no serviço: modelo, regras e cuidador familiar (provisório)
 - [0081](0081-apis-entre-lista-de-espera-pessoas-e-atendidos.md) — APIs entre Lista de espera, Pessoas e Atendidos
 - [0082](0082-permissoes-dos-usuarios-atendidos.md) — Permissões dos usuários atendidos (provisório)

@@ -5,6 +5,9 @@ import java.time.Instant;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -73,6 +76,15 @@ class ServicoColaboradores implements Colaboradores {
 		if (distintos.contains(null) || colaboradores.countByIdInAndAtivoTrue(distintos) != distintos.size()) {
 			throw new ColaboradorIndisponivelException();
 		}
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Map<UUID, ResumoColaborador> obterVarios(Collection<UUID> ids) {
+		return colaboradores.findAllById(ids)
+			.stream()
+			.map(Colaborador::resumo)
+			.collect(Collectors.toMap(ResumoColaborador::id, Function.identity()));
 	}
 
 	@Override
