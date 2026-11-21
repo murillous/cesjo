@@ -11,6 +11,8 @@ export function contaDeTeste(mudancas: Partial<ContaSessao> = {}): ContaSessao {
     'NOTIFICACOES_LER',
     'LISTA_ESPERA_LER',
     'LISTA_ESPERA_CADASTRAR',
+    'COLABORADORES_LER',
+    'COLABORADORES_GERENCIAR',
   ];
   return {
     id: '00000000-0000-0000-0000-000000000001',

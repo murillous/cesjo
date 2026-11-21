@@ -34,6 +34,14 @@ class PerfilTests {
 	}
 
 	@Test
+	void soCoordenadorVeEGerenciaColaboradores() {
+		assertThat(Arrays.stream(Perfil.values()).filter(perfil -> perfil.tem(Permissao.COLABORADORES_LER)))
+			.containsExactly(Perfil.COORDENADOR);
+		assertThat(Arrays.stream(Perfil.values()).filter(perfil -> perfil.tem(Permissao.COLABORADORES_GERENCIAR)))
+			.containsExactly(Perfil.COORDENADOR);
+	}
+
+	@Test
 	void usuariosAtendidosConformeAMatriz() {
 		assertThat(Arrays.stream(Perfil.values()).filter(perfil -> perfil.tem(Permissao.ATENDIDOS_INSERIR)))
 			.containsExactly(Perfil.COORDENADOR);
