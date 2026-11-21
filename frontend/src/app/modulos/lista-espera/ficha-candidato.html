@@ -1,0 +1,206 @@
+<section class="ficha" aria-labelledby="titulo-ficha">
+  <a matButton routerLink="/lista-espera" class="voltar">
+    <mat-icon aria-hidden="true">arrow_back</mat-icon>
+    Lista de espera
+  </a>
+
+  @if (carregando()) {
+    <mat-progress-bar mode="indeterminate" aria-label="Carregando o candidato" />
+  }
+
+  @if (erro(); as mensagem) {
+    <p class="erro" role="alert">{{ mensagem }}</p>
+  }
+
+  @if (inscricao(); as candidato) {
+    <header class="cabecalho">
+      <div class="lugar" [class.fora]="!candidato.posicao">
+        @if (candidato.posicao) {
+          <span class="numero">{{ candidato.posicao }}º</span>
+          <span class="legenda">na fila</span>
+        } @else {
+          <span class="legenda">{{ situacao(candidato.situacao) }}</span>
+        }
+      </div>
+      <div class="identificacao">
+        <h1 id="titulo-ficha">{{ candidato.nomeCompleto }}</h1>
+        <p class="texto-secundario">
+          Na lista desde {{ candidato.dataCadastro | date: 'dd/MM/yyyy' }}
+        </p>
+      </div>
+    </header>
+
+    <div class="colunas">
+      <div class="coluna">
+        <section class="bloco" aria-labelledby="titulo-dados">
+          <div class="bloco-topo">
+            <h2 id="titulo-dados">Dados</h2>
+            @if (podeEditar) {
+              <a matButton="outlined" routerLink="editar">
+                <mat-icon aria-hidden="true">edit</mat-icon>
+                Editar dados
+              </a>
+            }
+          </div>
+          <dl class="dados">
+            <div>
+              <dt>Tipo de deficiência</dt>
+              <dd>{{ tipo(candidato) }}</dd>
+            </div>
+            <div>
+              <dt>Data de nascimento</dt>
+              <dd>
+                {{
+                  candidato.dataNascimento
+                    ? (candidato.dataNascimento | date: 'dd/MM/yyyy')
+                    : 'Não informada'
+                }}
+              </dd>
+            </div>
+            <div>
+              <dt>Responsável</dt>
+              <dd>{{ candidato.nomeResponsavel }}</dd>
+            </div>
+            <div>
+              <dt>Telefone</dt>
+              <dd>
+                <a [href]="'tel:+55' + candidato.telefone">{{ telefone(candidato) }}</a>
+              </dd>
+            </div>
+            <div>
+              <dt>Origem do encaminhamento</dt>
+              <dd>{{ origem(candidato) }}</dd>
+            </div>
+            <div>
+              <dt>Data de cadastro</dt>
+              <dd>{{ candidato.dataCadastro | date: 'dd/MM/yyyy' }}</dd>
+            </div>
+          </dl>
+        </section>
+
+        <section class="bloco" aria-labelledby="titulo-anexos">
+          <div class="bloco-topo">
+            <h2 id="titulo-anexos">Documentos</h2>
+            <a matButton="outlined" routerLink="documentos">
+              <mat-icon aria-hidden="true">folder_open</mat-icon>
+              Ver documentos
+            </a>
+          </div>
+          @if (candidato.cadastroCompleto) {
+            <p class="estado completo">
+              <mat-icon aria-hidden="true">check_circle</mat-icon>
+              Laudo médico e comprovante de residência anexados.
+            </p>
+          } @else {
+            <p class="estado incompleto">
+              <mat-icon aria-hidden="true">error</mat-icon>
+              Cadastro incompleto: falta {{ pendentes() }}.
+            </p>
+          }
+        </section>
+      </div>
+
+      <div class="coluna">
+        <section class="bloco" aria-labelledby="titulo-situacao">
+          <h2 id="titulo-situacao">Situação</h2>
+          <p class="situacao-atual">
+            {{ situacao(candidato.situacao) }}
+            @if (candidato.situacao === 'SAIU') {
+              <span class="texto-secundario">
+                em {{ candidato.dataSaida | date: 'dd/MM/yyyy' }}, por
+                {{ motivo(candidato.motivoSaida).toLowerCase() }}
+              </span>
+            }
+          </p>
+
+          @if (podeEditar && proxima(); as destino) {
+            @if (!mudando()) {
+              <button matButton="outlined" type="button" class="mudar" (click)="abrirMudanca()">
+                {{ destino === 'SAIU' ? 'Tirar da fila' : 'Voltar para a fila' }}
+              </button>
+            } @else {
+              <form
+                class="mudanca"
+                [formGroup]="mudanca"
+                (ngSubmit)="confirmarMudanca()"
+                [attr.aria-label]="destino === 'SAIU' ? 'Tirar da fila' : 'Voltar para a fila'"
+                novalidate
+              >
+                @if (destino === 'AGUARDANDO') {
+                  <p class="texto-secundario">
+                    O candidato volta para a posição que a data de cadastro dá.
+                  </p>
+                }
+                <mat-form-field appearance="outline">
+                  <mat-label>Data</mat-label>
+                  <input
+                    matInput
+                    [matDatepicker]="seletorData"
+                    [max]="hoje"
+                    formControlName="data"
+                  />
+                  <mat-datepicker-toggle matIconSuffix [for]="seletorData" />
+                  <mat-datepicker #seletorData />
+                </mat-form-field>
+
+                @if (destino === 'SAIU') {
+                  <mat-form-field appearance="outline">
+                    <mat-label>Motivo da saída</mat-label>
+                    <mat-select formControlName="motivoSaida">
+                      @for (motivo of motivos; track motivo.valor) {
+                        <mat-option [value]="motivo.valor">{{ motivo.rotulo }}</mat-option>
+                      }
+                    </mat-select>
+                  </mat-form-field>
+                }
+
+                <mat-form-field appearance="outline">
+                  <mat-label>Observação</mat-label>
+                  <textarea matInput formControlName="observacao" rows="3"></textarea>
+                  <mat-hint>
+                    {{
+                      destino === 'SAIU'
+                        ? 'Obrigatória quando o motivo é "Outro motivo".'
+                        : 'Obrigatória: conte por que o candidato volta.'
+                    }}
+                  </mat-hint>
+                </mat-form-field>
+
+                @if (erroMudanca(); as mensagem) {
+                  <p class="erro" role="alert">{{ mensagem }}</p>
+                }
+
+                <div class="botoes">
+                  <button matButton="filled" type="submit" [disabled]="enviando()">
+                    {{ destino === 'SAIU' ? 'Confirmar saída' : 'Confirmar volta' }}
+                  </button>
+                  <button matButton type="button" (click)="cancelarMudanca()">Cancelar</button>
+                </div>
+              </form>
+            }
+          }
+        </section>
+
+        <section class="bloco" aria-labelledby="titulo-historico">
+          <h2 id="titulo-historico">Histórico</h2>
+          <ol
+            class="historico"
+            aria-label="Mudanças de situação, da mais recente para a mais antiga"
+          >
+            @for (item of historico(); track item.registradoEm) {
+              <li>
+                <time class="quando" [attr.datetime]="item.data">{{
+                  item.data | date: 'dd/MM/yyyy'
+                }}</time>
+                <span class="o-que">{{ evento(item) }}</span>
+                @if (item.observacao) {
+                  <p class="observacao">{{ item.observacao }}</p>
+                }
+              </li>
+            }
+          </ol>
+        </section>
+      </div>
+    </div>
+  }
+</section>

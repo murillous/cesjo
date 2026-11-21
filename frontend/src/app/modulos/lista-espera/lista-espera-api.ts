@@ -6,7 +6,13 @@ import {
   ArquivoBaixado,
   nomeDoContentDisposition,
 } from '../../compartilhado/arquivos/arquivos-api';
-import { OrigemEncaminhamento, SituacaoInscricao, TipoDeficiencia, TipoDocumento } from './rotulos';
+import {
+  MotivoSaida,
+  OrigemEncaminhamento,
+  SituacaoInscricao,
+  TipoDeficiencia,
+  TipoDocumento,
+} from './rotulos';
 
 /** Dados do cadastro na lista de espera (RF001, ADR 0038). Datas no formato `AAAA-MM-DD`. */
 export interface NovaInscricao {
@@ -20,6 +26,30 @@ export interface NovaInscricao {
   /** Opcionais: ids devolvidos por `POST /api/arquivos` (ADR 0056). */
   laudoMedicoArquivoId?: string | null;
   comprovanteResidenciaArquivoId?: string | null;
+}
+
+/** Edição dos dados do candidato (ADR 0090): os campos do cadastro, sem os anexos. */
+export type EdicaoInscricao = Omit<
+  NovaInscricao,
+  'laudoMedicoArquivoId' | 'comprovanteResidenciaArquivoId'
+>;
+
+/** Pedido de mudança de situação (ADR 0091). */
+export interface MudancaSituacao {
+  situacao: SituacaoInscricao;
+  data: string;
+  motivoSaida?: MotivoSaida | null;
+  observacao?: string | null;
+}
+
+/** Uma mudança de situação no histórico da ficha. */
+export interface HistoricoSituacao {
+  situacaoAnterior: SituacaoInscricao | null;
+  situacaoNova: SituacaoInscricao;
+  data: string;
+  motivoSaida: MotivoSaida | null;
+  observacao: string | null;
+  registradoEm: string;
 }
 
 /** Documento anexado à inscrição, sem o conteúdo. */
@@ -48,6 +78,11 @@ export interface Inscricao {
   /** Documentos obrigatórios que faltam; vazio quando o cadastro está completo. */
   documentosPendentes: TipoDocumento[];
   cadastroCompleto: boolean;
+  /** Ausente quando a inscrição não está aguardando. */
+  posicao?: number | null;
+  dataSaida?: string | null;
+  motivoSaida?: MotivoSaida | null;
+  historico: HistoricoSituacao[];
 }
 
 /**
@@ -101,6 +136,14 @@ export class ListaEsperaApi {
 
   obter(id: string): Observable<Inscricao> {
     return this.http.get<Inscricao>(urlInscricao(id));
+  }
+
+  editar(id: string, dados: EdicaoInscricao): Observable<Inscricao> {
+    return this.http.put<Inscricao>(urlInscricao(id), dados);
+  }
+
+  mudarSituacao(id: string, mudanca: MudancaSituacao): Observable<Inscricao> {
+    return this.http.post<Inscricao>(`${urlInscricao(id)}/situacao`, mudanca);
   }
 
   /** Liga um arquivo já enviado à inscrição, substituindo o documento do mesmo tipo. */

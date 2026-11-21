@@ -16,6 +16,18 @@ export const LISTA_ESPERA_ROUTES: Routes = [
     loadComponent: () => import('./formulario-inscricao').then((m) => m.FormularioInscricao),
   },
   {
+    path: ':id',
+    title: 'Ficha do candidato | CESJO SGI',
+    canMatch: [exigePermissao('LISTA_ESPERA_LER')],
+    loadComponent: () => import('./ficha-candidato').then((m) => m.FichaCandidato),
+  },
+  {
+    path: ':id/editar',
+    title: 'Editar candidato | CESJO SGI',
+    canMatch: [exigePermissao('LISTA_ESPERA_EDITAR')],
+    loadComponent: () => import('./formulario-inscricao').then((m) => m.FormularioInscricao),
+  },
+  {
     path: ':id/documentos',
     title: 'Documentos do candidato | CESJO SGI',
     canMatch: [exigePermissao('LISTA_ESPERA_LER')],

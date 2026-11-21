@@ -93,6 +93,42 @@ describe('FormularioInscricao', () => {
     expect(campos[1].textContent).toContain('Comprovante de residência');
   });
 
+  it('na edição, carrega o candidato, envia PUT sem anexos e volta para a ficha', async () => {
+    TestBed.inject(Sessao).definir(contaDeTeste());
+    const fixture = TestBed.createComponent(FormularioInscricao);
+    fixture.componentRef.setInput('id', 'i1');
+    fixture.detectChanges();
+    controle.expectOne('/api/lista-espera/inscricoes/i1').flush({
+      id: 'i1',
+      nomeCompleto: 'Pessoa Fictícia',
+      dataNascimento: null,
+      tipoDeficiencia: 'FISICA',
+      telefone: '3132345678',
+      nomeResponsavel: 'Responsável Fictício',
+      origemEncaminhamento: 'SAUDE',
+      dataCadastro: '2026-11-02',
+    });
+    await fixture.whenStable();
+    const elemento = fixture.nativeElement as HTMLElement;
+    expect(elemento.querySelector('h1')?.textContent).toContain('Editar candidato');
+    expect(elemento.querySelector('app-envio-arquivo')).toBeNull();
+
+    (fixture.componentInstance as unknown as Componente).salvar();
+    const pedido = controle.expectOne('/api/lista-espera/inscricoes/i1');
+    expect(pedido.request.method).toBe('PUT');
+    expect(pedido.request.body).toEqual({
+      nomeCompleto: 'Pessoa Fictícia',
+      dataNascimento: null,
+      tipoDeficiencia: 'FISICA',
+      telefone: '3132345678',
+      nomeResponsavel: 'Responsável Fictício',
+      origemEncaminhamento: 'SAUDE',
+      dataCadastro: '2026-11-02',
+    });
+    pedido.flush({ id: 'i1' });
+    expect(navegar).toHaveBeenCalledWith(['/lista-espera', 'i1']);
+  });
+
   it('não envia sem os campos obrigatórios', async () => {
     const componente = await criar();
     componente.salvar();

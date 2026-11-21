@@ -5,11 +5,24 @@ export type TipoDeficiencia = 'FISICA' | 'SENSORIAL' | 'INTELECTUAL' | 'MULTIPLA
 export type OrigemEncaminhamento =
   'CRAS' | 'CREAS' | 'JUDICIARIO' | 'SAUDE' | 'EDUCACAO' | 'DEMANDA_ESPONTANEA';
 
-export type SituacaoInscricao = 'AGUARDANDO';
+export type SituacaoInscricao = 'AGUARDANDO' | 'INSERIDO' | 'SAIU';
 
-/** Situações da inscrição; as de saída entram com a issue #29 (pergunta 4). */
+/** Situações da inscrição, com os rótulos do backend (ADR 0091). */
 export const SITUACOES: readonly { valor: SituacaoInscricao; rotulo: string }[] = [
   { valor: 'AGUARDANDO', rotulo: 'Aguardando' },
+  { valor: 'INSERIDO', rotulo: 'Inserido no serviço' },
+  { valor: 'SAIU', rotulo: 'Saiu da lista' },
+];
+
+/** Motivos de saída da lista, com os nomes do enum `MotivoSaida` do backend. */
+export type MotivoSaida = 'DESISTENCIA' | 'NAO_LOCALIZADO' | 'FORA_DO_PERFIL' | 'OUTRO';
+
+// PENDENTE-CESJO(P4): lista provisória de motivos de saída (ADR 0091).
+export const MOTIVOS_SAIDA: readonly { valor: MotivoSaida; rotulo: string }[] = [
+  { valor: 'DESISTENCIA', rotulo: 'Desistência' },
+  { valor: 'NAO_LOCALIZADO', rotulo: 'Não localizado' },
+  { valor: 'FORA_DO_PERFIL', rotulo: 'Fora do perfil do serviço' },
+  { valor: 'OUTRO', rotulo: 'Outro motivo' },
 ];
 
 /** Rótulo de um valor numa das listas acima, ou o próprio valor quando não houver. */

@@ -115,7 +115,11 @@
               {{ item.posicao ?? '–' }}
             </span>
             <div class="corpo">
-              <span class="nome">{{ item.nomeCompleto }}</span>
+              @if (completo) {
+                <a class="nome" [routerLink]="item.id">{{ item.nomeCompleto }}</a>
+              } @else {
+                <span class="nome">{{ item.nomeCompleto }}</span>
+              }
               <span class="texto-secundario">
                 {{ situacao(item.situacao) }} desde {{ item.dataCadastro | date: 'dd/MM/yyyy' }}
               </span>
@@ -162,7 +166,13 @@
           @for (item of itens(); track item.id) {
             <tr>
               <td class="coluna-posicao">{{ item.posicao ?? '–' }}</td>
-              <th scope="row" class="nome">{{ item.nomeCompleto }}</th>
+              <th scope="row" class="nome">
+                @if (completo) {
+                  <a [routerLink]="item.id">{{ item.nomeCompleto }}</a>
+                } @else {
+                  {{ item.nomeCompleto }}
+                }
+              </th>
               @if (completo) {
                 <td>{{ tipo(item.tipoDeficiencia) }}</td>
                 <td>{{ origem(item.origemEncaminhamento) }}</td>

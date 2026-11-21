@@ -35,6 +35,7 @@ function inscricao(mudancas: Partial<Inscricao> = {}): Inscricao {
     ],
     documentosPendentes: ['COMPROVANTE_RESIDENCIA'],
     cadastroCompleto: false,
+    historico: [],
     ...mudancas,
   };
 }
