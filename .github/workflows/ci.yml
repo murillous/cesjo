@@ -186,7 +186,9 @@ jobs:
             if [ "$n" -ge 1 ]; then echo "crond gerou o snapshot"; exit 0; fi
             sleep 5
           done
-          echo "o crond não rodou o backup em 150 segundos"; exit 1
+          echo "o crond não rodou o backup em 150 segundos"
+          docker compose exec -T backup sh -c 'ps; ls -la /etc/crontabs /var/spool/cron 2>&1; cat /etc/crontabs/root; date; busybox | head -3' || true
+          exit 1
 
       - name: Logs da pilha
         if: always()
