@@ -5,7 +5,7 @@ export type TipoDeficiencia = 'FISICA' | 'SENSORIAL' | 'INTELECTUAL' | 'MULTIPLA
 export type OrigemEncaminhamento =
   'CRAS' | 'CREAS' | 'JUDICIARIO' | 'SAUDE' | 'EDUCACAO' | 'DEMANDA_ESPONTANEA';
 
-export type SituacaoInscricao = 'AGUARDANDO';
+export type SituacaoInscricao = 'AGUARDANDO' | 'EM_AVALIACAO';
 
 /** Na ordem em que aparecem no formulário. Rótulos iguais aos do backend. */
 export const TIPOS_DEFICIENCIA: readonly { valor: TipoDeficiencia; rotulo: string }[] = [

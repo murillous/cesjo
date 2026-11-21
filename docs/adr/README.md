@@ -69,3 +69,4 @@ frente de trabalho paralela não é usado todo.
 - [0049](0049-candidato-em-avaliacao-e-api-da-lista-de-espera.md) — Candidato em avaliação e API Java da lista de espera (provisório)
 - [0070](0070-agendamento-e-agenda-das-visitas.md) — Agendamento e agenda das visitas domiciliares
 - [0071](0071-permissoes-das-visitas.md) — Permissões da agenda e do agendamento de visitas
+- [0072](0072-telas-de-visitas-e-agenda-do-dia.md) — Telas da agenda de visitas e agenda do dia na página inicial
