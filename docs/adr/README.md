@@ -67,3 +67,7 @@ frente de trabalho paralela não é usado todo.
 - [0042](0042-resposta-http-de-download-da-exportacao.md) — Resposta HTTP de download e parâmetro de formato da exportação
 - [0043](0043-auditoria-e-permissao-da-exportacao.md) — Auditoria e permissão da exportação
 - [0044](0044-exportacao-no-frontend.md) — Serviço e botão de exportação no frontend
+- [0050](0050-empacotamento-e-compose-de-producao.md) — Imagens Docker e compose de produção em `deploy/` (provisório)
+- [0051](0051-caddy-como-borda.md) — Caddy como borda: TLS, estáticos, proxy de `/api` e cabeçalhos
+- [0052](0052-segredos-da-implantacao-no-env.md) — Segredos da implantação num `.env` fora do repositório
+- [0053](0053-ci-das-imagens-de-implantacao.md) — CI constrói as imagens e testa a pilha sem publicar
