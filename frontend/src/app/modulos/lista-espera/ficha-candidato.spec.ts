@@ -170,6 +170,16 @@ describe('FichaCandidato', () => {
     expect(elemento.querySelector('.mudar')?.textContent).toContain('Tirar da fila');
   });
 
+  it('com ATENDIDOS_INSERIR, leva à inserção no serviço quem está aguardando', async () => {
+    const { elemento } = await renderizar(inscricao(), ['LISTA_ESPERA_LER', 'ATENDIDOS_INSERIR']);
+    expect(elemento.querySelector('a.inserir')?.getAttribute('href')).toBe('/atendidos/inserir/i1');
+  });
+
+  it('sem ATENDIDOS_INSERIR, não mostra a inserção', async () => {
+    const { elemento } = await renderizar(inscricao(), ['LISTA_ESPERA_LER']);
+    expect(elemento.querySelector('a.inserir')).toBeNull();
+  });
+
   it('inserido não muda de situação pela ficha', async () => {
     const { elemento } = await renderizar(inscricao({ situacao: 'INSERIDO', posicao: null }));
     expect(elemento.querySelector('.mudar')).toBeNull();

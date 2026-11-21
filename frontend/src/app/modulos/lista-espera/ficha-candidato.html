@@ -115,6 +115,17 @@
             }
           </p>
 
+          @if (podeInserir && candidato.situacao === 'AGUARDANDO') {
+            <a
+              matButton="filled"
+              class="inserir"
+              [routerLink]="['/atendidos', 'inserir', candidato.id]"
+            >
+              <mat-icon aria-hidden="true">how_to_reg</mat-icon>
+              Inserir no serviço
+            </a>
+          }
+
           @if (podeEditar && proxima(); as destino) {
             @if (!mudando()) {
               <button matButton="outlined" type="button" class="mudar" (click)="abrirMudanca()">

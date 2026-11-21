@@ -71,7 +71,10 @@ export class FichaCandidato implements OnInit {
   private readonly api = inject(ListaEsperaApi);
   private readonly avisos = inject(MatSnackBar);
 
-  protected readonly podeEditar = inject(Sessao).temPermissao('LISTA_ESPERA_EDITAR');
+  private readonly sessao = inject(Sessao);
+  protected readonly podeEditar = this.sessao.temPermissao('LISTA_ESPERA_EDITAR');
+  /** A inserção é do módulo atendidos (issue #39), em `/atendidos/inserir/:inscricaoId`. */
+  protected readonly podeInserir = this.sessao.temPermissao('ATENDIDOS_INSERIR');
   protected readonly motivos = MOTIVOS_SAIDA;
   protected readonly hoje = hoje();
 
