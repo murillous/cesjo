@@ -1,5 +1,7 @@
 import { Routes } from '@angular/router';
 
+import { Permissao } from '../acesso/permissao';
+
 /** Item exibido no menu lateral. `icone` é o nome de um ícone Material Symbols, por exemplo `home`. */
 export interface ItemMenu {
   rotulo: string;
@@ -21,4 +23,6 @@ export interface ModuloFrontend {
   /** Rotas internas do módulo, importadas sob demanda. */
   rotas: () => Promise<Routes>;
   menu?: ItemMenu;
+  /** Permissão exigida para entrar no módulo e ver o item de menu. Sem ela, o módulo é de todos. */
+  permissao?: Permissao;
 }

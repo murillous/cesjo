@@ -1,6 +1,6 @@
 <nav class="menu" aria-label="Menu principal">
   <mat-nav-list>
-    @for (entrada of entradas; track entrada.link) {
+    @for (entrada of entradas(); track entrada.link) {
       <a
         mat-list-item
         class="menu-item"

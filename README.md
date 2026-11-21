@@ -26,7 +26,9 @@ A única fonte de requisitos é o
 | Frontend | Angular 22, Angular Material 22 com tema institucional |
 
 O planejamento completo (arquitetura, modelo de dados, permissões, ordem de entrega e backlog) está em
-[docs/planejamento.md](docs/planejamento.md).
+[docs/planejamento.md](docs/planejamento.md). Cada decisão do projeto, com o motivo, fica num ADR em
+[docs/adr](docs/adr/README.md). Decisões provisórias, tomadas enquanto a equipe CESJO não responde, ficam
+marcadas no código com `PENDENTE-CESJO` (`git grep -n "PENDENTE-CESJO"`).
 
 ## Rodar o backend
 
