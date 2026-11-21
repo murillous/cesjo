@@ -1,0 +1,96 @@
+@use 'styles/breakpoints' as bp;
+
+// Mobile first: as vagas disponíveis em destaque na linha de cima e os outros três números lado a
+// lado embaixo. No tablet, os quatro numa linha só.
+
+.painel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sgi-space-1-5);
+  margin-bottom: var(--sgi-space-3);
+  padding: var(--sgi-space-2);
+  border-radius: var(--sgi-radius-lg);
+  background: var(--sgi-color-background-secondary);
+}
+
+.numeros {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--sgi-space-1-5);
+  margin: 0;
+
+  dt {
+    color: var(--sgi-color-text-secondary);
+    font-size: var(--sgi-font-size-small);
+  }
+
+  dd {
+    margin: 0;
+    font-size: var(--sgi-font-size-h3);
+    font-weight: var(--sgi-font-weight-semibold);
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.principal {
+  grid-column: 1 / -1;
+
+  dd {
+    color: var(--sgi-color-primary);
+    font-size: var(--sgi-font-size-h1);
+    font-weight: var(--sgi-font-weight-bold);
+    line-height: 1.1;
+  }
+
+  &.sem-vaga dd {
+    color: var(--sgi-color-text-secondary);
+  }
+}
+
+.nota {
+  margin: 0;
+}
+
+.alterar {
+  align-self: flex-start;
+  min-height: var(--sgi-alvo-toque);
+}
+
+.edicao {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sgi-space-1);
+  max-width: 24rem;
+}
+
+.botoes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sgi-space-1);
+
+  button {
+    min-height: var(--sgi-alvo-toque);
+  }
+}
+
+.aviso-erro {
+  margin: 0 0 var(--sgi-space-2);
+  padding: var(--sgi-space-1) var(--sgi-space-2);
+  border-left: var(--sgi-space-0-5) solid var(--sgi-color-accent);
+  background: var(--sgi-color-background-secondary);
+}
+
+@media (min-width: bp.$tablet) {
+  .numeros {
+    grid-template-columns: minmax(10rem, 1.5fr) repeat(3, minmax(0, 1fr));
+    align-items: end;
+  }
+
+  .principal {
+    grid-column: auto;
+  }
+
+  .botoes {
+    flex-direction: row;
+  }
+}

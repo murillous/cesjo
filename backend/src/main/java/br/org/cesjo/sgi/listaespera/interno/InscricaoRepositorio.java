@@ -16,6 +16,10 @@ interface InscricaoRepositorio
 
 	List<InscricaoListaEspera> findBySituacaoIn(Collection<SituacaoInscricao> situacoes, Sort ordem);
 
+	long countBySituacao(SituacaoInscricao situacao);
+
+	long countBySituacaoIn(Collection<SituacaoInscricao> situacoes);
+
 	/** Inscrições nas situações dadas, na ordem da fila (índice {@code ix_inscricao_fila}). */
 	List<InscricaoListaEspera> findBySituacaoInOrderByDataCadastroAscCriadoEmAsc(Collection<SituacaoInscricao> situacoes);
 

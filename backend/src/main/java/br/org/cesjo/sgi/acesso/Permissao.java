@@ -77,6 +77,12 @@ public enum Permissao {
 	PIA_EDITAR,
 
 	/** Aprovar o PIA apresentado à família e à equipe (RF006, seção 4.1, ADR 0107). */
-	PIA_APROVAR
+	PIA_APROVAR,
+
+	/** Ver a capacidade do serviço, as vagas disponíveis e o tamanho da fila (RF003, ADR 0092). */
+	CAPACIDADE_LER,
+
+	/** Definir a capacidade do serviço (RF003, ADR 0092). */
+	CAPACIDADE_EDITAR
 
 }

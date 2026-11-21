@@ -59,7 +59,20 @@ describe('FilaListaEspera', () => {
     http = TestBed.inject(HttpTestingController);
   });
 
-  afterEach(() => http.verify());
+  afterEach(() => {
+    http
+      .match('/api/lista-espera/vagas')
+      .forEach((pedido) =>
+        pedido.flush({
+          capacidade: 10,
+          ocupadas: 4,
+          disponiveis: 6,
+          tamanhoFila: 2,
+          definidaEm: null,
+        }),
+      );
+    http.verify();
+  });
 
   async function renderizar(itens: ItemFila[], permissoes?: Permissao[]) {
     TestBed.inject(Sessao).definir(contaDeTeste(permissoes ? { permissoes } : {}));

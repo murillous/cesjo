@@ -99,6 +99,8 @@ frente de trabalho paralela não é usado todo.
 - [0083](0083-listagem-e-ficha-dos-usuarios-atendidos.md) — Listagem e ficha dos usuários atendidos (provisório)
 - [0090](0090-edicao-do-candidato.md) — Edição dos dados do candidato
 - [0091](0091-situacoes-motivos-e-historico-da-inscricao.md) — Situações, motivos de saída e histórico da inscrição (provisório)
+- [0092](0092-capacidade-e-painel-de-vagas.md) — Capacidade do serviço e painel de vagas (provisório)
+- [0093](0093-contagem-de-vagas-ocupadas.md) — Contagem de vagas ocupadas atrás de uma interface
 - [0094](0094-em-avaliacao-segue-na-fila.md) — Candidato em avaliação segue na fila (provisório)
 - [0100](0100-escuta-ativa-e-qualificada.md) — Escuta ativa e qualificada com textos cifrados e leitura auditada
 - [0101](0101-permissoes-da-escuta.md) — Permissões da escuta ativa e qualificada
