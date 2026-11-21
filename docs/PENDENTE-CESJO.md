@@ -48,6 +48,7 @@ Situação: provisória.
 | Decisão provisória | Onde mudar | ADR |
 |---|---|---|
 | A capacidade é um número total, sem divisão por turno. | `ServicoVagas.painel` e `capacidade_servico` (`V8`) | [0092](adr/0092-capacidade-e-painel-de-vagas.md) |
+| A vaga aberta é avisada só no sistema, para Coordenador e Administrativo, com link para o próximo candidato da fila. | `AvisoDeVagaAberta.DESTINO` | [0095](adr/0095-aviso-de-vaga-aberta.md) |
 
 ## P4. Saída da lista
 

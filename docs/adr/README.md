@@ -102,6 +102,7 @@ frente de trabalho paralela não é usado todo.
 - [0092](0092-capacidade-e-painel-de-vagas.md) — Capacidade do serviço e painel de vagas (provisório)
 - [0093](0093-contagem-de-vagas-ocupadas.md) — Contagem de vagas ocupadas atrás de uma interface
 - [0094](0094-em-avaliacao-segue-na-fila.md) — Candidato em avaliação segue na fila (provisório)
+- [0095](0095-aviso-de-vaga-aberta.md) — Aviso de vaga aberta (provisório)
 - [0100](0100-escuta-ativa-e-qualificada.md) — Escuta ativa e qualificada com textos cifrados e leitura auditada
 - [0101](0101-permissoes-da-escuta.md) — Permissões da escuta ativa e qualificada
 - [0102](0102-telas-de-escuta.md) — Telas de escuta organizadas pela pessoa atendida
