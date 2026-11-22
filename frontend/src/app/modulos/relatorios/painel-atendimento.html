@@ -1,0 +1,73 @@
+<form class="periodo" [formGroup]="periodo" (ngSubmit)="aplicar()" aria-label="Período">
+  <mat-form-field subscriptSizing="dynamic">
+    <mat-label>Período</mat-label>
+    <mat-date-range-input [rangePicker]="seletorPeriodo">
+      <input matStartDate formControlName="inicio" placeholder="Início" />
+      <input matEndDate formControlName="fim" placeholder="Fim" />
+    </mat-date-range-input>
+    <mat-hint>dd/mm/aaaa – dd/mm/aaaa</mat-hint>
+    <mat-datepicker-toggle matIconSuffix [for]="seletorPeriodo" />
+    <mat-date-range-picker #seletorPeriodo />
+    @if (periodo.invalid && periodo.touched) {
+      <mat-error>Informe o início e o fim do período.</mat-error>
+    }
+  </mat-form-field>
+  <button matButton="filled" type="submit" [disabled]="carregando()">Mostrar período</button>
+</form>
+
+@if (erro(); as mensagem) {
+  <p class="aviso-erro" role="alert">{{ mensagem }}</p>
+} @else if (painel(); as dados) {
+  <p class="texto-secundario contado" aria-live="polite">
+    De {{ dados.inicio | date: 'dd/MM/yyyy' }} a {{ dados.fim | date: 'dd/MM/yyyy' }}. Contado em
+    {{ dados.geradoEm | date: "dd/MM/yyyy 'às' HH:mm" }}.
+  </p>
+
+  <dl class="numeros">
+    <div>
+      <dt>Atividades realizadas</dt>
+      <dd>{{ dados.totalAtividades }}</dd>
+    </div>
+    <div>
+      <dt>Usuários atendidos no período</dt>
+      <dd>{{ dados.atendidosNoPeriodo }}</dd>
+    </div>
+    <div>
+      <dt>Desligamentos</dt>
+      <dd>
+        {{ dados.totalDesligamentos }}
+        <span class="taxa">{{ dados.taxaDesligamento | percent: '1.0-1' }} dos atendidos</span>
+      </dd>
+    </div>
+  </dl>
+
+  <div class="graficos">
+    @if (dados.violacoesPorCategoria; as violacoes) {
+      <app-grafico-barras
+        class="largo"
+        titulo="Violações de direitos por categoria"
+        unidade="Violações"
+        nota="Pela data em que a violação foi identificada."
+        [contagens]="violacoes"
+      />
+    }
+    <app-grafico-barras
+      titulo="Atividades realizadas por tipo"
+      unidade="Atividades"
+      [contagens]="dados.atividadesPorTipo"
+    />
+    <app-grafico-barras
+      titulo="Desligamentos por motivo"
+      unidade="Desligamentos"
+      [nota]="
+        'A porcentagem é a taxa de desligamento: sobre os ' +
+        dados.atendidosNoPeriodo +
+        ' usuários atendidos no período.'
+      "
+      [base]="dados.atendidosNoPeriodo"
+      [contagens]="dados.desligamentosPorMotivo"
+    />
+  </div>
+} @else {
+  <p class="texto-secundario">Carregando…</p>
+}

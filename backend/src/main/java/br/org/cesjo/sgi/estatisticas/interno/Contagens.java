@@ -16,6 +16,15 @@ final class Contagens {
 	private Contagens() {
 	}
 
+	/** Uma contagem por valor do enum, na ordem do enum, a partir de um mapa já contado. */
+	static <E extends Enum<E>> List<Contagem> doMapa(Class<E> tipo, Function<E, String> rotulo, Map<E, Long> totais) {
+		List<Contagem> contagens = new ArrayList<>();
+		for (E valor : tipo.getEnumConstants()) {
+			contagens.add(new Contagem(valor.name(), rotulo.apply(valor), totais.getOrDefault(valor, 0L)));
+		}
+		return List.copyOf(contagens);
+	}
+
 	/**
 	 * Uma contagem por valor do enum, na ordem do enum, inclusive os que têm zero, para o gráfico ter
 	 * sempre as mesmas barras. Os itens sem categoria ({@code null}) vão numa barra a mais, no fim, só

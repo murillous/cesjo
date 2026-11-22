@@ -11,9 +11,18 @@
   margin: 0;
 }
 
+figcaption {
+  margin-bottom: var(--sgi-space-2);
+}
+
 h2 {
-  margin: 0 0 var(--sgi-space-2);
+  margin: 0;
   font-size: var(--sgi-font-size-h3);
+}
+
+.nota {
+  margin: var(--sgi-space-0-5) 0 0;
+  font-size: var(--sgi-font-size-small);
 }
 
 .barras {

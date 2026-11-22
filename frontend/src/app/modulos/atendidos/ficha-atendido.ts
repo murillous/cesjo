@@ -65,8 +65,8 @@ export class FichaAtendidoPagina implements OnInit {
   protected readonly podeEditar = this.sessao.temPermissao('ATENDIDOS_EDITAR');
   protected readonly podeDesligar = this.sessao.temPermissao('ATENDIDOS_DESLIGAR');
   protected readonly podeRegistrarViolacao = this.sessao.temPermissao('VIOLACOES_REGISTRAR');
-  protected readonly podeLerAtividades = this.sessao.temPermissao('ATIVIDADES_LER');
   protected readonly podeLerViolacoes = this.sessao.temPermissao('VIOLACOES_LER');
+  protected readonly podeLerAtividades = this.sessao.temPermissao('ATIVIDADES_LER');
 
   ngOnInit(): void {
     this.api.ficha(this.id()).subscribe({

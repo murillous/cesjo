@@ -318,3 +318,25 @@ Situação: provisória.
 | Decisão provisória | Onde mudar | ADR |
 |---|---|---|
 | Um anexo só por registro, em qualquer tipo, e sempre opcional; o número do ofício vai no assunto. | `ServicoComunicacoes.anexar` (backend), coluna `comunicacao.arquivo_id` (migração nova) e campo de anexo em `ficha-comunicacao.html` (frontend) | [0164](adr/0164-oficios-declaracoes-e-encaminhamentos.md) |
+
+## P32. Taxa de desligamento
+
+> Como a equipe calcula a taxa de desligamento (RF017)? Sobre quantos usuários: os atendidos em algum
+> momento do período, os ativos no início ou no fim do período, ou o total de desligamentos?
+
+Situação: provisória.
+
+| Decisão provisória | Onde mudar | ADR |
+|---|---|---|
+| Desligamentos do período sobre os usuários atendidos em algum dia do período (inseridos até o fim e não desligados antes do início), geral e por motivo. | `estatisticas.interno.ServicoDashboards.taxa` e, para outra base, `UsuariosAtendidos.contarAtendidosNoPeriodo` | [0198](adr/0198-dashboard-de-violacoes-atividades-e-desligamentos.md) |
+
+## P33. Violações nos dashboards e relatórios
+
+> O perfil Consulta, que lê relatórios mas não vê violações de direitos, pode ver a contagem de
+> violações por categoria nos dashboards e no relatório mensal?
+
+Situação: provisória.
+
+| Decisão provisória | Onde mudar | ADR |
+|---|---|---|
+| Não. A contagem de violações só aparece para quem também tem `VIOLACOES_LER` (hoje só o Coordenador). | `estatisticas.interno.DashboardsControlador.atendimento` | [0199](adr/0199-violacoes-no-dashboard-so-para-quem-le-violacoes.md) |

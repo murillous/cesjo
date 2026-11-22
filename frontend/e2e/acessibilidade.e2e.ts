@@ -46,8 +46,13 @@ const TELAS_LOGADAS = [
   { nome: 'contas de acesso', caminho: '/contas', titulo: /Contas de acesso/ },
   { nome: 'nova conta', caminho: '/contas/nova', titulo: /Nova conta/ },
   { nome: 'log de auditoria', caminho: '/auditoria', titulo: /Log de auditoria/ },
-  { nome: 'violações de direitos', caminho: '/violacoes', titulo: /Violações de direitos/ },
   { nome: 'perfil dos atendidos', caminho: '/relatorios/perfil', titulo: /Perfil dos usuários/ },
+  {
+    nome: 'violações, atividades e desligamentos',
+    caminho: '/relatorios/atendimento',
+    titulo: /Violações, atividades e desligamentos/,
+  },
+  { nome: 'violações de direitos', caminho: '/violacoes', titulo: /Violações de direitos/ },
   { nome: 'página não encontrada', caminho: '/nao-existe', titulo: /não encontrada/ },
 ];
 

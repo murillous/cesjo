@@ -7,11 +7,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import com.jayway.jsonpath.JsonPath;
 import org.springframework.http.MediaType;
@@ -85,6 +88,51 @@ final class DadosDeTeste {
 		edicao.put("telefone", "31912345678");
 		edicao.put("cadastro", cadastro);
 		enviar(put("/api/atendidos/{id}/cadastro", insercaoId), edicao, 204);
+	}
+
+	/** Registra uma violação de direitos na inserção. */
+	void registrarViolacao(String insercaoId, String tipo, String ambito, LocalDate data) throws Exception {
+		Map<String, Object> dados = new LinkedHashMap<>();
+		dados.put("tipo", tipo);
+		dados.put("ambito", ambito);
+		dados.put("dataIdentificacao", data.toString());
+		dados.put("descricao", "Descrição fictícia.");
+		enviar(post("/api/atendidos/{id}/violacoes", insercaoId), dados, 201);
+	}
+
+	/** Desliga o usuário da inserção. */
+	void desligar(String insercaoId, LocalDate data, String motivo) throws Exception {
+		Map<String, Object> dados = new LinkedHashMap<>();
+		dados.put("data", data.toString());
+		dados.put("motivo", motivo);
+		dados.put("observacao", null);
+		enviar(post("/api/atendidos/{id}/desligamento", insercaoId), dados, 201);
+	}
+
+	/** Colaborador fictício ativo, gravado direto no banco, como nos testes de atividades. */
+	UUID colaborador(String nome) {
+		UUID id = UUID.randomUUID();
+		Timestamp agora = Timestamp.from(Instant.now());
+		jdbc.update("""
+				insert into colaborador (id, nome, funcao, ativo, criado_em, atualizado_em)
+				values (?, ?, 'PSICOLOGO', true, ?, ?)""", id, nome, agora, agora);
+		return id;
+	}
+
+	/** Registra uma atividade com o usuário da inserção como participante. */
+	void registrarAtividade(String tipo, LocalDate data, String insercaoId, UUID profissional) throws Exception {
+		Map<String, Object> dados = new LinkedHashMap<>();
+		dados.put("tipo", tipo);
+		dados.put("data", data.toString());
+		dados.put("titulo", "Atividade fictícia");
+		dados.put("descricao", "Descrição fictícia.");
+		dados.put("participantes", List.of(pessoaId(insercaoId)));
+		dados.put("profissionais", List.of(profissional));
+		enviar(post("/api/atividades"), dados, 201);
+	}
+
+	String pessoaId(String insercaoId) {
+		return jdbc.queryForObject("select pessoa_id::text from insercao where id = ?::uuid", String.class, insercaoId);
 	}
 
 	/** {@code GET} como Coordenador; devolve o corpo. */
