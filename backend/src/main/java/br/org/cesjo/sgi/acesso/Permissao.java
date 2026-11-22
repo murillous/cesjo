@@ -124,6 +124,12 @@ public enum Permissao {
 	EVENTOS_LER,
 
 	/** Registrar e editar reuniões e eventos institucionais (RF012, ADR 0176). */
-	EVENTOS_REGISTRAR
+	EVENTOS_REGISTRAR,
+
+	/** Ver as doações recebidas e realizadas (RF015, ADR 0179). */
+	DOACOES_LER,
+
+	/** Registrar e editar doações (RF015, ADR 0179). */
+	DOACOES_REGISTRAR
 
 }

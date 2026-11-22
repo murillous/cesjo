@@ -1,0 +1,128 @@
+@use 'styles/breakpoints' as bp;
+
+.cabecalho {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sgi-space-2);
+  margin-bottom: var(--sgi-space-2);
+
+  h1 {
+    margin: 0;
+  }
+}
+
+// Celular: filtros empilhados, na largura toda.
+.filtros {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0 var(--sgi-space-2);
+  margin-bottom: var(--sgi-space-1);
+}
+
+.botoes-filtro {
+  display: flex;
+  gap: var(--sgi-space-1);
+  margin-bottom: var(--sgi-space-2);
+
+  button {
+    min-height: 48px;
+  }
+}
+
+.erro {
+  padding: var(--sgi-space-1-5) var(--sgi-space-2);
+  border-left: var(--sgi-space-0-5) solid var(--sgi-color-accent);
+  background: var(--sgi-color-background-secondary);
+}
+
+.vazio {
+  color: var(--sgi-color-text-secondary);
+}
+
+.lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: var(--sgi-border);
+}
+
+// Celular: data e direção em cima, contraparte e o que foi doado embaixo.
+.linha {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--sgi-space-0-5) var(--sgi-space-2);
+  padding: var(--sgi-space-2) var(--sgi-space-1);
+  border-bottom: var(--sgi-border);
+  color: inherit;
+  text-decoration: none;
+
+  &:hover,
+  &:focus-visible {
+    background: var(--sgi-color-background-secondary);
+  }
+}
+
+.data {
+  font-weight: var(--sgi-font-weight-semibold);
+  font-variant-numeric: tabular-nums;
+}
+
+// Recebida e realizada se distinguem pelo texto e pelo fundo, não só pela cor.
+.direcao {
+  padding: 0 var(--sgi-space-1);
+  border-radius: var(--sgi-radius-sm);
+  background: var(--sgi-color-accent-soft);
+  font-size: var(--sgi-font-size-small);
+  font-weight: var(--sgi-font-weight-medium);
+
+  &.realizada {
+    background: var(--sgi-color-background-secondary);
+  }
+}
+
+.contraparte {
+  grid-column: 1 / -1;
+  overflow-wrap: anywhere;
+}
+
+.detalhe {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--sgi-space-1);
+  font-size: var(--sgi-font-size-small);
+  color: var(--sgi-color-text-secondary);
+}
+
+.quanto {
+  font-weight: var(--sgi-font-weight-medium);
+  color: var(--sgi-color-text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (min-width: bp.$tablet) {
+  .filtros {
+    grid-template-columns: 1fr 1fr 1.5fr auto;
+    align-items: start;
+  }
+
+  .botoes-filtro {
+    padding-top: var(--sgi-space-0-5);
+  }
+
+  .linha {
+    grid-template-columns: 7rem 7rem 2fr 2fr;
+    align-items: center;
+  }
+
+  .direcao {
+    justify-self: start;
+  }
+
+  .contraparte,
+  .detalhe {
+    grid-column: auto;
+  }
+}

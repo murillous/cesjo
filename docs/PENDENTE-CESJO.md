@@ -137,7 +137,12 @@ Situação: provisória.
 
 > As doações incluem dinheiro? É preciso emitir recibo ou prestar contas com valores?
 
-Situação: aberta.
+Situação: provisória.
+
+| Decisão provisória | Onde mudar | ADR |
+|---|---|---|
+| A doação em dinheiro tem valor em reais opcional; os outros tipos não têm valor, só quantidade em texto livre. Não há recibo nem prestação de contas. | `institucional.interno.DadosDoacao` e `ck_doacao_valor` (`V58`) | [0178](adr/0178-registro-de-doacoes.md) |
+| Tipos de doação: dinheiro, alimentos, roupas e calçados, higiene e limpeza, material pedagógico, móveis e equipamentos, outro. | `institucional.TipoDoacao`, `ck_doacao_tipo` (`V58`) e `rotulos.ts` do módulo doações (frontend) | [0178](adr/0178-registro-de-doacoes.md) |
 
 ## P12. Integrações (seção 5.1)
 
@@ -209,6 +214,7 @@ Situação: provisória.
 | O Administrativo não lista nem registra atividades (`ATIVIDADES_LER` e `ATIVIDADES_REGISTRAR` só para Coordenador e Equipe Técnica). | `acesso.Perfil` (linha do `ADMINISTRATIVO`) | [0152](adr/0152-permissoes-das-atividades.md) |
 | Equipe Técnica e Administrativo não veem nem registram parcerias. | `acesso.Perfil` (`PARCERIAS_LER`, `PARCERIAS_GERENCIAR`) | [0173](adr/0173-permissoes-das-parcerias.md) |
 | Equipe Técnica e Administrativo não veem nem registram reuniões e eventos institucionais. | `acesso.Perfil` (`EVENTOS_LER`, `EVENTOS_REGISTRAR`) | [0176](adr/0176-permissoes-das-reunioes-e-eventos.md) |
+| Equipe Técnica e Administrativo não veem nem registram doações. | `acesso.Perfil` (`DOACOES_LER`, `DOACOES_REGISTRAR`) | [0179](adr/0179-permissoes-das-doacoes.md) |
 
 ## P18. Funções dos colaboradores
 

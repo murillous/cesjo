@@ -147,3 +147,6 @@ frente de trabalho paralela não é usado todo.
 - [0175](0175-reunioes-e-eventos-institucionais.md) — Reuniões e eventos institucionais
 - [0176](0176-permissoes-das-reunioes-e-eventos.md) — Permissões das reuniões e eventos institucionais (provisório)
 - [0177](0177-telas-de-reunioes-e-eventos.md) — Telas de reuniões e eventos
+- [0178](0178-registro-de-doacoes.md) — Registro de doações recebidas e realizadas (provisório)
+- [0179](0179-permissoes-das-doacoes.md) — Permissões das doações (provisório)
+- [0180](0180-telas-de-doacoes.md) — Telas de doações
