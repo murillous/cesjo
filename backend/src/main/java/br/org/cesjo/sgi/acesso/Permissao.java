@@ -57,6 +57,12 @@ public enum Permissao {
 	/** Ler só os dados básicos dos usuários atendidos: nome, situação, turno e datas (ADR 0082). */
 	ATENDIDOS_LER_BASICO,
 
+	/** Completar e corrigir o cadastro do usuário atendido, sem crença nem saúde (RF007, ADR 0142). */
+	ATENDIDOS_EDITAR,
+
+	/** Ler e editar a crença religiosa e os dados de saúde do usuário atendido (RF007, ADR 0142). */
+	ATENDIDOS_DADOS_SENSIVEIS,
+
 	/** Ver a agenda e a ficha das visitas domiciliares (RF004, ADR 0071). */
 	VISITAS_LER,
 
@@ -95,6 +101,12 @@ public enum Permissao {
 
 	/** Consultar violações de direitos e ler a descrição, com leitura auditada (RF009, ADR 0113). */
 	VIOLACOES_LER,
+
+	/** Listar as atividades e abrir a ficha com a descrição (RF010, ADR 0152). */
+	ATIVIDADES_LER,
+
+	/** Registrar e corrigir atividades (RF010, ADR 0152). */
+	ATIVIDADES_REGISTRAR,
 
 	/** Listar os contatos e comunicações e abrir a ficha com a descrição (RF011, ADR 0162). */
 	COMUNICACOES_LER,
