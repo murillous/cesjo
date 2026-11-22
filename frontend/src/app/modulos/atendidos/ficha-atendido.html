@@ -103,6 +103,10 @@
             </dl>
           </section>
         }
+
+        @if (podeLerAtividades) {
+          <app-atividades-do-usuario [pessoaId]="f.pessoaId" />
+        }
       </div>
     } @else {
       <p class="texto-secundario basico">

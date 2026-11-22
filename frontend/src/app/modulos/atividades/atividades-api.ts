@@ -51,13 +51,41 @@ export interface OpcoesAtividade {
   sugeridoId: string | null;
 }
 
+/** Filtros da listagem (ADR 0155). Datas em `AAAA-MM-DD`, as duas inclusive. */
+export interface FiltrosAtividades {
+  tipo?: TipoAtividade | null;
+  de?: string | null;
+  ate?: string | null;
+  profissionalId?: string | null;
+  pessoaId?: string | null;
+}
+
+/** Quem aparece em alguma atividade, ativo ou não, para os filtros. */
+export interface OpcoesFiltro {
+  profissionais: Profissional[];
+  usuarios: Participante[];
+}
+
 @Injectable({ providedIn: 'root' })
 export class AtividadesApi {
   private readonly http = inject(HttpClient);
 
-  listar(pagina: number, tamanho: number): Observable<PaginaAtividades> {
-    const params = new HttpParams().set('page', pagina).set('size', tamanho);
+  listar(
+    filtros: FiltrosAtividades,
+    pagina: number,
+    tamanho: number,
+  ): Observable<PaginaAtividades> {
+    let params = new HttpParams().set('page', pagina).set('size', tamanho);
+    for (const [nome, valor] of Object.entries(filtros)) {
+      if (valor) {
+        params = params.set(nome, valor);
+      }
+    }
     return this.http.get<PaginaAtividades>('/api/atividades', { params });
+  }
+
+  filtros(): Observable<OpcoesFiltro> {
+    return this.http.get<OpcoesFiltro>('/api/atividades/filtros');
   }
 
   atividade(id: string): Observable<Atividade> {

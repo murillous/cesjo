@@ -15,6 +15,67 @@
     }
   </header>
 
+  <form class="filtros" [formGroup]="filtros" (ngSubmit)="filtrar()" aria-label="Filtros">
+    <mat-form-field>
+      <mat-label>Tipo</mat-label>
+      <mat-select formControlName="tipo">
+        <mat-option [value]="null">Todos</mat-option>
+        @for (tipo of listaTipos; track tipo.valor) {
+          <mat-option [value]="tipo.valor">{{ tipo.rotulo }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>De</mat-label>
+      <input matInput [matDatepicker]="seletorDe" formControlName="de" />
+      <mat-hint>DD/MM/AAAA</mat-hint>
+      <mat-datepicker-toggle matIconSuffix [for]="seletorDe" />
+      <mat-datepicker #seletorDe />
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Até</mat-label>
+      <input matInput [matDatepicker]="seletorAte" formControlName="ate" />
+      <mat-hint>DD/MM/AAAA</mat-hint>
+      <mat-datepicker-toggle matIconSuffix [for]="seletorAte" />
+      <mat-datepicker #seletorAte />
+      @if (filtros.controls.ate.hasError('antesDoInicio')) {
+        <mat-error>O fim não pode ser antes do início.</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Profissional</mat-label>
+      <mat-select formControlName="profissionalId">
+        <mat-option [value]="null">Todos</mat-option>
+        @for (profissional of opcoes().profissionais; track profissional.id) {
+          <mat-option [value]="profissional.id">
+            {{ profissional.nome }} ({{ funcoes[profissional.funcao] }})
+          </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Usuário atendido</mat-label>
+      <mat-select formControlName="pessoaId">
+        <mat-option [value]="null">Todos</mat-option>
+        @for (usuario of opcoes().usuarios; track usuario.pessoaId) {
+          <mat-option [value]="usuario.pessoaId">{{ usuario.nomeCompleto }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <div class="botoes">
+      <button matButton="filled" type="submit">
+        <mat-icon aria-hidden="true">filter_alt</mat-icon>
+        Filtrar
+      </button>
+      <button matButton type="button" (click)="limpar()">Limpar filtros</button>
+    </div>
+  </form>
+
   <div class="resultado" [attr.aria-busy]="carregando()">
     @if (carregando()) {
       <mat-progress-bar mode="indeterminate" aria-label="Carregando atividades" />
@@ -27,10 +88,7 @@
       </div>
     } @else if (!carregando() && atividades().length === 0) {
       <div class="aviso">
-        <p>Nenhuma atividade registrada ainda.</p>
-        @if (podeRegistrar) {
-          <a matButton="outlined" routerLink="nova">Registrar a primeira atividade</a>
-        }
+        <p>Nenhuma atividade com esses filtros. Mude ou limpe os filtros.</p>
       </div>
     } @else {
       <p class="total texto-secundario" aria-live="polite">
