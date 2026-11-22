@@ -221,3 +221,14 @@ Situação: provisória.
 |---|---|---|
 | A pessoa ou instituição é texto livre (`contraparte`), sem ligação com usuário atendido nem com cadastro de instituições. | `atividades.interno.DadosComunicacao` e migração nova com `pessoa_id` | [0160](adr/0160-registro-de-contatos-e-comunicacoes.md) |
 | Só se registra o que já aconteceu: a data não pode ser futura. | `ServicoComunicacoes.exigirDataValida` (backend) e `[max]` da data em `ficha-comunicacao.html` (frontend) | [0160](adr/0160-registro-de-contatos-e-comunicacoes.md) |
+
+## P31. Ofícios, declarações e encaminhamentos (RF011)
+
+> Os ofícios e declarações têm número ou protocolo que precisa ser registrado à parte? Cada registro
+> pode ter mais de um anexo (ofício e resposta, por exemplo)? O anexo é obrigatório em algum tipo?
+
+Situação: provisória.
+
+| Decisão provisória | Onde mudar | ADR |
+|---|---|---|
+| Um anexo só por registro, em qualquer tipo, e sempre opcional; o número do ofício vai no assunto. | `ServicoComunicacoes.anexar` (backend), coluna `comunicacao.arquivo_id` (migração nova) e campo de anexo em `ficha-comunicacao.html` (frontend) | [0164](adr/0164-oficios-declaracoes-e-encaminhamentos.md) |
