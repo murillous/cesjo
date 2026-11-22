@@ -1,0 +1,71 @@
+<section class="atividades" aria-labelledby="titulo-atividades">
+  <header class="cabecalho">
+    <div>
+      <h1 id="titulo-atividades">Atividades</h1>
+      <p class="texto-secundario">
+        O que a equipe fez com os usuários atendidos e as famílias, da mais recente para a mais
+        antiga.
+      </p>
+    </div>
+    @if (podeRegistrar) {
+      <a matButton="filled" routerLink="nova">
+        <mat-icon aria-hidden="true">add</mat-icon>
+        Registrar atividade
+      </a>
+    }
+  </header>
+
+  <div class="resultado" [attr.aria-busy]="carregando()">
+    @if (carregando()) {
+      <mat-progress-bar mode="indeterminate" aria-label="Carregando atividades" />
+    }
+
+    @if (erro()) {
+      <div class="aviso" role="alert">
+        <p>Não foi possível carregar as atividades. Verifique a conexão e tente de novo.</p>
+        <button matButton="outlined" type="button" (click)="carregar()">Tentar de novo</button>
+      </div>
+    } @else if (!carregando() && atividades().length === 0) {
+      <div class="aviso">
+        <p>Nenhuma atividade registrada ainda.</p>
+        @if (podeRegistrar) {
+          <a matButton="outlined" routerLink="nova">Registrar a primeira atividade</a>
+        }
+      </div>
+    } @else {
+      <p class="total texto-secundario" aria-live="polite">
+        {{ total() }} {{ total() === 1 ? 'atividade' : 'atividades' }}
+      </p>
+
+      <ol class="diario" aria-label="Atividades">
+        @for (atividade of atividades(); track atividade.id) {
+          <li>
+            <a class="item" [routerLink]="atividade.id">
+              <time class="dia" [attr.datetime]="atividade.data">
+                <span class="numero">{{ data(atividade.data) | date: 'dd' }}</span>
+                <span class="mes">{{ data(atividade.data) | date: 'MMM yyyy' }}</span>
+              </time>
+              <span class="corpo">
+                <span class="titulo">{{ atividade.titulo }}</span>
+                <span class="tipo">{{ tipos[atividade.tipo] }}</span>
+                <span class="pessoas texto-secundario">
+                  <mat-icon aria-hidden="true">group</mat-icon>
+                  {{ nomes(atividade) }}
+                </span>
+              </span>
+            </a>
+          </li>
+        }
+      </ol>
+
+      <mat-paginator
+        [length]="total()"
+        [pageIndex]="pagina()"
+        [pageSize]="tamanho()"
+        [pageSizeOptions]="tamanhos"
+        (page)="mudarPagina($event)"
+        aria-label="Páginas da lista"
+      />
+    }
+  </div>
+</section>
