@@ -26,6 +26,9 @@ public interface Pessoas {
 	/** Nome da entidade documento da pessoa no log de auditoria. */
 	String ENTIDADE_DOCUMENTO = "documento_pessoa";
 
+	/** Nome da entidade cadastro completo da pessoa no log de auditoria (ADR 0140). */
+	String ENTIDADE_CADASTRO = "cadastro_complementar";
+
 	/** Cadastra a pessoa e o seu responsável e devolve o {@code id} da pessoa. */
 	UUID cadastrar(NovaPessoa nova);
 
@@ -80,5 +83,32 @@ public interface Pessoas {
 	 * @throws IllegalArgumentException quando a pessoa não existe
 	 */
 	DadosResponsavel cadastrarResponsavel(UUID pessoaId, String nomeCompleto);
+
+	/**
+	 * Dados pessoais completos da pessoa (ADR 0140), {@link CadastroComplementar#VAZIO} se ainda não foram
+	 * preenchidos. Não traz crença nem saúde. Não é auditado: CPF, NIS e RG são cifrados no banco, mas não
+	 * são dado sensível da LGPD (ADR 0142).
+	 */
+	CadastroComplementar cadastroComplementar(UUID pessoaId);
+
+	/**
+	 * Crença religiosa e dados de saúde da pessoa, {@link DadosSensiveis#VAZIO} se não há nada
+	 * preenchido. Quando há, registra a leitura sensível do cadastro (ADR 0142).
+	 */
+	DadosSensiveis dadosSensiveis(UUID pessoaId);
+
+	/**
+	 * Grava os dados pessoais completos. Registra na auditoria só os nomes dos campos que mudaram.
+	 *
+	 * @throws br.org.cesjo.sgi.compartilhado.web.RecursoNaoEncontradoException quando a pessoa não existe
+	 */
+	void atualizarCadastroComplementar(UUID pessoaId, CadastroComplementar dados);
+
+	/**
+	 * Grava a crença e os dados de saúde. Registra na auditoria só os nomes dos campos que mudaram.
+	 *
+	 * @throws br.org.cesjo.sgi.compartilhado.web.RecursoNaoEncontradoException quando a pessoa não existe
+	 */
+	void atualizarDadosSensiveis(UUID pessoaId, DadosSensiveis dados);
 
 }
