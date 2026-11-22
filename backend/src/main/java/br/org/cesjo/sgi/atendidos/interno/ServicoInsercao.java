@@ -2,6 +2,7 @@ package br.org.cesjo.sgi.atendidos.interno;
 
 import java.text.Collator;
 import java.time.Clock;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.EnumMap;
@@ -16,7 +17,9 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.org.cesjo.sgi.atendidos.MotivoDesligamento;
 import br.org.cesjo.sgi.atendidos.PerfilAtendido;
+import br.org.cesjo.sgi.atendidos.TipoViolacao;
 import br.org.cesjo.sgi.atendidos.SituacaoInsercao;
 import br.org.cesjo.sgi.atendidos.Turno;
 import br.org.cesjo.sgi.atendidos.UsuarioAtivo;
@@ -50,12 +53,15 @@ class ServicoInsercao implements UsuariosAtendidos {
 
 	private final ConsultaAtendidos consulta;
 
+	private final ContagensDoPeriodo contagens;
+
 	private final Clock relogio = Clock.systemUTC();
 
 	ServicoInsercao(InsercaoRepositorio insercoes, ListaEspera listaEspera, Pessoas pessoas, Auditoria auditoria,
-			IdentidadeAtual identidadeAtual, ConsultaAtendidos consulta) {
+			IdentidadeAtual identidadeAtual, ConsultaAtendidos consulta, ContagensDoPeriodo contagens) {
 		this.insercoes = insercoes;
 		this.consulta = consulta;
+		this.contagens = contagens;
 		this.listaEspera = listaEspera;
 		this.pessoas = pessoas;
 		this.auditoria = auditoria;
@@ -133,6 +139,33 @@ class ServicoInsercao implements UsuariosAtendidos {
 	@Transactional(readOnly = true)
 	public List<PerfilAtendido> perfisDosAtivos() {
 		return consulta.perfisDosAtivos();
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Map<TipoViolacao, Long> contarViolacoesPorTipo(LocalDate inicio, LocalDate fim) {
+		exigirPeriodo(inicio, fim);
+		return contagens.violacoesPorTipo(inicio, fim);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Map<MotivoDesligamento, Long> contarDesligamentosPorMotivo(LocalDate inicio, LocalDate fim) {
+		exigirPeriodo(inicio, fim);
+		return contagens.desligamentosPorMotivo(inicio, fim);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public long contarAtendidosNoPeriodo(LocalDate inicio, LocalDate fim) {
+		exigirPeriodo(inicio, fim);
+		return contagens.atendidosNoPeriodo(inicio, fim);
+	}
+
+	private static void exigirPeriodo(LocalDate inicio, LocalDate fim) {
+		if (inicio == null || fim == null || fim.isBefore(inicio)) {
+			throw new IllegalArgumentException("Período inválido: " + inicio + " a " + fim);
+		}
 	}
 
 	@Override
