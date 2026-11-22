@@ -61,6 +61,22 @@ class ContagensDoPeriodo {
 				""").param("inicio", inicio).param("fim", fim).query(Long.class).single();
 	}
 
+	long insercoes(LocalDate inicio, LocalDate fim) {
+		return jdbc.sql("select count(*) from insercao where data_insercao between :inicio and :fim")
+			.param("inicio", inicio)
+			.param("fim", fim)
+			.query(Long.class)
+			.single();
+	}
+
+	long ativosEm(LocalDate dia) {
+		return jdbc.sql("""
+				select count(*) from insercao i
+				left join desligamento d on d.insercao_id = i.id
+				where i.data_insercao <= :dia and (d.id is null or d.data > :dia)
+				""").param("dia", dia).query(Long.class).single();
+	}
+
 	private static <E extends Enum<E>> Map<E, Long> zerado(Class<E> tipo) {
 		Map<E, Long> mapa = new EnumMap<>(tipo);
 		for (E valor : tipo.getEnumConstants()) {

@@ -63,4 +63,10 @@ public interface UsuariosAtendidos {
 	 */
 	long contarAtendidosNoPeriodo(LocalDate inicio, LocalDate fim);
 
+	/** Inserções no serviço com data entre {@code inicio} e {@code fim}, inclusive (RF016, ADR 0200). */
+	long contarInsercoes(LocalDate inicio, LocalDate fim);
+
+	/** Usuários com inserção ativa no fim de {@code dia}: inseridos até o dia e não desligados até ele. */
+	long contarAtivosEm(LocalDate dia);
+
 }

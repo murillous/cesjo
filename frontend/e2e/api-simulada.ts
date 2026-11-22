@@ -106,6 +106,36 @@ const PAINEL_ATENDIMENTO = {
   ],
 };
 
+const linhas = (grupo: string, pares: [string, number][]) =>
+  pares.map(([indicador, quantidade]) => ({ grupo, indicador, quantidade }));
+
+const RELATORIO_MENSAL = {
+  titulo: 'Relatório mensal de outubro de 2026',
+  inicio: '2026-10-01',
+  fim: '2026-10-31',
+  geradoEm: '2026-11-20T13:00:00Z',
+  linhas: [
+    ...linhas('Lista de espera', [
+      ['Novas inscrições', 6],
+      ['Candidatos na fila no último dia', 14],
+      ['Saídas da lista: Desistência', 1],
+    ]),
+    ...linhas('Usuários atendidos', [
+      ['Inserções no serviço', 2],
+      ['Usuários atendidos no período', 27],
+      ['Usuários ativos no último dia', 26],
+    ]),
+    ...linhas('Atendimentos', [
+      ['Atendimento multiprofissional', 3],
+      ['Estudo de caso', 0],
+    ]),
+    ...linhas('Desligamentos', [
+      ['Evasão', 1],
+      ['Outros', 0],
+    ]),
+  ],
+};
+
 const AUDITORIA = [
   {
     id: '00000000-0000-0000-0000-0000000000a1',
@@ -187,6 +217,7 @@ export async function simularApi(
     if (caminho === '/api/auditoria/entidades') return json(route, ['conta_acesso', 'arquivo']);
     if (caminho === '/api/auditoria') return json(route, pagina(AUDITORIA));
     if (caminho === '/api/estatisticas/dashboards/perfil') return json(route, PAINEL_PERFIL);
+    if (caminho === '/api/estatisticas/relatorios/mensal') return json(route, RELATORIO_MENSAL);
     if (caminho === '/api/estatisticas/dashboards/atendimento')
       return json(route, PAINEL_ATENDIMENTO);
     if (caminho === '/api/violacoes') return json(route, pagina(VIOLACOES));

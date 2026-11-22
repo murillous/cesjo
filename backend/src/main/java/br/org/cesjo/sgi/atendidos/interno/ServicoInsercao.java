@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -160,6 +161,19 @@ class ServicoInsercao implements UsuariosAtendidos {
 	public long contarAtendidosNoPeriodo(LocalDate inicio, LocalDate fim) {
 		exigirPeriodo(inicio, fim);
 		return contagens.atendidosNoPeriodo(inicio, fim);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public long contarInsercoes(LocalDate inicio, LocalDate fim) {
+		exigirPeriodo(inicio, fim);
+		return contagens.insercoes(inicio, fim);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public long contarAtivosEm(LocalDate dia) {
+		return contagens.ativosEm(Objects.requireNonNull(dia, "dia"));
 	}
 
 	private static void exigirPeriodo(LocalDate inicio, LocalDate fim) {
