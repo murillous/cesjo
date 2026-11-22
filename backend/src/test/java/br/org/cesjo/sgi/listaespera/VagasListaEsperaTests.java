@@ -32,7 +32,7 @@ import br.org.cesjo.sgi.auditoria.AcaoAuditoria;
 import br.org.cesjo.sgi.auditoria.Auditoria;
 
 /**
- * Capacidade e vagas disponíveis (issue #30, ADR 0092 e ADR 0093). O banco é compartilhado com outros
+ * Capacidade e vagas disponíveis (issue #30, ADR 0092, ADR 0093 e ADR 0135). O banco é compartilhado com outros
  * testes, então cada teste parte da ocupação e da fila que o painel informa.
  */
 @Import(TestcontainersConfiguration.class)
@@ -65,7 +65,7 @@ class VagasListaEsperaTests {
 			.andExpect(jsonPath("$.definidaEm").isNotEmpty());
 		verify(auditoria).registrar(argThat(e -> e.acao() == AcaoAuditoria.CRIAR && e.entidade().equals("capacidade_servico")));
 
-		inserirInscricao("INSERIDO");
+		ocuparVaga();
 		mvc.perform(get("/api/lista-espera/vagas"))
 			.andExpect(jsonPath("$.ocupadas").value(ocupadas + 1))
 			.andExpect(jsonPath("$.disponiveis").value(2));
@@ -74,7 +74,7 @@ class VagasListaEsperaTests {
 	@Test
 	@ComConta(perfil = Perfil.COORDENADOR, login = "vagas-lotado")
 	void vagasDisponiveisNuncaFicamNegativas() throws Exception {
-		inserirInscricao("INSERIDO");
+		ocuparVaga();
 		definir(0).andExpect(jsonPath("$.disponiveis").value(0));
 	}
 
@@ -123,6 +123,23 @@ class VagasListaEsperaTests {
 
 	private ResultActions definirCorpo(String corpo) throws Exception {
 		return mvc.perform(put("/api/lista-espera/capacidade").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(corpo));
+	}
+
+	/** Usuário atendido ativo, que ocupa vaga (ADR 0135). */
+	private void ocuparVaga() {
+		UUID pessoa = UUID.randomUUID();
+		UUID inscricao = UUID.randomUUID();
+		UUID responsavel = UUID.randomUUID();
+		jdbc.update("insert into pessoa (id, nome_completo, tipo_deficiencia, telefone, criado_em, atualizado_em)"
+				+ " values (?, 'Pessoa Fictícia de Vagas', 'TEA', '3132345678', now(), now())", pessoa);
+		jdbc.update("insert into inscricao_lista_espera (id, pessoa_id, data_cadastro, origem_encaminhamento, situacao,"
+				+ " criado_em, atualizado_em) values (?, ?, date '2024-01-01', 'CRAS', 'INSERIDO', now(), now())",
+				inscricao, pessoa);
+		jdbc.update("insert into responsavel (id, pessoa_id, nome_completo, criado_em, atualizado_em)"
+				+ " values (?, ?, 'Responsável Fictício', now(), now())", responsavel, pessoa);
+		jdbc.update("insert into insercao (id, pessoa_id, inscricao_id, data_insercao, turno, cuidador_responsavel_id,"
+				+ " situacao, criado_em, atualizado_em) values (?, ?, ?, date '2024-02-01', 'MATUTINO', ?, 'ATIVA',"
+				+ " now(), now())", UUID.randomUUID(), pessoa, inscricao, responsavel);
 	}
 
 	private void inserirInscricao(String situacao) {

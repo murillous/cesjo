@@ -77,8 +77,8 @@ class ServicoInsercao implements UsuariosAtendidos {
 	@Transactional
 	InsercaoResposta inserir(NovaInsercao nova) {
 		DadosInscricao inscricao = inscricao(nova.inscricaoId());
-		if (inscricao.situacao() != SituacaoInscricao.AGUARDANDO) {
-			throw new RegraNegocioException("Só um candidato que está aguardando na fila pode ser inserido no serviço.");
+		if (!inscricao.situacao().ativa()) {
+			throw new RegraNegocioException("Só um candidato que está na fila pode ser inserido no serviço.");
 		}
 		if (nova.dataInsercao().isBefore(inscricao.dataCadastro())) {
 			throw new RegraNegocioException("A data de inserção não pode ser anterior à data de cadastro na fila.");
@@ -89,7 +89,7 @@ class ServicoInsercao implements UsuariosAtendidos {
 		}
 		DadosResponsavel cuidador = cuidador(pessoaId, nova);
 
-		listaEspera.registrarInsercao(inscricao.id());
+		listaEspera.registrarInsercao(inscricao.id(), nova.dataInsercao());
 		UUID autor = identidadeAtual.obter().map(Identidade::id).orElse(null);
 		Insercao insercao = new Insercao(pessoaId, inscricao.id(), nova.dataInsercao(), nova.turno(), cuidador.id(),
 				autor, relogio.instant());

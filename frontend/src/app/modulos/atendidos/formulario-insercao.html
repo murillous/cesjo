@@ -22,9 +22,9 @@
       </p>
     </div>
 
-    @if (c.situacao !== 'AGUARDANDO') {
+    @if (!naFila(c)) {
       <p class="aviso" role="status">
-        Este candidato não está mais aguardando na fila e não pode ser inserido de novo.
+        Este candidato não está mais na fila e não pode ser inserido de novo.
       </p>
     } @else {
       <form [formGroup]="formulario" (ngSubmit)="salvar()" novalidate>

@@ -18,7 +18,7 @@ import { Router, RouterLink } from '@angular/router';
 
 import { mensagemDeErro } from '../../acesso/problema';
 import { dataIso, hoje } from '../lista-espera/datas';
-import { TIPOS_DEFICIENCIA } from '../lista-espera/rotulos';
+import { SITUACOES_ATIVAS, TIPOS_DEFICIENCIA } from '../lista-espera/rotulos';
 import { AtendidosApi, CandidatoInsercao } from './atendidos-api';
 import { Turno, TURNOS } from './rotulos';
 
@@ -86,6 +86,11 @@ export class FormularioInsercao implements OnInit {
         this.erro.set(mensagemDeErro(erro, 'Não foi possível carregar o candidato.'));
       },
     });
+  }
+
+  /** Aguardando ou em avaliação: pode ser inserido (ADR 0136). */
+  protected naFila(candidato: CandidatoInsercao): boolean {
+    return SITUACOES_ATIVAS.has(candidato.situacao);
   }
 
   protected rotuloTipo(candidato: CandidatoInsercao): string {
