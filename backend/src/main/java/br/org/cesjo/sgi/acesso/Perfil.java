@@ -16,9 +16,13 @@ import static br.org.cesjo.sgi.acesso.Permissao.COLABORADORES_LER;
 import static br.org.cesjo.sgi.acesso.Permissao.COMUNICACOES_LER;
 import static br.org.cesjo.sgi.acesso.Permissao.COMUNICACOES_REGISTRAR;
 import static br.org.cesjo.sgi.acesso.Permissao.CONTAS_GERENCIAR;
+import static br.org.cesjo.sgi.acesso.Permissao.DOACOES_LER;
+import static br.org.cesjo.sgi.acesso.Permissao.DOACOES_REGISTRAR;
 import static br.org.cesjo.sgi.acesso.Permissao.DOCUMENTOS_ENVIAR;
 import static br.org.cesjo.sgi.acesso.Permissao.DOCUMENTOS_LER;
 import static br.org.cesjo.sgi.acesso.Permissao.ESCUTA_LER;
+import static br.org.cesjo.sgi.acesso.Permissao.EVENTOS_LER;
+import static br.org.cesjo.sgi.acesso.Permissao.EVENTOS_REGISTRAR;
 import static br.org.cesjo.sgi.acesso.Permissao.ESCUTA_REGISTRAR;
 import static br.org.cesjo.sgi.acesso.Permissao.LISTA_ESPERA_CADASTRAR;
 import static br.org.cesjo.sgi.acesso.Permissao.LISTA_ESPERA_EDITAR;
@@ -26,6 +30,8 @@ import static br.org.cesjo.sgi.acesso.Permissao.LISTA_ESPERA_EXPORTAR;
 import static br.org.cesjo.sgi.acesso.Permissao.LISTA_ESPERA_FILA_LER;
 import static br.org.cesjo.sgi.acesso.Permissao.LISTA_ESPERA_LER;
 import static br.org.cesjo.sgi.acesso.Permissao.NOTIFICACOES_LER;
+import static br.org.cesjo.sgi.acesso.Permissao.PARCERIAS_GERENCIAR;
+import static br.org.cesjo.sgi.acesso.Permissao.PARCERIAS_LER;
 import static br.org.cesjo.sgi.acesso.Permissao.VIOLACOES_LER;
 import static br.org.cesjo.sgi.acesso.Permissao.VIOLACOES_REGISTRAR;
 import static br.org.cesjo.sgi.acesso.Permissao.PIA_APROVAR;
@@ -59,23 +65,25 @@ public enum Perfil {
 					COLABORADORES_GERENCIAR, ATENDIDOS_INSERIR, ATENDIDOS_LER, ATENDIDOS_LER_BASICO, VISITAS_LER,
 					VISITAS_AGENDAR, VISITAS_REGISTRAR, ESCUTA_LER, ESCUTA_REGISTRAR, PIA_LER,
 					PIA_EDITAR, PIA_APROVAR, CAPACIDADE_LER, CAPACIDADE_EDITAR, ATENDIDOS_DESLIGAR, VIOLACOES_REGISTRAR, VIOLACOES_LER, LISTA_ESPERA_EXPORTAR,
-					ATENDIDOS_EDITAR, ATENDIDOS_DADOS_SENSIVEIS, ATIVIDADES_LER, ATIVIDADES_REGISTRAR,
-					COMUNICACOES_LER, COMUNICACOES_REGISTRAR, RELATORIOS_LER)),
+					ATENDIDOS_EDITAR, ATENDIDOS_DADOS_SENSIVEIS, ATIVIDADES_LER, ATIVIDADES_REGISTRAR, COMUNICACOES_LER,
+					COMUNICACOES_REGISTRAR, PARCERIAS_LER, PARCERIAS_GERENCIAR, EVENTOS_LER, EVENTOS_REGISTRAR, DOACOES_LER,
+					DOACOES_REGISTRAR, RELATORIOS_LER)),
 
 	// PENDENTE-CESJO(P17): a Equipe Técnica não vê relatórios nem dashboards (ADR 0015 e ADR 0196).
-	// PENDENTE-CESJO(P17): a Equipe Técnica não vê o cadastro de colaboradores (gestão institucional, ADR 0047).
+	// PENDENTE-CESJO(P17): a Equipe Técnica não vê o cadastro de colaboradores (gestão institucional, ADR 0047)
+	// nem as parcerias (ADR 0173) nem as reuniões e eventos institucionais (ADR 0176) nem as doações (ADR 0179).
 	// PENDENTE-CESJO(P17): a Equipe Técnica lê e edita a lista de espera mas não cadastra candidatos (ADR 0039) e
 	// lê os usuários atendidos mas não insere no serviço (ADR 0082).
 	EQUIPE_TECNICA("Equipe Técnica",
 			EnumSet.of(DOCUMENTOS_LER, NOTIFICACOES_LER, LISTA_ESPERA_LER, LISTA_ESPERA_FILA_LER, LISTA_ESPERA_EDITAR,
 					ATENDIDOS_LER, ATENDIDOS_LER_BASICO, VISITAS_LER, VISITAS_AGENDAR, VISITAS_REGISTRAR, ESCUTA_LER,
 					ESCUTA_REGISTRAR, PIA_LER,
-					PIA_EDITAR, CAPACIDADE_LER, VIOLACOES_REGISTRAR, VIOLACOES_LER, LISTA_ESPERA_EXPORTAR,
-					ATENDIDOS_EDITAR, ATENDIDOS_DADOS_SENSIVEIS, ATIVIDADES_LER, ATIVIDADES_REGISTRAR,
-					COMUNICACOES_LER, COMUNICACOES_REGISTRAR)),
+					PIA_EDITAR, CAPACIDADE_LER, VIOLACOES_REGISTRAR, VIOLACOES_LER, LISTA_ESPERA_EXPORTAR, ATENDIDOS_EDITAR,
+					ATENDIDOS_DADOS_SENSIVEIS, ATIVIDADES_LER, ATIVIDADES_REGISTRAR, COMUNICACOES_LER, COMUNICACOES_REGISTRAR)),
 
 	// PENDENTE-CESJO(P17): o Administrativo não vê relatórios nem dashboards (ADR 0015 e ADR 0196).
-	// PENDENTE-CESJO(P17): o Administrativo não vê o cadastro de colaboradores (gestão institucional, ADR 0047).
+	// PENDENTE-CESJO(P17): o Administrativo não vê o cadastro de colaboradores (gestão institucional, ADR 0047)
+	// nem registra parcerias (ADR 0173) nem reuniões e eventos institucionais (ADR 0176) nem doações (ADR 0179).
 	// PENDENTE-CESJO(P17): o Administrativo não vê as atividades (RF010), ponto com (?) na matriz (ADR 0152).
 	// PENDENTE-CESJO(P8): o Administrativo agenda, cancela e reagenda visitas, mas não registra a realização
 	// nem lê as observações, que são sensíveis (ADR 0074).

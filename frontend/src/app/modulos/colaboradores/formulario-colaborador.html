@@ -53,11 +53,29 @@
       <mat-hint>Opcional. Liga o colaborador ao login que ele usa no sistema.</mat-hint>
     </mat-form-field>
 
+    @if (!edicao()) {
+      <mat-form-field appearance="outline">
+        <mat-label>Data da contratação</mat-label>
+        <input
+          matInput
+          [matDatepicker]="seletorContratacao"
+          [max]="hoje"
+          formControlName="dataContratacao"
+        />
+        <mat-hint>Opcional. DD/MM/AAAA</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="seletorContratacao" />
+        <mat-datepicker #seletorContratacao />
+        @if (formulario.controls.dataContratacao.hasError('matDatepickerMax')) {
+          <mat-error>A data não pode ser futura.</mat-error>
+        }
+      </mat-form-field>
+    }
+
     @if (edicao()) {
       <mat-slide-toggle formControlName="ativo" class="ativo"> Ativo na equipe </mat-slide-toggle>
       <p class="texto-secundario dica-ativo">
         Colaborador inativo deixa de aparecer para novas visitas, escutas e atividades. Os registros
-        antigos continuam com o nome dele.
+        antigos continuam com o nome dele. Para quem saiu da equipe, registre o desligamento abaixo.
       </p>
     }
 
@@ -69,4 +87,12 @@
       </div>
     }
   </form>
+
+  @if (colaborador(); as atual) {
+    <app-historico-vinculos
+      [colaboradorId]="atual.id"
+      [podeGerenciar]="podeGerenciar"
+      (mudou)="recarregar()"
+    />
+  }
 </section>

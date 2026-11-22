@@ -142,6 +142,17 @@ frente de trabalho paralela não é usado todo.
 - [0163](0163-telas-de-contatos-e-comunicacoes.md) — Telas de contatos e comunicações
 - [0164](0164-oficios-declaracoes-e-encaminhamentos.md) — Ofícios, declarações e encaminhamentos, com direção e anexo opcional (provisório)
 - [0165](0165-telas-de-oficios-declaracoes-e-encaminhamentos.md) — Telas de ofícios, declarações e encaminhamentos
+- [0170](0170-vinculos-dos-colaboradores.md) — Histórico de vínculos: contratações e desligamentos dos colaboradores (provisório)
+- [0171](0171-tela-de-vinculos-dos-colaboradores.md) — Histórico de vínculos na ficha do colaborador
+- [0172](0172-parceiros-e-acoes-de-articulacao.md) — Parceiros e ações de articulação (provisório)
+- [0173](0173-permissoes-das-parcerias.md) — Permissões das parcerias (provisório)
+- [0174](0174-telas-de-parcerias.md) — Telas de parcerias
+- [0175](0175-reunioes-e-eventos-institucionais.md) — Reuniões e eventos institucionais
+- [0176](0176-permissoes-das-reunioes-e-eventos.md) — Permissões das reuniões e eventos institucionais (provisório)
+- [0177](0177-telas-de-reunioes-e-eventos.md) — Telas de reuniões e eventos
+- [0178](0178-registro-de-doacoes.md) — Registro de doações recebidas e realizadas (provisório)
+- [0179](0179-permissoes-das-doacoes.md) — Permissões das doações (provisório)
+- [0180](0180-telas-de-doacoes.md) — Telas de doações
 - [0195](0195-modulo-estatisticas-e-dashboard-de-perfil.md) — Módulo Estatísticas e dashboard de perfil dos usuários atendidos
 - [0196](0196-permissao-dos-relatorios-e-dashboards.md) — Permissão dos relatórios e dashboards (provisório)
 - [0197](0197-graficos-em-html-e-css-sem-biblioteca.md) — Gráficos em HTML e CSS, sem biblioteca, e área de relatórios com abas

@@ -131,13 +131,22 @@ Situação: provisória.
 
 > O que precisa ser registrado sobre cada parceria (termo, vigência, contatos, ações realizadas)?
 
-Situação: aberta.
+Situação: provisória.
+
+| Decisão provisória | Onde mudar | ADR |
+|---|---|---|
+| O parceiro tem nome, tipo de instituição (órgão público, organização da sociedade civil, empresa, instituição de ensino ou outro), termo ou instrumento, início e fim da vigência, contato em texto livre, observações e situação ativo/inativo. Cada ação de articulação tem data e descrição. | `institucional.interno.DadosParceiro`, `institucional.TipoParceiro`, `V56__cria_parceiro.sql` e `rotulos.ts` do módulo parcerias (frontend) | [0172](adr/0172-parceiros-e-acoes-de-articulacao.md) |
 
 ## P11. Doações (RF015)
 
 > As doações incluem dinheiro? É preciso emitir recibo ou prestar contas com valores?
 
-Situação: aberta.
+Situação: provisória.
+
+| Decisão provisória | Onde mudar | ADR |
+|---|---|---|
+| A doação em dinheiro tem valor em reais opcional; os outros tipos não têm valor, só quantidade em texto livre. Não há recibo nem prestação de contas. | `institucional.interno.DadosDoacao` e `ck_doacao_valor` (`V58`) | [0178](adr/0178-registro-de-doacoes.md) |
+| Tipos de doação: dinheiro, alimentos, roupas e calçados, higiene e limpeza, material pedagógico, móveis e equipamentos, outro. | `institucional.TipoDoacao`, `ck_doacao_tipo` (`V58`) e `rotulos.ts` do módulo doações (frontend) | [0178](adr/0178-registro-de-doacoes.md) |
 
 ## P12. Integrações (seção 5.1)
 
@@ -206,8 +215,11 @@ Situação: provisória.
 | Só o Coordenador insere candidatos no serviço; a Equipe Técnica lê a ficha completa dos usuários atendidos. | `acesso.Perfil` (`ATENDIDOS_INSERIR`) | [0082](adr/0082-permissoes-dos-usuarios-atendidos.md) |
 | Só o Coordenador registra desligamento, porque ele libera vaga. | `acesso.Perfil` (`ATENDIDOS_DESLIGAR`) | [0110](adr/0110-desligamento-do-usuario-atendido.md) |
 | Equipe Técnica e Administrativo não veem nem gerenciam o cadastro de colaboradores; escolhem o profissional pelas telas de visita, escuta e atividade. | `acesso.Perfil` (`COLABORADORES_LER`, `COLABORADORES_GERENCIAR`) | [0047](adr/0047-permissoes-dos-colaboradores.md) |
-| Só Coordenador e Consulta veem relatórios e dashboards; Equipe Técnica e Administrativo ficam sem acesso. | `acesso.Perfil` (`RELATORIOS_LER`) e `relatorios.modulo.ts` (frontend) | [0196](adr/0196-permissao-dos-relatorios-e-dashboards.md) |
 | O Administrativo não lista nem registra atividades (`ATIVIDADES_LER` e `ATIVIDADES_REGISTRAR` só para Coordenador e Equipe Técnica). | `acesso.Perfil` (linha do `ADMINISTRATIVO`) | [0152](adr/0152-permissoes-das-atividades.md) |
+| Equipe Técnica e Administrativo não veem nem registram parcerias. | `acesso.Perfil` (`PARCERIAS_LER`, `PARCERIAS_GERENCIAR`) | [0173](adr/0173-permissoes-das-parcerias.md) |
+| Equipe Técnica e Administrativo não veem nem registram reuniões e eventos institucionais. | `acesso.Perfil` (`EVENTOS_LER`, `EVENTOS_REGISTRAR`) | [0176](adr/0176-permissoes-das-reunioes-e-eventos.md) |
+| Equipe Técnica e Administrativo não veem nem registram doações. | `acesso.Perfil` (`DOACOES_LER`, `DOACOES_REGISTRAR`) | [0179](adr/0179-permissoes-das-doacoes.md) |
+| Só Coordenador e Consulta veem relatórios e dashboards; Equipe Técnica e Administrativo ficam sem acesso. | `acesso.Perfil` (`RELATORIOS_LER`) e `relatorios.modulo.ts` (frontend) | [0196](adr/0196-permissao-dos-relatorios-e-dashboards.md) |
 
 ## P18. Funções dos colaboradores
 
@@ -275,6 +287,17 @@ Situação: provisória.
 | Decisão provisória | Onde mudar | ADR |
 |---|---|---|
 | O atendimento multiprofissional exige pelo menos dois profissionais, de qualquer função. | `atividades.TipoAtividade` (`ATENDIMENTO_MULTIPROFISSIONAL`) e `TIPOS_ATIVIDADE` em `rotulos.ts` do módulo atividades (frontend) | [0154](adr/0154-atendimentos-e-estudos-de-caso.md) |
+
+## P26. Motivos de desligamento de colaborador (RF014)
+
+> Quais motivos de desligamento de colaborador o Centro-Dia usa (pedido de demissão, fim de
+> contrato, dispensa, aposentadoria)? Precisam aparecer separados em algum relatório?
+
+Situação: provisória.
+
+| Decisão provisória | Onde mudar | ADR |
+|---|---|---|
+| O motivo do desligamento é texto livre obrigatório, guardado cifrado, sem lista fechada. | `institucional.interno.NovoDesligamentoColaborador` e `motivo_desligamento` (`V55`) | [0170](adr/0170-vinculos-dos-colaboradores.md) |
 
 ## P30. Contatos e comunicações (RF011)
 
