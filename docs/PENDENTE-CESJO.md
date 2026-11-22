@@ -121,7 +121,11 @@ Situação: provisória.
 > Há modelos atuais dos relatórios mensal, quadrimestral e anual? O que contém o relatório de
 > intervenção (CREAS) e o relatório de transparência, e para quem é enviado cada um?
 
-Situação: aberta.
+Situação: provisória.
+
+| Decisão provisória | Onde mudar | ADR |
+|---|---|---|
+| Relatório mensal com quantitativos de lista de espera (novas inscrições, fila no último dia, saídas por motivo), usuários (inserções, atendidos no período, ativos no último dia), atendimentos e atividades por tipo, contatos e comunicações por tipo e direção, e desligamentos por motivo. Sem violações. | `estatisticas.interno.IndicadoresDoRelatorio` (uma linha por indicador) | [0200](adr/0200-relatorio-estatistico-mensal.md) |
 
 ## P10. Parcerias (RF013)
 

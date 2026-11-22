@@ -147,3 +147,5 @@ frente de trabalho paralela não é usado todo.
 - [0197](0197-graficos-em-html-e-css-sem-biblioteca.md) — Gráficos em HTML e CSS, sem biblioteca, e área de relatórios com abas
 - [0198](0198-dashboard-de-violacoes-atividades-e-desligamentos.md) — Dashboard de violações, atividades e desligamentos por período (provisório)
 - [0199](0199-violacoes-no-dashboard-so-para-quem-le-violacoes.md) — Gráfico de violações só para quem lê violações de direitos (provisório)
+- [0200](0200-relatorio-estatistico-mensal.md) — Relatório estatístico mensal: indicadores numa lista só e período parametrizável (provisório)
+- [0201](0201-tela-do-relatorio-mensal.md) — Tela do relatório mensal
