@@ -127,7 +127,11 @@ Situação: aberta.
 
 > O que precisa ser registrado sobre cada parceria (termo, vigência, contatos, ações realizadas)?
 
-Situação: aberta.
+Situação: provisória.
+
+| Decisão provisória | Onde mudar | ADR |
+|---|---|---|
+| O parceiro tem nome, tipo de instituição (órgão público, organização da sociedade civil, empresa, instituição de ensino ou outro), termo ou instrumento, início e fim da vigência, contato em texto livre, observações e situação ativo/inativo. Cada ação de articulação tem data e descrição. | `institucional.interno.DadosParceiro`, `institucional.TipoParceiro`, `V56__cria_parceiro.sql` e `rotulos.ts` do módulo parcerias (frontend) | [0172](adr/0172-parceiros-e-acoes-de-articulacao.md) |
 
 ## P11. Doações (RF015)
 
@@ -203,6 +207,7 @@ Situação: provisória.
 | Só o Coordenador registra desligamento, porque ele libera vaga. | `acesso.Perfil` (`ATENDIDOS_DESLIGAR`) | [0110](adr/0110-desligamento-do-usuario-atendido.md) |
 | Equipe Técnica e Administrativo não veem nem gerenciam o cadastro de colaboradores; escolhem o profissional pelas telas de visita, escuta e atividade. | `acesso.Perfil` (`COLABORADORES_LER`, `COLABORADORES_GERENCIAR`) | [0047](adr/0047-permissoes-dos-colaboradores.md) |
 | O Administrativo não lista nem registra atividades (`ATIVIDADES_LER` e `ATIVIDADES_REGISTRAR` só para Coordenador e Equipe Técnica). | `acesso.Perfil` (linha do `ADMINISTRATIVO`) | [0152](adr/0152-permissoes-das-atividades.md) |
+| Equipe Técnica e Administrativo não veem nem registram parcerias. | `acesso.Perfil` (`PARCERIAS_LER`, `PARCERIAS_GERENCIAR`) | [0173](adr/0173-permissoes-das-parcerias.md) |
 
 ## P18. Funções dos colaboradores
 

@@ -141,3 +141,6 @@ frente de trabalho paralela não é usado todo.
 - [0165](0165-telas-de-oficios-declaracoes-e-encaminhamentos.md) — Telas de ofícios, declarações e encaminhamentos
 - [0170](0170-vinculos-dos-colaboradores.md) — Histórico de vínculos: contratações e desligamentos dos colaboradores (provisório)
 - [0171](0171-tela-de-vinculos-dos-colaboradores.md) — Histórico de vínculos na ficha do colaborador
+- [0172](0172-parceiros-e-acoes-de-articulacao.md) — Parceiros e ações de articulação (provisório)
+- [0173](0173-permissoes-das-parcerias.md) — Permissões das parcerias (provisório)
+- [0174](0174-telas-de-parcerias.md) — Telas de parcerias

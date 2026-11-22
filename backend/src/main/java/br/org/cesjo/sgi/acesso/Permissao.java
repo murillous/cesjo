@@ -112,6 +112,12 @@ public enum Permissao {
 	COMUNICACOES_LER,
 
 	/** Registrar e corrigir contatos e comunicações (RF011, ADR 0162). */
-	COMUNICACOES_REGISTRAR
+	COMUNICACOES_REGISTRAR,
+
+	/** Ver os parceiros e as ações de articulação (RF013, ADR 0173). */
+	PARCERIAS_LER,
+
+	/** Cadastrar e editar parceiros e registrar ações de articulação (RF013, ADR 0173). */
+	PARCERIAS_GERENCIAR
 
 }
