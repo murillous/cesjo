@@ -3,6 +3,7 @@
 // Mobile first. Base (celular): barra superior, conteúdo e barra de navegação inferior, todas na
 // rolagem da página; as barras ficam presas no topo e na base com `position: sticky`.
 // Tablet: a navegação vira trilho à esquerda. Desktop: menu lateral com rótulos.
+// O conteúdo e o contêiner de cada página ficam centralizados no espaço ao lado da navegação.
 
 :host {
   display: grid;
@@ -61,6 +62,7 @@
   grid-area: conteudo;
   width: 100%;
   max-width: var(--sgi-conteudo-max-width);
+  margin-inline: auto;
   padding: var(--sgi-space-3) var(--sgi-space-2) var(--sgi-space-4);
 }
 

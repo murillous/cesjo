@@ -160,3 +160,4 @@ frente de trabalho paralela não é usado todo.
 - [0199](0199-violacoes-no-dashboard-so-para-quem-le-violacoes.md) — Gráfico de violações só para quem lê violações de direitos (provisório)
 - [0200](0200-relatorio-estatistico-mensal.md) — Relatório estatístico mensal: indicadores numa lista só e período parametrizável (provisório)
 - [0201](0201-tela-do-relatorio-mensal.md) — Tela do relatório mensal
+- [0202](0202-conteudo-centralizado-ao-lado-da-navegacao.md) — Conteúdo centralizado ao lado da navegação

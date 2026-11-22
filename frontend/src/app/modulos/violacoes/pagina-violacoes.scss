@@ -1,6 +1,7 @@
 // Mobile first: a página só limita a largura do texto; o painel cuida do resto.
 .violacoes {
   max-width: 960px;
+  margin-inline: auto;
 }
 
 .cabecalho p {
