@@ -62,9 +62,20 @@ describe('Módulo de contatos e comunicações', () => {
             data: '2026-11-20',
             contraparte: 'Mãe Fictícia',
             assunto: 'Faltas da semana',
+            direcao: null,
+            temAnexo: false,
+          },
+          {
+            id: 'c2',
+            tipo: 'ENCAMINHAMENTO',
+            direcao: 'RECEBIDA',
+            data: '2026-11-19',
+            contraparte: 'CRAS Fictício',
+            assunto: 'Encaminhamento de usuário',
+            temAnexo: true,
           },
         ],
-        page: { size: 20, number: 0, totalElements: 1, totalPages: 1 },
+        page: { size: 20, number: 0, totalElements: 2, totalPages: 1 },
       });
     await harness.fixture.whenStable();
 
@@ -73,6 +84,8 @@ describe('Módulo de contatos e comunicações', () => {
     expect(texto).toContain('Faltas da semana');
     expect(texto).toContain('Contato telefônico com cuidador familiar');
     expect(texto).toContain('20/11/2026');
+    expect(texto).toContain('Encaminhamento recebido');
+    expect(texto).toContain('com anexo');
     expect(texto).toContain('Registrar contato');
   });
 });

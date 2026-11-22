@@ -117,6 +117,18 @@
   font-size: var(--sgi-font-size-small);
 }
 
+.tipo {
+  display: flex;
+  align-items: center;
+  gap: var(--sgi-space-0-5);
+}
+
+.clipe {
+  width: 16px;
+  height: 16px;
+  font-size: 16px;
+}
+
 .dia {
   grid-area: dia;
   white-space: nowrap;
