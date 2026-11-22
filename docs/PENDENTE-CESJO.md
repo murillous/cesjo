@@ -196,6 +196,7 @@ Situação: provisória.
 | Só o Coordenador insere candidatos no serviço; a Equipe Técnica lê a ficha completa dos usuários atendidos. | `acesso.Perfil` (`ATENDIDOS_INSERIR`) | [0082](adr/0082-permissoes-dos-usuarios-atendidos.md) |
 | Só o Coordenador registra desligamento, porque ele libera vaga. | `acesso.Perfil` (`ATENDIDOS_DESLIGAR`) | [0110](adr/0110-desligamento-do-usuario-atendido.md) |
 | Equipe Técnica e Administrativo não veem nem gerenciam o cadastro de colaboradores; escolhem o profissional pelas telas de visita, escuta e atividade. | `acesso.Perfil` (`COLABORADORES_LER`, `COLABORADORES_GERENCIAR`) | [0047](adr/0047-permissoes-dos-colaboradores.md) |
+| O Administrativo não lista nem registra atividades (`ATIVIDADES_LER` e `ATIVIDADES_REGISTRAR` só para Coordenador e Equipe Técnica). | `acesso.Perfil` (linha do `ADMINISTRATIVO`) | [0152](adr/0152-permissoes-das-atividades.md) |
 
 ## P18. Funções dos colaboradores
 
@@ -208,3 +209,25 @@ Situação: provisória.
 | Decisão provisória | Onde mudar | ADR |
 |---|---|---|
 | Funções `ASSISTENTE_SOCIAL`, `PSICOLOGO`, `TERAPEUTA_OCUPACIONAL` e `OUTRA`, tiradas do planejamento. | `institucional.FuncaoColaborador`, `ck_colaborador_funcao` (migração nova) e `rotulos.ts` do módulo colaboradores (frontend) | [0045](adr/0045-cadastro-e-api-java-dos-colaboradores.md) |
+
+## P23. Participantes das atividades com famílias
+
+> Nas atividades com famílias (RF010), o que precisa ser registrado: só de quais usuários atendidos
+> eram as famílias presentes, ou cada familiar que participou (nome, parentesco)?
+
+Situação: provisória.
+
+| Decisão provisória | Onde mudar | ADR |
+|---|---|---|
+| Participantes são sempre usuários atendidos ativos; na atividade com famílias, o participante indica de qual usuário é a família, sem registrar o familiar. | `atividades.interno.DadosAtividade` (`participantes`) e `ficha-atividade.html` (frontend) | [0150](adr/0150-registro-de-atividades.md) |
+
+## P24. Atividades planejadas
+
+> As atividades (RF010) são registradas só depois de realizadas, ou a equipe quer também agendar
+> atividades futuras e marcar depois se aconteceram?
+
+Situação: provisória.
+
+| Decisão provisória | Onde mudar | ADR |
+|---|---|---|
+| Só se registra atividade realizada: a data não pode ser futura e não há agenda de atividades. | `ServicoAtividades.exigirDataValida` (backend) e `[max]` da data em `ficha-atividade.html` (frontend) | [0150](adr/0150-registro-de-atividades.md) |
