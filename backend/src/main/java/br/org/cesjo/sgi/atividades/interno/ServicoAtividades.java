@@ -28,7 +28,7 @@ import br.org.cesjo.sgi.institucional.Colaboradores;
 import br.org.cesjo.sgi.institucional.ResumoColaborador;
 import br.org.cesjo.sgi.pessoas.Pessoas;
 
-/** Registro, correção, leitura e contagem das atividades (RF010, ADR 0150 e ADR 0151). */
+/** Registro, correção, leitura e contagem das atividades (RF010, ADR 0150, ADR 0151 e ADR 0154). */
 @Service
 class ServicoAtividades implements Atividades {
 
@@ -60,6 +60,7 @@ class ServicoAtividades implements Atividades {
 	@Transactional
 	AtividadeResposta registrar(DadosAtividade dados) {
 		exigirDataValida(dados.data());
+		exigirRegrasDoTipo(dados);
 		usuariosAtendidos.exigirAtivos(dados.participantes());
 		colaboradores.exigirAtivos(dados.profissionais());
 		Atividade atividade = atividades.save(new Atividade(dados, autor(), relogio.instant()));
@@ -75,6 +76,7 @@ class ServicoAtividades implements Atividades {
 	AtividadeResposta corrigir(UUID id, DadosAtividade dados) {
 		Atividade atividade = buscar(id);
 		exigirDataValida(dados.data());
+		exigirRegrasDoTipo(dados);
 		usuariosAtendidos.exigirAtivos(novos(dados.participantes(), atividade.getParticipantes()));
 		colaboradores.exigirAtivos(novos(dados.profissionais(), atividade.getProfissionais()));
 		Set<String> alterados = atividade.corrigir(dados, autor(), relogio.instant());
@@ -84,9 +86,17 @@ class ServicoAtividades implements Atividades {
 		return resposta(atividade);
 	}
 
-	@Transactional(readOnly = true)
+	/**
+	 * Atividade completa. A leitura de atendimento ou estudo de caso vai para o log como leitura sensível
+	 * (RNF 3.3, ADR 0154); a das atividades coletivas, não.
+	 */
+	@Transactional
 	AtividadeResposta ler(UUID id) {
-		return resposta(buscar(id));
+		Atividade atividade = buscar(id);
+		if (atividade.getTipo().individual()) {
+			auditoria.registrar(EventoAuditoria.leituraSensivel(ENTIDADE, id));
+		}
+		return resposta(atividade);
 	}
 
 	/** Atividades da mais recente para a mais antiga, sem a descrição. */
@@ -124,6 +134,18 @@ class ServicoAtividades implements Atividades {
 			contagem.put((TipoAtividade) linha[0], (Long) linha[1]);
 		}
 		return contagem;
+	}
+
+	/** Atendimento e estudo de caso têm um só usuário; cada tipo tem um mínimo de profissionais. */
+	private static void exigirRegrasDoTipo(DadosAtividade dados) {
+		TipoAtividade tipo = dados.tipo();
+		if (tipo.individual() && Set.copyOf(dados.participantes()).size() != 1) {
+			throw new RegraNegocioException("Atendimentos e estudos de caso são de um só usuário atendido.");
+		}
+		if (Set.copyOf(dados.profissionais()).size() < tipo.minimoProfissionais()) {
+			throw new RegraNegocioException(
+					"O atendimento multiprofissional precisa de pelo menos " + tipo.minimoProfissionais() + " profissionais.");
+		}
 	}
 
 	// PENDENTE-CESJO(P24): só se registra atividade já realizada; a data não pode ser futura, e não há agenda
