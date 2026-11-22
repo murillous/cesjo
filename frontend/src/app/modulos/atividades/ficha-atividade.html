@@ -13,6 +13,12 @@
     @if (!editando()) {
       <h1 id="titulo-atividade">{{ atual.titulo }}</h1>
       <p class="tipo">{{ rotulosTipo[atual.tipo] }}</p>
+      @if (sigilosa()) {
+        <p class="texto-secundario aviso">
+          <mat-icon aria-hidden="true">lock</mat-icon>
+          Conteúdo sigiloso: guardado cifrado, e cada abertura fica no log de auditoria.
+        </p>
+      }
 
       @if (erro(); as mensagem) {
         <p class="erro" role="alert">{{ mensagem }}</p>
@@ -66,6 +72,9 @@
     <p class="texto-secundario aviso">
       <mat-icon aria-hidden="true">lock</mat-icon>
       A descrição é guardada cifrada.
+      @if (tipo()?.individual) {
+        Cada abertura deste registro fica no log de auditoria.
+      }
     </p>
 
     @if (erro(); as mensagem) {
@@ -77,9 +86,16 @@
         <mat-form-field appearance="outline">
           <mat-label>Tipo</mat-label>
           <mat-select formControlName="tipo">
-            @for (tipo of tipos; track tipo.valor) {
-              <mat-option [value]="tipo.valor">{{ tipo.rotulo }}</mat-option>
-            }
+            <mat-optgroup label="Atividades coletivas">
+              @for (tipo of coletivos; track tipo.valor) {
+                <mat-option [value]="tipo.valor">{{ tipo.rotulo }}</mat-option>
+              }
+            </mat-optgroup>
+            <mat-optgroup label="Atendimentos e estudos de caso">
+              @for (tipo of individuais; track tipo.valor) {
+                <mat-option [value]="tipo.valor">{{ tipo.rotulo }}</mat-option>
+              }
+            </mat-optgroup>
           </mat-select>
           @if (formulario.controls.tipo.invalid) {
             <mat-error>Escolha o tipo.</mat-error>
@@ -128,6 +144,8 @@
         </mat-select>
         @if (opcoesUsuarios().length === 0) {
           <mat-hint>Nenhum usuário atendido ativo.</mat-hint>
+        } @else if (tipo()?.individual) {
+          <mat-hint>Escolha o usuário atendido.</mat-hint>
         } @else {
           <mat-hint
             >Usuários atendidos. Nas atividades com famílias, escolha de quem é a família.</mat-hint
@@ -151,6 +169,8 @@
           <mat-hint
             >Nenhum colaborador ativo. O Coordenador cadastra a equipe em Colaboradores.</mat-hint
           >
+        } @else if ((tipo()?.minimoProfissionais ?? 1) > 1) {
+          <mat-hint>Escolha {{ tipo()?.minimoProfissionais }} ou mais.</mat-hint>
         } @else {
           <mat-hint>Escolha um ou mais.</mat-hint>
         }
