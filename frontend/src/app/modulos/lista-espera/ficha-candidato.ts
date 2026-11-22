@@ -103,6 +103,11 @@ export class FichaCandidato implements OnInit {
     return SITUACOES_ATIVAS.has(situacao) ? 'SAIU' : situacao === 'SAIU' ? 'AGUARDANDO' : null;
   });
 
+  /** Aguardando ou em avaliação: pode ser inserido no serviço (ADR 0136). */
+  protected naFila(situacao: SituacaoInscricao): boolean {
+    return SITUACOES_ATIVAS.has(situacao);
+  }
+
   protected readonly historico = computed(() => [...(this.inscricao()?.historico ?? [])].reverse());
 
   protected readonly pendentes = computed(() => {

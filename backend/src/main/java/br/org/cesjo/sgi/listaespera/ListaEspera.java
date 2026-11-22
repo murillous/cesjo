@@ -1,5 +1,6 @@
 package br.org.cesjo.sgi.listaespera;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -32,14 +33,16 @@ public interface ListaEspera {
 	Optional<DadosInscricao> obter(UUID inscricaoId);
 
 	/**
-	 * Tira a inscrição da fila com a situação {@link SituacaoInscricao#INSERIDO}. Participa da transação
-	 * de quem chama: se a inserção falhar depois, a inscrição volta a aguardar.
+	 * Tira a inscrição da fila com a situação {@link SituacaoInscricao#INSERIDO} e grava a mudança no
+	 * histórico de situação, com a data da inserção (ADR 0135). Aceita qualquer situação ativa, também
+	 * o candidato em avaliação (ADR 0136). Participa da transação de quem chama: se a inserção falhar
+	 * depois, a inscrição volta à situação de antes.
 	 *
 	 * @throws br.org.cesjo.sgi.compartilhado.web.RecursoNaoEncontradoException quando a inscrição não
 	 * existe
-	 * @throws br.org.cesjo.sgi.compartilhado.web.RegraNegocioException quando a inscrição não está
-	 * aguardando
+	 * @throws br.org.cesjo.sgi.compartilhado.web.RegraNegocioException quando a inscrição não está na
+	 * fila
 	 */
-	DadosInscricao registrarInsercao(UUID inscricaoId);
+	DadosInscricao registrarInsercao(UUID inscricaoId, LocalDate dataInsercao);
 
 }

@@ -122,6 +122,8 @@ frente de trabalho paralela não é usado todo.
 - [0124](0124-correcoes-de-acessibilidade.md) — Correções de acessibilidade achadas pela auditoria
 - [0125](0125-checklist-manual-de-navegadores.md) — Checklist manual para Safari no iPhone e leitor de tela
 - [0130](0130-exportacao-da-lista-de-espera.md) — Exportação da lista de espera em PDF e Excel (provisório)
+- [0135](0135-integracao-de-vagas-com-atendidos.md) — Vagas ocupadas pelos atendidos ativos e aviso de vaga no desligamento
+- [0136](0136-insercao-de-candidato-em-avaliacao.md) — Candidato em avaliação pode ser inserido no serviço
 - [0140](0140-campos-do-cadastro-completo.md) — Campos do cadastro completo do usuário atendido (provisório)
 - [0141](0141-cifra-e-campos-consultaveis-do-cadastro.md) — O que é cifrado e o que fica consultável no cadastro completo
 - [0142](0142-permissoes-do-cadastro-completo.md) — Permissões do cadastro completo e da crença e saúde (provisório)
