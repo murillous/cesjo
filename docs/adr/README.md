@@ -125,3 +125,6 @@ frente de trabalho paralela não é usado todo.
 - [0172](0172-parceiros-e-acoes-de-articulacao.md) — Parceiros e ações de articulação (provisório)
 - [0173](0173-permissoes-das-parcerias.md) — Permissões das parcerias (provisório)
 - [0174](0174-telas-de-parcerias.md) — Telas de parcerias
+- [0175](0175-reunioes-e-eventos-institucionais.md) — Reuniões e eventos institucionais
+- [0176](0176-permissoes-das-reunioes-e-eventos.md) — Permissões das reuniões e eventos institucionais (provisório)
+- [0177](0177-telas-de-reunioes-e-eventos.md) — Telas de reuniões e eventos

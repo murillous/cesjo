@@ -201,6 +201,7 @@ Situação: provisória.
 | Só o Coordenador registra desligamento, porque ele libera vaga. | `acesso.Perfil` (`ATENDIDOS_DESLIGAR`) | [0110](adr/0110-desligamento-do-usuario-atendido.md) |
 | Equipe Técnica e Administrativo não veem nem gerenciam o cadastro de colaboradores; escolhem o profissional pelas telas de visita, escuta e atividade. | `acesso.Perfil` (`COLABORADORES_LER`, `COLABORADORES_GERENCIAR`) | [0047](adr/0047-permissoes-dos-colaboradores.md) |
 | Equipe Técnica e Administrativo não veem nem registram parcerias. | `acesso.Perfil` (`PARCERIAS_LER`, `PARCERIAS_GERENCIAR`) | [0173](adr/0173-permissoes-das-parcerias.md) |
+| Equipe Técnica e Administrativo não veem nem registram reuniões e eventos institucionais. | `acesso.Perfil` (`EVENTOS_LER`, `EVENTOS_REGISTRAR`) | [0176](adr/0176-permissoes-das-reunioes-e-eventos.md) |
 
 ## P18. Funções dos colaboradores
 
