@@ -122,3 +122,5 @@ frente de trabalho paralela não é usado todo.
 - [0124](0124-correcoes-de-acessibilidade.md) — Correções de acessibilidade achadas pela auditoria
 - [0125](0125-checklist-manual-de-navegadores.md) — Checklist manual para Safari no iPhone e leitor de tela
 - [0130](0130-exportacao-da-lista-de-espera.md) — Exportação da lista de espera em PDF e Excel (provisório)
+- [0135](0135-integracao-de-vagas-com-atendidos.md) — Vagas ocupadas pelos atendidos ativos e aviso de vaga no desligamento
+- [0136](0136-insercao-de-candidato-em-avaliacao.md) — Candidato em avaliação pode ser inserido no serviço
