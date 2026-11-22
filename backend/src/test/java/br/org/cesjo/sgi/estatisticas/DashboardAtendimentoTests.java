@@ -1,13 +1,17 @@
 package br.org.cesjo.sgi.estatisticas;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.within;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
+import com.jayway.jsonpath.JsonPath;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +26,8 @@ import br.org.cesjo.sgi.acesso.ComConta;
 import br.org.cesjo.sgi.acesso.Perfil;
 
 /**
- * Dashboard de violações, atividades e desligamentos (issue #57). Os dados ficam em 2003, um ano que
- * nenhum outro teste usa, então as contagens do período são exatas mesmo com o banco compartilhado.
- * Só dados fictícios.
+ * Dashboard de violações, atividades e desligamentos (issue #57). O banco é compartilhado e guarda
+ * dados de outras execuções, então o teste compara as contagens antes e depois. Só dados fictícios.
  */
 @Import(TestcontainersConfiguration.class)
 @SpringBootTest
@@ -45,6 +48,8 @@ class DashboardAtendimentoTests {
 	@ComConta(perfil = Perfil.COORDENADOR, login = "dashboard-atendimento-coord")
 	void contaViolacoesAtividadesEDesligamentosDoPeriodo() throws Exception {
 		DadosDeTeste dados = new DadosDeTeste(mvc, jdbc);
+		String antes = ler();
+
 		String ana = dados.inserirNoServico("Período Ana", null, "TEA", "MATUTINO", ANO.withDayOfMonth(10));
 		String bruno = dados.inserirNoServico("Período Bruno", null, "TEA", "MATUTINO", ANO.withDayOfMonth(10));
 		dados.desligar(bruno, LocalDate.of(2003, 3, 5), "EVASAO");
@@ -59,24 +64,48 @@ class DashboardAtendimentoTests {
 		dados.registrarAtividade("ESTUDO_DE_CASO", LocalDate.of(2003, 4, 1), ana, psicologa);
 		dados.registrarAtividade("ESTUDO_DE_CASO", LocalDate.of(2003, 9, 1), ana, psicologa);
 
+		String depois = ler();
+		assertThat(diferenca(antes, depois, "violacoesPorCategoria", "ABUSO_SEXUAL")).isEqualTo(1);
+		assertThat(diferenca(antes, depois, "violacoesPorCategoria", "ISOLAMENTO_SOCIAL")).isZero();
+		assertThat(diferenca(antes, depois, "atividadesPorTipo", "COM_USUARIOS")).isEqualTo(1);
+		assertThat(diferenca(antes, depois, "atividadesPorTipo", "ESTUDO_DE_CASO")).isEqualTo(1);
+		assertThat(numero(depois, "$.totalAtividades") - numero(antes, "$.totalAtividades")).isEqualTo(2);
+		assertThat(numero(depois, "$.atendidosNoPeriodo") - numero(antes, "$.atendidosNoPeriodo")).isEqualTo(2);
+		assertThat(numero(depois, "$.totalDesligamentos") - numero(antes, "$.totalDesligamentos")).isEqualTo(1);
+		assertThat(diferenca(antes, depois, "desligamentosPorMotivo", "EVASAO")).isEqualTo(1);
+		assertThat(diferenca(antes, depois, "desligamentosPorMotivo", "MUDANCA_MUNICIPIO")).isZero();
+
+		// A taxa é desligamentos sobre atendidos no período, geral e por motivo.
+		double atendidos = numero(depois, "$.atendidosNoPeriodo");
+		assertThat((Double) JsonPath.read(depois, "$.taxaDesligamento"))
+			.isCloseTo(numero(depois, "$.totalDesligamentos") / atendidos, within(1e-9));
+		assertThat(JsonPath.<List<Double>>read(depois, "$.desligamentosPorMotivo[?(@.chave == 'EVASAO')].taxa").get(0))
+			.isCloseTo(DadosDeTeste.total(depois, "desligamentosPorMotivo", "EVASAO") / atendidos, within(1e-9));
+
 		mvc.perform(get(URL).param("inicio", "2003-01-01").param("fim", "2003-06-30"))
 			.andExpect(status().isOk())
 			.andExpect(header().string("Cache-Control", "no-store"))
 			.andExpect(jsonPath("$.inicio").value("2003-01-01"))
 			.andExpect(jsonPath("$.violacoesPorCategoria.length()").value(12))
-			.andExpect(jsonPath("$.violacoesPorCategoria[?(@.chave == 'ABUSO_SEXUAL')].total").value(1))
-			.andExpect(jsonPath("$.violacoesPorCategoria[?(@.chave == 'ISOLAMENTO_SOCIAL')].total").value(0))
 			.andExpect(jsonPath("$.atividadesPorTipo.length()").value(6))
-			.andExpect(jsonPath("$.atividadesPorTipo[?(@.chave == 'COM_USUARIOS')].total").value(1))
 			.andExpect(jsonPath("$.atividadesPorTipo[?(@.chave == 'ESTUDO_DE_CASO')].rotulo").value("Estudo de caso"))
-			.andExpect(jsonPath("$.atividadesPorTipo[?(@.chave == 'ESTUDO_DE_CASO')].total").value(1))
-			.andExpect(jsonPath("$.totalAtividades").value(2))
-			.andExpect(jsonPath("$.atendidosNoPeriodo").value(2))
-			.andExpect(jsonPath("$.totalDesligamentos").value(1))
-			.andExpect(jsonPath("$.taxaDesligamento").value(0.5))
-			.andExpect(jsonPath("$.desligamentosPorMotivo[?(@.chave == 'EVASAO')].total").value(1))
-			.andExpect(jsonPath("$.desligamentosPorMotivo[?(@.chave == 'EVASAO')].taxa").value(0.5))
-			.andExpect(jsonPath("$.desligamentosPorMotivo[?(@.chave == 'MUDANCA_MUNICIPIO')].total").value(0));
+			.andExpect(jsonPath("$.desligamentosPorMotivo.length()").value(5));
+	}
+
+	private String ler() throws Exception {
+		return mvc.perform(get(URL).param("inicio", "2003-01-01").param("fim", "2003-06-30"))
+			.andExpect(status().isOk())
+			.andReturn()
+			.getResponse()
+			.getContentAsString();
+	}
+
+	private static long numero(String corpo, String caminho) {
+		return ((Number) JsonPath.read(corpo, caminho)).longValue();
+	}
+
+	private static long diferenca(String antes, String depois, String grafico, String chave) {
+		return DadosDeTeste.total(depois, grafico, chave) - DadosDeTeste.total(antes, grafico, chave);
 	}
 
 	@Test
