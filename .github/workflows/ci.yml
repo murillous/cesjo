@@ -261,12 +261,18 @@ jobs:
           # forget e do check, então o backup do crond ainda pode estar rodando. Um processo em
           # segundo plano espera esse backup terminar e fica com o lock até o contêiner ser recriado:
           # o crond não começa outro backup no meio, e nenhum restic é interrompido.
-          docker compose exec -T -d backup flock -w 120 /run/sgi-backup.lock sh -c 'touch /run/ci-lock-tomado; sleep 600'
+          # O flock do BusyBox não tem -w; o limite de espera fica no laço abaixo.
+          docker compose exec -T -d backup sh -c \
+            'flock /run/sgi-backup.lock sh -c "touch /run/ci-lock-tomado; sleep 600" 2> /run/ci-lock.err'
           for _ in $(seq 1 26); do
             if docker compose exec -T backup test -e /run/ci-lock-tomado; then break; fi
             sleep 5
           done
-          docker compose exec -T backup test -e /run/ci-lock-tomado
+          if ! docker compose exec -T backup test -e /run/ci-lock-tomado; then
+            echo "não foi possível ficar com o lock do backup em 130 segundos"
+            docker compose exec -T backup sh -c 'ps; cat /run/ci-lock.err' || true
+            exit 1
+          fi
           # 31 de fevereiro: o crond nunca roda o backup no resto do job.
           sed -i "s|^SGI_BACKUP_HORARIO=.*|SGI_BACKUP_HORARIO=0 0 31 2 *|" backup.env
           docker compose up -d --wait backup
