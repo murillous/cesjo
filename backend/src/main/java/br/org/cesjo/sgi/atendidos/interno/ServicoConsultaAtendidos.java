@@ -68,7 +68,8 @@ class ServicoConsultaAtendidos {
 				desligamentos.findByInsercaoId(id).map(Desligamento::getData).orElse(null), false);
 	}
 
-	VisoesAtendido.Ficha fichaCompleta(UUID id) {
+	/** Ficha completa; com {@code sensiveis}, traz também a crença e a saúde, com leitura auditada. */
+	VisoesAtendido.Ficha fichaCompleta(UUID id, boolean sensiveis) {
 		Insercao insercao = insercao(id);
 		DadosPessoa pessoa = pessoa(insercao);
 		LocalDate hoje = hoje();
@@ -93,6 +94,7 @@ class ServicoConsultaAtendidos {
 				insercao.getTurno(), insercao.getDataInsercao(), pessoa.tipoDeficiencia(), nascimento,
 				nascimento == null ? null : FaixaEtaria.idade(nascimento, hoje),
 				FaixaEtaria.de(nascimento, hoje).orElse(null), pessoa.telefone(), cuidador, inscricao, desligamento,
+				pessoas.cadastroComplementar(pessoa.id()), sensiveis ? pessoas.dadosSensiveis(pessoa.id()) : null,
 				true);
 	}
 

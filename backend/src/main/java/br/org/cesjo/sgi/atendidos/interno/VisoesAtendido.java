@@ -8,6 +8,9 @@ import br.org.cesjo.sgi.atendidos.MotivoDesligamento;
 import br.org.cesjo.sgi.atendidos.SituacaoInsercao;
 import br.org.cesjo.sgi.atendidos.Turno;
 import br.org.cesjo.sgi.listaespera.OrigemEncaminhamento;
+import br.org.cesjo.sgi.pessoas.CadastroComplementar;
+import br.org.cesjo.sgi.pessoas.DadosSensiveis;
+import br.org.cesjo.sgi.pessoas.Genero;
 import br.org.cesjo.sgi.pessoas.TipoDeficiencia;
 
 /**
@@ -34,23 +37,28 @@ final class VisoesAtendido {
 	/** Item da listagem para quem tem {@code ATENDIDOS_LER}. */
 	record Item(UUID id, UUID pessoaId, String nomeCompleto, SituacaoInsercao situacao, Turno turno,
 			LocalDate dataInsercao, LocalDate dataDesligamento, TipoDeficiencia tipoDeficiencia, LocalDate dataNascimento, Integer idade,
-			FaixaEtaria faixaEtaria, boolean completo) {
+			FaixaEtaria faixaEtaria, Genero genero, String bairro, boolean completo) {
 
 		static Item de(LinhaAtendido linha, LocalDate hoje) {
 			LocalDate nascimento = linha.dataNascimento();
 			return new Item(linha.id(), linha.pessoaId(), linha.nomeCompleto(), linha.situacao(), linha.turno(),
 					linha.dataInsercao(), linha.dataDesligamento(), linha.tipoDeficiencia(), nascimento,
 					nascimento == null ? null : FaixaEtaria.idade(nascimento, hoje),
-					FaixaEtaria.de(nascimento, hoje).orElse(null), true);
+					FaixaEtaria.de(nascimento, hoje).orElse(null), linha.genero(), linha.bairro(), true);
 		}
 
 	}
 
-	/** Ficha completa: inserção, pessoa, cuidador e inscrição de origem. */
+	/**
+	 * Ficha completa: inserção, pessoa, cadastro completo, cuidador e inscrição de origem.
+	 *
+	 * @param dadosSensiveis crença e saúde; nulo para quem não tem {@code ATENDIDOS_DADOS_SENSIVEIS} (ADR 0142)
+	 */
 	record Ficha(UUID id, UUID pessoaId, String nomeCompleto, SituacaoInsercao situacao, Turno turno,
 			LocalDate dataInsercao, TipoDeficiencia tipoDeficiencia, LocalDate dataNascimento, Integer idade,
 			FaixaEtaria faixaEtaria, String telefone, String nomeCuidador, Inscricao inscricao,
-			Desligamento desligamento, boolean completo) {
+			Desligamento desligamento, CadastroComplementar cadastro, DadosSensiveis dadosSensiveis,
+			boolean completo) {
 	}
 
 	/** Desligamento na ficha completa. Ler a observação é auditado (ADR 0110). */
