@@ -138,6 +138,12 @@ describe('FormularioInsercao', () => {
     const { elemento } = await criar({ ...CANDIDATO, situacao: 'INSERIDO' });
 
     expect(elemento.querySelector('form')).toBeNull();
-    expect(elemento.textContent).toContain('não está mais aguardando');
+    expect(elemento.textContent).toContain('não está mais na fila');
+  });
+
+  it('mostra o formulário para o candidato em avaliação', async () => {
+    const { elemento } = await criar({ ...CANDIDATO, situacao: 'EM_AVALIACAO' });
+
+    expect(elemento.querySelector('form')).not.toBeNull();
   });
 });

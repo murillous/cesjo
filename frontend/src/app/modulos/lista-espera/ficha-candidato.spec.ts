@@ -175,6 +175,14 @@ describe('FichaCandidato', () => {
     expect(elemento.querySelector('a.inserir')?.getAttribute('href')).toBe('/atendidos/inserir/i1');
   });
 
+  it('com ATENDIDOS_INSERIR, também leva à inserção quem está em avaliação', async () => {
+    const { elemento } = await renderizar(inscricao({ situacao: 'EM_AVALIACAO', posicao: 1 }), [
+      'LISTA_ESPERA_LER',
+      'ATENDIDOS_INSERIR',
+    ]);
+    expect(elemento.querySelector('a.inserir')?.getAttribute('href')).toBe('/atendidos/inserir/i1');
+  });
+
   it('sem ATENDIDOS_INSERIR, não mostra a inserção', async () => {
     const { elemento } = await renderizar(inscricao(), ['LISTA_ESPERA_LER']);
     expect(elemento.querySelector('a.inserir')).toBeNull();

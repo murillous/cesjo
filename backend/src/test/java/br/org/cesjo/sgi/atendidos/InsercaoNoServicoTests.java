@@ -132,7 +132,40 @@ class InsercaoNoServicoTests {
 		inserir(dados(inscrito.inscricaoId(), inscrito.responsavelId(), null)).andExpect(status().isCreated());
 
 		inserir(dados(inscrito.inscricaoId(), inscrito.responsavelId(), null)).andExpect(status().isUnprocessableContent())
-			.andExpect(jsonPath("$.detail").value(org.hamcrest.Matchers.containsString("aguardando")));
+			.andExpect(jsonPath("$.detail").value(org.hamcrest.Matchers.containsString("na fila")));
+	}
+
+	@Test
+	@ComConta(perfil = Perfil.COORDENADOR, login = COORDENADOR)
+	void gravaAInsercaoNoHistoricoDaInscricao() throws Exception {
+		Inscrito inscrito = inscrever();
+		clearInvocations(auditoria);
+
+		inserir(dados(inscrito.inscricaoId(), inscrito.responsavelId(), null)).andExpect(status().isCreated());
+
+		mvc.perform(get("/api/lista-espera/inscricoes/{id}", inscrito.inscricaoId()))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.historico.length()").value(2))
+			.andExpect(jsonPath("$.historico[1].situacaoAnterior").value("AGUARDANDO"))
+			.andExpect(jsonPath("$.historico[1].situacaoNova").value("INSERIDO"))
+			.andExpect(jsonPath("$.historico[1].data").value("2026-11-10"));
+		verify(auditoria).registrar(argThat(e -> e.acao() == AcaoAuditoria.CRIAR
+				&& e.entidade().equals("historico_situacao_inscricao")));
+	}
+
+	@Test
+	@ComConta(perfil = Perfil.COORDENADOR, login = COORDENADOR)
+	void insereCandidatoEmAvaliacao() throws Exception {
+		Inscrito inscrito = inscrever();
+		jdbc.update("update inscricao_lista_espera set situacao = 'EM_AVALIACAO' where id = ?::uuid",
+				inscrito.inscricaoId());
+
+		inserir(dados(inscrito.inscricaoId(), inscrito.responsavelId(), null)).andExpect(status().isCreated());
+
+		assertThat(situacao(inscrito.inscricaoId())).isEqualTo("INSERIDO");
+		assertThat(jdbc.queryForObject("select situacao_anterior from historico_situacao_inscricao"
+				+ " where inscricao_id = ?::uuid and situacao_nova = 'INSERIDO'", String.class, inscrito.inscricaoId()))
+			.isEqualTo("EM_AVALIACAO");
 	}
 
 	@Test
