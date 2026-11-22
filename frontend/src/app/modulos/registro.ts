@@ -12,6 +12,7 @@ import { doacoesModulo } from './doacoes/doacoes.modulo';
 import { inicioModulo } from './inicio/inicio.modulo';
 import { listaEsperaModulo } from './lista-espera/lista-espera.modulo';
 import { parceriasModulo } from './parcerias/parcerias.modulo';
+import { violacoesModulo } from './violacoes/violacoes.modulo';
 import { visitasModulo } from './visitas/visitas.modulo';
 import { ModuloFrontend } from './modulo';
 
@@ -23,6 +24,7 @@ export const MODULOS: readonly ModuloFrontend[] = [
   inicioModulo,
   listaEsperaModulo,
   atendidosModulo,
+  violacoesModulo,
   visitasModulo,
   atendimentoModulo,
   atividadesModulo,

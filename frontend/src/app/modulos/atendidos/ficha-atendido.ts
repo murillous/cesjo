@@ -10,6 +10,7 @@ import { Sessao } from '../../acesso/sessao';
 import { AtividadesDoUsuario } from '../atividades/atividades-do-usuario';
 import { ORIGENS_ENCAMINHAMENTO, TIPOS_DEFICIENCIA } from '../lista-espera/rotulos';
 import { AtendidosApi, CadastroComplementar, FichaAtendido } from './atendidos-api';
+import { PainelViolacoes } from './painel-violacoes';
 import {
   CRENCAS,
   ESCOLARIDADES,
@@ -36,6 +37,7 @@ import {
     MatButtonModule,
     MatIconModule,
     MatProgressBarModule,
+    PainelViolacoes,
     RouterLink,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -64,6 +66,7 @@ export class FichaAtendidoPagina implements OnInit {
   protected readonly podeDesligar = this.sessao.temPermissao('ATENDIDOS_DESLIGAR');
   protected readonly podeRegistrarViolacao = this.sessao.temPermissao('VIOLACOES_REGISTRAR');
   protected readonly podeLerAtividades = this.sessao.temPermissao('ATIVIDADES_LER');
+  protected readonly podeLerViolacoes = this.sessao.temPermissao('VIOLACOES_LER');
 
   ngOnInit(): void {
     this.api.ficha(this.id()).subscribe({

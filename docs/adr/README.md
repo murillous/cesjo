@@ -129,6 +129,7 @@ frente de trabalho paralela não é usado todo.
 - [0142](0142-permissoes-do-cadastro-completo.md) — Permissões do cadastro completo e da crença e saúde (provisório)
 - [0143](0143-opcoes-de-genero-e-escolaridade.md) — Opções de gênero e de escolaridade (provisório)
 - [0144](0144-tela-do-cadastro-completo.md) — Tela de completar o cadastro do usuário atendido
+- [0145](0145-consulta-de-violacoes-de-direitos.md) — Consulta de violações de direitos (provisório)
 - [0150](0150-registro-de-atividades.md) — Registro de atividades com usuários e famílias (provisório)
 - [0151](0151-api-java-de-contagem-de-atividades.md) — API Java do módulo Atividades para contagem por tipo e período
 - [0152](0152-permissoes-das-atividades.md) — Permissões das atividades (provisório)

@@ -171,7 +171,16 @@
           <app-atividades-do-usuario [pessoaId]="f.pessoaId" />
         }
       </div>
-    } @else {
+    }
+
+    @if (podeLerViolacoes) {
+      <section aria-labelledby="titulo-violacoes" class="bloco violacoes">
+        <h2 id="titulo-violacoes">Violações de direitos</h2>
+        <app-painel-violacoes [insercaoId]="id()" />
+      </section>
+    }
+
+    @if (!f.completo) {
       <p class="texto-secundario basico">
         Seu perfil vê só nome, situação, turno e datas dos usuários atendidos.
       </p>

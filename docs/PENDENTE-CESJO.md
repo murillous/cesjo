@@ -228,6 +228,17 @@ Situação: provisória.
 |---|---|---|
 | Funções `ASSISTENTE_SOCIAL`, `PSICOLOGO`, `TERAPEUTA_OCUPACIONAL` e `OUTRA`, tiradas do planejamento. | `institucional.FuncaoColaborador`, `ck_colaborador_funcao` (migração nova) e `rotulos.ts` do módulo colaboradores (frontend) | [0045](adr/0045-cadastro-e-api-java-dos-colaboradores.md) |
 
+## P19. Leitura das violações de direitos na lista
+
+> Ver a categoria e a data de uma violação numa lista, sem abrir a descrição, conta como leitura de
+> dado sensível e deve ir para o log de auditoria? Ou basta registrar quem abre a descrição?
+
+Situação: provisória.
+
+| Decisão provisória | Onde mudar | ADR |
+|---|---|---|
+| As listas de violações (na ficha e a geral) não geram evento de auditoria. Só a leitura da descrição é registrada, como leitura sensível de `violacao_direito`, a cada vez que alguém a abre. | `atendidos.interno.ServicoViolacoes` (`listarDoAtendido` e `listar`) | [0145](adr/0145-consulta-de-violacoes-de-direitos.md) |
+
 ## P21. Opções de gênero e de escolaridade
 
 > Quais opções de gênero o cadastro do usuário atendido deve oferecer? E quais níveis de
