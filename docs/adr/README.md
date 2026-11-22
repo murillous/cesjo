@@ -153,3 +153,6 @@ frente de trabalho paralela não é usado todo.
 - [0178](0178-registro-de-doacoes.md) — Registro de doações recebidas e realizadas (provisório)
 - [0179](0179-permissoes-das-doacoes.md) — Permissões das doações (provisório)
 - [0180](0180-telas-de-doacoes.md) — Telas de doações
+- [0195](0195-modulo-estatisticas-e-dashboard-de-perfil.md) — Módulo Estatísticas e dashboard de perfil dos usuários atendidos
+- [0196](0196-permissao-dos-relatorios-e-dashboards.md) — Permissão dos relatórios e dashboards (provisório)
+- [0197](0197-graficos-em-html-e-css-sem-biblioteca.md) — Gráficos em HTML e CSS, sem biblioteca, e área de relatórios com abas

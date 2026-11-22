@@ -215,6 +215,7 @@ Situação: provisória.
 | Equipe Técnica e Administrativo não veem nem registram parcerias. | `acesso.Perfil` (`PARCERIAS_LER`, `PARCERIAS_GERENCIAR`) | [0173](adr/0173-permissoes-das-parcerias.md) |
 | Equipe Técnica e Administrativo não veem nem registram reuniões e eventos institucionais. | `acesso.Perfil` (`EVENTOS_LER`, `EVENTOS_REGISTRAR`) | [0176](adr/0176-permissoes-das-reunioes-e-eventos.md) |
 | Equipe Técnica e Administrativo não veem nem registram doações. | `acesso.Perfil` (`DOACOES_LER`, `DOACOES_REGISTRAR`) | [0179](adr/0179-permissoes-das-doacoes.md) |
+| Só Coordenador e Consulta veem relatórios e dashboards; Equipe Técnica e Administrativo ficam sem acesso. | `acesso.Perfil` (`RELATORIOS_LER`) e `relatorios.modulo.ts` (frontend) | [0196](adr/0196-permissao-dos-relatorios-e-dashboards.md) |
 
 ## P18. Funções dos colaboradores
 

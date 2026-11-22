@@ -130,6 +130,9 @@ public enum Permissao {
 	DOACOES_LER,
 
 	/** Registrar e editar doações (RF015, ADR 0179). */
-	DOACOES_REGISTRAR
+	DOACOES_REGISTRAR,
+
+	/** Ver os dashboards e gerar os relatórios estatísticos, que só trazem contagens (RF016, RF017, ADR 0196). */
+	RELATORIOS_LER
 
 }

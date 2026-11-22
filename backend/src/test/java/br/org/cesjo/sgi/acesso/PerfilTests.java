@@ -117,6 +117,12 @@ class PerfilTests {
 	}
 
 	@Test
+	void relatoriosParaCoordenadorEConsulta() {
+		assertThat(Arrays.stream(Perfil.values()).filter(perfil -> perfil.tem(Permissao.RELATORIOS_LER)))
+			.containsExactlyInAnyOrder(Perfil.COORDENADOR, Perfil.CONSULTA);
+	}
+
+	@Test
 	void visitasConformeAMatriz() {
 		assertThat(Arrays.stream(Perfil.values()).filter(perfil -> perfil.tem(Permissao.VISITAS_LER)))
 			.containsExactlyInAnyOrder(Perfil.COORDENADOR, Perfil.EQUIPE_TECNICA, Perfil.ADMINISTRATIVO);
@@ -168,7 +174,8 @@ class PerfilTests {
 	@Test
 	void consultaSoVeNotificacoesAFilaEDadosBasicosDosAtendidos() {
 		assertThat(Perfil.CONSULTA.permissoes()).containsExactlyInAnyOrder(Permissao.NOTIFICACOES_LER,
-				Permissao.LISTA_ESPERA_FILA_LER, Permissao.ATENDIDOS_LER_BASICO, Permissao.CAPACIDADE_LER);
+				Permissao.LISTA_ESPERA_FILA_LER, Permissao.ATENDIDOS_LER_BASICO, Permissao.CAPACIDADE_LER,
+				Permissao.RELATORIOS_LER);
 	}
 
 }

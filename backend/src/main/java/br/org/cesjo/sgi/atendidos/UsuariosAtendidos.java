@@ -37,4 +37,11 @@ public interface UsuariosAtendidos {
 	 */
 	void exigirAtivos(Collection<UUID> pessoaIds);
 
+	/**
+	 * Perfil de cada usuário com inserção ativa, para os dashboards contarem por deficiência, gênero,
+	 * faixa etária e turno (RF017, ADR 0195). Lido na hora, sem cache. Não é auditado: não identifica a
+	 * pessoa.
+	 */
+	List<PerfilAtendido> perfisDosAtivos();
+
 }

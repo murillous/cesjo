@@ -13,6 +13,7 @@ import { inicioModulo } from './inicio/inicio.modulo';
 import { listaEsperaModulo } from './lista-espera/lista-espera.modulo';
 import { parceriasModulo } from './parcerias/parcerias.modulo';
 import { violacoesModulo } from './violacoes/violacoes.modulo';
+import { relatoriosModulo } from './relatorios/relatorios.modulo';
 import { visitasModulo } from './visitas/visitas.modulo';
 import { ModuloFrontend } from './modulo';
 
@@ -29,6 +30,7 @@ export const MODULOS: readonly ModuloFrontend[] = [
   atendimentoModulo,
   atividadesModulo,
   comunicacoesModulo,
+  relatoriosModulo,
   colaboradoresModulo,
   parceriasModulo,
   eventosModulo,
