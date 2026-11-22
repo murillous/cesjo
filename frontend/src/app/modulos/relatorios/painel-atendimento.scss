@@ -1,0 +1,89 @@
+@use 'styles/breakpoints' as bp;
+
+// Mobile first: período, números e gráficos empilhados. No tablet o período e o botão ficam lado a
+// lado e os números numa linha; no desktop, os gráficos de atividades e desligamentos lado a lado.
+
+.periodo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sgi-space-1);
+  margin-bottom: var(--sgi-space-3);
+
+  button {
+    align-self: flex-start;
+    min-height: var(--sgi-alvo-toque);
+  }
+}
+
+.contado {
+  margin: 0 0 var(--sgi-space-2);
+}
+
+.numeros {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--sgi-space-2);
+  margin: 0 0 var(--sgi-space-4);
+
+  dt {
+    color: var(--sgi-color-text-secondary);
+    font-size: var(--sgi-font-size-small);
+  }
+
+  dd {
+    margin: 0;
+    color: var(--sgi-color-primary-dark);
+    font-size: var(--sgi-font-size-h2);
+    font-weight: var(--sgi-font-weight-bold);
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.taxa {
+  margin-left: var(--sgi-space-1);
+  color: var(--sgi-color-text-secondary);
+  font-size: var(--sgi-font-size-body);
+  font-weight: var(--sgi-font-weight-regular);
+}
+
+.graficos {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--sgi-space-4);
+}
+
+.aviso-erro {
+  padding: var(--sgi-space-1) var(--sgi-space-2);
+  border-left: var(--sgi-space-0-5) solid var(--sgi-color-accent);
+  background: var(--sgi-color-background-secondary);
+}
+
+@media (min-width: bp.$tablet) {
+  .periodo {
+    flex-direction: row;
+    align-items: flex-start;
+
+    mat-form-field {
+      min-width: 20rem;
+    }
+
+    button {
+      margin-top: var(--sgi-space-1);
+    }
+  }
+
+  .numeros {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: bp.$desktop) {
+  .graficos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--sgi-space-6) var(--sgi-space-4);
+  }
+
+  .largo {
+    grid-column: 1 / -1;
+  }
+}

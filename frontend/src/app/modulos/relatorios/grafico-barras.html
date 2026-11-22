@@ -1,6 +1,9 @@
 <figure class="grafico">
   <figcaption>
     <h2>{{ titulo() }}</h2>
+    @if (nota(); as texto) {
+      <p class="texto-secundario nota">{{ texto }}</p>
+    }
   </figcaption>
   @if (soma() === 0) {
     <p class="texto-secundario vazio">Nenhum registro para mostrar.</p>

@@ -18,6 +18,10 @@ export class GraficoBarras {
   readonly contagens = input.required<readonly Contagem[]>();
   /** Nome do que é contado, no plural, para a tabela. */
   readonly unidade = input('Usuários');
+  /** Base da porcentagem. Sem ela, a porcentagem é sobre a soma das barras. */
+  readonly base = input<number | null>(null);
+  /** Frase curta abaixo do título, por exemplo para dizer sobre o que é a porcentagem. */
+  readonly nota = input<string | null>(null);
 
   protected readonly soma = computed(() =>
     this.contagens().reduce((total, contagem) => total + contagem.total, 0),
@@ -34,10 +38,10 @@ export class GraficoBarras {
   }
 
   protected porcentagem(total: number): string {
-    const soma = this.soma();
-    if (soma === 0) {
+    const base = this.base() ?? this.soma();
+    if (base === 0) {
       return '0%';
     }
-    return `${Math.round((total / soma) * 100)}%`;
+    return `${Math.round((total / base) * 100)}%`;
   }
 }

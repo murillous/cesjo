@@ -78,6 +78,34 @@ const PAINEL_PERFIL = {
   ]),
 };
 
+const PAINEL_ATENDIMENTO = {
+  geradoEm: '2026-11-20T13:00:00Z',
+  inicio: '2026-01-01',
+  fim: '2026-11-20',
+  violacoesPorCategoria: contagens([
+    ['EXPLORACAO_IMAGEM', 'Exploração de imagem', 0],
+    ['ISOLAMENTO_SOCIAL', 'Isolamento social', 2],
+    ['DISCRIMINACAO_FAMILIAR', 'Atitudes discriminatórias e preconceituosas no seio familiar', 1],
+    ['NEGLIGENCIA_ABANDONO', 'Negligência ou abandono', 3],
+    ['OUTRAS', 'Outras violações', 0],
+  ]),
+  atividadesPorTipo: contagens([
+    ['COM_FAMILIAS', 'Atividade com famílias', 4],
+    ['COM_USUARIOS', 'Atividade com usuários', 18],
+    ['ATENDIMENTO_TECNICO_INDIVIDUALIZADO', 'Atendimento técnico individualizado', 9],
+    ['ESTUDO_DE_CASO', 'Estudo de caso', 2],
+  ]),
+  totalAtividades: 33,
+  atendidosNoPeriodo: 25,
+  totalDesligamentos: 3,
+  taxaDesligamento: 0.12,
+  desligamentosPorMotivo: [
+    { chave: 'EVASAO', rotulo: 'Evasão', total: 1, taxa: 0.04 },
+    { chave: 'MUDANCA_MUNICIPIO', rotulo: 'Mudança para outro município', total: 2, taxa: 0.08 },
+    { chave: 'OUTROS', rotulo: 'Outros', total: 0, taxa: 0 },
+  ],
+};
+
 const AUDITORIA = [
   {
     id: '00000000-0000-0000-0000-0000000000a1',
@@ -159,6 +187,8 @@ export async function simularApi(
     if (caminho === '/api/auditoria/entidades') return json(route, ['conta_acesso', 'arquivo']);
     if (caminho === '/api/auditoria') return json(route, pagina(AUDITORIA));
     if (caminho === '/api/estatisticas/dashboards/perfil') return json(route, PAINEL_PERFIL);
+    if (caminho === '/api/estatisticas/dashboards/atendimento')
+      return json(route, PAINEL_ATENDIMENTO);
     if (caminho === '/api/violacoes') return json(route, pagina(VIOLACOES));
     return json(route, { title: 'Não simulado no teste', status: 404 }, 404);
   });
