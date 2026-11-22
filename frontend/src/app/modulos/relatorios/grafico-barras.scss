@@ -1,0 +1,118 @@
+@use 'styles/breakpoints' as bp;
+
+// Mobile first: o rótulo da categoria fica em cima da barra, que usa a largura toda. No tablet o
+// rótulo vai para a esquerda, numa coluna fixa, e as barras começam todas na mesma linha de base.
+
+:host {
+  display: block;
+}
+
+.grafico {
+  margin: 0;
+}
+
+h2 {
+  margin: 0 0 var(--sgi-space-2);
+  font-size: var(--sgi-font-size-h3);
+}
+
+.barras {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sgi-space-1-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: grid;
+    gap: var(--sgi-space-0-5);
+  }
+}
+
+.rotulo {
+  font-size: var(--sgi-font-size-small);
+}
+
+.faixa {
+  display: flex;
+  align-items: center;
+  gap: var(--sgi-space-1);
+  // A régua da barra: uma linha fina na base, para a barra zero ainda ter lugar.
+  border-left: 1px solid var(--sgi-color-border);
+  min-height: 1.5rem;
+}
+
+.barra {
+  display: block;
+  // Barra de no máximo 24px de espessura, base reta e ponta arredondada.
+  // A fração vem do componente; o espaço do valor na ponta fica reservado para a maior barra.
+  width: calc((100% - 5.5rem) * var(--fracao));
+  height: 1.25rem;
+  border-radius: 0 var(--sgi-radius-sm) var(--sgi-radius-sm) 0;
+  background: var(--sgi-color-primary);
+}
+
+.sem-valor .barra {
+  // Os sem categoria ficam numa barra mais apagada, para não competir com as categorias.
+  background: var(--sgi-color-accent-soft);
+}
+
+.valor {
+  flex: none;
+  font-weight: var(--sgi-font-weight-semibold);
+  font-variant-numeric: tabular-nums;
+}
+
+.porcentagem {
+  margin-left: var(--sgi-space-0-5);
+  color: var(--sgi-color-text-secondary);
+  font-size: var(--sgi-font-size-small);
+  font-weight: var(--sgi-font-weight-regular);
+}
+
+.vazio {
+  margin: 0;
+}
+
+.como-tabela {
+  margin-top: var(--sgi-space-2);
+
+  summary {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--sgi-alvo-toque);
+    color: var(--sgi-color-primary-dark);
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-variant-numeric: tabular-nums;
+  }
+
+  th,
+  td {
+    padding: var(--sgi-space-0-5) var(--sgi-space-1);
+    border-bottom: var(--sgi-border);
+    text-align: left;
+  }
+
+  td {
+    text-align: right;
+  }
+}
+
+@media (min-width: bp.$tablet) {
+  .barras li {
+    grid-template-columns: 11rem minmax(0, 1fr);
+    align-items: center;
+    gap: var(--sgi-space-2);
+  }
+
+  .rotulo {
+    text-align: right;
+  }
+}

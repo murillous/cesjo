@@ -15,6 +15,7 @@ export const CONTA_COORDENADOR = {
     'LISTA_ESPERA_LER',
     'LISTA_ESPERA_CADASTRAR',
     'LISTA_ESPERA_FILA_LER',
+    'RELATORIOS_LER',
   ],
   trocaSenhaObrigatoria: false,
 };
@@ -44,6 +45,37 @@ const CONTAS = [
     atualizadoEm: '2026-11-03T12:00:00Z',
   },
 ];
+
+const contagens = (pares: [string, string, number][]) =>
+  pares.map(([chave, rotulo, total]) => ({ chave, rotulo, total }));
+
+const PAINEL_PERFIL = {
+  geradoEm: '2026-11-20T13:00:00Z',
+  totalAtivos: 12,
+  porTipoDeficiencia: contagens([
+    ['FISICA', 'Física', 3],
+    ['SENSORIAL', 'Sensorial', 1],
+    ['INTELECTUAL', 'Intelectual', 4],
+    ['MULTIPLA', 'Múltipla', 1],
+    ['TEA', 'TEA', 2],
+    ['T21', 'Síndrome de Down (T21)', 1],
+  ]),
+  porGenero: contagens([
+    ['FEMININO', 'Feminino', 5],
+    ['MASCULINO', 'Masculino', 6],
+    ['OUTRO', 'Outro', 0],
+    ['SEM_VALOR', 'Não informado', 1],
+  ]),
+  porFaixaEtaria: contagens([
+    ['JOVEM', 'Jovem (18 a 29 anos)', 7],
+    ['ADULTO', 'Adulto (30 a 59 anos)', 5],
+  ]),
+  porTurno: contagens([
+    ['MATUTINO', 'Matutino', 4],
+    ['VESPERTINO', 'Vespertino', 5],
+    ['INTEGRAL', 'Integral', 3],
+  ]),
+};
 
 const AUDITORIA = [
   {
@@ -113,6 +145,7 @@ export async function simularApi(
     if (caminho.startsWith('/api/contas/')) return json(route, CONTAS[1]);
     if (caminho === '/api/auditoria/entidades') return json(route, ['conta_acesso', 'arquivo']);
     if (caminho === '/api/auditoria') return json(route, pagina(AUDITORIA));
+    if (caminho === '/api/estatisticas/dashboards/perfil') return json(route, PAINEL_PERFIL);
     return json(route, { title: 'Não simulado no teste', status: 404 }, 404);
   });
 }

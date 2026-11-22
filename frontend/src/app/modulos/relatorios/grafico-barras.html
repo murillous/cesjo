@@ -1,0 +1,49 @@
+<figure class="grafico">
+  <figcaption>
+    <h2>{{ titulo() }}</h2>
+  </figcaption>
+  @if (soma() === 0) {
+    <p class="texto-secundario vazio">Nenhum registro para mostrar.</p>
+  } @else {
+    <ul class="barras" aria-hidden="true">
+      @for (contagem of contagens(); track contagem.chave) {
+        <li [class.sem-valor]="contagem.chave === 'SEM_VALOR'">
+          <span class="rotulo">{{ contagem.rotulo }}</span>
+          <span class="faixa" [title]="contagem.rotulo + ': ' + contagem.total">
+            <span class="barra" [style.--fracao]="fracao(contagem.total)"></span>
+            <span class="valor">
+              {{ contagem.total }}
+              <span class="porcentagem">{{ porcentagem(contagem.total) }}</span>
+            </span>
+          </span>
+        </li>
+      }
+    </ul>
+    <details class="como-tabela">
+      <summary>Ver como tabela</summary>
+      <table>
+        <caption class="cdk-visually-hidden">
+          {{
+            titulo()
+          }}
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">Categoria</th>
+            <th scope="col">{{ unidade() }}</th>
+            <th scope="col">Porcentagem</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (contagem of contagens(); track contagem.chave) {
+            <tr>
+              <th scope="row">{{ contagem.rotulo }}</th>
+              <td>{{ contagem.total }}</td>
+              <td>{{ porcentagem(contagem.total) }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </details>
+  }
+</figure>

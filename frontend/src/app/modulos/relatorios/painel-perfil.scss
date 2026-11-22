@@ -1,0 +1,52 @@
+@use 'styles/breakpoints' as bp;
+
+// Mobile first: o total em destaque e os gráficos um embaixo do outro. No desktop, dois por linha.
+
+.resumo {
+  margin-bottom: var(--sgi-space-4);
+}
+
+.total {
+  margin: 0;
+  font-size: var(--sgi-font-size-h3);
+
+  strong {
+    display: block;
+    color: var(--sgi-color-primary-dark);
+    font-size: var(--sgi-font-size-h1);
+    font-weight: var(--sgi-font-weight-bold);
+    font-variant-numeric: tabular-nums;
+    line-height: 1.1;
+  }
+}
+
+.atualizado {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sgi-space-1);
+  margin: var(--sgi-space-1) 0 0;
+
+  button {
+    min-height: var(--sgi-alvo-toque);
+  }
+}
+
+.graficos {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--sgi-space-4);
+}
+
+.aviso-erro {
+  padding: var(--sgi-space-1) var(--sgi-space-2);
+  border-left: var(--sgi-space-0-5) solid var(--sgi-color-accent);
+  background: var(--sgi-color-background-secondary);
+}
+
+@media (min-width: bp.$desktop) {
+  .graficos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--sgi-space-6) var(--sgi-space-4);
+  }
+}
