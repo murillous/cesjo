@@ -122,3 +122,6 @@ frente de trabalho paralela não é usado todo.
 - [0124](0124-correcoes-de-acessibilidade.md) — Correções de acessibilidade achadas pela auditoria
 - [0125](0125-checklist-manual-de-navegadores.md) — Checklist manual para Safari no iPhone e leitor de tela
 - [0130](0130-exportacao-da-lista-de-espera.md) — Exportação da lista de espera em PDF e Excel (provisório)
+- [0178](0178-registro-de-doacoes.md) — Registro de doações recebidas e realizadas (provisório)
+- [0179](0179-permissoes-das-doacoes.md) — Permissões das doações (provisório)
+- [0180](0180-telas-de-doacoes.md) — Telas de doações

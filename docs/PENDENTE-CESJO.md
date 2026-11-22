@@ -127,7 +127,12 @@ Situação: aberta.
 
 > As doações incluem dinheiro? É preciso emitir recibo ou prestar contas com valores?
 
-Situação: aberta.
+Situação: provisória.
+
+| Decisão provisória | Onde mudar | ADR |
+|---|---|---|
+| A doação em dinheiro tem valor em reais opcional; os outros tipos não têm valor, só quantidade em texto livre. Não há recibo nem prestação de contas. | `institucional.interno.DadosDoacao` e `ck_doacao_valor` (`V58`) | [0178](adr/0178-registro-de-doacoes.md) |
+| Tipos de doação: dinheiro, alimentos, roupas e calçados, higiene e limpeza, material pedagógico, móveis e equipamentos, outro. | `institucional.TipoDoacao`, `ck_doacao_tipo` (`V58`) e `rotulos.ts` do módulo doações (frontend) | [0178](adr/0178-registro-de-doacoes.md) |
 
 ## P12. Integrações (seção 5.1)
 
@@ -196,6 +201,7 @@ Situação: provisória.
 | Só o Coordenador insere candidatos no serviço; a Equipe Técnica lê a ficha completa dos usuários atendidos. | `acesso.Perfil` (`ATENDIDOS_INSERIR`) | [0082](adr/0082-permissoes-dos-usuarios-atendidos.md) |
 | Só o Coordenador registra desligamento, porque ele libera vaga. | `acesso.Perfil` (`ATENDIDOS_DESLIGAR`) | [0110](adr/0110-desligamento-do-usuario-atendido.md) |
 | Equipe Técnica e Administrativo não veem nem gerenciam o cadastro de colaboradores; escolhem o profissional pelas telas de visita, escuta e atividade. | `acesso.Perfil` (`COLABORADORES_LER`, `COLABORADORES_GERENCIAR`) | [0047](adr/0047-permissoes-dos-colaboradores.md) |
+| Equipe Técnica e Administrativo não veem nem registram doações. | `acesso.Perfil` (`DOACOES_LER`, `DOACOES_REGISTRAR`) | [0179](adr/0179-permissoes-das-doacoes.md) |
 
 ## P18. Funções dos colaboradores
 
