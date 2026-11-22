@@ -39,7 +39,7 @@ class ViolacaoDireito {
 	@Column(name = "data_identificacao", nullable = false)
 	private LocalDate dataIdentificacao;
 
-	/** Cifrada; ler é auditado (ADR 0113). */
+	/** Cifrada; ler é auditado (ADR 0145). */
 	@Column(nullable = false)
 	@Convert(converter = TextoCifradoConverter.class)
 	private String descricao;

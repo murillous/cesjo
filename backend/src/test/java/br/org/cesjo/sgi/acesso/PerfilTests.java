@@ -66,6 +66,30 @@ class PerfilTests {
 	}
 
 	@Test
+	void soCoordenadorVeEGerenciaParcerias() {
+		assertThat(Arrays.stream(Perfil.values()).filter(perfil -> perfil.tem(Permissao.PARCERIAS_LER)))
+			.containsExactly(Perfil.COORDENADOR);
+		assertThat(Arrays.stream(Perfil.values()).filter(perfil -> perfil.tem(Permissao.PARCERIAS_GERENCIAR)))
+			.containsExactly(Perfil.COORDENADOR);
+	}
+
+	@Test
+	void soCoordenadorVeERegistraEventosInstitucionais() {
+		assertThat(Arrays.stream(Perfil.values()).filter(perfil -> perfil.tem(Permissao.EVENTOS_LER)))
+			.containsExactly(Perfil.COORDENADOR);
+		assertThat(Arrays.stream(Perfil.values()).filter(perfil -> perfil.tem(Permissao.EVENTOS_REGISTRAR)))
+			.containsExactly(Perfil.COORDENADOR);
+	}
+
+	@Test
+	void soCoordenadorVeERegistraDoacoes() {
+		assertThat(Arrays.stream(Perfil.values()).filter(perfil -> perfil.tem(Permissao.DOACOES_LER)))
+			.containsExactly(Perfil.COORDENADOR);
+		assertThat(Arrays.stream(Perfil.values()).filter(perfil -> perfil.tem(Permissao.DOACOES_REGISTRAR)))
+			.containsExactly(Perfil.COORDENADOR);
+	}
+
+	@Test
 	void usuariosAtendidosConformeAMatriz() {
 		assertThat(Arrays.stream(Perfil.values()).filter(perfil -> perfil.tem(Permissao.ATENDIDOS_INSERIR)))
 			.containsExactly(Perfil.COORDENADOR);
@@ -124,6 +148,22 @@ class PerfilTests {
 			.containsExactlyInAnyOrder(Perfil.COORDENADOR, Perfil.EQUIPE_TECNICA);
 		assertThat(Arrays.stream(Perfil.values()).filter(perfil -> perfil.tem(Permissao.PIA_APROVAR)))
 			.containsExactly(Perfil.COORDENADOR);
+	}
+
+	@Test
+	void atividadesSoParaCoordenadorEEquipeTecnica() {
+		assertThat(Arrays.stream(Perfil.values()).filter(perfil -> perfil.tem(Permissao.ATIVIDADES_LER)))
+			.containsExactlyInAnyOrder(Perfil.COORDENADOR, Perfil.EQUIPE_TECNICA);
+		assertThat(Arrays.stream(Perfil.values()).filter(perfil -> perfil.tem(Permissao.ATIVIDADES_REGISTRAR)))
+			.containsExactlyInAnyOrder(Perfil.COORDENADOR, Perfil.EQUIPE_TECNICA);
+	}
+
+	@Test
+	void comunicacoesParaTodosMenosConsulta() {
+		assertThat(Arrays.stream(Perfil.values()).filter(perfil -> perfil.tem(Permissao.COMUNICACOES_LER)))
+			.containsExactlyInAnyOrder(Perfil.COORDENADOR, Perfil.EQUIPE_TECNICA, Perfil.ADMINISTRATIVO);
+		assertThat(Arrays.stream(Perfil.values()).filter(perfil -> perfil.tem(Permissao.COMUNICACOES_REGISTRAR)))
+			.containsExactlyInAnyOrder(Perfil.COORDENADOR, Perfil.EQUIPE_TECNICA, Perfil.ADMINISTRATIVO);
 	}
 
 	@Test

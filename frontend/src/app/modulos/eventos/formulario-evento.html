@@ -1,0 +1,91 @@
+<section class="evento">
+  <a matButton routerLink="/eventos" class="voltar">
+    <mat-icon aria-hidden="true">arrow_back</mat-icon>
+    Reuniões e eventos
+  </a>
+
+  <h1>{{ edicao() ? 'Reunião ou evento' : 'Registrar reunião ou evento' }}</h1>
+
+  @if (erro(); as mensagem) {
+    <p class="erro" role="alert">{{ mensagem }}</p>
+  }
+
+  <form [formGroup]="formulario" (ngSubmit)="salvar()" novalidate>
+    <mat-form-field appearance="outline">
+      <mat-label>Tipo</mat-label>
+      <mat-select formControlName="tipo">
+        @for (tipo of tipos; track tipo.valor) {
+          <mat-option [value]="tipo.valor">{{ tipo.rotulo }}</mat-option>
+        }
+      </mat-select>
+      @if (formulario.controls.tipo.hasError('required')) {
+        <mat-error>Escolha o tipo.</mat-error>
+      }
+    </mat-form-field>
+
+    @if (direcoes().length > 0) {
+      <fieldset [class.invalido]="formulario.controls.direcao.touched && faltaDirecao()">
+        <legend id="titulo-direcao">Indicação</legend>
+        <mat-radio-group formControlName="direcao" aria-labelledby="titulo-direcao">
+          @for (direcao of direcoes(); track direcao.valor) {
+            <mat-radio-button [value]="direcao.valor">{{ direcao.rotulo }}</mat-radio-button>
+          }
+        </mat-radio-group>
+        @if (formulario.controls.direcao.touched && faltaDirecao()) {
+          <p class="erro-campo" role="alert">Escolha a indicação.</p>
+        }
+      </fieldset>
+    }
+
+    <mat-form-field appearance="outline">
+      <mat-label>Data</mat-label>
+      <input matInput [matDatepicker]="seletorData" [max]="hoje" formControlName="data" />
+      <mat-hint>DD/MM/AAAA</mat-hint>
+      <mat-datepicker-toggle matIconSuffix [for]="seletorData" />
+      <mat-datepicker #seletorData />
+      @if (formulario.controls.data.hasError('required')) {
+        <mat-error>Informe a data.</mat-error>
+      } @else if (formulario.controls.data.hasError('matDatepickerMax')) {
+        <mat-error>A data não pode ser futura.</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Descrição</mat-label>
+      <textarea matInput formControlName="descricao" rows="5"></textarea>
+      <mat-hint>Pauta, o que foi tratado e encaminhamentos. Guardada cifrada.</mat-hint>
+      @if (formulario.controls.descricao.hasError('required')) {
+        <mat-error>Descreva a reunião ou o evento.</mat-error>
+      } @else if (formulario.controls.descricao.hasError('maxlength')) {
+        <mat-error>Use até 4000 caracteres.</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Participantes</mat-label>
+      <textarea matInput formControlName="participantes" rows="2"></textarea>
+      <mat-hint>Opcional. Quem participou, da equipe e de fora.</mat-hint>
+    </mat-form-field>
+
+    @if (podeEscolherParceiro || evento()?.parceiro) {
+      <mat-form-field appearance="outline">
+        <mat-label>Parceiro</mat-label>
+        <mat-select formControlName="parceiroId">
+          <mat-option value="">Sem parceiro</mat-option>
+          @for (parceiro of parceiros(); track parceiro.id) {
+            <mat-option [value]="parceiro.id">{{ parceiro.nome }}</mat-option>
+          }
+        </mat-select>
+        <mat-hint>Opcional. Liga o registro a uma parceria.</mat-hint>
+      </mat-form-field>
+    }
+
+    @if (podeRegistrar) {
+      <div class="botoes">
+        <button matButton="filled" type="submit" [disabled]="enviando()">
+          {{ edicao() ? 'Salvar registro' : 'Registrar' }}
+        </button>
+      </div>
+    }
+  </form>
+</section>

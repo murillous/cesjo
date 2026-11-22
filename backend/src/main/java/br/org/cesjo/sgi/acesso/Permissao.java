@@ -99,8 +99,38 @@ public enum Permissao {
 	/** Registrar violação de direitos (RF009, ADR 0112). */
 	VIOLACOES_REGISTRAR,
 
-	/** Consultar violações de direitos e ler a descrição, com leitura auditada (RF009, ADR 0113). */
+	/** Consultar violações de direitos e ler a descrição, com leitura auditada (RF009, ADR 0145). */
 	VIOLACOES_LER,
+
+	/** Listar as atividades e abrir a ficha com a descrição (RF010, ADR 0152). */
+	ATIVIDADES_LER,
+
+	/** Registrar e corrigir atividades (RF010, ADR 0152). */
+	ATIVIDADES_REGISTRAR,
+
+	/** Listar os contatos e comunicações e abrir a ficha com a descrição (RF011, ADR 0162). */
+	COMUNICACOES_LER,
+
+	/** Registrar e corrigir contatos e comunicações (RF011, ADR 0162). */
+	COMUNICACOES_REGISTRAR,
+
+	/** Ver os parceiros e as ações de articulação (RF013, ADR 0173). */
+	PARCERIAS_LER,
+
+	/** Cadastrar e editar parceiros e registrar ações de articulação (RF013, ADR 0173). */
+	PARCERIAS_GERENCIAR,
+
+	/** Ver as reuniões e eventos institucionais, com a descrição (RF012, ADR 0176). */
+	EVENTOS_LER,
+
+	/** Registrar e editar reuniões e eventos institucionais (RF012, ADR 0176). */
+	EVENTOS_REGISTRAR,
+
+	/** Ver as doações recebidas e realizadas (RF015, ADR 0179). */
+	DOACOES_LER,
+
+	/** Registrar e editar doações (RF015, ADR 0179). */
+	DOACOES_REGISTRAR,
 
 	/** Ver os dashboards e gerar os relatórios estatísticos, que só trazem contagens (RF016, RF017, ADR 0196). */
 	RELATORIOS_LER

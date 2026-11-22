@@ -127,13 +127,22 @@ Situação: aberta.
 
 > O que precisa ser registrado sobre cada parceria (termo, vigência, contatos, ações realizadas)?
 
-Situação: aberta.
+Situação: provisória.
+
+| Decisão provisória | Onde mudar | ADR |
+|---|---|---|
+| O parceiro tem nome, tipo de instituição (órgão público, organização da sociedade civil, empresa, instituição de ensino ou outro), termo ou instrumento, início e fim da vigência, contato em texto livre, observações e situação ativo/inativo. Cada ação de articulação tem data e descrição. | `institucional.interno.DadosParceiro`, `institucional.TipoParceiro`, `V56__cria_parceiro.sql` e `rotulos.ts` do módulo parcerias (frontend) | [0172](adr/0172-parceiros-e-acoes-de-articulacao.md) |
 
 ## P11. Doações (RF015)
 
 > As doações incluem dinheiro? É preciso emitir recibo ou prestar contas com valores?
 
-Situação: aberta.
+Situação: provisória.
+
+| Decisão provisória | Onde mudar | ADR |
+|---|---|---|
+| A doação em dinheiro tem valor em reais opcional; os outros tipos não têm valor, só quantidade em texto livre. Não há recibo nem prestação de contas. | `institucional.interno.DadosDoacao` e `ck_doacao_valor` (`V58`) | [0178](adr/0178-registro-de-doacoes.md) |
+| Tipos de doação: dinheiro, alimentos, roupas e calçados, higiene e limpeza, material pedagógico, móveis e equipamentos, outro. | `institucional.TipoDoacao`, `ck_doacao_tipo` (`V58`) e `rotulos.ts` do módulo doações (frontend) | [0178](adr/0178-registro-de-doacoes.md) |
 
 ## P12. Integrações (seção 5.1)
 
@@ -202,6 +211,10 @@ Situação: provisória.
 | Só o Coordenador insere candidatos no serviço; a Equipe Técnica lê a ficha completa dos usuários atendidos. | `acesso.Perfil` (`ATENDIDOS_INSERIR`) | [0082](adr/0082-permissoes-dos-usuarios-atendidos.md) |
 | Só o Coordenador registra desligamento, porque ele libera vaga. | `acesso.Perfil` (`ATENDIDOS_DESLIGAR`) | [0110](adr/0110-desligamento-do-usuario-atendido.md) |
 | Equipe Técnica e Administrativo não veem nem gerenciam o cadastro de colaboradores; escolhem o profissional pelas telas de visita, escuta e atividade. | `acesso.Perfil` (`COLABORADORES_LER`, `COLABORADORES_GERENCIAR`) | [0047](adr/0047-permissoes-dos-colaboradores.md) |
+| O Administrativo não lista nem registra atividades (`ATIVIDADES_LER` e `ATIVIDADES_REGISTRAR` só para Coordenador e Equipe Técnica). | `acesso.Perfil` (linha do `ADMINISTRATIVO`) | [0152](adr/0152-permissoes-das-atividades.md) |
+| Equipe Técnica e Administrativo não veem nem registram parcerias. | `acesso.Perfil` (`PARCERIAS_LER`, `PARCERIAS_GERENCIAR`) | [0173](adr/0173-permissoes-das-parcerias.md) |
+| Equipe Técnica e Administrativo não veem nem registram reuniões e eventos institucionais. | `acesso.Perfil` (`EVENTOS_LER`, `EVENTOS_REGISTRAR`) | [0176](adr/0176-permissoes-das-reunioes-e-eventos.md) |
+| Equipe Técnica e Administrativo não veem nem registram doações. | `acesso.Perfil` (`DOACOES_LER`, `DOACOES_REGISTRAR`) | [0179](adr/0179-permissoes-das-doacoes.md) |
 | Só Coordenador e Consulta veem relatórios e dashboards; Equipe Técnica e Administrativo ficam sem acesso. | `acesso.Perfil` (`RELATORIOS_LER`) e `relatorios.modulo.ts` (frontend) | [0196](adr/0196-permissao-dos-relatorios-e-dashboards.md) |
 
 ## P18. Funções dos colaboradores
@@ -216,6 +229,17 @@ Situação: provisória.
 |---|---|---|
 | Funções `ASSISTENTE_SOCIAL`, `PSICOLOGO`, `TERAPEUTA_OCUPACIONAL` e `OUTRA`, tiradas do planejamento. | `institucional.FuncaoColaborador`, `ck_colaborador_funcao` (migração nova) e `rotulos.ts` do módulo colaboradores (frontend) | [0045](adr/0045-cadastro-e-api-java-dos-colaboradores.md) |
 
+## P19. Leitura das violações de direitos na lista
+
+> Ver a categoria e a data de uma violação numa lista, sem abrir a descrição, conta como leitura de
+> dado sensível e deve ir para o log de auditoria? Ou basta registrar quem abre a descrição?
+
+Situação: provisória.
+
+| Decisão provisória | Onde mudar | ADR |
+|---|---|---|
+| As listas de violações (na ficha e a geral) não geram evento de auditoria. Só a leitura da descrição é registrada, como leitura sensível de `violacao_direito`, a cada vez que alguém a abre. | `atendidos.interno.ServicoViolacoes` (`listarDoAtendido` e `listar`) | [0145](adr/0145-consulta-de-violacoes-de-direitos.md) |
+
 ## P21. Opções de gênero e de escolaridade
 
 > Quais opções de gênero o cadastro do usuário atendido deve oferecer? E quais níveis de
@@ -226,3 +250,71 @@ Situação: provisória.
 | Decisão provisória | Onde mudar | ADR |
 |---|---|---|
 | Gênero: feminino, masculino e outro. Escolaridade: sem escolaridade, fundamental, médio e superior, incompletos e completos. Vazio é "não informado". | `pessoas.Genero`, `pessoas.Escolaridade`, restrições da `V40` (migração nova) e `rotulos.ts` do módulo atendidos (frontend) | [0143](adr/0143-opcoes-de-genero-e-escolaridade.md) |
+
+## P23. Participantes das atividades com famílias
+
+> Nas atividades com famílias (RF010), o que precisa ser registrado: só de quais usuários atendidos
+> eram as famílias presentes, ou cada familiar que participou (nome, parentesco)?
+
+Situação: provisória.
+
+| Decisão provisória | Onde mudar | ADR |
+|---|---|---|
+| Participantes são sempre usuários atendidos ativos; na atividade com famílias, o participante indica de qual usuário é a família, sem registrar o familiar. | `atividades.interno.DadosAtividade` (`participantes`) e `ficha-atividade.html` (frontend) | [0150](adr/0150-registro-de-atividades.md) |
+
+## P24. Atividades planejadas
+
+> As atividades (RF010) são registradas só depois de realizadas, ou a equipe quer também agendar
+> atividades futuras e marcar depois se aconteceram?
+
+Situação: provisória.
+
+| Decisão provisória | Onde mudar | ADR |
+|---|---|---|
+| Só se registra atividade realizada: a data não pode ser futura e não há agenda de atividades. | `ServicoAtividades.exigirDataValida` (backend) e `[max]` da data em `ficha-atividade.html` (frontend) | [0150](adr/0150-registro-de-atividades.md) |
+
+## P25. Atendimento multiprofissional
+
+> O atendimento multiprofissional (RF010) precisa ter sempre dois ou mais profissionais registrados?
+> Quais funções contam (por exemplo, assistente social e psicóloga juntas)?
+
+Situação: provisória.
+
+| Decisão provisória | Onde mudar | ADR |
+|---|---|---|
+| O atendimento multiprofissional exige pelo menos dois profissionais, de qualquer função. | `atividades.TipoAtividade` (`ATENDIMENTO_MULTIPROFISSIONAL`) e `TIPOS_ATIVIDADE` em `rotulos.ts` do módulo atividades (frontend) | [0154](adr/0154-atendimentos-e-estudos-de-caso.md) |
+
+## P26. Motivos de desligamento de colaborador (RF014)
+
+> Quais motivos de desligamento de colaborador o Centro-Dia usa (pedido de demissão, fim de
+> contrato, dispensa, aposentadoria)? Precisam aparecer separados em algum relatório?
+
+Situação: provisória.
+
+| Decisão provisória | Onde mudar | ADR |
+|---|---|---|
+| O motivo do desligamento é texto livre obrigatório, guardado cifrado, sem lista fechada. | `institucional.interno.NovoDesligamentoColaborador` e `motivo_desligamento` (`V55`) | [0170](adr/0170-vinculos-dos-colaboradores.md) |
+
+## P30. Contatos e comunicações (RF011)
+
+> Nos contatos e comunicações, a pessoa ou instituição precisa estar ligada ao cadastro (o usuário
+> atendido cujo cuidador ligou, a instituição parceira) ou basta o nome? Registram-se só contatos que
+> já aconteceram, ou também contatos agendados?
+
+Situação: provisória.
+
+| Decisão provisória | Onde mudar | ADR |
+|---|---|---|
+| A pessoa ou instituição é texto livre (`contraparte`), sem ligação com usuário atendido nem com cadastro de instituições. | `atividades.interno.DadosComunicacao` e migração nova com `pessoa_id` | [0160](adr/0160-registro-de-contatos-e-comunicacoes.md) |
+| Só se registra o que já aconteceu: a data não pode ser futura. | `ServicoComunicacoes.exigirDataValida` (backend) e `[max]` da data em `ficha-comunicacao.html` (frontend) | [0160](adr/0160-registro-de-contatos-e-comunicacoes.md) |
+
+## P31. Ofícios, declarações e encaminhamentos (RF011)
+
+> Os ofícios e declarações têm número ou protocolo que precisa ser registrado à parte? Cada registro
+> pode ter mais de um anexo (ofício e resposta, por exemplo)? O anexo é obrigatório em algum tipo?
+
+Situação: provisória.
+
+| Decisão provisória | Onde mudar | ADR |
+|---|---|---|
+| Um anexo só por registro, em qualquer tipo, e sempre opcional; o número do ofício vai no assunto. | `ServicoComunicacoes.anexar` (backend), coluna `comunicacao.arquivo_id` (migração nova) e campo de anexo em `ficha-comunicacao.html` (frontend) | [0164](adr/0164-oficios-declaracoes-e-encaminhamentos.md) |

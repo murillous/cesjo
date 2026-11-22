@@ -1,7 +1,11 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import { provideNativeDateAdapter } from '@angular/material/core';
 import { provideRouter } from '@angular/router';
+
+import { contaDeTeste } from '../../acesso/conta-de-teste';
+import { Sessao } from '../../acesso/sessao';
 
 import { AtendidoBasico, FichaCompleta } from './atendidos-api';
 import { FichaAtendidoPagina } from './ficha-atendido';
@@ -60,7 +64,12 @@ describe('FichaAtendidoPagina', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [FichaAtendidoPagina],
-      providers: [provideRouter([]), provideHttpClient(), provideHttpClientTesting()],
+      providers: [
+        provideRouter([]),
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        provideNativeDateAdapter(),
+      ],
     });
     http = TestBed.inject(HttpTestingController);
   });
@@ -77,6 +86,38 @@ describe('FichaAtendidoPagina', () => {
     await fixture.whenStable();
     return fixture.nativeElement as HTMLElement;
   }
+
+  it('mostra as atividades da pessoa para quem lê atividades', async () => {
+    TestBed.inject(Sessao).definir(
+      contaDeTeste({ permissoes: ['ATENDIDOS_LER', 'ATIVIDADES_LER'] }),
+    );
+    const fixture = TestBed.createComponent(FichaAtendidoPagina);
+    fixture.componentRef.setInput('id', 'ins-1');
+    fixture.detectChanges();
+    http.expectOne('/api/atendidos/ins-1').flush(FICHA);
+    await fixture.whenStable();
+
+    const pedido = http.expectOne((r) => r.url === '/api/atividades');
+    expect(pedido.request.params.get('pessoaId')).toBe('pes-1');
+    pedido.flush({
+      content: [
+        {
+          id: 'a1',
+          tipo: 'COM_USUARIOS',
+          data: '2026-11-18',
+          titulo: 'Oficina de pintura',
+          participantes: [],
+          profissionais: [],
+        },
+      ],
+      page: { size: 5, number: 0, totalElements: 7, totalPages: 2 },
+    });
+    await fixture.whenStable();
+
+    const texto = (fixture.nativeElement as HTMLElement).textContent ?? '';
+    expect(texto).toContain('Oficina de pintura');
+    expect(texto).toContain('Ver todas as 7 atividades');
+  });
 
   it('mostra a ficha completa com pessoa, serviço e lista de espera', async () => {
     const elemento = await abrir(FICHA);
@@ -131,6 +172,24 @@ describe('FichaAtendidoPagina', () => {
     expect(elemento.textContent).not.toContain('Telefone');
     expect(elemento.textContent).toContain('Desligado em 20/11/2026');
     expect(elemento.textContent).toContain('Desligado em 20/11/2026');
+  });
+
+  it('com VIOLACOES_LER, mostra as violações de direitos da pessoa', async () => {
+    TestBed.inject(Sessao).definir(
+      contaDeTeste({ permissoes: ['ATENDIDOS_LER', 'VIOLACOES_LER'] }),
+    );
+    const elemento = await abrir(FICHA);
+    http.expectOne('/api/atendidos/ins-1/violacoes').flush([]);
+
+    expect(elemento.querySelector('#titulo-violacoes')?.textContent).toContain(
+      'Violações de direitos',
+    );
+  });
+
+  it('sem VIOLACOES_LER, não mostra nem busca as violações', async () => {
+    const elemento = await abrir(FICHA);
+    http.expectNone('/api/atendidos/ins-1/violacoes');
+    expect(elemento.querySelector('#titulo-violacoes')).toBeNull();
   });
 
   it('mostra o erro quando a ficha não existe', async () => {

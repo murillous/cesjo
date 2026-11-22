@@ -115,7 +115,7 @@
             }
           </p>
 
-          @if (podeInserir && candidato.situacao === 'AGUARDANDO') {
+          @if (podeInserir && naFila(candidato.situacao)) {
             <a
               matButton="filled"
               class="inserir"

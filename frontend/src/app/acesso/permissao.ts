@@ -34,6 +34,16 @@ export type Permissao =
   | 'ATENDIDOS_DESLIGAR'
   | 'VIOLACOES_REGISTRAR'
   | 'VIOLACOES_LER'
+  | 'ATIVIDADES_LER'
+  | 'ATIVIDADES_REGISTRAR'
+  | 'COMUNICACOES_LER'
+  | 'COMUNICACOES_REGISTRAR'
+  | 'PARCERIAS_LER'
+  | 'PARCERIAS_GERENCIAR'
+  | 'EVENTOS_LER'
+  | 'EVENTOS_REGISTRAR'
+  | 'DOACOES_LER'
+  | 'DOACOES_REGISTRAR'
   | 'RELATORIOS_LER';
 
 /** Perfis da seção 4 do documento de requisitos, com os nomes do enum `Perfil` do backend. */
