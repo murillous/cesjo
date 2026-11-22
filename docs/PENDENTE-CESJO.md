@@ -271,3 +271,25 @@ Situação: provisória.
 | Decisão provisória | Onde mudar | ADR |
 |---|---|---|
 | O atendimento multiprofissional exige pelo menos dois profissionais, de qualquer função. | `atividades.TipoAtividade` (`ATENDIMENTO_MULTIPROFISSIONAL`) e `TIPOS_ATIVIDADE` em `rotulos.ts` do módulo atividades (frontend) | [0154](adr/0154-atendimentos-e-estudos-de-caso.md) |
+
+## P32. Taxa de desligamento
+
+> Como a equipe calcula a taxa de desligamento (RF017)? Sobre quantos usuários: os atendidos em algum
+> momento do período, os ativos no início ou no fim do período, ou o total de desligamentos?
+
+Situação: provisória.
+
+| Decisão provisória | Onde mudar | ADR |
+|---|---|---|
+| Desligamentos do período sobre os usuários atendidos em algum dia do período (inseridos até o fim e não desligados antes do início), geral e por motivo. | `estatisticas.interno.ServicoDashboards.taxa` e, para outra base, `UsuariosAtendidos.contarAtendidosNoPeriodo` | [0198](adr/0198-dashboard-de-violacoes-atividades-e-desligamentos.md) |
+
+## P33. Violações nos dashboards e relatórios
+
+> O perfil Consulta, que lê relatórios mas não vê violações de direitos, pode ver a contagem de
+> violações por categoria nos dashboards e no relatório mensal?
+
+Situação: provisória.
+
+| Decisão provisória | Onde mudar | ADR |
+|---|---|---|
+| Não. A contagem de violações só aparece para quem também tem `VIOLACOES_LER` (hoje só o Coordenador). | `estatisticas.interno.DashboardsControlador.atendimento` | [0199](adr/0199-violacoes-no-dashboard-so-para-quem-le-violacoes.md) |
