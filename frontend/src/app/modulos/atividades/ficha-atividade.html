@@ -1,0 +1,172 @@
+<section class="atividade" aria-labelledby="titulo-atividade">
+  <a matButton routerLink="/atividades" class="voltar">
+    <mat-icon aria-hidden="true">arrow_back</mat-icon>
+    Atividades
+  </a>
+
+  @if (!nova() && !atividade() && erro(); as mensagem) {
+    <h1 id="titulo-atividade">Atividade</h1>
+    <p class="erro" role="alert">{{ mensagem }}</p>
+  }
+
+  @if (atividade(); as atual) {
+    @if (!editando()) {
+      <h1 id="titulo-atividade">{{ atual.titulo }}</h1>
+      <p class="tipo">{{ rotulosTipo[atual.tipo] }}</p>
+
+      @if (erro(); as mensagem) {
+        <p class="erro" role="alert">{{ mensagem }}</p>
+      }
+
+      <dl class="cabecalho">
+        <div>
+          <dt>Data</dt>
+          <dd>{{ data(atual.data) | date: "d 'de' MMMM 'de' y" }}</dd>
+        </div>
+        <div>
+          <dt>Profissionais</dt>
+          <dd>
+            @for (profissional of atual.profissionais; track profissional.id; let ultimo = $last) {
+              {{ profissional.nome }}, {{ funcoes[profissional.funcao] }}
+              @if (!ultimo) {
+                <br />
+              }
+            }
+          </dd>
+        </div>
+      </dl>
+
+      <section class="texto" aria-labelledby="titulo-descricao">
+        <h2 id="titulo-descricao">Descrição</h2>
+        <p>{{ atual.descricao }}</p>
+      </section>
+
+      <section class="texto" aria-labelledby="titulo-participantes">
+        <h2 id="titulo-participantes">Participantes ({{ atual.participantes.length }})</h2>
+        <ul class="participantes">
+          @for (participante of atual.participantes; track participante.pessoaId) {
+            <li>{{ participante.nomeCompleto }}</li>
+          }
+        </ul>
+      </section>
+
+      @if (podeRegistrar) {
+        <div class="botoes">
+          <button matButton="outlined" type="button" (click)="corrigir()">
+            <mat-icon aria-hidden="true">edit</mat-icon>
+            Corrigir atividade
+          </button>
+        </div>
+      }
+    }
+  }
+
+  @if (nova() || editando()) {
+    <h1 id="titulo-atividade">{{ nova() ? 'Registrar atividade' : 'Corrigir atividade' }}</h1>
+    <p class="texto-secundario aviso">
+      <mat-icon aria-hidden="true">lock</mat-icon>
+      A descrição é guardada cifrada.
+    </p>
+
+    @if (erro(); as mensagem) {
+      <p class="erro" role="alert">{{ mensagem }}</p>
+    }
+
+    <form [formGroup]="formulario" (ngSubmit)="salvar()" novalidate>
+      <div class="linha">
+        <mat-form-field appearance="outline">
+          <mat-label>Tipo</mat-label>
+          <mat-select formControlName="tipo">
+            @for (tipo of tipos; track tipo.valor) {
+              <mat-option [value]="tipo.valor">{{ tipo.rotulo }}</mat-option>
+            }
+          </mat-select>
+          @if (formulario.controls.tipo.invalid) {
+            <mat-error>Escolha o tipo.</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- PENDENTE-CESJO(P24): só atividade realizada, data até hoje. -->
+        <mat-form-field appearance="outline">
+          <mat-label>Data</mat-label>
+          <input matInput [matDatepicker]="seletorData" [max]="hoje" formControlName="data" />
+          <mat-hint>DD/MM/AAAA</mat-hint>
+          <mat-datepicker-toggle matIconSuffix [for]="seletorData" />
+          <mat-datepicker #seletorData />
+          @if (formulario.controls.data.hasError('matDatepickerMax')) {
+            <mat-error>A data não pode ser futura.</mat-error>
+          } @else if (formulario.controls.data.invalid) {
+            <mat-error>Informe a data.</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Título</mat-label>
+        <input matInput formControlName="titulo" maxlength="200" />
+        <mat-hint>Por exemplo, "Oficina de música". Não escreva aqui dado sigiloso.</mat-hint>
+        @if (formulario.controls.titulo.invalid) {
+          <mat-error>Informe o título.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Descrição</mat-label>
+        <textarea matInput formControlName="descricao" rows="6"></textarea>
+        @if (formulario.controls.descricao.invalid) {
+          <mat-error>Descreva a atividade.</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- PENDENTE-CESJO(P23): participantes são usuários atendidos; nas atividades com famílias, indicam de quem é a família. -->
+      <mat-form-field appearance="outline">
+        <mat-label>Participantes</mat-label>
+        <mat-select formControlName="participantes" multiple>
+          @for (usuario of opcoesUsuarios(); track usuario.pessoaId) {
+            <mat-option [value]="usuario.pessoaId">{{ usuario.nomeCompleto }}</mat-option>
+          }
+        </mat-select>
+        @if (opcoesUsuarios().length === 0) {
+          <mat-hint>Nenhum usuário atendido ativo.</mat-hint>
+        } @else {
+          <mat-hint
+            >Usuários atendidos. Nas atividades com famílias, escolha de quem é a família.</mat-hint
+          >
+        }
+        @if (formulario.controls.participantes.invalid) {
+          <mat-error>Escolha pelo menos um participante.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Profissionais</mat-label>
+        <mat-select formControlName="profissionais" multiple>
+          @for (profissional of opcoesProfissionais(); track profissional.id) {
+            <mat-option [value]="profissional.id">
+              {{ profissional.nome }} ({{ funcoes[profissional.funcao] }})
+            </mat-option>
+          }
+        </mat-select>
+        @if (opcoesProfissionais().length === 0) {
+          <mat-hint
+            >Nenhum colaborador ativo. O Coordenador cadastra a equipe em Colaboradores.</mat-hint
+          >
+        } @else {
+          <mat-hint>Escolha um ou mais.</mat-hint>
+        }
+        @if (formulario.controls.profissionais.invalid) {
+          <mat-error>Escolha pelo menos um profissional.</mat-error>
+        }
+      </mat-form-field>
+
+      <div class="botoes">
+        <button matButton="filled" type="submit" [disabled]="enviando()">
+          {{ nova() ? 'Registrar atividade' : 'Salvar correção' }}
+        </button>
+        @if (editando()) {
+          <button matButton type="button" (click)="desistir()">Desistir</button>
+        }
+      </div>
+    </form>
+  }
+</section>
