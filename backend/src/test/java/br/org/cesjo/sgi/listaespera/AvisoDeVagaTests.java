@@ -73,8 +73,8 @@ class AvisoDeVagaTests {
 	@Test
 	@ComConta(perfil = Perfil.COORDENADOR, login = "aviso-desligamento")
 	void vagaLiberadaPorOutroModuloNotificaQuandoSaiDeZero() throws Exception {
-		UUID inserida = inserirInscricao("INSERIDO", "2001-01-01");
-		UUID outra = inserirInscricao("INSERIDO", "2001-01-02");
+		UUID inserida = ocuparVaga("2001-01-01");
+		UUID outra = ocuparVaga("2001-01-02");
 		long ocupadas = ocupadas();
 		definir(ocupadas);
 		long antes = avisos();
@@ -89,9 +89,23 @@ class AvisoDeVagaTests {
 		assertThat(avisos()).as("a vaga já estava aberta").isEqualTo(antes + 2);
 	}
 
-	private void liberar(UUID inscricao) {
-		jdbc.update("update inscricao_lista_espera set situacao = 'SAIU', motivo_saida = 'OUTRO',"
-				+ " data_saida = date '2001-02-01' where id = ?", inscricao);
+	private void liberar(UUID insercao) {
+		jdbc.update("update insercao set situacao = 'DESLIGADA' where id = ?", insercao);
+	}
+
+	/** Usuário atendido ativo, que ocupa vaga (ADR 0135); devolve o id da inserção. */
+	private UUID ocuparVaga(String dataCadastro) {
+		UUID inscricao = inserirInscricao("INSERIDO", dataCadastro);
+		UUID pessoa = jdbc.queryForObject("select pessoa_id from inscricao_lista_espera where id = ?", UUID.class,
+				inscricao);
+		UUID responsavel = UUID.randomUUID();
+		UUID insercao = UUID.randomUUID();
+		jdbc.update("insert into responsavel (id, pessoa_id, nome_completo, criado_em, atualizado_em)"
+				+ " values (?, ?, 'Responsável Fictício', now(), now())", responsavel, pessoa);
+		jdbc.update("insert into insercao (id, pessoa_id, inscricao_id, data_insercao, turno, cuidador_responsavel_id,"
+				+ " situacao, criado_em, atualizado_em) values (?, ?, ?, date '2001-02-01', 'MATUTINO', ?, 'ATIVA',"
+				+ " now(), now())", insercao, pessoa, inscricao, responsavel);
+		return insercao;
 	}
 
 	private long avisos() {
