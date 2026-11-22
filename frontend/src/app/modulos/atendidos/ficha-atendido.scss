@@ -102,6 +102,10 @@ dd {
   max-width: 60ch;
 }
 
+.violacoes {
+  margin-top: var(--sgi-space-2);
+}
+
 @media (min-width: bp.$tablet) {
   .acoes {
     flex-direction: row;

@@ -9,6 +9,7 @@ import { mensagemDeErro } from '../../acesso/problema';
 import { Sessao } from '../../acesso/sessao';
 import { ORIGENS_ENCAMINHAMENTO, TIPOS_DEFICIENCIA } from '../lista-espera/rotulos';
 import { AtendidosApi, FichaAtendido } from './atendidos-api';
+import { PainelViolacoes } from './painel-violacoes';
 import { ROTULOS_SITUACAO_INSERCAO, rotuloFaixa, rotuloMotivo, rotuloTurno } from './rotulos';
 
 /**
@@ -18,7 +19,14 @@ import { ROTULOS_SITUACAO_INSERCAO, rotuloFaixa, rotuloMotivo, rotuloTurno } fro
  */
 @Component({
   selector: 'app-ficha-atendido',
-  imports: [DatePipe, MatButtonModule, MatIconModule, MatProgressBarModule, RouterLink],
+  imports: [
+    DatePipe,
+    MatButtonModule,
+    MatIconModule,
+    MatProgressBarModule,
+    PainelViolacoes,
+    RouterLink,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './ficha-atendido.html',
   styleUrl: './ficha-atendido.scss',
@@ -39,6 +47,7 @@ export class FichaAtendidoPagina implements OnInit {
   private readonly sessao = inject(Sessao);
   protected readonly podeDesligar = this.sessao.temPermissao('ATENDIDOS_DESLIGAR');
   protected readonly podeRegistrarViolacao = this.sessao.temPermissao('VIOLACOES_REGISTRAR');
+  protected readonly podeLerViolacoes = this.sessao.temPermissao('VIOLACOES_LER');
 
   ngOnInit(): void {
     this.api.ficha(this.id()).subscribe({

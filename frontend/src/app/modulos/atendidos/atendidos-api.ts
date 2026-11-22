@@ -122,6 +122,41 @@ export interface PaginaAtendidos {
   page: { size: number; number: number; totalElements: number; totalPages: number };
 }
 
+/** Violação na consulta, sem a descrição (ADR 0145). */
+export interface LinhaViolacao {
+  id: string;
+  /** Inserção mais recente da pessoa, para abrir a ficha. */
+  insercaoId: string | null;
+  pessoaId: string;
+  nomeCompleto: string;
+  tipo: TipoViolacao;
+  ambito: AmbitoViolacao | null;
+  dataIdentificacao: string;
+}
+
+/** Violação com a descrição. Cada leitura fica registrada no log de auditoria. */
+export interface ViolacaoCompleta {
+  id: string;
+  pessoaId: string;
+  tipo: TipoViolacao;
+  ambito: AmbitoViolacao | null;
+  dataIdentificacao: string;
+  descricao: string;
+  registradaEm: string;
+}
+
+/** Filtros da consulta de violações; o período é pela data de identificação, `AAAA-MM-DD`. */
+export interface FiltrosViolacoes {
+  tipo?: TipoViolacao | null;
+  de?: string | null;
+  ate?: string | null;
+}
+
+export interface PaginaViolacoes {
+  content: readonly LinhaViolacao[];
+  page: { size: number; number: number; totalElements: number; totalPages: number };
+}
+
 @Injectable({ providedIn: 'root' })
 export class AtendidosApi {
   private readonly http = inject(HttpClient);
@@ -161,7 +196,38 @@ export class AtendidosApi {
     );
   }
 
+  violacoesDoAtendido(id: string, filtros: FiltrosViolacoes): Observable<readonly LinhaViolacao[]> {
+    return this.http.get<readonly LinhaViolacao[]>(
+      `/api/atendidos/${encodeURIComponent(id)}/violacoes`,
+      { params: paramsDe(filtros) },
+    );
+  }
+
+  listarViolacoes(
+    filtros: FiltrosViolacoes,
+    pagina: number,
+    tamanho: number,
+  ): Observable<PaginaViolacoes> {
+    const params = paramsDe(filtros).set('page', pagina).set('size', tamanho);
+    return this.http.get<PaginaViolacoes>('/api/violacoes', { params });
+  }
+
+  /** Descrição da violação; o backend registra a leitura no log de auditoria. */
+  lerViolacao(id: string): Observable<ViolacaoCompleta> {
+    return this.http.get<ViolacaoCompleta>(`/api/violacoes/${encodeURIComponent(id)}`);
+  }
+
   inserir(dados: NovaInsercao): Observable<InsercaoCriada> {
     return this.http.post<InsercaoCriada>('/api/atendidos/insercoes', dados);
   }
+}
+
+function paramsDe(filtros: FiltrosViolacoes): HttpParams {
+  let params = new HttpParams();
+  for (const [nome, valor] of Object.entries(filtros)) {
+    if (valor) {
+      params = params.set(nome, valor);
+    }
+  }
+  return params;
 }
