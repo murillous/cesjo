@@ -23,6 +23,12 @@
         }
       </p>
       <div class="acoes">
+        @if (podeEditar && f.completo) {
+          <a matButton="outlined" routerLink="cadastro">
+            <mat-icon aria-hidden="true">edit</mat-icon>
+            Completar cadastro
+          </a>
+        }
         @if (podeRegistrarViolacao) {
           <a matButton="outlined" routerLink="violacoes/nova">
             <mat-icon aria-hidden="true">report</mat-icon>
@@ -45,6 +51,8 @@
           <dl>
             <dt>Tipo de deficiência</dt>
             <dd>{{ rotuloTipo(f.tipoDeficiencia) }}</dd>
+            <dt>Gênero</dt>
+            <dd>{{ rotuloDe(generos, f.cadastro.genero) }}</dd>
             <dt>Data de nascimento</dt>
             <dd>
               @if (f.dataNascimento) {
@@ -63,6 +71,61 @@
             </dd>
           </dl>
         </section>
+
+        <section aria-labelledby="titulo-documentos" class="bloco">
+          <h2 id="titulo-documentos">Documentos e endereço</h2>
+          <dl>
+            <dt>CPF</dt>
+            <dd>{{ f.cadastro.cpf ?? 'Não informado' }}</dd>
+            <dt>NIS</dt>
+            <dd>{{ f.cadastro.nis ?? 'Não informado' }}</dd>
+            <dt>RG</dt>
+            <dd>{{ f.cadastro.rg ?? 'Não informado' }}</dd>
+            <dt>Bairro</dt>
+            <dd>{{ f.cadastro.bairro ?? 'Não informado' }}</dd>
+            @if (endereco(f.cadastro); as texto) {
+              <dt>Endereço</dt>
+              <dd>{{ texto }}</dd>
+            }
+          </dl>
+        </section>
+
+        <section aria-labelledby="titulo-social" class="bloco">
+          <h2 id="titulo-social">Escolaridade, renda e benefícios</h2>
+          <dl>
+            <dt>Escolaridade</dt>
+            <dd>{{ rotuloDe(escolaridades, f.cadastro.escolaridade) }}</dd>
+            <dt>Renda familiar mensal</dt>
+            <dd>
+              @if (f.cadastro.rendaFamiliar !== null) {
+                {{ f.cadastro.rendaFamiliar | currency: 'BRL' : 'symbol' : '1.2-2' }}
+              } @else {
+                Não informada
+              }
+            </dd>
+            <dt>Benefícios</dt>
+            <dd>{{ beneficios(f.cadastro) }}</dd>
+          </dl>
+        </section>
+
+        @if (f.dadosSensiveis; as sensiveis) {
+          <section aria-labelledby="titulo-sensiveis" class="bloco sensivel">
+            <h2 id="titulo-sensiveis">
+              <mat-icon aria-hidden="true">lock</mat-icon>
+              Crença religiosa e saúde
+            </h2>
+            <dl>
+              <dt>Crença religiosa</dt>
+              <dd>{{ rotuloDe(crencas, sensiveis.crencaReligiosa) }}</dd>
+              <dt>Medicamentos de uso contínuo</dt>
+              <dd class="observacao">{{ sensiveis.medicamentosUsoContinuo ?? 'Não informados' }}</dd>
+              @if (sensiveis.observacoesSaude) {
+                <dt>Outras informações de saúde</dt>
+                <dd class="observacao">{{ sensiveis.observacoesSaude }}</dd>
+              }
+            </dl>
+          </section>
+        }
 
         <section aria-labelledby="titulo-servico" class="bloco">
           <h2 id="titulo-servico">No serviço</h2>
@@ -102,6 +165,10 @@
               <dd>{{ rotuloOrigem(inscricao.origemEncaminhamento) }}</dd>
             </dl>
           </section>
+        }
+
+        @if (podeLerAtividades) {
+          <app-atividades-do-usuario [pessoaId]="f.pessoaId" />
         }
       </div>
     } @else {

@@ -23,6 +23,8 @@ const COMPLETO: AtendidoCompleto = {
   dataNascimento: '1996-01-01',
   idade: 30,
   faixaEtaria: 'ADULTO',
+  genero: null,
+  bairro: null,
 };
 
 const BASICO: AtendidoBasico = {

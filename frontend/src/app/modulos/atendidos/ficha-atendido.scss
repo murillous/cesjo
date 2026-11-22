@@ -85,6 +85,18 @@ dt {
   }
 }
 
+// Crença e saúde: área restrita, marcada pelo cadeado e pela borda de destaque.
+.sensivel {
+  border-left: var(--sgi-space-0-5) solid var(--sgi-color-primary);
+  background: var(--sgi-color-background-secondary);
+
+  h2 {
+    display: flex;
+    align-items: center;
+    gap: var(--sgi-space-1);
+  }
+}
+
 .observacao {
   white-space: pre-line;
 }
