@@ -122,3 +122,5 @@ frente de trabalho paralela não é usado todo.
 - [0124](0124-correcoes-de-acessibilidade.md) — Correções de acessibilidade achadas pela auditoria
 - [0125](0125-checklist-manual-de-navegadores.md) — Checklist manual para Safari no iPhone e leitor de tela
 - [0130](0130-exportacao-da-lista-de-espera.md) — Exportação da lista de espera em PDF e Excel (provisório)
+- [0170](0170-vinculos-dos-colaboradores.md) — Histórico de vínculos: contratações e desligamentos dos colaboradores (provisório)
+- [0171](0171-tela-de-vinculos-dos-colaboradores.md) — Histórico de vínculos na ficha do colaborador
