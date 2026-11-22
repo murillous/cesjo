@@ -117,3 +117,53 @@ export function rotuloViolacao(tipo: TipoViolacao): string {
 export function exigeAmbito(tipo: TipoViolacao | '' | null): boolean {
   return TIPOS_VIOLACAO.find((t) => t.valor === tipo)?.exigeAmbito ?? false;
 }
+
+/** Gêneros, com os nomes do enum `Genero` do backend (ADR 0143). Sem valor: não informado. */
+export type Genero = 'FEMININO' | 'MASCULINO' | 'OUTRO';
+
+// PENDENTE-CESJO(P21): opções de gênero e de escolaridade provisórias (ADR 0143).
+export const GENEROS: readonly { valor: Genero; rotulo: string }[] = [
+  { valor: 'FEMININO', rotulo: 'Feminino' },
+  { valor: 'MASCULINO', rotulo: 'Masculino' },
+  { valor: 'OUTRO', rotulo: 'Outro' },
+];
+
+/** Escolaridade, com os nomes do enum `Escolaridade` do backend (ADR 0143). */
+export type Escolaridade =
+  | 'SEM_ESCOLARIDADE'
+  | 'FUNDAMENTAL_INCOMPLETO'
+  | 'FUNDAMENTAL_COMPLETO'
+  | 'MEDIO_INCOMPLETO'
+  | 'MEDIO_COMPLETO'
+  | 'SUPERIOR_INCOMPLETO'
+  | 'SUPERIOR_COMPLETO';
+
+export const ESCOLARIDADES: readonly { valor: Escolaridade; rotulo: string }[] = [
+  { valor: 'SEM_ESCOLARIDADE', rotulo: 'Sem escolaridade' },
+  { valor: 'FUNDAMENTAL_INCOMPLETO', rotulo: 'Fundamental incompleto' },
+  { valor: 'FUNDAMENTAL_COMPLETO', rotulo: 'Fundamental completo' },
+  { valor: 'MEDIO_INCOMPLETO', rotulo: 'Médio incompleto' },
+  { valor: 'MEDIO_COMPLETO', rotulo: 'Médio completo' },
+  { valor: 'SUPERIOR_INCOMPLETO', rotulo: 'Superior incompleto' },
+  { valor: 'SUPERIOR_COMPLETO', rotulo: 'Superior completo' },
+];
+
+/** Crença religiosa, com as opções do RF007 (enum `CrencaReligiosa` do backend). */
+export type CrencaReligiosa =
+  'CATOLICA' | 'EVANGELICA' | 'TESTEMUNHA_DE_JEOVA' | 'MATRIZ_AFRICANA' | 'OUTRAS';
+
+export const CRENCAS: readonly { valor: CrencaReligiosa; rotulo: string }[] = [
+  { valor: 'CATOLICA', rotulo: 'Católica' },
+  { valor: 'EVANGELICA', rotulo: 'Evangélica' },
+  { valor: 'TESTEMUNHA_DE_JEOVA', rotulo: 'Testemunha de Jeová' },
+  { valor: 'MATRIZ_AFRICANA', rotulo: 'Matriz africana' },
+  { valor: 'OUTRAS', rotulo: 'Outras' },
+];
+
+/** Rótulo de um valor de uma das listas acima, ou "Não informado" sem valor. */
+export function rotuloDe<T extends string>(
+  lista: readonly { valor: T; rotulo: string }[],
+  valor: T | null,
+): string {
+  return lista.find((item) => item.valor === valor)?.rotulo ?? 'Não informado';
+}

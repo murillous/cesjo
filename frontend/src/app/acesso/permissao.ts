@@ -21,6 +21,8 @@ export type Permissao =
   | 'ATENDIDOS_INSERIR'
   | 'ATENDIDOS_LER'
   | 'ATENDIDOS_LER_BASICO'
+  | 'ATENDIDOS_EDITAR'
+  | 'ATENDIDOS_DADOS_SENSIVEIS'
   | 'VISITAS_LER'
   | 'VISITAS_AGENDAR'
   | 'VISITAS_REGISTRAR'
@@ -31,7 +33,17 @@ export type Permissao =
   | 'PIA_APROVAR'
   | 'ATENDIDOS_DESLIGAR'
   | 'VIOLACOES_REGISTRAR'
-  | 'VIOLACOES_LER';
+  | 'VIOLACOES_LER'
+  | 'ATIVIDADES_LER'
+  | 'ATIVIDADES_REGISTRAR'
+  | 'COMUNICACOES_LER'
+  | 'COMUNICACOES_REGISTRAR'
+  | 'PARCERIAS_LER'
+  | 'PARCERIAS_GERENCIAR'
+  | 'EVENTOS_LER'
+  | 'EVENTOS_REGISTRAR'
+  | 'DOACOES_LER'
+  | 'DOACOES_REGISTRAR';
 
 /** Perfis da seção 4 do documento de requisitos, com os nomes do enum `Perfil` do backend. */
 export type Perfil = 'COORDENADOR' | 'EQUIPE_TECNICA' | 'ADMINISTRATIVO' | 'CONSULTA';

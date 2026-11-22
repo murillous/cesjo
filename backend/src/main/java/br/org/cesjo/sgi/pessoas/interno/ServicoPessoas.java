@@ -28,7 +28,9 @@ import br.org.cesjo.sgi.auditoria.EventoAuditoria;
 import br.org.cesjo.sgi.compartilhado.seguranca.Identidade;
 import br.org.cesjo.sgi.compartilhado.seguranca.IdentidadeAtual;
 import br.org.cesjo.sgi.compartilhado.web.RecursoNaoEncontradoException;
+import br.org.cesjo.sgi.pessoas.CadastroComplementar;
 import br.org.cesjo.sgi.pessoas.DadosPessoa;
+import br.org.cesjo.sgi.pessoas.DadosSensiveis;
 import br.org.cesjo.sgi.pessoas.DocumentoInvalidoException;
 import br.org.cesjo.sgi.pessoas.DocumentoPessoa;
 import br.org.cesjo.sgi.pessoas.FiltroPessoas;
@@ -52,6 +54,8 @@ class ServicoPessoas implements Pessoas {
 
 	private final DocumentoRepositorio documentos;
 
+	private final CadastroComplementarRepositorio cadastros;
+
 	private final Arquivos arquivos;
 
 	private final Auditoria auditoria;
@@ -61,10 +65,11 @@ class ServicoPessoas implements Pessoas {
 	private final Clock relogio = Clock.systemUTC();
 
 	ServicoPessoas(PessoaRepositorio pessoas, ResponsavelRepositorio responsaveis, DocumentoRepositorio documentos,
-			Arquivos arquivos, Auditoria auditoria, IdentidadeAtual identidadeAtual) {
+			CadastroComplementarRepositorio cadastros, Arquivos arquivos, Auditoria auditoria, IdentidadeAtual identidadeAtual) {
 		this.pessoas = pessoas;
 		this.responsaveis = responsaveis;
 		this.documentos = documentos;
+		this.cadastros = cadastros;
 		this.arquivos = arquivos;
 		this.auditoria = auditoria;
 		this.identidadeAtual = identidadeAtual;
@@ -236,6 +241,64 @@ class ServicoPessoas implements Pessoas {
 		ConteudoArquivo conteudo = arquivos.ler(documento.getArquivoId());
 		auditoria.registrar(EventoAuditoria.leituraSensivel(ENTIDADE_DOCUMENTO, documento.getId()));
 		return conteudo;
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public CadastroComplementar cadastroComplementar(UUID pessoaId) {
+		return cadastros.findById(pessoaId)
+			.map(CadastroComplementarPessoa::complementar)
+			.orElse(CadastroComplementar.VAZIO);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public DadosSensiveis dadosSensiveis(UUID pessoaId) {
+		DadosSensiveis dados = cadastros.findById(pessoaId)
+			.map(CadastroComplementarPessoa::sensiveis)
+			.orElse(DadosSensiveis.VAZIO);
+		if (!dados.vazio()) {
+			auditoria.registrar(EventoAuditoria.leituraSensivel(ENTIDADE_CADASTRO, pessoaId));
+		}
+		return dados;
+	}
+
+	@Override
+	@Transactional
+	public void atualizarCadastroComplementar(UUID pessoaId, CadastroComplementar dados) {
+		gravarCadastro(pessoaId, (cadastro, autor, agora) -> cadastro.atualizar(dados, autor, agora));
+	}
+
+	@Override
+	@Transactional
+	public void atualizarDadosSensiveis(UUID pessoaId, DadosSensiveis dados) {
+		gravarCadastro(pessoaId, (cadastro, autor, agora) -> cadastro.atualizar(dados, autor, agora));
+	}
+
+	/** Cria a linha do cadastro na primeira gravação e audita só o que mudou. */
+	private void gravarCadastro(UUID pessoaId, AlteracaoCadastro alteracao) {
+		if (!pessoas.existsById(pessoaId)) {
+			throw new RecursoNaoEncontradoException("Pessoa não encontrada.");
+		}
+		UUID autor = identidadeAtual.obter().map(Identidade::id).orElse(null);
+		Instant agora = relogio.instant();
+		Optional<CadastroComplementarPessoa> atual = cadastros.findById(pessoaId);
+		CadastroComplementarPessoa cadastro = atual.orElseGet(() -> new CadastroComplementarPessoa(pessoaId, autor, agora));
+		Set<String> campos = alteracao.aplicar(cadastro, autor, agora);
+		if (atual.isEmpty()) {
+			cadastros.save(cadastro);
+			auditoria.registrar(EventoAuditoria.criacao(ENTIDADE_CADASTRO, pessoaId));
+		}
+		else if (!campos.isEmpty()) {
+			auditoria.registrar(EventoAuditoria.alteracao(ENTIDADE_CADASTRO, pessoaId, campos));
+		}
+	}
+
+	@FunctionalInterface
+	private interface AlteracaoCadastro {
+
+		Set<String> aplicar(CadastroComplementarPessoa cadastro, UUID autor, Instant agora);
+
 	}
 
 	private static DocumentoPessoa dados(Documento documento, MetadadosArquivo arquivo) {

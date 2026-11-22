@@ -57,6 +57,12 @@ public enum Permissao {
 	/** Ler só os dados básicos dos usuários atendidos: nome, situação, turno e datas (ADR 0082). */
 	ATENDIDOS_LER_BASICO,
 
+	/** Completar e corrigir o cadastro do usuário atendido, sem crença nem saúde (RF007, ADR 0142). */
+	ATENDIDOS_EDITAR,
+
+	/** Ler e editar a crença religiosa e os dados de saúde do usuário atendido (RF007, ADR 0142). */
+	ATENDIDOS_DADOS_SENSIVEIS,
+
 	/** Ver a agenda e a ficha das visitas domiciliares (RF004, ADR 0071). */
 	VISITAS_LER,
 
@@ -94,6 +100,36 @@ public enum Permissao {
 	VIOLACOES_REGISTRAR,
 
 	/** Consultar violações de direitos e ler a descrição, com leitura auditada (RF009, ADR 0145). */
-	VIOLACOES_LER
+	VIOLACOES_LER,
+
+	/** Listar as atividades e abrir a ficha com a descrição (RF010, ADR 0152). */
+	ATIVIDADES_LER,
+
+	/** Registrar e corrigir atividades (RF010, ADR 0152). */
+	ATIVIDADES_REGISTRAR,
+
+	/** Listar os contatos e comunicações e abrir a ficha com a descrição (RF011, ADR 0162). */
+	COMUNICACOES_LER,
+
+	/** Registrar e corrigir contatos e comunicações (RF011, ADR 0162). */
+	COMUNICACOES_REGISTRAR,
+
+	/** Ver os parceiros e as ações de articulação (RF013, ADR 0173). */
+	PARCERIAS_LER,
+
+	/** Cadastrar e editar parceiros e registrar ações de articulação (RF013, ADR 0173). */
+	PARCERIAS_GERENCIAR,
+
+	/** Ver as reuniões e eventos institucionais, com a descrição (RF012, ADR 0176). */
+	EVENTOS_LER,
+
+	/** Registrar e editar reuniões e eventos institucionais (RF012, ADR 0176). */
+	EVENTOS_REGISTRAR,
+
+	/** Ver as doações recebidas e realizadas (RF015, ADR 0179). */
+	DOACOES_LER,
+
+	/** Registrar e editar doações (RF015, ADR 0179). */
+	DOACOES_REGISTRAR
 
 }

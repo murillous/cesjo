@@ -1,0 +1,135 @@
+<section class="atividades" aria-labelledby="titulo-atividades">
+  <header class="cabecalho">
+    <div>
+      <h1 id="titulo-atividades">Atividades</h1>
+      <p class="texto-secundario">
+        O que a equipe fez com os usuários atendidos e as famílias, da mais recente para a mais
+        antiga.
+      </p>
+    </div>
+    @if (podeRegistrar) {
+      <a matButton="filled" routerLink="nova">
+        <mat-icon aria-hidden="true">add</mat-icon>
+        Registrar atividade
+      </a>
+    }
+  </header>
+
+  <form class="filtros" [formGroup]="filtros" (ngSubmit)="filtrar()" aria-label="Filtros">
+    <mat-form-field>
+      <mat-label>Tipo</mat-label>
+      <mat-select formControlName="tipo">
+        <mat-option [value]="null">Todos</mat-option>
+        @for (tipo of listaTipos; track tipo.valor) {
+          <mat-option [value]="tipo.valor">{{ tipo.rotulo }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>De</mat-label>
+      <input matInput [matDatepicker]="seletorDe" formControlName="de" />
+      <mat-hint>DD/MM/AAAA</mat-hint>
+      <mat-datepicker-toggle matIconSuffix [for]="seletorDe" />
+      <mat-datepicker #seletorDe />
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Até</mat-label>
+      <input matInput [matDatepicker]="seletorAte" formControlName="ate" />
+      <mat-hint>DD/MM/AAAA</mat-hint>
+      <mat-datepicker-toggle matIconSuffix [for]="seletorAte" />
+      <mat-datepicker #seletorAte />
+      @if (filtros.controls.ate.hasError('antesDoInicio')) {
+        <mat-error>O fim não pode ser antes do início.</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Profissional</mat-label>
+      <mat-select formControlName="profissionalId">
+        <mat-option [value]="null">Todos</mat-option>
+        @for (profissional of opcoes().profissionais; track profissional.id) {
+          <mat-option [value]="profissional.id">
+            {{ profissional.nome }} ({{ funcoes[profissional.funcao] }})
+          </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Usuário atendido</mat-label>
+      <mat-select formControlName="pessoaId">
+        <mat-option [value]="null">Todos</mat-option>
+        @for (usuario of opcoes().usuarios; track usuario.pessoaId) {
+          <mat-option [value]="usuario.pessoaId">{{ usuario.nomeCompleto }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <div class="botoes">
+      <button matButton="filled" type="submit">
+        <mat-icon aria-hidden="true">filter_alt</mat-icon>
+        Filtrar
+      </button>
+      <button matButton type="button" (click)="limpar()">Limpar filtros</button>
+    </div>
+  </form>
+
+  <div class="resultado" [attr.aria-busy]="carregando()">
+    @if (carregando()) {
+      <mat-progress-bar mode="indeterminate" aria-label="Carregando atividades" />
+    }
+
+    @if (erro()) {
+      <div class="aviso" role="alert">
+        <p>Não foi possível carregar as atividades. Verifique a conexão e tente de novo.</p>
+        <button matButton="outlined" type="button" (click)="carregar()">Tentar de novo</button>
+      </div>
+    } @else if (!carregando() && atividades().length === 0) {
+      <div class="aviso">
+        <p>Nenhuma atividade com esses filtros. Mude ou limpe os filtros.</p>
+      </div>
+    } @else {
+      <p class="total texto-secundario" aria-live="polite">
+        {{ total() }} {{ total() === 1 ? 'atividade' : 'atividades' }}
+      </p>
+
+      <ol class="diario" aria-label="Atividades">
+        @for (atividade of atividades(); track atividade.id) {
+          <li>
+            <a class="item" [routerLink]="atividade.id">
+              <time class="dia" [attr.datetime]="atividade.data">
+                <span class="numero">{{ data(atividade.data) | date: 'dd' }}</span>
+                <span class="mes">{{ data(atividade.data) | date: 'MMM yyyy' }}</span>
+              </time>
+              <span class="corpo">
+                <span class="titulo">{{ atividade.titulo }}</span>
+                <span class="tipo">
+                  {{ tipos[atividade.tipo] }}
+                  @if (individual(atividade)) {
+                    <mat-icon aria-hidden="true">lock</mat-icon>
+                    <span class="cdk-visually-hidden">, sigiloso</span>
+                  }
+                </span>
+                <span class="pessoas texto-secundario">
+                  <mat-icon aria-hidden="true">group</mat-icon>
+                  {{ nomes(atividade) }}
+                </span>
+              </span>
+            </a>
+          </li>
+        }
+      </ol>
+
+      <mat-paginator
+        [length]="total()"
+        [pageIndex]="pagina()"
+        [pageSize]="tamanho()"
+        [pageSizeOptions]="tamanhos"
+        (page)="mudarPagina($event)"
+        aria-label="Páginas da lista"
+      />
+    }
+  </div>
+</section>

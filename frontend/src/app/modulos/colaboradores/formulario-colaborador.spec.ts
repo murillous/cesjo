@@ -1,7 +1,7 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { MATERIAL_ANIMATIONS } from '@angular/material/core';
+import { MATERIAL_ANIMATIONS, provideNativeDateAdapter } from '@angular/material/core';
 import { provideRouter, Router } from '@angular/router';
 
 import { contaDeTeste } from '../../acesso/conta-de-teste';
@@ -26,6 +26,7 @@ describe('FormularioColaborador', () => {
         provideRouter([]),
         provideHttpClient(),
         provideHttpClientTesting(),
+        provideNativeDateAdapter(),
         { provide: MATERIAL_ANIMATIONS, useValue: { animationsDisabled: true } },
       ],
     });
@@ -63,10 +64,30 @@ describe('FormularioColaborador', () => {
       nome: 'Nova Colaboradora',
       funcao: 'TERAPEUTA_OCUPACIONAL',
       contaId: contaFicticia().id,
+      dataContratacao: null,
     });
     pedido.flush(colaboradorFicticio({ id: 'c9' }));
 
     expect(navegar).toHaveBeenCalledWith(['/colaboradores', 'c9']);
+  });
+
+  it('cadastra com a data de contratação, que abre o primeiro vínculo', async () => {
+    const fixture = TestBed.createComponent(FormularioColaborador);
+    responderContas();
+    await fixture.whenStable();
+    const componente = fixture.componentInstance as unknown as FormularioExposto;
+    componente.formulario.patchValue({
+      nome: 'Nova Colaboradora',
+      funcao: 'OUTRA',
+      dataContratacao: new Date(2026, 0, 5),
+    });
+    componente.salvar();
+
+    const pedido = controle.expectOne('/api/colaboradores');
+    expect(pedido.request.body).toEqual(
+      expect.objectContaining({ dataContratacao: '2026-01-05', contaId: null }),
+    );
+    pedido.flush(colaboradorFicticio({ id: 'c9' }));
   });
 
   it('não envia o formulário incompleto', async () => {
@@ -88,6 +109,7 @@ describe('FormularioColaborador', () => {
       .expectOne('/api/colaboradores/c1')
       .flush(colaboradorFicticio({ id: 'c1', conta: ligada }));
     await fixture.whenStable();
+    controle.expectOne('/api/colaboradores/c1/vinculos').flush([]);
 
     const componente = fixture.componentInstance as unknown as FormularioExposto;
     componente.formulario.patchValue({ ativo: false, contaId: '' });
@@ -135,6 +157,8 @@ describe('FormularioColaborador', () => {
     fixture.componentRef.setInput('id', 'c1');
     await fixture.whenStable();
     controle.expectOne('/api/colaboradores/c1').flush(colaboradorFicticio({ id: 'c1' }));
+    await fixture.whenStable();
+    controle.expectOne('/api/colaboradores/c1/vinculos').flush([]);
     await fixture.whenStable();
 
     expect((fixture.componentInstance as unknown as FormularioExposto).formulario.disabled).toBe(

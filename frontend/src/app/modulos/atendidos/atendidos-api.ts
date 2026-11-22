@@ -5,7 +5,10 @@ import { Observable } from 'rxjs';
 import { OrigemEncaminhamento, SituacaoInscricao, TipoDeficiencia } from '../lista-espera/rotulos';
 import {
   AmbitoViolacao,
+  CrencaReligiosa,
+  Escolaridade,
   FaixaEtaria,
+  Genero,
   MotivoDesligamento,
   SituacaoInsercao,
   TipoViolacao,
@@ -69,11 +72,52 @@ export interface AtendidoCompleto extends Omit<AtendidoBasico, 'completo'> {
   dataNascimento: string | null;
   idade: number | null;
   faixaEtaria: FaixaEtaria | null;
+  genero: Genero | null;
+  bairro: string | null;
 }
 
 export type Atendido = AtendidoBasico | AtendidoCompleto;
 
-/** Ficha completa: a inserção, a pessoa, o cuidador e a inscrição de origem (ADR 0083). */
+/**
+ * Dados pessoais completos (RF007, ADR 0140). Todos opcionais; CPF, NIS e CEP vêm só com os dígitos.
+ * A lista de campos espelha o record `CadastroComplementar` do backend.
+ */
+export interface CadastroComplementar {
+  genero: Genero | null;
+  cpf: string | null;
+  nis: string | null;
+  rg: string | null;
+  escolaridade: Escolaridade | null;
+  cep: string | null;
+  logradouro: string | null;
+  numero: string | null;
+  complemento: string | null;
+  bairro: string | null;
+  cidade: string | null;
+  rendaFamiliar: number | null;
+  recebeBpc: boolean;
+  inscritoCadUnico: boolean;
+  recebeBolsaFamilia: boolean;
+}
+
+/** Crença religiosa e saúde: só para quem tem `ATENDIDOS_DADOS_SENSIVEIS` (ADR 0142). */
+export interface DadosSensiveis {
+  crencaReligiosa: CrencaReligiosa | null;
+  medicamentosUsoContinuo: string | null;
+  observacoesSaude: string | null;
+}
+
+/** Corpo de `PUT /api/atendidos/{id}/cadastro`. Sem `dadosSensiveis`, crença e saúde ficam como estão. */
+export interface EdicaoCadastro {
+  nomeCompleto: string;
+  dataNascimento: string | null;
+  tipoDeficiencia: TipoDeficiencia;
+  telefone: string;
+  cadastro: CadastroComplementar;
+  dadosSensiveis: DadosSensiveis | null;
+}
+
+/** Ficha completa: a inserção, a pessoa, o cadastro, o cuidador e a inscrição de origem (ADR 0083). */
 export interface FichaCompleta extends AtendidoCompleto {
   telefone: string;
   nomeCuidador: string | null;
@@ -89,6 +133,9 @@ export interface FichaCompleta extends AtendidoCompleto {
     motivo: MotivoDesligamento;
     observacao: string | null;
   } | null;
+  cadastro: CadastroComplementar;
+  /** Nulo para quem não tem `ATENDIDOS_DADOS_SENSIVEIS`; ler fica registrado na auditoria. */
+  dadosSensiveis: DadosSensiveis | null;
 }
 
 /** Dados do desligamento (RF008, ADR 0110). Observação obrigatória no motivo `OUTROS`. */
@@ -108,13 +155,18 @@ export interface NovaViolacao {
 
 export type FichaAtendido = AtendidoBasico | FichaCompleta;
 
-/** Filtros da listagem. Tipo de deficiência e faixa etária só para quem tem `ATENDIDOS_LER`. */
+/**
+ * Filtros da listagem. Tipo de deficiência, faixa etária, gênero e bairro só para quem tem
+ * `ATENDIDOS_LER`.
+ */
 export interface FiltrosAtendidos {
   nome?: string | null;
   turno?: Turno | null;
   situacao?: SituacaoInsercao | null;
   tipoDeficiencia?: TipoDeficiencia | null;
   faixaEtaria?: FaixaEtaria | null;
+  genero?: Genero | null;
+  bairro?: string | null;
 }
 
 export interface PaginaAtendidos {
@@ -194,6 +246,10 @@ export class AtendidosApi {
       `/api/atendidos/${encodeURIComponent(id)}/violacoes`,
       dados,
     );
+  }
+
+  salvarCadastro(id: string, dados: EdicaoCadastro): Observable<void> {
+    return this.http.put<void>(`/api/atendidos/${encodeURIComponent(id)}/cadastro`, dados);
   }
 
   violacoesDoAtendido(id: string, filtros: FiltrosViolacoes): Observable<readonly LinhaViolacao[]> {
