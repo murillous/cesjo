@@ -5,6 +5,7 @@ import { atendimentoModulo } from './atendimento/atendimento.modulo';
 import { auditoriaModulo } from './auditoria/auditoria.modulo';
 import { colaboradoresModulo } from './colaboradores/colaboradores.modulo';
 import { contasModulo } from './contas/contas.modulo';
+import { doacoesModulo } from './doacoes/doacoes.modulo';
 import { inicioModulo } from './inicio/inicio.modulo';
 import { listaEsperaModulo } from './lista-espera/lista-espera.modulo';
 import { visitasModulo } from './visitas/visitas.modulo';
@@ -21,6 +22,7 @@ export const MODULOS: readonly ModuloFrontend[] = [
   visitasModulo,
   atendimentoModulo,
   colaboradoresModulo,
+  doacoesModulo,
   contasModulo,
   auditoriaModulo,
 ];
