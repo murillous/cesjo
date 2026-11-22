@@ -94,6 +94,12 @@ public enum Permissao {
 	VIOLACOES_REGISTRAR,
 
 	/** Consultar violações de direitos e ler a descrição, com leitura auditada (RF009, ADR 0113). */
-	VIOLACOES_LER
+	VIOLACOES_LER,
+
+	/** Listar os contatos e comunicações e abrir a ficha com a descrição (RF011, ADR 0162). */
+	COMUNICACOES_LER,
+
+	/** Registrar e corrigir contatos e comunicações (RF011, ADR 0162). */
+	COMUNICACOES_REGISTRAR
 
 }
