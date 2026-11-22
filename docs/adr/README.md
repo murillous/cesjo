@@ -122,6 +122,11 @@ frente de trabalho paralela não é usado todo.
 - [0124](0124-correcoes-de-acessibilidade.md) — Correções de acessibilidade achadas pela auditoria
 - [0125](0125-checklist-manual-de-navegadores.md) — Checklist manual para Safari no iPhone e leitor de tela
 - [0130](0130-exportacao-da-lista-de-espera.md) — Exportação da lista de espera em PDF e Excel (provisório)
+- [0140](0140-campos-do-cadastro-completo.md) — Campos do cadastro completo do usuário atendido (provisório)
+- [0141](0141-cifra-e-campos-consultaveis-do-cadastro.md) — O que é cifrado e o que fica consultável no cadastro completo
+- [0142](0142-permissoes-do-cadastro-completo.md) — Permissões do cadastro completo e da crença e saúde (provisório)
+- [0143](0143-opcoes-de-genero-e-escolaridade.md) — Opções de gênero e de escolaridade (provisório)
+- [0144](0144-tela-do-cadastro-completo.md) — Tela de completar o cadastro do usuário atendido
 - [0150](0150-registro-de-atividades.md) — Registro de atividades com usuários e famílias (provisório)
 - [0151](0151-api-java-de-contagem-de-atividades.md) — API Java do módulo Atividades para contagem por tipo e período
 - [0152](0152-permissoes-das-atividades.md) — Permissões das atividades (provisório)
