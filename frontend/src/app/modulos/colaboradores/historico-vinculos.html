@@ -1,0 +1,77 @@
+<section class="vinculos" aria-labelledby="titulo-vinculos">
+  <h2 id="titulo-vinculos">Contratações e desligamentos</h2>
+
+  @if (vinculos(); as lista) {
+    @if (lista.length === 0) {
+      <p class="texto-secundario">Nenhuma contratação registrada.</p>
+    } @else {
+      <ol class="lista">
+        @for (vinculo of lista; track vinculo.id) {
+          <li [class.aberto]="!vinculo.dataDesligamento">
+            <p class="periodo">
+              Contratado em {{ vinculo.dataContratacao | date: 'dd/MM/yyyy' }}
+              @if (vinculo.dataDesligamento) {
+                <span>, desligado em {{ vinculo.dataDesligamento | date: 'dd/MM/yyyy' }}</span>
+              } @else {
+                <span class="atual">, vínculo atual</span>
+              }
+            </p>
+            @if (vinculo.motivoDesligamento) {
+              <p class="motivo">{{ vinculo.motivoDesligamento }}</p>
+            }
+          </li>
+        }
+      </ol>
+    }
+  }
+
+  @if (erro(); as mensagem) {
+    <p class="erro" role="alert">{{ mensagem }}</p>
+  }
+
+  @if (podeGerenciar() && vinculos()) {
+    @if (!registrando()) {
+      <button matButton="outlined" type="button" (click)="abrirRegistro()">
+        {{ aberto() ? 'Registrar desligamento' : 'Registrar contratação' }}
+      </button>
+    } @else {
+      <form [formGroup]="formulario" (ngSubmit)="salvar()" novalidate>
+        <mat-form-field appearance="outline">
+          <mat-label>{{ aberto() ? 'Data do desligamento' : 'Data da contratação' }}</mat-label>
+          <input matInput [matDatepicker]="seletorData" [max]="hoje" formControlName="data" />
+          <mat-hint>DD/MM/AAAA</mat-hint>
+          <mat-datepicker-toggle matIconSuffix [for]="seletorData" />
+          <mat-datepicker #seletorData />
+          @if (formulario.controls.data.hasError('required')) {
+            <mat-error>Informe a data.</mat-error>
+          } @else if (formulario.controls.data.hasError('matDatepickerMax')) {
+            <mat-error>A data não pode ser futura.</mat-error>
+          }
+        </mat-form-field>
+
+        @if (aberto()) {
+          <mat-form-field appearance="outline">
+            <mat-label>Motivo do desligamento</mat-label>
+            <textarea matInput formControlName="motivo" rows="3"></textarea>
+            <mat-hint>Guardado cifrado.</mat-hint>
+            @if (formulario.controls.motivo.hasError('required')) {
+              <mat-error>Informe o motivo.</mat-error>
+            } @else if (formulario.controls.motivo.hasError('maxlength')) {
+              <mat-error>Use até 2000 caracteres.</mat-error>
+            }
+          </mat-form-field>
+          <p class="texto-secundario aviso">
+            O colaborador fica inativo e deixa de aparecer para novas visitas, escutas e atividades.
+          </p>
+        }
+
+        <div class="botoes">
+          <button matButton="filled" type="submit" [disabled]="enviando()">
+            {{ aberto() ? 'Registrar desligamento' : 'Registrar contratação' }}
+          </button>
+          <button matButton type="button" (click)="cancelar()">Cancelar</button>
+        </div>
+      </form>
+    }
+  }
+</section>
