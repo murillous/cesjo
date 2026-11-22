@@ -1,7 +1,7 @@
 @use 'styles/breakpoints' as bp;
 
-// Mobile first: o diário é uma coluna só, com a data num bloco à esquerda de cada atividade. No
-// tablet o cabeçalho põe o botão ao lado do título.
+// Mobile first: filtros empilhados e o diário numa coluna só, com a data num bloco à esquerda de
+// cada atividade. No tablet os filtros viram grade e o cabeçalho põe o botão ao lado do título.
 
 .cabecalho {
   display: flex;
@@ -18,6 +18,25 @@
     align-self: flex-start;
     min-height: var(--sgi-alvo-toque);
   }
+}
+
+.filtros {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0 var(--sgi-space-2);
+  padding: var(--sgi-space-2);
+  margin-bottom: var(--sgi-space-3);
+  background: var(--sgi-color-background-secondary);
+  border-radius: var(--sgi-radius-lg);
+  border-left: var(--sgi-space-0-5) solid var(--sgi-color-primary);
+}
+
+.botoes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sgi-space-1);
+  padding-bottom: var(--sgi-space-2);
 }
 
 .total {
@@ -127,9 +146,23 @@
 }
 
 @media (min-width: bp.$tablet) {
+  .filtros {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .botoes {
+    grid-column: 1 / -1;
+  }
+
   .cabecalho {
     flex-direction: row;
     justify-content: space-between;
     align-items: flex-end;
+  }
+}
+
+@media (min-width: bp.$desktop) {
+  .filtros {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }

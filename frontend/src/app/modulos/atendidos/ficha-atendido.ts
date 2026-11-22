@@ -7,6 +7,7 @@ import { RouterLink } from '@angular/router';
 
 import { mensagemDeErro } from '../../acesso/problema';
 import { Sessao } from '../../acesso/sessao';
+import { AtividadesDoUsuario } from '../atividades/atividades-do-usuario';
 import { ORIGENS_ENCAMINHAMENTO, TIPOS_DEFICIENCIA } from '../lista-espera/rotulos';
 import { AtendidosApi, CadastroComplementar, FichaAtendido } from './atendidos-api';
 import {
@@ -23,12 +24,20 @@ import {
 /**
  * Ficha do usuário atendido (`/atendidos/:id`, RF007, ADR 0083). Mostra o que a conta pode ver: a
  * ficha completa (com crença e saúde só para quem tem `ATENDIDOS_DADOS_SENSIVEIS`) ou só os dados
- * básicos. Visitas, escutas e PIA entram aqui com o módulo de
- * atendimento.
+ * básicos. Na ficha completa, quem lê atividades vê as mais recentes da pessoa (ADR 0155). Visitas,
+ * escutas e PIA entram aqui com o módulo de atendimento.
  */
 @Component({
   selector: 'app-ficha-atendido',
-  imports: [CurrencyPipe, DatePipe, MatButtonModule, MatIconModule, MatProgressBarModule, RouterLink],
+  imports: [
+    AtividadesDoUsuario,
+    CurrencyPipe,
+    DatePipe,
+    MatButtonModule,
+    MatIconModule,
+    MatProgressBarModule,
+    RouterLink,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './ficha-atendido.html',
   styleUrl: './ficha-atendido.scss',
@@ -54,6 +63,7 @@ export class FichaAtendidoPagina implements OnInit {
   protected readonly podeEditar = this.sessao.temPermissao('ATENDIDOS_EDITAR');
   protected readonly podeDesligar = this.sessao.temPermissao('ATENDIDOS_DESLIGAR');
   protected readonly podeRegistrarViolacao = this.sessao.temPermissao('VIOLACOES_REGISTRAR');
+  protected readonly podeLerAtividades = this.sessao.temPermissao('ATIVIDADES_LER');
 
   ngOnInit(): void {
     this.api.ficha(this.id()).subscribe({

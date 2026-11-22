@@ -1,7 +1,7 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { MATERIAL_ANIMATIONS } from '@angular/material/core';
+import { MATERIAL_ANIMATIONS, provideNativeDateAdapter } from '@angular/material/core';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 
@@ -22,6 +22,7 @@ describe('Módulo de atividades', () => {
         provideRouter(routes, withComponentInputBinding()),
         provideHttpClient(),
         provideHttpClientTesting(),
+        provideNativeDateAdapter(),
         { provide: MATERIAL_ANIMATIONS, useValue: { animationsDisabled: true } },
       ],
     });
@@ -79,6 +80,31 @@ describe('Módulo de atividades', () => {
     expect(texto).toContain('Registrar atividade');
   });
 
+  it('abre filtrada pelo usuário da ficha e aplica os filtros escolhidos', async () => {
+    entrarCom(['ATIVIDADES_LER']);
+    const controle = TestBed.inject(HttpTestingController);
+    const harness = await RouterTestingHarness.create('/atividades?pessoaId=p1');
+    const primeiro = controle.expectOne((r) => r.url === '/api/atividades');
+    expect(primeiro.request.params.get('pessoaId')).toBe('p1');
+    primeiro.flush({ content: [], page: { size: 20, number: 0, totalElements: 0, totalPages: 0 } });
+    controle.expectOne('/api/atividades/filtros').flush({
+      profissionais: [{ id: 'c1', nome: 'Psicóloga Fictícia', funcao: 'PSICOLOGO' }],
+      usuarios: [{ pessoaId: 'p1', nomeCompleto: 'Ana Fictícia' }],
+    });
+    await harness.fixture.whenStable();
+    expect(harness.routeNativeElement?.textContent).toContain(
+      'Nenhuma atividade com esses filtros',
+    );
+
+    const botaoLimpar = Array.from(
+      harness.routeNativeElement!.querySelectorAll<HTMLButtonElement>('button'),
+    ).find((b) => b.textContent?.includes('Limpar filtros'))!;
+    botaoLimpar.click();
+    const segundo = controle.expectOne((r) => r.url === '/api/atividades');
+    expect(segundo.request.params.has('pessoaId')).toBe(false);
+    segundo.flush({ content: [], page: { size: 20, number: 0, totalElements: 0, totalPages: 0 } });
+  });
+
   it('sem ATIVIDADES_REGISTRAR, não oferece o registro', async () => {
     entrarCom(['ATIVIDADES_LER']);
     const controle = TestBed.inject(HttpTestingController);
@@ -89,7 +115,7 @@ describe('Módulo de atividades', () => {
     await harness.fixture.whenStable();
 
     const texto = harness.routeNativeElement?.textContent ?? '';
-    expect(texto).toContain('Nenhuma atividade registrada');
+    expect(texto).toContain('Nenhuma atividade com esses filtros');
     expect(texto).not.toContain('Registrar');
   });
 });

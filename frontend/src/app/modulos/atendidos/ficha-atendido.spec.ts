@@ -3,6 +3,9 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 
+import { contaDeTeste } from '../../acesso/conta-de-teste';
+import { Sessao } from '../../acesso/sessao';
+
 import { AtendidoBasico, FichaCompleta } from './atendidos-api';
 import { FichaAtendidoPagina } from './ficha-atendido';
 
@@ -77,6 +80,38 @@ describe('FichaAtendidoPagina', () => {
     await fixture.whenStable();
     return fixture.nativeElement as HTMLElement;
   }
+
+  it('mostra as atividades da pessoa para quem lê atividades', async () => {
+    TestBed.inject(Sessao).definir(
+      contaDeTeste({ permissoes: ['ATENDIDOS_LER', 'ATIVIDADES_LER'] }),
+    );
+    const fixture = TestBed.createComponent(FichaAtendidoPagina);
+    fixture.componentRef.setInput('id', 'ins-1');
+    fixture.detectChanges();
+    http.expectOne('/api/atendidos/ins-1').flush(FICHA);
+    await fixture.whenStable();
+
+    const pedido = http.expectOne((r) => r.url === '/api/atividades');
+    expect(pedido.request.params.get('pessoaId')).toBe('pes-1');
+    pedido.flush({
+      content: [
+        {
+          id: 'a1',
+          tipo: 'COM_USUARIOS',
+          data: '2026-11-18',
+          titulo: 'Oficina de pintura',
+          participantes: [],
+          profissionais: [],
+        },
+      ],
+      page: { size: 5, number: 0, totalElements: 7, totalPages: 2 },
+    });
+    await fixture.whenStable();
+
+    const texto = (fixture.nativeElement as HTMLElement).textContent ?? '';
+    expect(texto).toContain('Oficina de pintura');
+    expect(texto).toContain('Ver todas as 7 atividades');
+  });
 
   it('mostra a ficha completa com pessoa, serviço e lista de espera', async () => {
     const elemento = await abrir(FICHA);

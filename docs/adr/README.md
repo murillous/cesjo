@@ -132,3 +132,4 @@ frente de trabalho paralela não é usado todo.
 - [0152](0152-permissoes-das-atividades.md) — Permissões das atividades (provisório)
 - [0153](0153-telas-de-atividades.md) — Telas de atividades: diário por data e ficha de registro
 - [0154](0154-atendimentos-e-estudos-de-caso.md) — Atendimentos e estudos de caso ligados a um usuário, com leitura auditada (provisório)
+- [0155](0155-listagem-de-atividades-por-periodo.md) — Listagem de atividades por período e atividades na ficha do usuário
