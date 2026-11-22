@@ -118,6 +118,12 @@ public enum Permissao {
 	PARCERIAS_LER,
 
 	/** Cadastrar e editar parceiros e registrar ações de articulação (RF013, ADR 0173). */
-	PARCERIAS_GERENCIAR
+	PARCERIAS_GERENCIAR,
+
+	/** Ver as reuniões e eventos institucionais, com a descrição (RF012, ADR 0176). */
+	EVENTOS_LER,
+
+	/** Registrar e editar reuniões e eventos institucionais (RF012, ADR 0176). */
+	EVENTOS_REGISTRAR
 
 }

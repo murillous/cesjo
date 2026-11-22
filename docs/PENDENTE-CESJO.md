@@ -208,6 +208,7 @@ Situação: provisória.
 | Equipe Técnica e Administrativo não veem nem gerenciam o cadastro de colaboradores; escolhem o profissional pelas telas de visita, escuta e atividade. | `acesso.Perfil` (`COLABORADORES_LER`, `COLABORADORES_GERENCIAR`) | [0047](adr/0047-permissoes-dos-colaboradores.md) |
 | O Administrativo não lista nem registra atividades (`ATIVIDADES_LER` e `ATIVIDADES_REGISTRAR` só para Coordenador e Equipe Técnica). | `acesso.Perfil` (linha do `ADMINISTRATIVO`) | [0152](adr/0152-permissoes-das-atividades.md) |
 | Equipe Técnica e Administrativo não veem nem registram parcerias. | `acesso.Perfil` (`PARCERIAS_LER`, `PARCERIAS_GERENCIAR`) | [0173](adr/0173-permissoes-das-parcerias.md) |
+| Equipe Técnica e Administrativo não veem nem registram reuniões e eventos institucionais. | `acesso.Perfil` (`EVENTOS_LER`, `EVENTOS_REGISTRAR`) | [0176](adr/0176-permissoes-das-reunioes-e-eventos.md) |
 
 ## P18. Funções dos colaboradores
 

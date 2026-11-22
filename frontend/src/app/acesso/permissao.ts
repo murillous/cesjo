@@ -39,7 +39,9 @@ export type Permissao =
   | 'COMUNICACOES_LER'
   | 'COMUNICACOES_REGISTRAR'
   | 'PARCERIAS_LER'
-  | 'PARCERIAS_GERENCIAR';
+  | 'PARCERIAS_GERENCIAR'
+  | 'EVENTOS_LER'
+  | 'EVENTOS_REGISTRAR';
 
 /** Perfis da seção 4 do documento de requisitos, com os nomes do enum `Perfil` do backend. */
 export type Perfil = 'COORDENADOR' | 'EQUIPE_TECNICA' | 'ADMINISTRATIVO' | 'CONSULTA';
