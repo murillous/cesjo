@@ -133,14 +133,6 @@ public enum Permissao {
 	DOACOES_REGISTRAR,
 
 	/** Ver os dashboards e gerar os relatórios estatísticos, que só trazem contagens (RF016, RF017, ADR 0196). */
-	RELATORIOS_LER,
-
-	RELATORIOS_LER,
-
-	/** Listar os contatos e comunicações e abrir a ficha com a descrição (RF011, ADR 0162). */
-	COMUNICACOES_LER,
-
-	/** Registrar e corrigir contatos e comunicações (RF011, ADR 0162). */
-	COMUNICACOES_REGISTRAR
+	RELATORIOS_LER
 
 }
