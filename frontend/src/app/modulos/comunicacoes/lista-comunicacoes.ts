@@ -16,11 +16,19 @@ import { Sessao } from '../../acesso/sessao';
 import { PaginadorPtBr } from '../../compartilhado/paginador-pt-br';
 import { dataIso, lerDataIso } from '../visitas/datas-visita';
 import { ComunicacoesApi, FiltroComunicacoes, ResumoComunicacao } from './comunicacoes-api';
-import { TIPO_POR_VALOR, TipoComunicacao, TIPOS_COMUNICACAO } from './rotulos';
+import {
+  DirecaoComunicacao,
+  DIRECOES,
+  rotuloCompleto,
+  TIPO_POR_VALOR,
+  TipoComunicacao,
+  TIPOS_COMUNICACAO,
+} from './rotulos';
 
 /**
  * Registro de contatos e comunicações (RF011, ADR 0163): do mais recente para o mais antigo, cada um
- * com o ícone do tipo, a pessoa ou instituição e o assunto. Filtra por tipo e período. Sem a descrição.
+ * com o ícone do tipo, a pessoa ou instituição e o assunto. Filtra por tipo, direção, pessoa ou
+ * instituição e período (ADR 0165). Sem a descrição.
  */
 @Component({
   selector: 'app-lista-comunicacoes',
@@ -48,11 +56,15 @@ export class ListaComunicacoes implements OnInit {
   protected readonly podeRegistrar = inject(Sessao).temPermissao('COMUNICACOES_REGISTRAR');
   protected readonly tipos = TIPOS_COMUNICACAO;
   protected readonly tipoPorValor = TIPO_POR_VALOR;
+  protected readonly direcoes = DIRECOES;
+  protected readonly rotulo = rotuloCompleto;
   protected readonly data = lerDataIso;
   protected readonly tamanhos = [20, 50, 100];
 
   protected readonly filtros = inject(NonNullableFormBuilder).group({
     tipo: ['' as TipoComunicacao | ''],
+    direcao: ['' as DirecaoComunicacao | ''],
+    contraparte: [''],
     inicio: [null as Date | null],
     fim: [null as Date | null],
   });
@@ -109,6 +121,8 @@ export class ListaComunicacoes implements OnInit {
     const valor = this.filtros.getRawValue();
     return {
       tipo: valor.tipo || null,
+      direcao: valor.direcao || null,
+      contraparte: valor.contraparte.trim() || null,
       inicio: valor.inicio ? dataIso(valor.inicio) : null,
       fim: valor.fim ? dataIso(valor.fim) : null,
     };

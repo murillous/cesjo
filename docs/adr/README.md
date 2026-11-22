@@ -137,3 +137,5 @@ frente de trabalho paralela não é usado todo.
 - [0161](0161-api-java-de-contagem-de-comunicacoes.md) — API Java de contagem de comunicações
 - [0162](0162-permissoes-dos-contatos-e-comunicacoes.md) — Permissões dos contatos e comunicações
 - [0163](0163-telas-de-contatos-e-comunicacoes.md) — Telas de contatos e comunicações
+- [0164](0164-oficios-declaracoes-e-encaminhamentos.md) — Ofícios, declarações e encaminhamentos, com direção e anexo opcional (provisório)
+- [0165](0165-telas-de-oficios-declaracoes-e-encaminhamentos.md) — Telas de ofícios, declarações e encaminhamentos

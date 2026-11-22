@@ -13,7 +13,7 @@
     @if (!editando()) {
       <p class="tipo">
         <mat-icon aria-hidden="true">{{ tipoPorValor[atual.tipo].icone }}</mat-icon>
-        {{ tipoPorValor[atual.tipo].rotulo }}
+        {{ rotulo(atual.tipo, atual.direcao) }}
       </p>
       <h1 id="titulo-comunicacao">{{ atual.assunto }}</h1>
 
@@ -41,6 +41,60 @@
         }
       </section>
 
+      <section class="texto anexo" aria-labelledby="titulo-anexo">
+        <h2 id="titulo-anexo">Anexo</h2>
+        @if (atual.anexo; as anexo) {
+          <div class="arquivo">
+            <mat-icon aria-hidden="true">description</mat-icon>
+            <span class="nome-arquivo">
+              {{ anexo.nomeOriginal }}
+              <span class="texto-secundario">{{ tamanho(anexo.tamanho) }}</span>
+            </span>
+          </div>
+        } @else {
+          <p class="texto-secundario">Sem anexo.</p>
+        }
+        @if (erroArquivo(); as mensagem) {
+          <p class="erro" role="alert">{{ mensagem }}</p>
+        }
+        <div class="botoes">
+          @if (atual.anexo) {
+            <button matButton="outlined" type="button" (click)="baixarAnexo()">
+              <mat-icon aria-hidden="true">download</mat-icon>
+              Baixar anexo
+            </button>
+          }
+          @if (podeRegistrar) {
+            <button
+              matButton="outlined"
+              type="button"
+              [disabled]="enviando()"
+              (click)="seletorAnexo.click()"
+            >
+              <mat-icon aria-hidden="true">attach_file</mat-icon>
+              {{ atual.anexo ? 'Trocar anexo' : 'Anexar arquivo' }}
+            </button>
+            <input
+              #seletorAnexo
+              class="cdk-visually-hidden"
+              type="file"
+              tabindex="-1"
+              aria-hidden="true"
+              [accept]="aceite"
+              (change)="trocarAnexo($event)"
+            />
+            @if (atual.anexo) {
+              <button matButton type="button" [disabled]="enviando()" (click)="removerAnexo()">
+                Remover anexo
+              </button>
+            }
+          }
+        </div>
+        @if (podeRegistrar) {
+          <p class="texto-secundario dica">{{ dicaArquivo }}</p>
+        }
+      </section>
+
       @if (podeRegistrar) {
         <div class="botoes">
           <button matButton="outlined" type="button" (click)="corrigir()">
@@ -53,7 +107,7 @@
   }
 
   @if (nova() || editando()) {
-    <h1 id="titulo-comunicacao">{{ nova() ? 'Registrar contato' : 'Corrigir registro' }}</h1>
+    <h1 id="titulo-comunicacao">{{ nova() ? 'Novo registro' : 'Corrigir registro' }}</h1>
 
     @if (erro(); as mensagem) {
       <p class="erro" role="alert">{{ mensagem }}</p>
@@ -74,17 +128,34 @@
         }
       </fieldset>
 
+      @if (opcaoTipo()?.direcoes; as direcoes) {
+        <fieldset class="direcoes">
+          <legend>Foi enviado ou recebido?</legend>
+          <label class="opcao-direcao">
+            <input type="radio" formControlName="direcao" value="ENVIADA" />
+            {{ direcoes.ENVIADA }} pelo Centro-Dia
+          </label>
+          <label class="opcao-direcao">
+            <input type="radio" formControlName="direcao" value="RECEBIDA" />
+            {{ direcoes.RECEBIDA }} de fora
+          </label>
+          @if (formulario.controls.direcao.invalid && formulario.controls.direcao.touched) {
+            <p class="erro-campo" role="alert">Diga se foi enviado ou recebido.</p>
+          }
+        </fieldset>
+      }
+
       <div class="linha">
         <mat-form-field appearance="outline">
-          <mat-label>{{ rotuloContraparte() }}</mat-label>
+          <mat-label>{{ opcaoTipo()?.contraparte ?? 'Pessoa ou instituição' }}</mat-label>
           <input matInput formControlName="contraparte" maxlength="200" />
           <mat-hint>Nome da pessoa ou da instituição.</mat-hint>
           @if (formulario.controls.contraparte.invalid) {
-            <mat-error>Informe com quem foi o contato.</mat-error>
+            <mat-error>Informe a pessoa ou instituição.</mat-error>
           }
         </mat-form-field>
 
-        <!-- PENDENTE-CESJO(P30): só contato que já aconteceu, data até hoje. -->
+        <!-- PENDENTE-CESJO(P30): só o que já aconteceu, data até hoje. -->
         <mat-form-field appearance="outline" class="campo-data">
           <mat-label>Data</mat-label>
           <input matInput [matDatepicker]="seletorData" [max]="hoje" formControlName="data" />
@@ -102,7 +173,10 @@
       <mat-form-field appearance="outline">
         <mat-label>Assunto</mat-label>
         <input matInput formControlName="assunto" maxlength="200" />
-        <mat-hint>Por exemplo, "Faltas da semana". Não escreva aqui dado sigiloso.</mat-hint>
+        <mat-hint
+          >Por exemplo, "Faltas da semana" ou "Ofício 12/2026". Não escreva aqui dado
+          sigiloso.</mat-hint
+        >
         @if (formulario.controls.assunto.invalid) {
           <mat-error>Informe o assunto.</mat-error>
         }
@@ -114,9 +188,46 @@
         <mat-hint>Guardada cifrada.</mat-hint>
       </mat-form-field>
 
+      @if (nova()) {
+        <!-- PENDENTE-CESJO(P31): um anexo só por registro, sempre opcional. -->
+        <div class="campo-arquivo">
+          <span class="rotulo-arquivo">Anexo (opcional)</span>
+          @if (arquivoNovo(); as arquivo) {
+            <div class="arquivo">
+              <mat-icon aria-hidden="true">description</mat-icon>
+              <span class="nome-arquivo">
+                {{ arquivo.name }}
+                <span class="texto-secundario">{{ tamanho(arquivo.size) }}</span>
+              </span>
+              <button matButton type="button" (click)="tirarArquivoNovo()">Tirar</button>
+            </div>
+          } @else {
+            <button matButton="outlined" type="button" (click)="seletorNovo.click()">
+              <mat-icon aria-hidden="true">attach_file</mat-icon>
+              Escolher arquivo
+            </button>
+          }
+          <input
+            #seletorNovo
+            class="cdk-visually-hidden"
+            type="file"
+            tabindex="-1"
+            aria-hidden="true"
+            [accept]="aceite"
+            (change)="escolherArquivo($event)"
+          />
+          <span class="texto-secundario dica"
+            >{{ dicaArquivo }} O ofício ou a declaração digitalizada, por exemplo.</span
+          >
+          @if (erroArquivo(); as mensagem) {
+            <p class="erro-campo" role="alert">{{ mensagem }}</p>
+          }
+        </div>
+      }
+
       <div class="botoes">
         <button matButton="filled" type="submit" [disabled]="enviando()">
-          {{ nova() ? 'Registrar contato' : 'Salvar correção' }}
+          {{ nova() ? 'Salvar registro' : 'Salvar correção' }}
         </button>
         @if (editando()) {
           <button matButton type="button" (click)="desistir()">Desistir</button>

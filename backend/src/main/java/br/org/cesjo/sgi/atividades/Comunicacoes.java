@@ -24,4 +24,13 @@ public interface Comunicacoes {
 	 */
 	Map<TipoComunicacao, Long> contarPorTipo(LocalDate inicio, LocalDate fim);
 
+	/**
+	 * Ofícios, declarações ou encaminhamentos ({@code tipo}) com data no período, as duas pontas inclusive,
+	 * contados por direção: expedidos ou enviados e recebidos. As duas direções aparecem no mapa.
+	 *
+	 * @throws IllegalArgumentException quando {@code fim} é anterior a {@code inicio} ou quando o tipo não
+	 * tem direção ({@link TipoComunicacao#temDirecao()})
+	 */
+	Map<DirecaoComunicacao, Long> contarPorDirecao(TipoComunicacao tipo, LocalDate inicio, LocalDate fim);
+
 }

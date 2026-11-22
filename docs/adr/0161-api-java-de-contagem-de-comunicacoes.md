@@ -25,6 +25,6 @@ em PR:
 
 ## Consequências
 
-- Quando os ofícios, declarações e encaminhamentos entrarem (issue #49), a contagem por direção
-  (enviados e recebidos) entra na mesma interface.
+- Com os ofícios, declarações e encaminhamentos (issue #49), a interface ganhou
+  `contarPorDirecao(tipo, inicio, fim)`, que conta os enviados e os recebidos (ADR 0164).
 - Se o relatório pedir outros cortes (por instituição, por exemplo), entra um método novo aqui.

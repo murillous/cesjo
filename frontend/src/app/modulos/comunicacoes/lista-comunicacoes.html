@@ -3,7 +3,8 @@
     <div>
       <h1 id="titulo-comunicacoes">Contatos e comunicações</h1>
       <p class="texto-secundario">
-        Ligações com cuidadores e instituições e atendimentos a quem não é acompanhado pelo serviço.
+        Ligações, atendimentos ao público, ofícios, declarações e encaminhamentos, do mais recente
+        para o mais antigo.
       </p>
     </div>
     @if (podeRegistrar) {
@@ -16,6 +17,12 @@
 
   <form class="filtros" [formGroup]="filtros" (ngSubmit)="filtrar()" aria-label="Filtros">
     <mat-form-field appearance="outline">
+      <mat-label>Pessoa ou instituição</mat-label>
+      <input matInput formControlName="contraparte" type="search" />
+      <mat-hint>Parte do nome, por exemplo "CRAS".</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
       <mat-label>Tipo</mat-label>
       <mat-select formControlName="tipo">
         <mat-option value="">Todos</mat-option>
@@ -23,6 +30,17 @@
           <mat-option [value]="tipo.valor">{{ tipo.rotulo }}</mat-option>
         }
       </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Enviados ou recebidos</mat-label>
+      <mat-select formControlName="direcao">
+        <mat-option value="">Todos</mat-option>
+        @for (direcao of direcoes; track direcao.valor) {
+          <mat-option [value]="direcao.valor">{{ direcao.rotulo }}</mat-option>
+        }
+      </mat-select>
+      <mat-hint>Ofícios, declarações e encaminhamentos.</mat-hint>
     </mat-form-field>
 
     <mat-form-field appearance="outline">
@@ -57,7 +75,9 @@
     } @else if (!carregando() && comunicacoes().length === 0) {
       <div class="aviso">
         @if (filtrado()) {
-          <p>Nenhum contato com esses filtros. Mude o tipo ou o período.</p>
+          <p>
+            Nenhum registro com esses filtros. Mude a pessoa ou instituição, o tipo ou o período.
+          </p>
         } @else {
           <p>Nenhum contato registrado ainda.</p>
           @if (podeRegistrar) {
@@ -80,7 +100,13 @@
               <span class="corpo">
                 <span class="contraparte">{{ item.contraparte }}</span>
                 <span class="assunto">{{ item.assunto }}</span>
-                <span class="tipo texto-secundario">{{ tipoPorValor[item.tipo].rotulo }}</span>
+                <span class="tipo texto-secundario">
+                  {{ rotulo(item.tipo, item.direcao) }}
+                  @if (item.temAnexo) {
+                    <mat-icon class="clipe" aria-hidden="true">attach_file</mat-icon>
+                    <span class="cdk-visually-hidden">, com anexo</span>
+                  }
+                </span>
               </span>
               <time class="dia texto-secundario" [attr.datetime]="item.data">{{
                 data(item.data) | date: 'dd/MM/yyyy'
