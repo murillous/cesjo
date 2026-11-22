@@ -244,13 +244,32 @@ jobs:
           ultimo() { docker compose exec -T backup restic snapshots --json latest | (grep -o '"id":"[^"]*"' || true) | head -1; }
           antes="$(ultimo)"
           docker compose up -d backup
+          gerou=nao
           for _ in $(seq 1 30); do
-            if [ "$(ultimo)" != "$antes" ]; then echo "crond gerou o snapshot"; exit 0; fi
+            if [ "$(ultimo)" != "$antes" ]; then gerou=sim; break; fi
             sleep 5
           done
-          echo "o crond não rodou o backup em 150 segundos"
-          docker compose exec -T backup sh -c 'ps; ls -la /etc/crontabs /var/spool/cron 2>&1; cat /etc/crontabs/root; date; busybox | head -3' || true
-          exit 1
+          if [ "$gerou" != sim ]; then
+            echo "o crond não rodou o backup em 150 segundos"
+            docker compose exec -T backup sh -c 'ps; ls -la /etc/crontabs /var/spool/cron 2>&1; cat /etc/crontabs/root; date; busybox | head -3' || true
+            exit 1
+          fi
+          echo "crond gerou o snapshot"
+
+          # Desliga o backup de minuto em minuto antes dos próximos passos, que chamam o backup.sh à
+          # mão e falhariam com "outro backup em andamento" (issue #99). O snapshot aparece antes do
+          # forget e do check, então o backup do crond ainda pode estar rodando. Um processo em
+          # segundo plano espera esse backup terminar e fica com o lock até o contêiner ser recriado:
+          # o crond não começa outro backup no meio, e nenhum restic é interrompido.
+          docker compose exec -T -d backup flock -w 120 /run/sgi-backup.lock sh -c 'touch /run/ci-lock-tomado; sleep 600'
+          for _ in $(seq 1 26); do
+            if docker compose exec -T backup test -e /run/ci-lock-tomado; then break; fi
+            sleep 5
+          done
+          docker compose exec -T backup test -e /run/ci-lock-tomado
+          # 31 de fevereiro: o crond nunca roda o backup no resto do job.
+          sed -i "s|^SGI_BACKUP_HORARIO=.*|SGI_BACKUP_HORARIO=0 0 31 2 *|" backup.env
+          docker compose up -d --wait backup
 
       - name: Recuperação de desastres (issue #22)
         run: |
