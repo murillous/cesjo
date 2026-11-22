@@ -1,0 +1,115 @@
+@use 'styles/breakpoints' as bp;
+
+// Mobile first: uma coluna, campos na largura toda e o botão embaixo. A partir do tablet os campos
+// curtos (datas, documentos, número) ficam lado a lado.
+.cadastro {
+  max-width: 760px;
+}
+
+.voltar {
+  margin: 0 0 var(--sgi-space-2) calc(-1 * var(--sgi-space-1));
+}
+
+h1 {
+  margin-bottom: var(--sgi-space-0-5);
+}
+
+.erro {
+  padding: var(--sgi-space-1-5) var(--sgi-space-2);
+  border-left: var(--sgi-space-0-5) solid var(--sgi-color-accent);
+  background: var(--sgi-color-background-secondary);
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sgi-space-3);
+  margin-top: var(--sgi-space-2);
+}
+
+fieldset {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sgi-space-1);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+legend {
+  display: flex;
+  align-items: center;
+  gap: var(--sgi-space-1);
+  margin-bottom: var(--sgi-space-1);
+  padding: 0;
+  font-size: var(--sgi-font-size-h3);
+  font-weight: var(--sgi-font-weight-medium);
+}
+
+.nota {
+  margin: 0 0 var(--sgi-space-1);
+  color: var(--sgi-color-text-secondary);
+  font-size: var(--sgi-font-size-small);
+}
+
+.linha {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0 var(--sgi-space-2);
+  align-items: start;
+}
+
+.faixa {
+  margin: 0 0 var(--sgi-space-2);
+  color: var(--sgi-color-text-secondary);
+}
+
+.beneficios {
+  display: flex;
+  flex-direction: column;
+
+  mat-checkbox {
+    min-height: var(--sgi-alvo-toque);
+  }
+}
+
+// Crença e saúde: marcados como área restrita, com a borda de destaque à esquerda.
+.sensivel {
+  padding: var(--sgi-space-2);
+  border-left: var(--sgi-space-0-5) solid var(--sgi-color-primary);
+  border-radius: var(--sgi-radius-md);
+  background: var(--sgi-color-background-secondary);
+}
+
+.botoes {
+  display: flex;
+  flex-direction: column;
+
+  button {
+    min-height: var(--sgi-alvo-toque);
+  }
+}
+
+@media (min-width: bp.$tablet) {
+  .linha {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .linha.tres {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .faixa {
+    margin-top: var(--sgi-space-2);
+  }
+
+  .beneficios {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--sgi-space-2);
+  }
+
+  .botoes {
+    flex-direction: row;
+  }
+}

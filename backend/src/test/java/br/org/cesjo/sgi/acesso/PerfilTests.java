@@ -93,6 +93,14 @@ class PerfilTests {
 	}
 
 	@Test
+	void cadastroCompletoECrencaSoParaCoordenadorEEquipeTecnica() {
+		assertThat(Arrays.stream(Perfil.values()).filter(perfil -> perfil.tem(Permissao.ATENDIDOS_EDITAR)))
+			.containsExactlyInAnyOrder(Perfil.COORDENADOR, Perfil.EQUIPE_TECNICA);
+		assertThat(Arrays.stream(Perfil.values()).filter(perfil -> perfil.tem(Permissao.ATENDIDOS_DADOS_SENSIVEIS)))
+			.containsExactlyInAnyOrder(Perfil.COORDENADOR, Perfil.EQUIPE_TECNICA);
+	}
+
+	@Test
 	void violacoesSoParaCoordenadorEEquipeTecnica() {
 		assertThat(Arrays.stream(Perfil.values()).filter(perfil -> perfil.tem(Permissao.VIOLACOES_REGISTRAR)))
 			.containsExactlyInAnyOrder(Perfil.COORDENADOR, Perfil.EQUIPE_TECNICA);
@@ -126,6 +134,22 @@ class PerfilTests {
 			.containsExactlyInAnyOrder(Perfil.COORDENADOR, Perfil.EQUIPE_TECNICA);
 		assertThat(Arrays.stream(Perfil.values()).filter(perfil -> perfil.tem(Permissao.PIA_APROVAR)))
 			.containsExactly(Perfil.COORDENADOR);
+	}
+
+	@Test
+	void atividadesSoParaCoordenadorEEquipeTecnica() {
+		assertThat(Arrays.stream(Perfil.values()).filter(perfil -> perfil.tem(Permissao.ATIVIDADES_LER)))
+			.containsExactlyInAnyOrder(Perfil.COORDENADOR, Perfil.EQUIPE_TECNICA);
+		assertThat(Arrays.stream(Perfil.values()).filter(perfil -> perfil.tem(Permissao.ATIVIDADES_REGISTRAR)))
+			.containsExactlyInAnyOrder(Perfil.COORDENADOR, Perfil.EQUIPE_TECNICA);
+	}
+
+	@Test
+	void comunicacoesParaTodosMenosConsulta() {
+		assertThat(Arrays.stream(Perfil.values()).filter(perfil -> perfil.tem(Permissao.COMUNICACOES_LER)))
+			.containsExactlyInAnyOrder(Perfil.COORDENADOR, Perfil.EQUIPE_TECNICA, Perfil.ADMINISTRATIVO);
+		assertThat(Arrays.stream(Perfil.values()).filter(perfil -> perfil.tem(Permissao.COMUNICACOES_REGISTRAR)))
+			.containsExactlyInAnyOrder(Perfil.COORDENADOR, Perfil.EQUIPE_TECNICA, Perfil.ADMINISTRATIVO);
 	}
 
 	@Test

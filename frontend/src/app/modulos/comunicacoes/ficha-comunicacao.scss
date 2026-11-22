@@ -1,0 +1,196 @@
+@use 'styles/breakpoints' as bp;
+
+// Mobile first: tudo em uma coluna. No tablet, os cartões de tipo ficam em três colunas e os campos,
+// lado a lado.
+
+.comunicacao {
+  max-width: 720px;
+}
+
+.voltar {
+  margin: 0 0 var(--sgi-space-2) calc(-1 * var(--sgi-space-1));
+}
+
+h1 {
+  margin: 0 0 var(--sgi-space-2);
+  overflow-wrap: anywhere;
+}
+
+.tipo,
+.arquivo {
+  display: flex;
+  align-items: center;
+  gap: var(--sgi-space-1);
+}
+
+.tipo {
+  margin: 0 0 var(--sgi-space-0-5);
+  color: var(--sgi-color-primary-dark);
+  font-weight: var(--sgi-font-weight-semibold);
+}
+
+.erro {
+  padding: var(--sgi-space-1-5) var(--sgi-space-2);
+  border-left: var(--sgi-space-0-5) solid var(--sgi-color-accent);
+  background: var(--sgi-color-background-secondary);
+}
+
+.cabecalho {
+  margin: 0 0 var(--sgi-space-3);
+
+  dt {
+    font-size: var(--sgi-font-size-small);
+    color: var(--sgi-color-text-secondary);
+  }
+
+  dd {
+    margin: 0 0 var(--sgi-space-1);
+    font-weight: var(--sgi-font-weight-semibold);
+  }
+}
+
+.texto {
+  margin-bottom: var(--sgi-space-3);
+
+  h2 {
+    margin: 0 0 var(--sgi-space-1);
+    padding-bottom: var(--sgi-space-0-5);
+    border-bottom: var(--sgi-border);
+    font-size: var(--sgi-font-size-h3);
+  }
+
+  p {
+    margin: 0;
+    max-width: 70ch;
+    white-space: pre-line;
+  }
+}
+
+.cabecalho dd,
+.texto p,
+.nome-arquivo {
+  overflow-wrap: anywhere;
+}
+
+form,
+.linha,
+.botoes,
+.tipos,
+.direcoes,
+.campo-arquivo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sgi-space-1);
+}
+
+.tipos,
+.direcoes {
+  margin: 0 0 var(--sgi-space-2);
+  padding: 0;
+  border: 0;
+}
+
+legend,
+.rotulo-arquivo {
+  margin-bottom: var(--sgi-space-1);
+  font-weight: var(--sgi-font-weight-semibold);
+}
+
+// Os tipos viram cartões grandes, fáceis de tocar no celular. O rádio continua visível para o teclado
+// e o leitor de tela; o cartão escolhido ganha borda e fundo.
+.cartao-tipo,
+.opcao-direcao {
+  display: flex;
+  align-items: center;
+  gap: var(--sgi-space-1-5);
+  min-height: var(--sgi-alvo-toque);
+  cursor: pointer;
+
+  input {
+    flex: none;
+    width: 1.125rem;
+    height: 1.125rem;
+    margin: 0;
+    accent-color: var(--sgi-color-primary-dark);
+  }
+}
+
+.cartao-tipo {
+  padding: var(--sgi-space-1-5) var(--sgi-space-2);
+  border: var(--sgi-border);
+  border-radius: var(--sgi-radius-md);
+
+  &:has(input:checked) {
+    border-color: var(--sgi-color-primary-dark);
+    background: var(--sgi-color-background-secondary);
+    font-weight: var(--sgi-font-weight-semibold);
+  }
+
+  &:has(input:focus-visible) {
+    outline: 2px solid var(--sgi-color-primary-dark);
+    outline-offset: 2px;
+  }
+}
+
+.tipo mat-icon,
+.arquivo mat-icon,
+.cartao-tipo mat-icon {
+  flex: none;
+  color: var(--sgi-color-primary-dark);
+}
+
+.campo-arquivo {
+  align-items: flex-start;
+  margin-bottom: var(--sgi-space-2);
+}
+
+.nome-arquivo {
+  display: flex;
+  flex-direction: column;
+}
+
+.dica,
+.erro-campo {
+  margin: 0;
+  font-size: var(--sgi-font-size-small);
+}
+
+.erro-campo {
+  color: var(--mat-sys-error, var(--sgi-color-accent));
+}
+
+.botoes button,
+.campo-arquivo button {
+  min-height: var(--sgi-alvo-toque);
+}
+
+@media (min-width: bp.$tablet) {
+  .linha,
+  .botoes,
+  .direcoes {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .linha mat-form-field {
+    flex: 2;
+  }
+
+  .linha .campo-data {
+    flex: 1;
+  }
+
+  .tipos {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .cartao-tipo {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .direcoes {
+    gap: var(--sgi-space-3);
+  }
+}
