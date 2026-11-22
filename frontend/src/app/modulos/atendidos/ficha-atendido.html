@@ -166,6 +166,10 @@
             </dl>
           </section>
         }
+
+        @if (podeLerAtividades) {
+          <app-atividades-do-usuario [pessoaId]="f.pessoaId" />
+        }
       </div>
     }
 

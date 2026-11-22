@@ -203,6 +203,7 @@ Situação: provisória.
 | Só o Coordenador registra desligamento, porque ele libera vaga. | `acesso.Perfil` (`ATENDIDOS_DESLIGAR`) | [0110](adr/0110-desligamento-do-usuario-atendido.md) |
 | Equipe Técnica e Administrativo não veem nem gerenciam o cadastro de colaboradores; escolhem o profissional pelas telas de visita, escuta e atividade. | `acesso.Perfil` (`COLABORADORES_LER`, `COLABORADORES_GERENCIAR`) | [0047](adr/0047-permissoes-dos-colaboradores.md) |
 | Só Coordenador e Consulta veem relatórios e dashboards; Equipe Técnica e Administrativo ficam sem acesso. | `acesso.Perfil` (`RELATORIOS_LER`) e `relatorios.modulo.ts` (frontend) | [0196](adr/0196-permissao-dos-relatorios-e-dashboards.md) |
+| O Administrativo não lista nem registra atividades (`ATIVIDADES_LER` e `ATIVIDADES_REGISTRAR` só para Coordenador e Equipe Técnica). | `acesso.Perfil` (linha do `ADMINISTRATIVO`) | [0152](adr/0152-permissoes-das-atividades.md) |
 
 ## P18. Funções dos colaboradores
 
@@ -237,3 +238,36 @@ Situação: provisória.
 | Decisão provisória | Onde mudar | ADR |
 |---|---|---|
 | Gênero: feminino, masculino e outro. Escolaridade: sem escolaridade, fundamental, médio e superior, incompletos e completos. Vazio é "não informado". | `pessoas.Genero`, `pessoas.Escolaridade`, restrições da `V40` (migração nova) e `rotulos.ts` do módulo atendidos (frontend) | [0143](adr/0143-opcoes-de-genero-e-escolaridade.md) |
+
+## P23. Participantes das atividades com famílias
+
+> Nas atividades com famílias (RF010), o que precisa ser registrado: só de quais usuários atendidos
+> eram as famílias presentes, ou cada familiar que participou (nome, parentesco)?
+
+Situação: provisória.
+
+| Decisão provisória | Onde mudar | ADR |
+|---|---|---|
+| Participantes são sempre usuários atendidos ativos; na atividade com famílias, o participante indica de qual usuário é a família, sem registrar o familiar. | `atividades.interno.DadosAtividade` (`participantes`) e `ficha-atividade.html` (frontend) | [0150](adr/0150-registro-de-atividades.md) |
+
+## P24. Atividades planejadas
+
+> As atividades (RF010) são registradas só depois de realizadas, ou a equipe quer também agendar
+> atividades futuras e marcar depois se aconteceram?
+
+Situação: provisória.
+
+| Decisão provisória | Onde mudar | ADR |
+|---|---|---|
+| Só se registra atividade realizada: a data não pode ser futura e não há agenda de atividades. | `ServicoAtividades.exigirDataValida` (backend) e `[max]` da data em `ficha-atividade.html` (frontend) | [0150](adr/0150-registro-de-atividades.md) |
+
+## P25. Atendimento multiprofissional
+
+> O atendimento multiprofissional (RF010) precisa ter sempre dois ou mais profissionais registrados?
+> Quais funções contam (por exemplo, assistente social e psicóloga juntas)?
+
+Situação: provisória.
+
+| Decisão provisória | Onde mudar | ADR |
+|---|---|---|
+| O atendimento multiprofissional exige pelo menos dois profissionais, de qualquer função. | `atividades.TipoAtividade` (`ATENDIMENTO_MULTIPROFISSIONAL`) e `TIPOS_ATIVIDADE` em `rotulos.ts` do módulo atividades (frontend) | [0154](adr/0154-atendimentos-e-estudos-de-caso.md) |

@@ -128,6 +128,12 @@ frente de trabalho paralela não é usado todo.
 - [0143](0143-opcoes-de-genero-e-escolaridade.md) — Opções de gênero e de escolaridade (provisório)
 - [0144](0144-tela-do-cadastro-completo.md) — Tela de completar o cadastro do usuário atendido
 - [0145](0145-consulta-de-violacoes-de-direitos.md) — Consulta de violações de direitos (provisório)
+- [0150](0150-registro-de-atividades.md) — Registro de atividades com usuários e famílias (provisório)
+- [0151](0151-api-java-de-contagem-de-atividades.md) — API Java do módulo Atividades para contagem por tipo e período
+- [0152](0152-permissoes-das-atividades.md) — Permissões das atividades (provisório)
+- [0153](0153-telas-de-atividades.md) — Telas de atividades: diário por data e ficha de registro
+- [0154](0154-atendimentos-e-estudos-de-caso.md) — Atendimentos e estudos de caso ligados a um usuário, com leitura auditada (provisório)
+- [0155](0155-listagem-de-atividades-por-periodo.md) — Listagem de atividades por período e atividades na ficha do usuário
 - [0195](0195-modulo-estatisticas-e-dashboard-de-perfil.md) — Módulo Estatísticas e dashboard de perfil dos usuários atendidos
 - [0196](0196-permissao-dos-relatorios-e-dashboards.md) — Permissão dos relatórios e dashboards (provisório)
 - [0197](0197-graficos-em-html-e-css-sem-biblioteca.md) — Gráficos em HTML e CSS, sem biblioteca, e área de relatórios com abas
