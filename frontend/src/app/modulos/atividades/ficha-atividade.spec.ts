@@ -88,6 +88,49 @@ describe('FichaAtividade', () => {
     controle.expectNone('/api/atividades');
   });
 
+  it('não envia estudo de caso com mais de um usuário nem multiprofissional com um profissional', async () => {
+    const fixture = TestBed.createComponent(FichaAtividade);
+    await fixture.whenStable();
+    responderOpcoes('c1');
+    const ficha = fixture.componentInstance as unknown as FichaExposta;
+    ficha.formulario.patchValue({
+      tipo: 'ESTUDO_DE_CASO',
+      titulo: 'Estudo',
+      descricao: 'Texto (fictício)',
+      participantes: ['p1', 'p2'],
+    });
+    ficha.salvar();
+    await fixture.whenStable();
+    expect((fixture.nativeElement as HTMLElement).textContent).toContain(
+      'Atendimentos e estudos de caso são de um só usuário atendido.',
+    );
+
+    ficha.formulario.patchValue({ tipo: 'ATENDIMENTO_MULTIPROFISSIONAL', participantes: ['p1'] });
+    ficha.salvar();
+    await fixture.whenStable();
+    expect((fixture.nativeElement as HTMLElement).textContent).toContain(
+      'precisa de pelo menos 2 profissionais',
+    );
+    controle.expectNone('/api/atividades');
+  });
+
+  it('avisa que o atendimento aberto é sigiloso', async () => {
+    const fixture = TestBed.createComponent(FichaAtividade);
+    fixture.componentRef.setInput('id', 'a1');
+    await fixture.whenStable();
+    controle
+      .expectOne('/api/atividades/opcoes')
+      .flush({ usuarios: [], profissionais: [], sugeridoId: null });
+    controle
+      .expectOne('/api/atividades/a1')
+      .flush(atividadeFicticia({ tipo: 'ATENDIMENTO_TECNICO_INDIVIDUALIZADO' }));
+    await fixture.whenStable();
+
+    const texto = (fixture.nativeElement as HTMLElement).textContent ?? '';
+    expect(texto).toContain('Atendimento técnico individualizado');
+    expect(texto).toContain('cada abertura fica no log de auditoria');
+  });
+
   it('mostra a atividade e corrige mantendo o participante desligado', async () => {
     const fixture = TestBed.createComponent(FichaAtividade);
     fixture.componentRef.setInput('id', 'a1');

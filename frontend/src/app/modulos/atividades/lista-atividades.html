@@ -47,7 +47,13 @@
               </time>
               <span class="corpo">
                 <span class="titulo">{{ atividade.titulo }}</span>
-                <span class="tipo">{{ tipos[atividade.tipo] }}</span>
+                <span class="tipo">
+                  {{ tipos[atividade.tipo] }}
+                  @if (individual(atividade)) {
+                    <mat-icon aria-hidden="true">lock</mat-icon>
+                    <span class="cdk-visually-hidden">, sigiloso</span>
+                  }
+                </span>
                 <span class="pessoas texto-secundario">
                   <mat-icon aria-hidden="true">group</mat-icon>
                   {{ nomes(atividade) }}

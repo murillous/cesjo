@@ -248,3 +248,14 @@ Situação: provisória.
 | Decisão provisória | Onde mudar | ADR |
 |---|---|---|
 | Só se registra atividade realizada: a data não pode ser futura e não há agenda de atividades. | `ServicoAtividades.exigirDataValida` (backend) e `[max]` da data em `ficha-atividade.html` (frontend) | [0150](adr/0150-registro-de-atividades.md) |
+
+## P25. Atendimento multiprofissional
+
+> O atendimento multiprofissional (RF010) precisa ter sempre dois ou mais profissionais registrados?
+> Quais funções contam (por exemplo, assistente social e psicóloga juntas)?
+
+Situação: provisória.
+
+| Decisão provisória | Onde mudar | ADR |
+|---|---|---|
+| O atendimento multiprofissional exige pelo menos dois profissionais, de qualquer função. | `atividades.TipoAtividade` (`ATENDIMENTO_MULTIPROFISSIONAL`) e `TIPOS_ATIVIDADE` em `rotulos.ts` do módulo atividades (frontend) | [0154](adr/0154-atendimentos-e-estudos-de-caso.md) |

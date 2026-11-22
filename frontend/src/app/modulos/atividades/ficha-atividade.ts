@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -19,11 +19,12 @@ import { hoje } from '../lista-espera/datas';
 import { dataIso, lerDataIso } from '../visitas/datas-visita';
 import { Profissional } from '../visitas/visitas-api';
 import { Atividade, AtividadesApi, DadosAtividade, Participante } from './atividades-api';
-import { ROTULOS_TIPO_ATIVIDADE, TipoAtividade, TIPOS_ATIVIDADE } from './rotulos';
+import { descricaoTipo, ROTULOS_TIPO_ATIVIDADE, TipoAtividade, TIPOS_ATIVIDADE } from './rotulos';
 
 /**
  * Registro (`/atividades/nova`), leitura e correção (`/atividades/:id`) de uma atividade do RF010
  * (ADR 0153). Participantes são usuários atendidos ativos; profissionais, colaboradores ativos.
+ * Atendimentos e estudos de caso têm um só usuário, e abrir um deles fica no log (ADR 0154).
  */
 @Component({
   selector: 'app-ficha-atividade',
@@ -50,7 +51,8 @@ export class FichaAtividade {
   private readonly avisos = inject(MatSnackBar);
   private readonly router = inject(Router);
 
-  protected readonly tipos = TIPOS_ATIVIDADE;
+  protected readonly coletivos = TIPOS_ATIVIDADE.filter((t) => !t.individual);
+  protected readonly individuais = TIPOS_ATIVIDADE.filter((t) => t.individual);
   protected readonly rotulosTipo = ROTULOS_TIPO_ATIVIDADE;
   protected readonly funcoes = ROTULOS_FUNCAO;
   protected readonly hoje = hoje();
@@ -71,6 +73,17 @@ export class FichaAtividade {
     descricao: ['', [Validators.required, Validators.maxLength(10000)]],
     participantes: [[] as string[], Validators.required],
     profissionais: [[] as string[], Validators.required],
+  });
+
+  private readonly tipoEscolhido = toSignal(this.formulario.controls.tipo.valueChanges, {
+    initialValue: this.formulario.controls.tipo.value,
+  });
+  /** Tipo escolhido no formulário, ou `undefined` antes da escolha. */
+  protected readonly tipo = computed(() => descricaoTipo(this.tipoEscolhido()));
+  /** A atividade aberta é atendimento ou estudo de caso. */
+  protected readonly sigilosa = computed(() => {
+    const atual = this.atividade();
+    return !!atual && !!descricaoTipo(atual.tipo)?.individual;
   });
 
   constructor() {
@@ -132,11 +145,13 @@ export class FichaAtividade {
   }
 
   protected salvar(): void {
-    if (this.formulario.invalid || this.enviando()) {
+    const valor = this.formulario.getRawValue();
+    const problema = this.problemaDoTipo(valor.participantes.length, valor.profissionais.length);
+    if (this.formulario.invalid || problema || this.enviando()) {
       this.formulario.markAllAsTouched();
+      this.erro.set(problema);
       return;
     }
-    const valor = this.formulario.getRawValue();
     const dados: DadosAtividade = {
       tipo: valor.tipo as TipoAtividade,
       data: dataIso(valor.data!),
@@ -166,6 +181,21 @@ export class FichaAtividade {
         this.erro.set(mensagemDeErro(erro, 'Não foi possível salvar a atividade.'));
       },
     });
+  }
+
+  /** Regra do tipo que a escolha não cumpre, na mesma redação do backend. */
+  private problemaDoTipo(participantes: number, profissionais: number): string | null {
+    const tipo = this.tipo();
+    if (!tipo) {
+      return null;
+    }
+    if (tipo.individual && participantes > 1) {
+      return 'Atendimentos e estudos de caso são de um só usuário atendido.';
+    }
+    if (profissionais > 0 && profissionais < tipo.minimoProfissionais) {
+      return `O atendimento multiprofissional precisa de pelo menos ${tipo.minimoProfissionais} profissionais.`;
+    }
+    return null;
   }
 
   private mostrar(atividade: Atividade): void {

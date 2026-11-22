@@ -10,7 +10,7 @@ import { Sessao } from '../../acesso/sessao';
 import { PaginadorPtBr } from '../../compartilhado/paginador-pt-br';
 import { lerDataIso } from '../visitas/datas-visita';
 import { AtividadesApi, ResumoAtividade } from './atividades-api';
-import { ROTULOS_TIPO_ATIVIDADE } from './rotulos';
+import { descricaoTipo, ROTULOS_TIPO_ATIVIDADE } from './rotulos';
 
 /**
  * Diário das atividades (RF010, ADR 0153): da mais recente para a mais antiga, com a data em
@@ -72,6 +72,11 @@ export class ListaAtividades implements OnInit {
         this.carregando.set(false);
       },
     });
+  }
+
+  /** Atendimento ou estudo de caso: abrir fica no log. */
+  protected individual(atividade: ResumoAtividade): boolean {
+    return !!descricaoTipo(atividade.tipo)?.individual;
   }
 
   /** "Ana, Bruno e mais 3", para a linha não crescer com grupos grandes. */

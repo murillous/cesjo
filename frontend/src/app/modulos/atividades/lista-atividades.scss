@@ -99,8 +99,17 @@
 }
 
 .tipo {
+  display: flex;
+  align-items: center;
+  gap: var(--sgi-space-0-5);
   font-size: var(--sgi-font-size-small);
   color: var(--sgi-color-primary-dark);
+
+  mat-icon {
+    width: 16px;
+    height: 16px;
+    font-size: 16px;
+  }
 }
 
 .pessoas {

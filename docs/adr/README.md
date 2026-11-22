@@ -131,3 +131,4 @@ frente de trabalho paralela não é usado todo.
 - [0151](0151-api-java-de-contagem-de-atividades.md) — API Java do módulo Atividades para contagem por tipo e período
 - [0152](0152-permissoes-das-atividades.md) — Permissões das atividades (provisório)
 - [0153](0153-telas-de-atividades.md) — Telas de atividades: diário por data e ficha de registro
+- [0154](0154-atendimentos-e-estudos-de-caso.md) — Atendimentos e estudos de caso ligados a um usuário, com leitura auditada (provisório)
