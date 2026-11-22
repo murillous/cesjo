@@ -94,6 +94,12 @@ public enum Permissao {
 	VIOLACOES_REGISTRAR,
 
 	/** Consultar violações de direitos e ler a descrição, com leitura auditada (RF009, ADR 0113). */
-	VIOLACOES_LER
+	VIOLACOES_LER,
+
+	/** Ver as doações recebidas e realizadas (RF015, ADR 0179). */
+	DOACOES_LER,
+
+	/** Registrar e editar doações (RF015, ADR 0179). */
+	DOACOES_REGISTRAR
 
 }
