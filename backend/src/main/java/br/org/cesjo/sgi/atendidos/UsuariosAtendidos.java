@@ -1,5 +1,6 @@
 package br.org.cesjo.sgi.atendidos;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,5 +20,12 @@ public interface UsuariosAtendidos {
 	 * inserção aparece com zero.
 	 */
 	Map<Turno, Long> contarAtivosPorTurno();
+
+	/**
+	 * Perfil de cada usuário com inserção ativa, para os dashboards contarem por deficiência, gênero,
+	 * faixa etária e turno (RF017, ADR 0195). Lido na hora, sem cache. Não é auditado: não identifica a
+	 * pessoa.
+	 */
+	List<PerfilAtendido> perfisDosAtivos();
 
 }

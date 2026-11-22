@@ -27,6 +27,7 @@ import static br.org.cesjo.sgi.acesso.Permissao.VIOLACOES_REGISTRAR;
 import static br.org.cesjo.sgi.acesso.Permissao.PIA_APROVAR;
 import static br.org.cesjo.sgi.acesso.Permissao.PIA_EDITAR;
 import static br.org.cesjo.sgi.acesso.Permissao.PIA_LER;
+import static br.org.cesjo.sgi.acesso.Permissao.RELATORIOS_LER;
 import static br.org.cesjo.sgi.acesso.Permissao.VISITAS_AGENDAR;
 import static br.org.cesjo.sgi.acesso.Permissao.VISITAS_LER;
 import static br.org.cesjo.sgi.acesso.Permissao.VISITAS_REGISTRAR;
@@ -54,8 +55,10 @@ public enum Perfil {
 					COLABORADORES_GERENCIAR, ATENDIDOS_INSERIR, ATENDIDOS_LER, ATENDIDOS_LER_BASICO, VISITAS_LER,
 					VISITAS_AGENDAR, VISITAS_REGISTRAR, ESCUTA_LER, ESCUTA_REGISTRAR, PIA_LER,
 					PIA_EDITAR, PIA_APROVAR, CAPACIDADE_LER, CAPACIDADE_EDITAR, ATENDIDOS_DESLIGAR, VIOLACOES_REGISTRAR, VIOLACOES_LER, LISTA_ESPERA_EXPORTAR,
-					ATENDIDOS_EDITAR, ATENDIDOS_DADOS_SENSIVEIS)),
+					ATENDIDOS_EDITAR, ATENDIDOS_DADOS_SENSIVEIS,
+					RELATORIOS_LER)),
 
+	// PENDENTE-CESJO(P17): a Equipe Técnica não vê relatórios nem dashboards (ADR 0015 e ADR 0196).
 	// PENDENTE-CESJO(P17): a Equipe Técnica não vê o cadastro de colaboradores (gestão institucional, ADR 0047).
 	// PENDENTE-CESJO(P17): a Equipe Técnica lê e edita a lista de espera mas não cadastra candidatos (ADR 0039) e
 	// lê os usuários atendidos mas não insere no serviço (ADR 0082).
@@ -66,6 +69,7 @@ public enum Perfil {
 					PIA_EDITAR, CAPACIDADE_LER, VIOLACOES_REGISTRAR, VIOLACOES_LER, LISTA_ESPERA_EXPORTAR,
 					ATENDIDOS_EDITAR, ATENDIDOS_DADOS_SENSIVEIS)),
 
+	// PENDENTE-CESJO(P17): o Administrativo não vê relatórios nem dashboards (ADR 0015 e ADR 0196).
 	// PENDENTE-CESJO(P17): o Administrativo não vê o cadastro de colaboradores (gestão institucional, ADR 0047).
 	// PENDENTE-CESJO(P8): o Administrativo agenda, cancela e reagenda visitas, mas não registra a realização
 	// nem lê as observações, que são sensíveis (ADR 0074).
@@ -80,7 +84,9 @@ public enum Perfil {
 	// posição, sem tipo de deficiência, origem, contato nem documentos (ADR 0058).
 	// PENDENTE-CESJO(P8): o Consulta vê só os dados básicos dos usuários atendidos (ADR 0015 e ADR 0082).
 	// O Consulta não exporta a lista (ADR 0130).
-	CONSULTA("Consulta", EnumSet.of(NOTIFICACOES_LER, LISTA_ESPERA_FILA_LER, ATENDIDOS_LER_BASICO, CAPACIDADE_LER));
+	// O Consulta lê relatórios e dashboards, que só trazem contagens (matriz da seção 6, ADR 0196).
+	CONSULTA("Consulta", EnumSet.of(NOTIFICACOES_LER, LISTA_ESPERA_FILA_LER, ATENDIDOS_LER_BASICO, CAPACIDADE_LER,
+			RELATORIOS_LER));
 
 	private final String rotulo;
 

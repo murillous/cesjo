@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Component;
 
+import br.org.cesjo.sgi.atendidos.PerfilAtendido;
 import br.org.cesjo.sgi.atendidos.SituacaoInsercao;
 import br.org.cesjo.sgi.atendidos.Turno;
 import br.org.cesjo.sgi.pessoas.Genero;
@@ -68,6 +69,19 @@ class ConsultaAtendidos {
 					rs.getString("bairro")))
 			.list();
 		return new PageImpl<>(linhas, pagina, total);
+	}
+
+	/** Perfil de cada inserção ativa, para os dashboards (ADR 0195). Só colunas em claro. */
+	List<PerfilAtendido> perfisDosAtivos() {
+		return jdbc.sql("""
+				select i.turno, p.tipo_deficiencia, c.genero, p.data_nascimento
+				""" + BASE + " where i.situacao = :situacao")
+			.param("situacao", SituacaoInsercao.ATIVA.name())
+			.query((rs, n) -> new PerfilAtendido(Turno.valueOf(rs.getString("turno")),
+					TipoDeficiencia.valueOf(rs.getString("tipo_deficiencia")),
+					rs.getString("genero") == null ? null : Genero.valueOf(rs.getString("genero")),
+					rs.getObject("data_nascimento", LocalDate.class)))
+			.list();
 	}
 
 	private static String condicoes(FiltroAtendidos filtro, LocalDate hoje, Map<String, Object> parametros) {

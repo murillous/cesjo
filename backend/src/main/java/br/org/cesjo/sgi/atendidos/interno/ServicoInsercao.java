@@ -10,6 +10,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.org.cesjo.sgi.atendidos.PerfilAtendido;
 import br.org.cesjo.sgi.atendidos.SituacaoInsercao;
 import br.org.cesjo.sgi.atendidos.Turno;
 import br.org.cesjo.sgi.atendidos.UsuariosAtendidos;
@@ -40,11 +41,14 @@ class ServicoInsercao implements UsuariosAtendidos {
 
 	private final IdentidadeAtual identidadeAtual;
 
+	private final ConsultaAtendidos consulta;
+
 	private final Clock relogio = Clock.systemUTC();
 
 	ServicoInsercao(InsercaoRepositorio insercoes, ListaEspera listaEspera, Pessoas pessoas, Auditoria auditoria,
-			IdentidadeAtual identidadeAtual) {
+			IdentidadeAtual identidadeAtual, ConsultaAtendidos consulta) {
 		this.insercoes = insercoes;
+		this.consulta = consulta;
 		this.listaEspera = listaEspera;
 		this.pessoas = pessoas;
 		this.auditoria = auditoria;
@@ -116,6 +120,12 @@ class ServicoInsercao implements UsuariosAtendidos {
 			contagem.put((Turno) linha[0], (Long) linha[1]);
 		}
 		return contagem;
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<PerfilAtendido> perfisDosAtivos() {
+		return consulta.perfisDosAtivos();
 	}
 
 	private DadosResponsavel cuidador(UUID pessoaId, NovaInsercao nova) {

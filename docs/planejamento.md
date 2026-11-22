@@ -61,7 +61,8 @@ fica em subpacotes internos.
 | `atendidos` | RF007 a RF009 | Inserção no serviço, desligamentos, violações de direitos. |
 | `atividades` | RF010, RF011 | Atividades, atendimentos, estudos de caso, contatos e comunicações. |
 | `institucional` | RF012 a RF015 | Reuniões e eventos, parcerias, colaboradores, doações. |
-| `relatorios` | RF016, RF017, seção 5.2 | Relatórios estatísticos, dashboards, exportação PDF e Excel. |
+| `relatorios` | seção 5.2 | Exportação PDF e Excel, usada pelos outros módulos. |
+| `estatisticas` | RF016, RF017 | Relatórios estatísticos e dashboards, lidos das APIs Java dos outros módulos (ADR 0195). |
 | `importacao` | seção 5.2 | Importação de planilhas Excel. |
 
 Código de infraestrutura compartilhado (conversor de criptografia, tratamento de erros, configuração web)
@@ -72,8 +73,8 @@ Convenções:
 - API REST em `/api/**`, JSON, erros no formato `ProblemDetail` (RFC 9457), listas paginadas.
 - Documentação da API com springdoc-openapi, disponível só fora de produção.
 - Esquema do banco somente por migrações Flyway. O Hibernate apenas valida (`ddl-auto=validate`).
-- Relatórios e dashboards leem por consultas SQL de leitura próprias do módulo `relatorios`, sem
-  passar pelas entidades de outros módulos.
+- Relatórios estatísticos e dashboards ficam no módulo `estatisticas` e leem os outros módulos só
+  pelas APIs Java públicas deles, que fazem as contagens em SQL agregado (ADR 0195).
 - Eventos de domínio do Spring Modulith ligam módulos sem dependência direta. Exemplo: o desligamento
   de um usuário atendido publica um evento, e `listaespera` recalcula as vagas e pede uma notificação.
 

@@ -100,6 +100,9 @@ public enum Permissao {
 	VIOLACOES_REGISTRAR,
 
 	/** Consultar violações de direitos e ler a descrição, com leitura auditada (RF009, ADR 0113). */
-	VIOLACOES_LER
+	VIOLACOES_LER,
+
+	/** Ver os dashboards e gerar os relatórios estatísticos, que só trazem contagens (RF016, RF017, ADR 0196). */
+	RELATORIOS_LER
 
 }
