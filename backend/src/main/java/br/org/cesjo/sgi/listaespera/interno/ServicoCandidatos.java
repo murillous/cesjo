@@ -1,6 +1,8 @@
 package br.org.cesjo.sgi.listaespera.interno;
 
 import java.time.Clock;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -28,6 +30,8 @@ class ServicoCandidatos implements ListaEspera {
 
 	private final InscricaoRepositorio inscricoes;
 
+	private final HistoricoSituacaoRepositorio historicos;
+
 	private final Pessoas pessoas;
 
 	private final Auditoria auditoria;
@@ -36,9 +40,10 @@ class ServicoCandidatos implements ListaEspera {
 
 	private final Clock relogio = Clock.systemUTC();
 
-	ServicoCandidatos(InscricaoRepositorio inscricoes, Pessoas pessoas, Auditoria auditoria,
-			IdentidadeAtual identidadeAtual) {
+	ServicoCandidatos(InscricaoRepositorio inscricoes, HistoricoSituacaoRepositorio historicos, Pessoas pessoas,
+			Auditoria auditoria, IdentidadeAtual identidadeAtual) {
 		this.inscricoes = inscricoes;
+		this.historicos = historicos;
 		this.pessoas = pessoas;
 		this.auditoria = auditoria;
 		this.identidadeAtual = identidadeAtual;
@@ -80,17 +85,23 @@ class ServicoCandidatos implements ListaEspera {
 
 	@Override
 	@Transactional
-	public DadosInscricao registrarInsercao(UUID inscricaoId) {
+	public DadosInscricao registrarInsercao(UUID inscricaoId, LocalDate dataInsercao) {
 		InscricaoListaEspera inscricao = inscricoes.findById(inscricaoId)
 			.orElseThrow(() -> new RecursoNaoEncontradoException("Inscrição não encontrada."));
-		if (inscricao.getSituacao() != SituacaoInscricao.AGUARDANDO) {
-			throw new RegraNegocioException("Só um candidato que está aguardando na fila pode ser inserido no serviço.");
+		SituacaoInscricao anterior = inscricao.getSituacao();
+		if (!anterior.ativa()) {
+			throw new RegraNegocioException("Só um candidato que está na fila pode ser inserido no serviço.");
 		}
-		inscricao.registrarInsercao(identidadeAtual.obter().map(Identidade::id).orElse(null), relogio.instant());
+		UUID autor = identidadeAtual.obter().map(Identidade::id).orElse(null);
+		Instant agora = relogio.instant();
+		inscricao.registrarInsercao(autor, agora);
 		// saveAndFlush: a versão (@Version) é conferida agora, e duas inserções simultâneas da mesma
 		// inscrição não passam as duas.
 		inscricoes.saveAndFlush(inscricao);
 		auditoria.registrar(EventoAuditoria.alteracao(ENTIDADE, inscricaoId, Set.of("situacao")));
+		HistoricoSituacao historico = historicos.save(new HistoricoSituacao(inscricaoId, anterior,
+				SituacaoInscricao.INSERIDO, dataInsercao, null, null, autor, agora));
+		auditoria.registrar(EventoAuditoria.criacao(ServicoListaEspera.ENTIDADE_HISTORICO, historico.getId()));
 		return dados(inscricao);
 	}
 

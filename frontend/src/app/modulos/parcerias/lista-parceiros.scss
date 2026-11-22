@@ -1,0 +1,125 @@
+@use 'styles/breakpoints' as bp;
+
+.cabecalho {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sgi-space-2);
+  margin-bottom: var(--sgi-space-2);
+
+  h1 {
+    margin: 0;
+  }
+}
+
+// Celular: o filtro ocupa a largura toda, com as três opções do mesmo tamanho.
+.filtro {
+  display: flex;
+  margin-bottom: var(--sgi-space-2);
+
+  mat-button-toggle {
+    flex: 1;
+  }
+}
+
+.erro {
+  padding: var(--sgi-space-1-5) var(--sgi-space-2);
+  border-left: var(--sgi-space-0-5) solid var(--sgi-color-accent);
+  background: var(--sgi-color-background-secondary);
+}
+
+.vazio {
+  color: var(--sgi-color-text-secondary);
+}
+
+.lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: var(--sgi-border);
+}
+
+// Celular: cada parceiro é um bloco com nome e situação em cima, tipo e vigência embaixo.
+.titulos {
+  display: none;
+}
+
+.linha {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--sgi-space-0-5) var(--sgi-space-2);
+  padding: var(--sgi-space-2) var(--sgi-space-1);
+  border-bottom: var(--sgi-border);
+  color: inherit;
+  text-decoration: none;
+
+  &:hover,
+  &:focus-visible {
+    background: var(--sgi-color-background-secondary);
+  }
+
+  &.inativo .nome,
+  &.inativo .situacao {
+    color: var(--sgi-color-text-secondary);
+  }
+}
+
+.nome {
+  font-weight: var(--sgi-font-weight-semibold);
+  overflow-wrap: anywhere;
+}
+
+.situacao {
+  grid-row: 1;
+  grid-column: 2;
+  text-align: right;
+  font-size: var(--sgi-font-size-small);
+  font-weight: var(--sgi-font-weight-medium);
+}
+
+.tipo,
+.vigencia {
+  grid-column: 1 / -1;
+  font-size: var(--sgi-font-size-small);
+  color: var(--sgi-color-text-secondary);
+}
+
+@media (min-width: bp.$tablet) {
+  .filtro {
+    display: inline-flex;
+
+    mat-button-toggle {
+      flex: none;
+    }
+  }
+
+  .titulos,
+  .linha {
+    display: grid;
+    grid-template-columns: 2fr 1.5fr 1.5fr 1fr;
+    align-items: center;
+    gap: var(--sgi-space-2);
+  }
+
+  .titulos {
+    padding: var(--sgi-space-1) var(--sgi-space-1);
+    border-bottom: var(--sgi-border);
+    font-size: var(--sgi-font-size-small);
+    font-weight: var(--sgi-font-weight-semibold);
+    color: var(--sgi-color-text-secondary);
+  }
+
+  .situacao,
+  .tipo,
+  .vigencia {
+    grid-row: auto;
+    grid-column: auto;
+    text-align: left;
+  }
+
+  .tipo {
+    font-size: inherit;
+    color: inherit;
+  }
+}

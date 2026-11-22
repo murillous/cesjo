@@ -4,12 +4,16 @@ import { atendidosModulo } from './atendidos/atendidos.modulo';
 import { atendimentoModulo } from './atendimento/atendimento.modulo';
 import { atividadesModulo } from './atividades/atividades.modulo';
 import { auditoriaModulo } from './auditoria/auditoria.modulo';
+import { comunicacoesModulo } from './comunicacoes/comunicacoes.modulo';
 import { colaboradoresModulo } from './colaboradores/colaboradores.modulo';
 import { contasModulo } from './contas/contas.modulo';
+import { eventosModulo } from './eventos/eventos.modulo';
+import { doacoesModulo } from './doacoes/doacoes.modulo';
 import { inicioModulo } from './inicio/inicio.modulo';
 import { listaEsperaModulo } from './lista-espera/lista-espera.modulo';
-import { relatoriosModulo } from './relatorios/relatorios.modulo';
+import { parceriasModulo } from './parcerias/parcerias.modulo';
 import { violacoesModulo } from './violacoes/violacoes.modulo';
+import { relatoriosModulo } from './relatorios/relatorios.modulo';
 import { visitasModulo } from './visitas/visitas.modulo';
 import { ModuloFrontend } from './modulo';
 
@@ -24,9 +28,13 @@ export const MODULOS: readonly ModuloFrontend[] = [
   violacoesModulo,
   visitasModulo,
   atendimentoModulo,
-  relatoriosModulo,
   atividadesModulo,
+  comunicacoesModulo,
+  relatoriosModulo,
   colaboradoresModulo,
+  parceriasModulo,
+  eventosModulo,
+  doacoesModulo,
   contasModulo,
   auditoriaModulo,
 ];

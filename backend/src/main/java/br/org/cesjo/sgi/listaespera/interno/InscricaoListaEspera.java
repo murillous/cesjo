@@ -140,9 +140,9 @@ class InscricaoListaEspera {
 		return true;
 	}
 
-	/** Tira a inscrição da fila porque a pessoa foi inserida no serviço. */
+	/** Tira a inscrição da fila porque a pessoa foi inserida no serviço (ADR 0136). */
 	void registrarInsercao(UUID autor, Instant agora) {
-		if (situacao != SituacaoInscricao.AGUARDANDO) {
+		if (!situacao.ativa()) {
 			throw new IllegalStateException("Inscrição fora da fila: " + situacao);
 		}
 		this.situacao = SituacaoInscricao.INSERIDO;

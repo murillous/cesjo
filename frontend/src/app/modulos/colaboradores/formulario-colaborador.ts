@@ -1,7 +1,13 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
-import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  NonNullableFormBuilder,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -14,7 +20,9 @@ import { filter, Observable, switchMap } from 'rxjs';
 import { mensagemDeErro } from '../../acesso/problema';
 import { Sessao } from '../../acesso/sessao';
 import { ContasApi } from '../contas/contas-api';
+import { dataIso, hoje } from '../lista-espera/datas';
 import { Colaborador, ColaboradoresApi, ContaLigada } from './colaboradores-api';
+import { HistoricoVinculos } from './historico-vinculos';
 import { FuncaoColaborador, FUNCOES } from './rotulos';
 
 /** Quantas contas a escolha da conta de acesso carrega; o sistema tem dezenas. */
@@ -22,12 +30,15 @@ const LIMITE_CONTAS = 200;
 
 /**
  * Cadastro (`/colaboradores/novo`) e edição (`/colaboradores/:id`) de colaborador, com a situação e a
- * conta de acesso ligada (ADR 0045 e ADR 0046). Sem `COLABORADORES_GERENCIAR`, só mostra os dados.
+ * conta de acesso ligada (ADR 0045 e ADR 0046), e o histórico de vínculos na edição (ADR 0170). Sem
+ * `COLABORADORES_GERENCIAR`, só mostra os dados.
  */
 @Component({
   selector: 'app-formulario-colaborador',
   imports: [
+    HistoricoVinculos,
     MatButtonModule,
+    MatDatepickerModule,
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
@@ -51,6 +62,7 @@ export class FormularioColaborador {
   private readonly sessao = inject(Sessao);
 
   protected readonly funcoes = FUNCOES;
+  protected readonly hoje = hoje();
   protected readonly podeGerenciar = this.sessao.temPermissao('COLABORADORES_GERENCIAR');
   protected readonly colaborador = signal<Colaborador | null>(null);
   protected readonly enviando = signal(false);
@@ -70,6 +82,8 @@ export class FormularioColaborador {
     funcao: ['' as FuncaoColaborador | '', Validators.required],
     contaId: [''],
     ativo: [true],
+    /** Só no cadastro: abre o primeiro vínculo. */
+    dataContratacao: new FormControl<Date | null>(null),
   });
 
   constructor() {
@@ -103,11 +117,16 @@ export class FormularioColaborador {
       this.formulario.markAllAsTouched();
       return;
     }
-    const { nome, funcao, contaId, ativo } = this.formulario.getRawValue();
+    const { nome, funcao, contaId, ativo, dataContratacao } = this.formulario.getRawValue();
     const dados = { nome, funcao: funcao as FuncaoColaborador, contaId: contaId || null };
     const id = this.id();
     this.executar(
-      id ? this.api.editar(id, { ...dados, ativo }) : this.api.criar(dados),
+      id
+        ? this.api.editar(id, { ...dados, ativo })
+        : this.api.criar({
+            ...dados,
+            dataContratacao: dataContratacao ? dataIso(dataContratacao) : null,
+          }),
       (salvo) => {
         this.avisos.open(id ? 'Colaborador salvo.' : 'Colaborador cadastrado.', 'Fechar', {
           duration: 4000,
@@ -121,6 +140,14 @@ export class FormularioColaborador {
     );
   }
 
+  /** Contratação e desligamento mudam a situação: recarrega o colaborador. */
+  protected recarregar(): void {
+    const id = this.id();
+    if (id) {
+      this.api.obter(id).subscribe({ next: (colaborador) => this.mostrar(colaborador) });
+    }
+  }
+
   private mostrar(colaborador: Colaborador): void {
     this.colaborador.set(colaborador);
     this.formulario.setValue({
@@ -128,6 +155,7 @@ export class FormularioColaborador {
       funcao: colaborador.funcao,
       contaId: colaborador.conta?.id ?? '',
       ativo: colaborador.ativo,
+      dataContratacao: null,
     });
   }
 

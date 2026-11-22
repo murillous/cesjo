@@ -1,0 +1,83 @@
+<section class="parceiros">
+  <header class="cabecalho">
+    <h1>Parcerias</h1>
+    @if (podeGerenciar) {
+      <a matButton="filled" routerLink="novo">
+        <mat-icon aria-hidden="true">add</mat-icon>
+        Novo parceiro
+      </a>
+    }
+  </header>
+
+  <mat-button-toggle-group
+    class="filtro"
+    [value]="situacao()"
+    (change)="filtrar($event)"
+    hideSingleSelectionIndicator
+    aria-label="Situação dos parceiros"
+  >
+    @for (opcao of situacoes; track opcao.valor) {
+      <mat-button-toggle [value]="opcao.valor">{{ opcao.rotulo }}</mat-button-toggle>
+    }
+  </mat-button-toggle-group>
+
+  @if (carregando()) {
+    <mat-progress-bar mode="indeterminate" aria-label="Carregando parceiros" />
+  }
+  @if (erro(); as mensagem) {
+    <p class="erro" role="alert">{{ mensagem }}</p>
+  }
+
+  @if (pagina(); as dados) {
+    @if (dados.content.length === 0) {
+      <p class="vazio">
+        @if (situacao() === 'inativos') {
+          Nenhum parceiro inativo.
+        } @else if (podeGerenciar) {
+          Nenhum parceiro nesta situação. Cadastre a primeira parceria em "Novo parceiro".
+        } @else {
+          Nenhum parceiro nesta situação.
+        }
+      </p>
+    } @else {
+      <ul class="lista" aria-label="Parceiros">
+        <li class="titulos" aria-hidden="true">
+          <span>Nome</span>
+          <span>Tipo</span>
+          <span>Vigência</span>
+          <span>Situação</span>
+        </li>
+        @for (parceiro of dados.content; track parceiro.id) {
+          <li>
+            <a class="linha" [routerLink]="parceiro.id" [class.inativo]="!parceiro.ativo">
+              <span class="nome">{{ parceiro.nome }}</span>
+              <span class="tipo">{{ tipos[parceiro.tipo] }}</span>
+              <span class="vigencia">
+                @if (parceiro.vigenciaInicio || parceiro.vigenciaFim) {
+                  {{
+                    parceiro.vigenciaInicio ? (parceiro.vigenciaInicio | date: 'dd/MM/yyyy') : '…'
+                  }}
+                  a
+                  {{
+                    parceiro.vigenciaFim ? (parceiro.vigenciaFim | date: 'dd/MM/yyyy') : 'sem fim'
+                  }}
+                } @else {
+                  Sem vigência informada
+                }
+              </span>
+              <span class="situacao">{{ parceiro.ativo ? 'Ativo' : 'Inativo' }}</span>
+            </a>
+          </li>
+        }
+      </ul>
+      <mat-paginator
+        [length]="dados.page.totalElements"
+        [pageIndex]="dados.page.number"
+        [pageSize]="tamanho()"
+        [pageSizeOptions]="[10, 20, 50]"
+        (page)="mudarPagina($event)"
+        aria-label="Páginas da lista de parceiros"
+      />
+    }
+  }
+</section>

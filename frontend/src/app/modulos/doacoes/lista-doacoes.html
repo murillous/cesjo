@@ -1,0 +1,86 @@
+<section class="doacoes">
+  <header class="cabecalho">
+    <h1>Doações</h1>
+    @if (podeRegistrar) {
+      <a matButton="filled" routerLink="nova">
+        <mat-icon aria-hidden="true">add</mat-icon>
+        Registrar doação
+      </a>
+    }
+  </header>
+
+  <form class="filtros" [formGroup]="filtros" (ngSubmit)="filtrar()" aria-label="Filtros">
+    <mat-form-field appearance="outline">
+      <mat-label>De</mat-label>
+      <input matInput [matDatepicker]="seletorDe" formControlName="de" />
+      <mat-datepicker-toggle matIconSuffix [for]="seletorDe" />
+      <mat-datepicker #seletorDe />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Até</mat-label>
+      <input matInput [matDatepicker]="seletorAte" formControlName="ate" />
+      <mat-datepicker-toggle matIconSuffix [for]="seletorAte" />
+      <mat-datepicker #seletorAte />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Direção</mat-label>
+      <mat-select formControlName="direcao">
+        <mat-option value="">Recebidas e realizadas</mat-option>
+        <mat-option value="RECEBIDA">Só recebidas</mat-option>
+        <mat-option value="REALIZADA">Só realizadas</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <div class="botoes-filtro">
+      <button matButton="outlined" type="submit">Filtrar</button>
+      <button matButton type="button" (click)="limpar()">Limpar</button>
+    </div>
+  </form>
+
+  @if (carregando()) {
+    <mat-progress-bar mode="indeterminate" aria-label="Carregando doações" />
+  }
+  @if (erro(); as mensagem) {
+    <p class="erro" role="alert">{{ mensagem }}</p>
+  }
+
+  @if (pagina(); as dados) {
+    @if (dados.content.length === 0) {
+      <p class="vazio">
+        Nenhuma doação encontrada.
+        @if (podeRegistrar) {
+          Registre a primeira em "Registrar doação".
+        }
+      </p>
+    } @else {
+      <ul class="lista" aria-label="Doações">
+        @for (doacao of dados.content; track doacao.id) {
+          <li>
+            <a class="linha" [routerLink]="doacao.id">
+              <span class="data">{{ doacao.data | date: 'dd/MM/yyyy' }}</span>
+              <span class="direcao" [class.realizada]="doacao.direcao === 'REALIZADA'">
+                {{ direcoes[doacao.direcao] }}
+              </span>
+              <span class="contraparte">{{ doacao.contraparte }}</span>
+              <span class="detalhe">
+                <span>{{ tipos[doacao.tipo] }}</span>
+                @if (doacao.valor !== null) {
+                  <span class="quanto">{{ doacao.valor | currency: 'BRL' }}</span>
+                } @else if (doacao.quantidade) {
+                  <span class="quanto">{{ doacao.quantidade }}</span>
+                }
+              </span>
+            </a>
+          </li>
+        }
+      </ul>
+      <mat-paginator
+        [length]="dados.page.totalElements"
+        [pageIndex]="dados.page.number"
+        [pageSize]="tamanho()"
+        [pageSizeOptions]="[10, 20, 50]"
+        (page)="mudarPagina($event)"
+        aria-label="Páginas da lista de doações"
+      />
+    }
+  }
+</section>

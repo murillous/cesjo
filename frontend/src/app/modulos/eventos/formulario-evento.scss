@@ -1,0 +1,71 @@
+@use 'styles/breakpoints' as bp;
+
+.evento {
+  max-width: 640px;
+}
+
+.voltar {
+  margin: 0 0 var(--sgi-space-2) calc(-1 * var(--sgi-space-1));
+}
+
+.erro {
+  padding: var(--sgi-space-1-5) var(--sgi-space-2);
+  border-left: var(--sgi-space-0-5) solid var(--sgi-color-accent);
+  background: var(--sgi-color-background-secondary);
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sgi-space-1);
+  margin-top: var(--sgi-space-2);
+}
+
+fieldset {
+  margin: 0 0 var(--sgi-space-2);
+  padding: var(--sgi-space-1-5) var(--sgi-space-2);
+  border: var(--sgi-border);
+  border-radius: var(--sgi-radius-sm);
+
+  &.invalido {
+    border-color: var(--sgi-color-accent);
+  }
+
+  legend {
+    padding: 0 var(--sgi-space-0-5);
+    font-weight: var(--sgi-font-weight-medium);
+  }
+}
+
+// Celular: opções da indicação uma por linha.
+mat-radio-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.erro-campo {
+  margin: var(--sgi-space-1) 0 0;
+  color: var(--sgi-color-accent);
+  font-size: var(--sgi-font-size-small);
+}
+
+.botoes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sgi-space-1);
+
+  button {
+    min-height: 48px;
+  }
+}
+
+@media (min-width: bp.$tablet) {
+  mat-radio-group {
+    flex-direction: row;
+    gap: var(--sgi-space-2);
+  }
+
+  .botoes {
+    flex-direction: row;
+  }
+}

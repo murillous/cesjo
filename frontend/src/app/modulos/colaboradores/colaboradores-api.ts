@@ -30,6 +30,20 @@ export interface DadosColaborador {
   contaId: string | null;
 }
 
+/** Cadastro: a data de contratação, quando informada, já abre o primeiro vínculo (ADR 0170). */
+export type NovoColaborador = DadosColaborador & { dataContratacao: string | null };
+
+/**
+ * Período de trabalho do colaborador (ADR 0170). Datas em `AAAA-MM-DD`; desligamento nulo no vínculo
+ * aberto.
+ */
+export interface Vinculo {
+  id: string;
+  dataContratacao: string;
+  dataDesligamento: string | null;
+  motivoDesligamento: string | null;
+}
+
 /** Filtro da listagem: `null` traz ativos e inativos. */
 export type FiltroSituacao = boolean | null;
 
@@ -49,11 +63,29 @@ export class ColaboradoresApi {
     return this.http.get<Colaborador>(`/api/colaboradores/${encodeURIComponent(id)}`);
   }
 
-  criar(dados: DadosColaborador): Observable<Colaborador> {
+  criar(dados: NovoColaborador): Observable<Colaborador> {
     return this.http.post<Colaborador>('/api/colaboradores', dados);
   }
 
   editar(id: string, dados: DadosColaborador & { ativo: boolean }): Observable<Colaborador> {
     return this.http.put<Colaborador>(`/api/colaboradores/${encodeURIComponent(id)}`, dados);
+  }
+
+  /** Vínculos do mais recente ao mais antigo. */
+  vinculos(id: string): Observable<Vinculo[]> {
+    return this.http.get<Vinculo[]>(`/api/colaboradores/${encodeURIComponent(id)}/vinculos`);
+  }
+
+  contratar(id: string, dataContratacao: string): Observable<Vinculo> {
+    return this.http.post<Vinculo>(`/api/colaboradores/${encodeURIComponent(id)}/contratacoes`, {
+      dataContratacao,
+    });
+  }
+
+  desligar(id: string, data: string, motivo: string): Observable<Vinculo> {
+    return this.http.post<Vinculo>(`/api/colaboradores/${encodeURIComponent(id)}/desligamento`, {
+      data,
+      motivo,
+    });
   }
 }
