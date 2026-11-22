@@ -1,0 +1,127 @@
+<section class="comunicacao" aria-labelledby="titulo-comunicacao">
+  <a matButton routerLink="/comunicacoes" class="voltar">
+    <mat-icon aria-hidden="true">arrow_back</mat-icon>
+    Contatos e comunicações
+  </a>
+
+  @if (!nova() && !comunicacao() && erro(); as mensagem) {
+    <h1 id="titulo-comunicacao">Contato</h1>
+    <p class="erro" role="alert">{{ mensagem }}</p>
+  }
+
+  @if (comunicacao(); as atual) {
+    @if (!editando()) {
+      <p class="tipo">
+        <mat-icon aria-hidden="true">{{ tipoPorValor[atual.tipo].icone }}</mat-icon>
+        {{ tipoPorValor[atual.tipo].rotulo }}
+      </p>
+      <h1 id="titulo-comunicacao">{{ atual.assunto }}</h1>
+
+      @if (erro(); as mensagem) {
+        <p class="erro" role="alert">{{ mensagem }}</p>
+      }
+
+      <dl class="cabecalho">
+        <div>
+          <dt>{{ tipoPorValor[atual.tipo].contraparte }}</dt>
+          <dd>{{ atual.contraparte }}</dd>
+        </div>
+        <div>
+          <dt>Data</dt>
+          <dd>{{ data(atual.data) | date: "d 'de' MMMM 'de' y" }}</dd>
+        </div>
+      </dl>
+
+      <section class="texto" aria-labelledby="titulo-descricao">
+        <h2 id="titulo-descricao">Descrição</h2>
+        @if (atual.descricao) {
+          <p>{{ atual.descricao }}</p>
+        } @else {
+          <p class="texto-secundario">Sem descrição.</p>
+        }
+      </section>
+
+      @if (podeRegistrar) {
+        <div class="botoes">
+          <button matButton="outlined" type="button" (click)="corrigir()">
+            <mat-icon aria-hidden="true">edit</mat-icon>
+            Corrigir registro
+          </button>
+        </div>
+      }
+    }
+  }
+
+  @if (nova() || editando()) {
+    <h1 id="titulo-comunicacao">{{ nova() ? 'Registrar contato' : 'Corrigir registro' }}</h1>
+
+    @if (erro(); as mensagem) {
+      <p class="erro" role="alert">{{ mensagem }}</p>
+    }
+
+    <form [formGroup]="formulario" (ngSubmit)="salvar()" novalidate>
+      <fieldset class="tipos">
+        <legend>Tipo</legend>
+        @for (tipo of tipos; track tipo.valor) {
+          <label class="cartao-tipo">
+            <input type="radio" formControlName="tipo" [value]="tipo.valor" />
+            <mat-icon aria-hidden="true">{{ tipo.icone }}</mat-icon>
+            <span>{{ tipo.rotulo }}</span>
+          </label>
+        }
+        @if (formulario.controls.tipo.invalid && formulario.controls.tipo.touched) {
+          <p class="erro-campo" role="alert">Escolha o tipo.</p>
+        }
+      </fieldset>
+
+      <div class="linha">
+        <mat-form-field appearance="outline">
+          <mat-label>{{ rotuloContraparte() }}</mat-label>
+          <input matInput formControlName="contraparte" maxlength="200" />
+          <mat-hint>Nome da pessoa ou da instituição.</mat-hint>
+          @if (formulario.controls.contraparte.invalid) {
+            <mat-error>Informe com quem foi o contato.</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- PENDENTE-CESJO(P30): só contato que já aconteceu, data até hoje. -->
+        <mat-form-field appearance="outline" class="campo-data">
+          <mat-label>Data</mat-label>
+          <input matInput [matDatepicker]="seletorData" [max]="hoje" formControlName="data" />
+          <mat-hint>DD/MM/AAAA</mat-hint>
+          <mat-datepicker-toggle matIconSuffix [for]="seletorData" />
+          <mat-datepicker #seletorData />
+          @if (formulario.controls.data.hasError('matDatepickerMax')) {
+            <mat-error>A data não pode ser futura.</mat-error>
+          } @else if (formulario.controls.data.invalid) {
+            <mat-error>Informe a data.</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Assunto</mat-label>
+        <input matInput formControlName="assunto" maxlength="200" />
+        <mat-hint>Por exemplo, "Faltas da semana". Não escreva aqui dado sigiloso.</mat-hint>
+        @if (formulario.controls.assunto.invalid) {
+          <mat-error>Informe o assunto.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Descrição (opcional)</mat-label>
+        <textarea matInput formControlName="descricao" rows="5"></textarea>
+        <mat-hint>Guardada cifrada.</mat-hint>
+      </mat-form-field>
+
+      <div class="botoes">
+        <button matButton="filled" type="submit" [disabled]="enviando()">
+          {{ nova() ? 'Registrar contato' : 'Salvar correção' }}
+        </button>
+        @if (editando()) {
+          <button matButton type="button" (click)="desistir()">Desistir</button>
+        }
+      </div>
+    </form>
+  }
+</section>

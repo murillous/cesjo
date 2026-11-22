@@ -133,3 +133,7 @@ frente de trabalho paralela não é usado todo.
 - [0153](0153-telas-de-atividades.md) — Telas de atividades: diário por data e ficha de registro
 - [0154](0154-atendimentos-e-estudos-de-caso.md) — Atendimentos e estudos de caso ligados a um usuário, com leitura auditada (provisório)
 - [0155](0155-listagem-de-atividades-por-periodo.md) — Listagem de atividades por período e atividades na ficha do usuário
+- [0160](0160-registro-de-contatos-e-comunicacoes.md) — Registro de contatos e comunicações (provisório)
+- [0161](0161-api-java-de-contagem-de-comunicacoes.md) — API Java de contagem de comunicações
+- [0162](0162-permissoes-dos-contatos-e-comunicacoes.md) — Permissões dos contatos e comunicações
+- [0163](0163-telas-de-contatos-e-comunicacoes.md) — Telas de contatos e comunicações

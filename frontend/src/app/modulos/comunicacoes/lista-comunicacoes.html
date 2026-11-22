@@ -1,0 +1,103 @@
+<section class="comunicacoes" aria-labelledby="titulo-comunicacoes">
+  <header class="cabecalho">
+    <div>
+      <h1 id="titulo-comunicacoes">Contatos e comunicações</h1>
+      <p class="texto-secundario">
+        Ligações com cuidadores e instituições e atendimentos a quem não é acompanhado pelo serviço.
+      </p>
+    </div>
+    @if (podeRegistrar) {
+      <a matButton="filled" routerLink="nova">
+        <mat-icon aria-hidden="true">add</mat-icon>
+        Registrar contato
+      </a>
+    }
+  </header>
+
+  <form class="filtros" [formGroup]="filtros" (ngSubmit)="filtrar()" aria-label="Filtros">
+    <mat-form-field appearance="outline">
+      <mat-label>Tipo</mat-label>
+      <mat-select formControlName="tipo">
+        <mat-option value="">Todos</mat-option>
+        @for (tipo of tipos; track tipo.valor) {
+          <mat-option [value]="tipo.valor">{{ tipo.rotulo }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Período</mat-label>
+      <mat-date-range-input [rangePicker]="seletorPeriodo">
+        <input matStartDate formControlName="inicio" placeholder="Início" />
+        <input matEndDate formControlName="fim" placeholder="Fim" />
+      </mat-date-range-input>
+      <mat-hint>DD/MM/AAAA – DD/MM/AAAA</mat-hint>
+      <mat-datepicker-toggle matIconSuffix [for]="seletorPeriodo" />
+      <mat-date-range-picker #seletorPeriodo />
+    </mat-form-field>
+
+    <div class="acoes-filtro">
+      <button matButton="tonal" type="submit">Filtrar</button>
+      @if (filtrado()) {
+        <button matButton type="button" (click)="limpar()">Limpar filtros</button>
+      }
+    </div>
+  </form>
+
+  <div class="resultado" [attr.aria-busy]="carregando()">
+    @if (carregando()) {
+      <mat-progress-bar mode="indeterminate" aria-label="Carregando contatos" />
+    }
+
+    @if (erro(); as mensagem) {
+      <div class="aviso" role="alert">
+        <p>{{ mensagem }}</p>
+        <button matButton="outlined" type="button" (click)="carregar()">Tentar de novo</button>
+      </div>
+    } @else if (!carregando() && comunicacoes().length === 0) {
+      <div class="aviso">
+        @if (filtrado()) {
+          <p>Nenhum contato com esses filtros. Mude o tipo ou o período.</p>
+        } @else {
+          <p>Nenhum contato registrado ainda.</p>
+          @if (podeRegistrar) {
+            <a matButton="outlined" routerLink="nova">Registrar o primeiro contato</a>
+          }
+        }
+      </div>
+    } @else {
+      <p class="total texto-secundario" aria-live="polite">
+        {{ total() }} {{ total() === 1 ? 'registro' : 'registros' }}
+      </p>
+
+      <ol class="registros" aria-label="Contatos e comunicações">
+        @for (item of comunicacoes(); track item.id) {
+          <li>
+            <a class="item" [routerLink]="item.id">
+              <mat-icon class="icone-tipo" [attr.data-tipo]="item.tipo" aria-hidden="true">{{
+                tipoPorValor[item.tipo].icone
+              }}</mat-icon>
+              <span class="corpo">
+                <span class="contraparte">{{ item.contraparte }}</span>
+                <span class="assunto">{{ item.assunto }}</span>
+                <span class="tipo texto-secundario">{{ tipoPorValor[item.tipo].rotulo }}</span>
+              </span>
+              <time class="dia texto-secundario" [attr.datetime]="item.data">{{
+                data(item.data) | date: 'dd/MM/yyyy'
+              }}</time>
+            </a>
+          </li>
+        }
+      </ol>
+
+      <mat-paginator
+        [length]="total()"
+        [pageIndex]="pagina()"
+        [pageSize]="tamanho()"
+        [pageSizeOptions]="tamanhos"
+        (page)="mudarPagina($event)"
+        aria-label="Páginas da lista"
+      />
+    }
+  </div>
+</section>

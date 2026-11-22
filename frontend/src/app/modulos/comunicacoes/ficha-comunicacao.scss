@@ -1,0 +1,179 @@
+@use 'styles/breakpoints' as bp;
+
+.comunicacao {
+  max-width: 720px;
+}
+
+.voltar {
+  margin: 0 0 var(--sgi-space-2) calc(-1 * var(--sgi-space-1));
+}
+
+h1 {
+  margin: 0 0 var(--sgi-space-2);
+  overflow-wrap: anywhere;
+}
+
+.tipo {
+  display: flex;
+  align-items: center;
+  gap: var(--sgi-space-1);
+  margin: 0 0 var(--sgi-space-0-5);
+  color: var(--sgi-color-primary-dark);
+  font-weight: var(--sgi-font-weight-semibold);
+}
+
+.erro {
+  padding: var(--sgi-space-1-5) var(--sgi-space-2);
+  border-left: var(--sgi-space-0-5) solid var(--sgi-color-accent);
+  background: var(--sgi-color-background-secondary);
+}
+
+.cabecalho {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sgi-space-1);
+  margin: 0 0 var(--sgi-space-3);
+
+  dt {
+    font-size: var(--sgi-font-size-small);
+    color: var(--sgi-color-text-secondary);
+  }
+
+  dd {
+    margin: 0;
+    font-weight: var(--sgi-font-weight-semibold);
+    overflow-wrap: anywhere;
+  }
+}
+
+.texto {
+  margin-bottom: var(--sgi-space-3);
+
+  h2 {
+    margin: 0 0 var(--sgi-space-1);
+    padding-bottom: var(--sgi-space-0-5);
+    border-bottom: var(--sgi-border);
+    font-size: var(--sgi-font-size-h3);
+  }
+
+  p {
+    margin: 0;
+    max-width: 70ch;
+    white-space: pre-line;
+    overflow-wrap: anywhere;
+  }
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sgi-space-1);
+}
+
+// Os três tipos viram cartões grandes, fáceis de tocar no celular. O rádio fica visível para o teclado
+// e o leitor de tela; o cartão escolhido ganha borda e fundo da cor primária.
+.tipos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sgi-space-1);
+  margin: 0 0 var(--sgi-space-2);
+  padding: 0;
+  border: 0;
+
+  legend {
+    margin-bottom: var(--sgi-space-1);
+    font-weight: var(--sgi-font-weight-semibold);
+  }
+}
+
+.cartao-tipo {
+  display: flex;
+  align-items: center;
+  gap: var(--sgi-space-1-5);
+  min-height: var(--sgi-alvo-toque);
+  padding: var(--sgi-space-1-5) var(--sgi-space-2);
+  border: var(--sgi-border);
+  border-radius: var(--sgi-radius-md);
+  cursor: pointer;
+
+  input {
+    flex: none;
+    width: 1.125rem;
+    height: 1.125rem;
+    margin: 0;
+    accent-color: var(--sgi-color-primary-dark);
+  }
+
+  mat-icon {
+    flex: none;
+    color: var(--sgi-color-primary-dark);
+  }
+
+  &:has(input:checked) {
+    border-color: var(--sgi-color-primary-dark);
+    background: var(--sgi-color-background-secondary);
+    font-weight: var(--sgi-font-weight-semibold);
+  }
+
+  &:has(input:focus-visible) {
+    outline: 2px solid var(--sgi-color-primary-dark);
+    outline-offset: 2px;
+  }
+}
+
+.erro-campo {
+  margin: 0;
+  color: var(--mat-sys-error, var(--sgi-color-accent));
+  font-size: var(--sgi-font-size-small);
+}
+
+.linha {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sgi-space-1);
+}
+
+.botoes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sgi-space-1);
+
+  button {
+    min-height: var(--sgi-alvo-toque);
+  }
+}
+
+@media (min-width: bp.$tablet) {
+  .cabecalho,
+  .linha,
+  .botoes {
+    flex-direction: row;
+  }
+
+  .cabecalho {
+    gap: var(--sgi-space-4);
+  }
+
+  .linha mat-form-field {
+    flex: 2;
+  }
+
+  .linha .campo-data {
+    flex: 1;
+  }
+
+  .tipos {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+
+    legend,
+    .erro-campo {
+      grid-column: 1 / -1;
+    }
+  }
+
+  .cartao-tipo {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

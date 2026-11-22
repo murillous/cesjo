@@ -13,6 +13,8 @@ import static br.org.cesjo.sgi.acesso.Permissao.CAPACIDADE_EDITAR;
 import static br.org.cesjo.sgi.acesso.Permissao.CAPACIDADE_LER;
 import static br.org.cesjo.sgi.acesso.Permissao.COLABORADORES_GERENCIAR;
 import static br.org.cesjo.sgi.acesso.Permissao.COLABORADORES_LER;
+import static br.org.cesjo.sgi.acesso.Permissao.COMUNICACOES_LER;
+import static br.org.cesjo.sgi.acesso.Permissao.COMUNICACOES_REGISTRAR;
 import static br.org.cesjo.sgi.acesso.Permissao.CONTAS_GERENCIAR;
 import static br.org.cesjo.sgi.acesso.Permissao.DOCUMENTOS_ENVIAR;
 import static br.org.cesjo.sgi.acesso.Permissao.DOCUMENTOS_LER;
@@ -56,7 +58,8 @@ public enum Perfil {
 					COLABORADORES_GERENCIAR, ATENDIDOS_INSERIR, ATENDIDOS_LER, ATENDIDOS_LER_BASICO, VISITAS_LER,
 					VISITAS_AGENDAR, VISITAS_REGISTRAR, ESCUTA_LER, ESCUTA_REGISTRAR, PIA_LER,
 					PIA_EDITAR, PIA_APROVAR, CAPACIDADE_LER, CAPACIDADE_EDITAR, ATENDIDOS_DESLIGAR, VIOLACOES_REGISTRAR, VIOLACOES_LER, LISTA_ESPERA_EXPORTAR,
-					ATENDIDOS_EDITAR, ATENDIDOS_DADOS_SENSIVEIS, ATIVIDADES_LER, ATIVIDADES_REGISTRAR)),
+					ATENDIDOS_EDITAR, ATENDIDOS_DADOS_SENSIVEIS, ATIVIDADES_LER, ATIVIDADES_REGISTRAR, COMUNICACOES_LER,
+					COMUNICACOES_REGISTRAR)),
 
 	// PENDENTE-CESJO(P17): a Equipe Técnica não vê o cadastro de colaboradores (gestão institucional, ADR 0047).
 	// PENDENTE-CESJO(P17): a Equipe Técnica lê e edita a lista de espera mas não cadastra candidatos (ADR 0039) e
@@ -66,7 +69,7 @@ public enum Perfil {
 					ATENDIDOS_LER, ATENDIDOS_LER_BASICO, VISITAS_LER, VISITAS_AGENDAR, VISITAS_REGISTRAR, ESCUTA_LER,
 					ESCUTA_REGISTRAR, PIA_LER,
 					PIA_EDITAR, CAPACIDADE_LER, VIOLACOES_REGISTRAR, VIOLACOES_LER, LISTA_ESPERA_EXPORTAR, ATENDIDOS_EDITAR,
-					ATENDIDOS_DADOS_SENSIVEIS, ATIVIDADES_LER, ATIVIDADES_REGISTRAR)),
+					ATENDIDOS_DADOS_SENSIVEIS, ATIVIDADES_LER, ATIVIDADES_REGISTRAR, COMUNICACOES_LER, COMUNICACOES_REGISTRAR)),
 
 	// PENDENTE-CESJO(P17): o Administrativo não vê o cadastro de colaboradores (gestão institucional, ADR 0047).
 	// PENDENTE-CESJO(P17): o Administrativo não vê as atividades (RF010), ponto com (?) na matriz (ADR 0152).
@@ -77,7 +80,8 @@ public enum Perfil {
 	// PENDENTE-CESJO(P8): o Administrativo envia e lê laudos e comprovantes até a equipe responder (ADR 0015).
 	ADMINISTRATIVO("Administrativo",
 			EnumSet.of(DOCUMENTOS_LER, DOCUMENTOS_ENVIAR, NOTIFICACOES_LER, LISTA_ESPERA_LER, LISTA_ESPERA_CADASTRAR,
-					LISTA_ESPERA_FILA_LER, LISTA_ESPERA_EDITAR, ATENDIDOS_LER_BASICO, VISITAS_LER, VISITAS_AGENDAR, LISTA_ESPERA_EXPORTAR, CAPACIDADE_LER)),
+					LISTA_ESPERA_FILA_LER, LISTA_ESPERA_EDITAR, ATENDIDOS_LER_BASICO, VISITAS_LER, VISITAS_AGENDAR, LISTA_ESPERA_EXPORTAR, CAPACIDADE_LER,
+					COMUNICACOES_LER, COMUNICACOES_REGISTRAR)),
 
 	// PENDENTE-CESJO(P8): "dados básicos" do Consulta na lista de espera são nome, situação, datas e
 	// posição, sem tipo de deficiência, origem, contato nem documentos (ADR 0058).

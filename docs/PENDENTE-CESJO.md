@@ -259,3 +259,16 @@ Situação: provisória.
 | Decisão provisória | Onde mudar | ADR |
 |---|---|---|
 | O atendimento multiprofissional exige pelo menos dois profissionais, de qualquer função. | `atividades.TipoAtividade` (`ATENDIMENTO_MULTIPROFISSIONAL`) e `TIPOS_ATIVIDADE` em `rotulos.ts` do módulo atividades (frontend) | [0154](adr/0154-atendimentos-e-estudos-de-caso.md) |
+
+## P30. Contatos e comunicações (RF011)
+
+> Nos contatos e comunicações, a pessoa ou instituição precisa estar ligada ao cadastro (o usuário
+> atendido cujo cuidador ligou, a instituição parceira) ou basta o nome? Registram-se só contatos que
+> já aconteceram, ou também contatos agendados?
+
+Situação: provisória.
+
+| Decisão provisória | Onde mudar | ADR |
+|---|---|---|
+| A pessoa ou instituição é texto livre (`contraparte`), sem ligação com usuário atendido nem com cadastro de instituições. | `atividades.interno.DadosComunicacao` e migração nova com `pessoa_id` | [0160](adr/0160-registro-de-contatos-e-comunicacoes.md) |
+| Só se registra o que já aconteceu: a data não pode ser futura. | `ServicoComunicacoes.exigirDataValida` (backend) e `[max]` da data em `ficha-comunicacao.html` (frontend) | [0160](adr/0160-registro-de-contatos-e-comunicacoes.md) |

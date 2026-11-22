@@ -106,6 +106,12 @@ public enum Permissao {
 	ATIVIDADES_LER,
 
 	/** Registrar e corrigir atividades (RF010, ADR 0152). */
-	ATIVIDADES_REGISTRAR
+	ATIVIDADES_REGISTRAR,
+
+	/** Listar os contatos e comunicações e abrir a ficha com a descrição (RF011, ADR 0162). */
+	COMUNICACOES_LER,
+
+	/** Registrar e corrigir contatos e comunicações (RF011, ADR 0162). */
+	COMUNICACOES_REGISTRAR
 
 }
