@@ -1,0 +1,58 @@
+<section class="acoes" aria-labelledby="titulo-acoes">
+  <h2 id="titulo-acoes">Ações de articulação</h2>
+
+  @if (acoes(); as lista) {
+    @if (lista.length === 0) {
+      <p class="texto-secundario">Nenhuma ação registrada com este parceiro.</p>
+    } @else {
+      <ol class="lista">
+        @for (acao of lista; track acao.id) {
+          <li>
+            <p class="data">{{ acao.data | date: 'dd/MM/yyyy' }}</p>
+            <p class="descricao">{{ acao.descricao }}</p>
+          </li>
+        }
+      </ol>
+    }
+  }
+
+  @if (erro(); as mensagem) {
+    <p class="erro" role="alert">{{ mensagem }}</p>
+  }
+
+  @if (podeGerenciar() && acoes()) {
+    @if (!registrando()) {
+      <button matButton="outlined" type="button" (click)="abrirRegistro()">Registrar ação</button>
+    } @else {
+      <form [formGroup]="formulario" (ngSubmit)="salvar()" novalidate>
+        <mat-form-field appearance="outline">
+          <mat-label>Data da ação</mat-label>
+          <input matInput [matDatepicker]="seletorData" [max]="hoje" formControlName="data" />
+          <mat-hint>DD/MM/AAAA</mat-hint>
+          <mat-datepicker-toggle matIconSuffix [for]="seletorData" />
+          <mat-datepicker #seletorData />
+          @if (formulario.controls.data.hasError('required')) {
+            <mat-error>Informe a data.</mat-error>
+          } @else if (formulario.controls.data.hasError('matDatepickerMax')) {
+            <mat-error>A data não pode ser futura.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>O que foi feito</mat-label>
+          <textarea matInput formControlName="descricao" rows="3"></textarea>
+          @if (formulario.controls.descricao.hasError('required')) {
+            <mat-error>Descreva a ação.</mat-error>
+          } @else if (formulario.controls.descricao.hasError('maxlength')) {
+            <mat-error>Use até 2000 caracteres.</mat-error>
+          }
+        </mat-form-field>
+
+        <div class="botoes">
+          <button matButton="filled" type="submit" [disabled]="enviando()">Registrar ação</button>
+          <button matButton type="button" (click)="cancelar()">Cancelar</button>
+        </div>
+      </form>
+    }
+  }
+</section>
