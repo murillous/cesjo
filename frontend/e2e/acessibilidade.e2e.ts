@@ -47,6 +47,7 @@ const TELAS_LOGADAS = [
   { nome: 'nova conta', caminho: '/contas/nova', titulo: /Nova conta/ },
   { nome: 'log de auditoria', caminho: '/auditoria', titulo: /Log de auditoria/ },
   { nome: 'perfil dos atendidos', caminho: '/relatorios/perfil', titulo: /Perfil dos usuários/ },
+  { nome: 'violações de direitos', caminho: '/violacoes', titulo: /Violações de direitos/ },
   { nome: 'página não encontrada', caminho: '/nao-existe', titulo: /não encontrada/ },
 ];
 

@@ -16,6 +16,7 @@ export const CONTA_COORDENADOR = {
     'LISTA_ESPERA_CADASTRAR',
     'LISTA_ESPERA_FILA_LER',
     'RELATORIOS_LER',
+    'VIOLACOES_LER',
   ],
   trocaSenhaObrigatoria: false,
 };
@@ -102,6 +103,18 @@ const AUDITORIA = [
   },
 ];
 
+const VIOLACOES = [
+  {
+    id: '00000000-0000-0000-0000-0000000000c1',
+    insercaoId: '00000000-0000-0000-0000-0000000000c2',
+    pessoaId: '00000000-0000-0000-0000-0000000000c3',
+    nomeCompleto: 'Pessoa Fictícia Atendida',
+    tipo: 'VIOLENCIA_FISICA_PSICOLOGICA',
+    ambito: 'INTRAFAMILIAR',
+    dataIdentificacao: '2026-11-10',
+  },
+];
+
 const NOTIFICACOES = [
   {
     id: '00000000-0000-0000-0000-0000000000b1',
@@ -146,6 +159,7 @@ export async function simularApi(
     if (caminho === '/api/auditoria/entidades') return json(route, ['conta_acesso', 'arquivo']);
     if (caminho === '/api/auditoria') return json(route, pagina(AUDITORIA));
     if (caminho === '/api/estatisticas/dashboards/perfil') return json(route, PAINEL_PERFIL);
+    if (caminho === '/api/violacoes') return json(route, pagina(VIOLACOES));
     return json(route, { title: 'Não simulado no teste', status: 404 }, 404);
   });
 }

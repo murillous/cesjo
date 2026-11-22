@@ -9,6 +9,7 @@ import { mensagemDeErro } from '../../acesso/problema';
 import { Sessao } from '../../acesso/sessao';
 import { ORIGENS_ENCAMINHAMENTO, TIPOS_DEFICIENCIA } from '../lista-espera/rotulos';
 import { AtendidosApi, CadastroComplementar, FichaAtendido } from './atendidos-api';
+import { PainelViolacoes } from './painel-violacoes';
 import {
   CRENCAS,
   ESCOLARIDADES,
@@ -28,7 +29,15 @@ import {
  */
 @Component({
   selector: 'app-ficha-atendido',
-  imports: [CurrencyPipe, DatePipe, MatButtonModule, MatIconModule, MatProgressBarModule, RouterLink],
+  imports: [
+    CurrencyPipe,
+    DatePipe,
+    MatButtonModule,
+    MatIconModule,
+    MatProgressBarModule,
+    PainelViolacoes,
+    RouterLink,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './ficha-atendido.html',
   styleUrl: './ficha-atendido.scss',
@@ -54,6 +63,7 @@ export class FichaAtendidoPagina implements OnInit {
   protected readonly podeEditar = this.sessao.temPermissao('ATENDIDOS_EDITAR');
   protected readonly podeDesligar = this.sessao.temPermissao('ATENDIDOS_DESLIGAR');
   protected readonly podeRegistrarViolacao = this.sessao.temPermissao('VIOLACOES_REGISTRAR');
+  protected readonly podeLerViolacoes = this.sessao.temPermissao('VIOLACOES_LER');
 
   ngOnInit(): void {
     this.api.ficha(this.id()).subscribe({

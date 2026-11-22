@@ -1,0 +1,125 @@
+<form
+  class="filtros"
+  [formGroup]="filtros"
+  (ngSubmit)="filtrar()"
+  aria-label="Filtros das violações"
+>
+  <mat-form-field class="campo-tipo">
+    <mat-label>Categoria</mat-label>
+    <mat-select formControlName="tipo">
+      <mat-option [value]="null">Todas</mat-option>
+      @for (tipo of tipos; track tipo.valor) {
+        <mat-option [value]="tipo.valor">{{ tipo.rotulo }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Identificada desde</mat-label>
+    <input matInput [matDatepicker]="seletorDe" [max]="hoje" formControlName="de" />
+    <mat-hint>DD/MM/AAAA</mat-hint>
+    <mat-datepicker-toggle matIconSuffix [for]="seletorDe" />
+    <mat-datepicker #seletorDe />
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Identificada até</mat-label>
+    <input matInput [matDatepicker]="seletorAte" [max]="hoje" formControlName="ate" />
+    <mat-hint>DD/MM/AAAA</mat-hint>
+    <mat-datepicker-toggle matIconSuffix [for]="seletorAte" />
+    <mat-datepicker #seletorAte />
+  </mat-form-field>
+
+  @if (periodoInvalido()) {
+    <p class="erro-campo" role="alert">O início do período precisa ser antes do fim.</p>
+  }
+
+  <div class="botoes">
+    <button matButton="filled" type="submit">
+      <mat-icon aria-hidden="true">filter_alt</mat-icon>
+      Filtrar
+    </button>
+    <button matButton type="button" (click)="limpar()">Limpar filtros</button>
+  </div>
+</form>
+
+<div class="resultado" [attr.aria-busy]="carregando()">
+  @if (carregando()) {
+    <mat-progress-bar mode="indeterminate" aria-label="Carregando violações" />
+  }
+
+  @if (erro(); as mensagem) {
+    <div class="aviso" role="alert">
+      <p>{{ mensagem }}</p>
+      <button matButton="outlined" type="button" (click)="carregar()">Tentar de novo</button>
+    </div>
+  } @else if (!carregando() && violacoes().length === 0) {
+    <div class="aviso">
+      <p>Nenhuma violação registrada com esses filtros.</p>
+    </div>
+  } @else {
+    <p class="total texto-secundario" aria-live="polite">
+      {{ total() }} {{ total() === 1 ? 'violação' : 'violações' }}
+    </p>
+
+    <ul class="lista" aria-label="Violações de direitos">
+      @for (violacao of violacoes(); track violacao.id) {
+        @let leitura = leituras()[violacao.id];
+        <li class="item">
+          <div class="dados">
+            <span class="categoria">{{ rotuloViolacao(violacao.tipo) }}</span>
+            @if (violacao.ambito) {
+              <span class="ambito">{{ rotuloAmbito(violacao.ambito) }}</span>
+            }
+            <span class="data texto-secundario">
+              Identificada em {{ violacao.dataIdentificacao | date: 'dd/MM/yyyy' }}
+            </span>
+            @if (geral()) {
+              @if (violacao.insercaoId) {
+                <a class="pessoa" [routerLink]="['/atendidos', violacao.insercaoId]">
+                  {{ violacao.nomeCompleto }}
+                </a>
+              } @else {
+                <span class="pessoa">{{ violacao.nomeCompleto }}</span>
+              }
+            }
+          </div>
+
+          <button
+            matButton
+            type="button"
+            class="ler"
+            [attr.aria-expanded]="!!leitura && !leitura.carregando"
+            [attr.aria-controls]="'descricao-' + violacao.id"
+            [disabled]="leitura?.carregando"
+            (click)="alternar(violacao)"
+          >
+            <mat-icon aria-hidden="true">{{
+              leitura && !leitura.carregando ? 'visibility_off' : 'lock_open'
+            }}</mat-icon>
+            {{ leitura && !leitura.carregando ? 'Esconder descrição' : 'Ler descrição' }}
+          </button>
+
+          <div class="descricao" [id]="'descricao-' + violacao.id" aria-live="polite">
+            @if (leitura?.descricao; as descricao) {
+              <p class="texto">{{ descricao }}</p>
+            } @else if (leitura?.erro; as mensagemLeitura) {
+              <p class="erro-campo" role="alert">{{ mensagemLeitura }}</p>
+            }
+          </div>
+        </li>
+      }
+    </ul>
+
+    @if (geral()) {
+      <mat-paginator
+        [length]="total()"
+        [pageIndex]="pagina()"
+        [pageSize]="tamanho()"
+        [pageSizeOptions]="tamanhos"
+        (page)="mudarPagina($event)"
+        aria-label="Páginas da lista de violações"
+      />
+    }
+  }
+</div>

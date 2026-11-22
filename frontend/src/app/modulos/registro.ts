@@ -8,6 +8,7 @@ import { contasModulo } from './contas/contas.modulo';
 import { inicioModulo } from './inicio/inicio.modulo';
 import { listaEsperaModulo } from './lista-espera/lista-espera.modulo';
 import { relatoriosModulo } from './relatorios/relatorios.modulo';
+import { violacoesModulo } from './violacoes/violacoes.modulo';
 import { visitasModulo } from './visitas/visitas.modulo';
 import { ModuloFrontend } from './modulo';
 
@@ -19,6 +20,7 @@ export const MODULOS: readonly ModuloFrontend[] = [
   inicioModulo,
   listaEsperaModulo,
   atendidosModulo,
+  violacoesModulo,
   visitasModulo,
   atendimentoModulo,
   relatoriosModulo,

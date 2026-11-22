@@ -127,6 +127,7 @@ frente de trabalho paralela não é usado todo.
 - [0142](0142-permissoes-do-cadastro-completo.md) — Permissões do cadastro completo e da crença e saúde (provisório)
 - [0143](0143-opcoes-de-genero-e-escolaridade.md) — Opções de gênero e de escolaridade (provisório)
 - [0144](0144-tela-do-cadastro-completo.md) — Tela de completar o cadastro do usuário atendido
+- [0145](0145-consulta-de-violacoes-de-direitos.md) — Consulta de violações de direitos (provisório)
 - [0195](0195-modulo-estatisticas-e-dashboard-de-perfil.md) — Módulo Estatísticas e dashboard de perfil dos usuários atendidos
 - [0196](0196-permissao-dos-relatorios-e-dashboards.md) — Permissão dos relatórios e dashboards (provisório)
 - [0197](0197-graficos-em-html-e-css-sem-biblioteca.md) — Gráficos em HTML e CSS, sem biblioteca, e área de relatórios com abas
