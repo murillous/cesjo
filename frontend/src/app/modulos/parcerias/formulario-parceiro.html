@@ -1,0 +1,93 @@
+<section class="parceiro">
+  <a matButton routerLink="/parcerias" class="voltar">
+    <mat-icon aria-hidden="true">arrow_back</mat-icon>
+    Parcerias
+  </a>
+
+  <h1>{{ edicao() ? (parceiro()?.nome ?? 'Parceiro') : 'Novo parceiro' }}</h1>
+  @if (parceiro(); as atual) {
+    <p class="situacao" [class.inativo]="!atual.ativo">{{ atual.ativo ? 'Ativo' : 'Inativo' }}</p>
+  }
+
+  @if (erro(); as mensagem) {
+    <p class="erro" role="alert">{{ mensagem }}</p>
+  }
+
+  <form [formGroup]="formulario" (ngSubmit)="salvar()" novalidate>
+    <mat-form-field appearance="outline">
+      <mat-label>Nome da instituição</mat-label>
+      <input matInput formControlName="nome" autocomplete="off" />
+      @if (formulario.controls.nome.hasError('required')) {
+        <mat-error>Informe o nome.</mat-error>
+      } @else if (formulario.controls.nome.hasError('maxlength')) {
+        <mat-error>Use até 150 caracteres.</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Tipo de instituição</mat-label>
+      <mat-select formControlName="tipo">
+        @for (tipo of tipos; track tipo.valor) {
+          <mat-option [value]="tipo.valor">{{ tipo.rotulo }}</mat-option>
+        }
+      </mat-select>
+      @if (formulario.controls.tipo.hasError('required')) {
+        <mat-error>Escolha o tipo.</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Termo ou instrumento</mat-label>
+      <input matInput formControlName="instrumento" autocomplete="off" />
+      <mat-hint>Opcional. Por exemplo: termo de cooperação 12/2026.</mat-hint>
+    </mat-form-field>
+
+    <fieldset class="vigencia">
+      <legend>Vigência (opcional)</legend>
+      <mat-form-field appearance="outline">
+        <mat-label>Início</mat-label>
+        <input matInput [matDatepicker]="seletorInicio" formControlName="vigenciaInicio" />
+        <mat-hint>DD/MM/AAAA</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="seletorInicio" />
+        <mat-datepicker #seletorInicio />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Fim</mat-label>
+        <input matInput [matDatepicker]="seletorFim" formControlName="vigenciaFim" />
+        <mat-hint>DD/MM/AAAA</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="seletorFim" />
+        <mat-datepicker #seletorFim />
+      </mat-form-field>
+    </fieldset>
+    @if (formulario.hasError('vigencia')) {
+      <p class="erro-campo" role="alert">O fim da vigência não pode ser antes do início.</p>
+    }
+
+    <mat-form-field appearance="outline">
+      <mat-label>Contato</mat-label>
+      <textarea matInput formControlName="contato" rows="2"></textarea>
+      <mat-hint>Opcional. Pessoa de referência, telefone ou e-mail da instituição.</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Observações</mat-label>
+      <textarea matInput formControlName="observacoes" rows="3"></textarea>
+    </mat-form-field>
+
+    @if (edicao()) {
+      <mat-slide-toggle formControlName="ativo" class="ativo">Parceria ativa</mat-slide-toggle>
+    }
+
+    @if (podeGerenciar) {
+      <div class="botoes">
+        <button matButton="filled" type="submit" [disabled]="enviando()">
+          {{ edicao() ? 'Salvar parceiro' : 'Cadastrar parceiro' }}
+        </button>
+      </div>
+    }
+  </form>
+
+  @if (parceiro(); as atual) {
+    <app-acoes-articulacao [parceiroId]="atual.id" [podeGerenciar]="podeGerenciar" />
+  }
+</section>
