@@ -16,12 +16,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 
+import br.org.cesjo.sgi.atividades.DirecaoComunicacao;
 import br.org.cesjo.sgi.atividades.TipoComunicacao;
 import br.org.cesjo.sgi.compartilhado.criptografia.TextoCifradoConverter;
 
 /**
  * Contato ou comunicação do RF011 (tabela {@code comunicacao}, ADR 0160). Contraparte e assunto ficam em
- * claro para a listagem; a descrição, opcional, é cifrada na aplicação.
+ * claro para a listagem; a descrição, opcional, é cifrada na aplicação. Ofícios, declarações e
+ * encaminhamentos têm direção e podem ter um anexo, guardado no módulo Arquivos (ADR 0164).
  */
 @Entity
 @Table(name = "comunicacao")
@@ -33,6 +35,10 @@ class Comunicacao {
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false, length = 40)
 	private TipoComunicacao tipo;
+
+	@Enumerated(EnumType.STRING)
+	@Column(length = 10)
+	private DirecaoComunicacao direcao;
 
 	@Column(name = "data_comunicacao", nullable = false)
 	private LocalDate data;
@@ -46,6 +52,10 @@ class Comunicacao {
 	@Convert(converter = TextoCifradoConverter.class)
 	@Column(columnDefinition = "text")
 	private String descricao;
+
+	/** Anexo opcional, pelo {@code id} do módulo Arquivos. */
+	@Column(name = "arquivo_id")
+	private UUID arquivoId;
 
 	@Column(name = "criado_em", nullable = false, updatable = false)
 	private Instant criadoEm;
@@ -80,6 +90,9 @@ class Comunicacao {
 		if (tipo != dados.tipo()) {
 			alterados.add("tipo");
 		}
+		if (direcao != dados.direcao()) {
+			alterados.add("direcao");
+		}
 		if (!data.equals(dados.data())) {
 			alterados.add("data_comunicacao");
 		}
@@ -102,10 +115,27 @@ class Comunicacao {
 
 	private void aplicar(DadosComunicacao dados) {
 		this.tipo = dados.tipo();
+		this.direcao = dados.direcao();
 		this.data = dados.data();
 		this.contraparte = dados.contraparte().strip();
 		this.assunto = dados.assunto().strip();
 		this.descricao = dados.descricaoLimpa();
+	}
+
+	/** Liga o anexo, no lugar do anterior se houver. */
+	void anexar(UUID arquivoId, UUID autor, Instant agora) {
+		this.arquivoId = arquivoId;
+		this.atualizadoEm = agora;
+		this.atualizadoPor = autor;
+	}
+
+	/** Desliga o anexo. Devolve {@code false} quando não havia anexo. */
+	boolean removerAnexo(UUID autor, Instant agora) {
+		if (arquivoId == null) {
+			return false;
+		}
+		anexar(null, autor, agora);
+		return true;
 	}
 
 	UUID getId() {
@@ -114,6 +144,14 @@ class Comunicacao {
 
 	TipoComunicacao getTipo() {
 		return tipo;
+	}
+
+	DirecaoComunicacao getDirecao() {
+		return direcao;
+	}
+
+	UUID getArquivoId() {
+		return arquivoId;
 	}
 
 	LocalDate getData() {
