@@ -94,6 +94,12 @@ public enum Permissao {
 	VIOLACOES_REGISTRAR,
 
 	/** Consultar violações de direitos e ler a descrição, com leitura auditada (RF009, ADR 0113). */
-	VIOLACOES_LER
+	VIOLACOES_LER,
+
+	/** Ver os parceiros e as ações de articulação (RF013, ADR 0173). */
+	PARCERIAS_LER,
+
+	/** Cadastrar e editar parceiros e registrar ações de articulação (RF013, ADR 0173). */
+	PARCERIAS_GERENCIAR
 
 }

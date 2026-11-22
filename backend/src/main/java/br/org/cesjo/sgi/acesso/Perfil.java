@@ -20,6 +20,8 @@ import static br.org.cesjo.sgi.acesso.Permissao.LISTA_ESPERA_EXPORTAR;
 import static br.org.cesjo.sgi.acesso.Permissao.LISTA_ESPERA_FILA_LER;
 import static br.org.cesjo.sgi.acesso.Permissao.LISTA_ESPERA_LER;
 import static br.org.cesjo.sgi.acesso.Permissao.NOTIFICACOES_LER;
+import static br.org.cesjo.sgi.acesso.Permissao.PARCERIAS_GERENCIAR;
+import static br.org.cesjo.sgi.acesso.Permissao.PARCERIAS_LER;
 import static br.org.cesjo.sgi.acesso.Permissao.VIOLACOES_LER;
 import static br.org.cesjo.sgi.acesso.Permissao.VIOLACOES_REGISTRAR;
 import static br.org.cesjo.sgi.acesso.Permissao.PIA_APROVAR;
@@ -51,9 +53,11 @@ public enum Perfil {
 					LISTA_ESPERA_LER, LISTA_ESPERA_CADASTRAR, LISTA_ESPERA_FILA_LER, LISTA_ESPERA_EDITAR, COLABORADORES_LER,
 					COLABORADORES_GERENCIAR, ATENDIDOS_INSERIR, ATENDIDOS_LER, ATENDIDOS_LER_BASICO, VISITAS_LER,
 					VISITAS_AGENDAR, VISITAS_REGISTRAR, ESCUTA_LER, ESCUTA_REGISTRAR, PIA_LER,
-					PIA_EDITAR, PIA_APROVAR, CAPACIDADE_LER, CAPACIDADE_EDITAR, ATENDIDOS_DESLIGAR, VIOLACOES_REGISTRAR, VIOLACOES_LER, LISTA_ESPERA_EXPORTAR)),
+					PIA_EDITAR, PIA_APROVAR, CAPACIDADE_LER, CAPACIDADE_EDITAR, ATENDIDOS_DESLIGAR, VIOLACOES_REGISTRAR, VIOLACOES_LER, LISTA_ESPERA_EXPORTAR,
+					PARCERIAS_LER, PARCERIAS_GERENCIAR)),
 
-	// PENDENTE-CESJO(P17): a Equipe Técnica não vê o cadastro de colaboradores (gestão institucional, ADR 0047).
+	// PENDENTE-CESJO(P17): a Equipe Técnica não vê o cadastro de colaboradores (gestão institucional, ADR 0047)
+	// nem as parcerias (ADR 0173).
 	// PENDENTE-CESJO(P17): a Equipe Técnica lê e edita a lista de espera mas não cadastra candidatos (ADR 0039) e
 	// lê os usuários atendidos mas não insere no serviço (ADR 0082).
 	EQUIPE_TECNICA("Equipe Técnica",
@@ -62,7 +66,8 @@ public enum Perfil {
 					ESCUTA_REGISTRAR, PIA_LER,
 					PIA_EDITAR, CAPACIDADE_LER, VIOLACOES_REGISTRAR, VIOLACOES_LER, LISTA_ESPERA_EXPORTAR)),
 
-	// PENDENTE-CESJO(P17): o Administrativo não vê o cadastro de colaboradores (gestão institucional, ADR 0047).
+	// PENDENTE-CESJO(P17): o Administrativo não vê o cadastro de colaboradores (gestão institucional, ADR 0047)
+	// nem registra parcerias (ADR 0173).
 	// PENDENTE-CESJO(P8): o Administrativo agenda, cancela e reagenda visitas, mas não registra a realização
 	// nem lê as observações, que são sensíveis (ADR 0074).
 	// PENDENTE-CESJO(P8): o Administrativo envia e lê laudos e comprovantes até a equipe responder (ADR 0015).
