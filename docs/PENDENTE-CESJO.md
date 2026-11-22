@@ -208,3 +208,16 @@ Situação: provisória.
 | Decisão provisória | Onde mudar | ADR |
 |---|---|---|
 | Funções `ASSISTENTE_SOCIAL`, `PSICOLOGO`, `TERAPEUTA_OCUPACIONAL` e `OUTRA`, tiradas do planejamento. | `institucional.FuncaoColaborador`, `ck_colaborador_funcao` (migração nova) e `rotulos.ts` do módulo colaboradores (frontend) | [0045](adr/0045-cadastro-e-api-java-dos-colaboradores.md) |
+
+## P30. Contatos e comunicações (RF011)
+
+> Nos contatos e comunicações, a pessoa ou instituição precisa estar ligada ao cadastro (o usuário
+> atendido cujo cuidador ligou, a instituição parceira) ou basta o nome? Registram-se só contatos que
+> já aconteceram, ou também contatos agendados?
+
+Situação: provisória.
+
+| Decisão provisória | Onde mudar | ADR |
+|---|---|---|
+| A pessoa ou instituição é texto livre (`contraparte`), sem ligação com usuário atendido nem com cadastro de instituições. | `atividades.interno.DadosComunicacao` e migração nova com `pessoa_id` | [0160](adr/0160-registro-de-contatos-e-comunicacoes.md) |
+| Só se registra o que já aconteceu: a data não pode ser futura. | `ServicoComunicacoes.exigirDataValida` (backend) e `[max]` da data em `ficha-comunicacao.html` (frontend) | [0160](adr/0160-registro-de-contatos-e-comunicacoes.md) |
