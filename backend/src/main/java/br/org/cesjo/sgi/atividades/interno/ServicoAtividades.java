@@ -99,10 +99,13 @@ class ServicoAtividades implements Atividades {
 		return resposta(atividade);
 	}
 
-	/** Atividades da mais recente para a mais antiga, sem a descrição. */
+	/** Atividades que atendem ao filtro, sem a descrição. Não é auditado, porque não expõe o texto. */
 	@Transactional(readOnly = true)
-	Page<ResumoAtividade> listar(Pageable pagina) {
-		Page<Atividade> encontradas = atividades.findAll(pagina);
+	Page<ResumoAtividade> listar(FiltroAtividades filtro, Pageable pagina) {
+		if (filtro.periodoInvertido()) {
+			throw new RegraNegocioException("O fim do período não pode ser anterior ao início.");
+		}
+		Page<Atividade> encontradas = atividades.findAll(filtro.especificacao(), pagina);
 		Map<UUID, String> nomes = pessoas
 			.nomes(encontradas.stream().flatMap(a -> a.getParticipantes().stream()).distinct().toList());
 		Map<UUID, ResumoColaborador> equipe = colaboradores
@@ -118,6 +121,22 @@ class ServicoAtividades implements Atividades {
 			.map(ResumoColaborador::id)
 			.orElse(null);
 		return new OpcoesAtividade(usuariosAtendidos.listarAtivos(), colaboradores.listarAtivos(), sugerido);
+	}
+
+	@Transactional(readOnly = true)
+	OpcoesFiltro opcoesFiltro() {
+		List<ResumoColaborador> equipe = colaboradores.obterVarios(atividades.profissionaisComAtividade())
+			.values()
+			.stream()
+			.sorted((a, b) -> a.nome().compareToIgnoreCase(b.nome()))
+			.toList();
+		List<Participante> usuarios = pessoas.nomes(atividades.participantesComAtividade())
+			.entrySet()
+			.stream()
+			.map(e -> new Participante(e.getKey(), e.getValue()))
+			.sorted((a, b) -> a.nomeCompleto().compareToIgnoreCase(b.nomeCompleto()))
+			.toList();
+		return new OpcoesFiltro(equipe, usuarios);
 	}
 
 	@Override

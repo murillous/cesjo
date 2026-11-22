@@ -55,6 +55,10 @@ class DadosDeAtividade {
 		return id;
 	}
 
+	void inativarColaborador(UUID id) {
+		jdbc.update("update colaborador set ativo = false where id = ?", id);
+	}
+
 	/** Valor gravado na coluna, sem decifrar. */
 	String descricaoNoBanco(String atividade) {
 		return jdbc.queryForObject("select descricao from atividade where id = ?::uuid", String.class, atividade);
