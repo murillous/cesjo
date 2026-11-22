@@ -77,6 +77,14 @@ class PerfilTests {
 	}
 
 	@Test
+	void cadastroCompletoECrencaSoParaCoordenadorEEquipeTecnica() {
+		assertThat(Arrays.stream(Perfil.values()).filter(perfil -> perfil.tem(Permissao.ATENDIDOS_EDITAR)))
+			.containsExactlyInAnyOrder(Perfil.COORDENADOR, Perfil.EQUIPE_TECNICA);
+		assertThat(Arrays.stream(Perfil.values()).filter(perfil -> perfil.tem(Permissao.ATENDIDOS_DADOS_SENSIVEIS)))
+			.containsExactlyInAnyOrder(Perfil.COORDENADOR, Perfil.EQUIPE_TECNICA);
+	}
+
+	@Test
 	void violacoesSoParaCoordenadorEEquipeTecnica() {
 		assertThat(Arrays.stream(Perfil.values()).filter(perfil -> perfil.tem(Permissao.VIOLACOES_REGISTRAR)))
 			.containsExactlyInAnyOrder(Perfil.COORDENADOR, Perfil.EQUIPE_TECNICA);

@@ -1,6 +1,8 @@
 package br.org.cesjo.sgi.acesso;
 
+import static br.org.cesjo.sgi.acesso.Permissao.ATENDIDOS_DADOS_SENSIVEIS;
 import static br.org.cesjo.sgi.acesso.Permissao.ATENDIDOS_DESLIGAR;
+import static br.org.cesjo.sgi.acesso.Permissao.ATENDIDOS_EDITAR;
 import static br.org.cesjo.sgi.acesso.Permissao.ATENDIDOS_INSERIR;
 import static br.org.cesjo.sgi.acesso.Permissao.ATENDIDOS_LER;
 import static br.org.cesjo.sgi.acesso.Permissao.ATENDIDOS_LER_BASICO;
@@ -51,7 +53,8 @@ public enum Perfil {
 					LISTA_ESPERA_LER, LISTA_ESPERA_CADASTRAR, LISTA_ESPERA_FILA_LER, LISTA_ESPERA_EDITAR, COLABORADORES_LER,
 					COLABORADORES_GERENCIAR, ATENDIDOS_INSERIR, ATENDIDOS_LER, ATENDIDOS_LER_BASICO, VISITAS_LER,
 					VISITAS_AGENDAR, VISITAS_REGISTRAR, ESCUTA_LER, ESCUTA_REGISTRAR, PIA_LER,
-					PIA_EDITAR, PIA_APROVAR, CAPACIDADE_LER, CAPACIDADE_EDITAR, ATENDIDOS_DESLIGAR, VIOLACOES_REGISTRAR, VIOLACOES_LER, LISTA_ESPERA_EXPORTAR)),
+					PIA_EDITAR, PIA_APROVAR, CAPACIDADE_LER, CAPACIDADE_EDITAR, ATENDIDOS_DESLIGAR, VIOLACOES_REGISTRAR, VIOLACOES_LER, LISTA_ESPERA_EXPORTAR,
+					ATENDIDOS_EDITAR, ATENDIDOS_DADOS_SENSIVEIS)),
 
 	// PENDENTE-CESJO(P17): a Equipe Técnica não vê o cadastro de colaboradores (gestão institucional, ADR 0047).
 	// PENDENTE-CESJO(P17): a Equipe Técnica lê e edita a lista de espera mas não cadastra candidatos (ADR 0039) e
@@ -60,11 +63,14 @@ public enum Perfil {
 			EnumSet.of(DOCUMENTOS_LER, NOTIFICACOES_LER, LISTA_ESPERA_LER, LISTA_ESPERA_FILA_LER, LISTA_ESPERA_EDITAR,
 					ATENDIDOS_LER, ATENDIDOS_LER_BASICO, VISITAS_LER, VISITAS_AGENDAR, VISITAS_REGISTRAR, ESCUTA_LER,
 					ESCUTA_REGISTRAR, PIA_LER,
-					PIA_EDITAR, CAPACIDADE_LER, VIOLACOES_REGISTRAR, VIOLACOES_LER, LISTA_ESPERA_EXPORTAR)),
+					PIA_EDITAR, CAPACIDADE_LER, VIOLACOES_REGISTRAR, VIOLACOES_LER, LISTA_ESPERA_EXPORTAR,
+					ATENDIDOS_EDITAR, ATENDIDOS_DADOS_SENSIVEIS)),
 
 	// PENDENTE-CESJO(P17): o Administrativo não vê o cadastro de colaboradores (gestão institucional, ADR 0047).
 	// PENDENTE-CESJO(P8): o Administrativo agenda, cancela e reagenda visitas, mas não registra a realização
 	// nem lê as observações, que são sensíveis (ADR 0074).
+	// PENDENTE-CESJO(P8): o Administrativo não completa o cadastro do usuário atendido e não vê crença
+	// religiosa nem dados de saúde (ATENDIDOS_EDITAR e ATENDIDOS_DADOS_SENSIVEIS, ADR 0142).
 	// PENDENTE-CESJO(P8): o Administrativo envia e lê laudos e comprovantes até a equipe responder (ADR 0015).
 	ADMINISTRATIVO("Administrativo",
 			EnumSet.of(DOCUMENTOS_LER, DOCUMENTOS_ENVIAR, NOTIFICACOES_LER, LISTA_ESPERA_LER, LISTA_ESPERA_CADASTRAR,
