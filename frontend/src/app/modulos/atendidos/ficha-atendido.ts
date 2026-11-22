@@ -1,4 +1,4 @@
-import { DatePipe } from '@angular/common';
+import { CurrencyPipe, DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, input, OnInit, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -8,17 +8,27 @@ import { RouterLink } from '@angular/router';
 import { mensagemDeErro } from '../../acesso/problema';
 import { Sessao } from '../../acesso/sessao';
 import { ORIGENS_ENCAMINHAMENTO, TIPOS_DEFICIENCIA } from '../lista-espera/rotulos';
-import { AtendidosApi, FichaAtendido } from './atendidos-api';
-import { ROTULOS_SITUACAO_INSERCAO, rotuloFaixa, rotuloMotivo, rotuloTurno } from './rotulos';
+import { AtendidosApi, CadastroComplementar, FichaAtendido } from './atendidos-api';
+import {
+  CRENCAS,
+  ESCOLARIDADES,
+  GENEROS,
+  ROTULOS_SITUACAO_INSERCAO,
+  rotuloDe,
+  rotuloFaixa,
+  rotuloMotivo,
+  rotuloTurno,
+} from './rotulos';
 
 /**
  * Ficha do usuário atendido (`/atendidos/:id`, RF007, ADR 0083). Mostra o que a conta pode ver: a
- * ficha completa ou só os dados básicos. Visitas, escutas e PIA entram aqui com o módulo de
+ * ficha completa (com crença e saúde só para quem tem `ATENDIDOS_DADOS_SENSIVEIS`) ou só os dados
+ * básicos. Visitas, escutas e PIA entram aqui com o módulo de
  * atendimento.
  */
 @Component({
   selector: 'app-ficha-atendido',
-  imports: [DatePipe, MatButtonModule, MatIconModule, MatProgressBarModule, RouterLink],
+  imports: [CurrencyPipe, DatePipe, MatButtonModule, MatIconModule, MatProgressBarModule, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './ficha-atendido.html',
   styleUrl: './ficha-atendido.scss',
@@ -36,7 +46,12 @@ export class FichaAtendidoPagina implements OnInit {
   protected readonly rotuloTurno = rotuloTurno;
   protected readonly rotuloFaixa = rotuloFaixa;
   protected readonly rotuloMotivo = rotuloMotivo;
+  protected readonly rotuloDe = rotuloDe;
+  protected readonly generos = GENEROS;
+  protected readonly escolaridades = ESCOLARIDADES;
+  protected readonly crencas = CRENCAS;
   private readonly sessao = inject(Sessao);
+  protected readonly podeEditar = this.sessao.temPermissao('ATENDIDOS_EDITAR');
   protected readonly podeDesligar = this.sessao.temPermissao('ATENDIDOS_DESLIGAR');
   protected readonly podeRegistrarViolacao = this.sessao.temPermissao('VIOLACOES_REGISTRAR');
 
@@ -59,6 +74,22 @@ export class FichaAtendidoPagina implements OnInit {
 
   protected rotuloOrigem(origem: string): string {
     return ORIGENS_ENCAMINHAMENTO.find((o) => o.valor === origem)?.rotulo ?? origem;
+  }
+
+  /** Rua, número, complemento, cidade e CEP numa linha; vazio se nada foi informado. */
+  protected endereco(c: CadastroComplementar): string {
+    const rua = [c.logradouro, c.numero].filter(Boolean).join(', ');
+    const cep = c.cep ? `CEP ${c.cep.slice(0, 5)}-${c.cep.slice(5)}` : null;
+    return [rua, c.complemento, c.cidade, cep].filter(Boolean).join(' – ');
+  }
+
+  protected beneficios(c: CadastroComplementar): string {
+    const lista = [
+      c.recebeBpc ? 'BPC' : null,
+      c.inscritoCadUnico ? 'CadÚnico' : null,
+      c.recebeBolsaFamilia ? 'Bolsa Família' : null,
+    ].filter(Boolean);
+    return lista.length ? lista.join(', ') : 'Nenhum informado';
   }
 
   protected telefone(digitos: string): string {
