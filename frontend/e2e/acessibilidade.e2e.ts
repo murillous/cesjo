@@ -52,6 +52,7 @@ const TELAS_LOGADAS = [
     caminho: '/relatorios/atendimento',
     titulo: /Violações, atividades e desligamentos/,
   },
+  { nome: 'relatório mensal', caminho: '/relatorios/mensal', titulo: /Relatório mensal/ },
   { nome: 'violações de direitos', caminho: '/violacoes', titulo: /Violações de direitos/ },
   { nome: 'página não encontrada', caminho: '/nao-existe', titulo: /não encontrada/ },
 ];

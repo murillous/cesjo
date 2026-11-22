@@ -42,6 +42,25 @@ export interface PainelAtendimento {
   desligamentosPorMotivo: TaxaDesligamento[];
 }
 
+/** Uma linha do relatório estatístico (ADR 0200). */
+export interface LinhaRelatorio {
+  grupo: string;
+  indicador: string;
+  quantidade: number;
+}
+
+/** Relatório estatístico de um período (RF016, ADR 0200). */
+export interface RelatorioEstatistico {
+  titulo: string;
+  inicio: string;
+  fim: string;
+  geradoEm: string;
+  linhas: LinhaRelatorio[];
+}
+
+/** Endpoint da exportação do relatório mensal, para o `app-botao-exportar`. */
+export const URL_EXPORTACAO_MENSAL = '/api/estatisticas/relatorios/mensal/exportacao';
+
 /** Dashboards e relatórios estatísticos do módulo `estatisticas` do backend. */
 @Injectable({ providedIn: 'root' })
 export class EstatisticasApi {
@@ -56,5 +75,11 @@ export class EstatisticasApi {
   atendimento(inicio: string, fim: string): Observable<PainelAtendimento> {
     const params = new HttpParams().set('inicio', inicio).set('fim', fim);
     return this.http.get<PainelAtendimento>('/api/estatisticas/dashboards/atendimento', { params });
+  }
+
+  /** `mes` no formato `AAAA-MM`. */
+  mensal(mes: string): Observable<RelatorioEstatistico> {
+    const params = new HttpParams().set('mes', mes);
+    return this.http.get<RelatorioEstatistico>('/api/estatisticas/relatorios/mensal', { params });
   }
 }

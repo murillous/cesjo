@@ -16,6 +16,11 @@ export const RELATORIOS_ROUTES: Routes = [
         title: 'Violações, atividades e desligamentos | CESJO SGI',
         loadComponent: () => import('./painel-atendimento').then((m) => m.PainelAtendimento),
       },
+      {
+        path: 'mensal',
+        title: 'Relatório mensal | CESJO SGI',
+        loadComponent: () => import('./relatorio-mensal').then((m) => m.RelatorioMensal),
+      },
     ],
   },
 ];

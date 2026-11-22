@@ -2,4 +2,5 @@
 export const ABAS: readonly { caminho: string; rotulo: string }[] = [
   { caminho: 'perfil', rotulo: 'Perfil dos atendidos' },
   { caminho: 'atendimento', rotulo: 'Violações, atividades e desligamentos' },
+  { caminho: 'mensal', rotulo: 'Relatório mensal' },
 ];
