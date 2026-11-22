@@ -22,7 +22,7 @@ Técnica "registrar e ler", Administrativo e Consulta "não". Não há ponto com
   categoria e não pede âmbito.
 - Data de identificação não futura; descrição obrigatória, até 4000 caracteres.
 - API: `POST /api/atendidos/{id}/violacoes`, para o usuário atendido ativo ou desligado. A resposta
-  não devolve a descrição: ler a descrição tem rota própria e auditada (ADR 0113).
+  não devolve a descrição: ler a descrição tem rota própria e auditada (ADR 0145).
 - Permissões novas: `VIOLACOES_REGISTRAR` e `VIOLACOES_LER`, para Coordenador e Equipe Técnica.
   Editar e excluir ("total" do Coordenador) ficam para quando a equipe pedir.
 - Auditoria: criação de `violacao_direito`.
@@ -31,6 +31,6 @@ Técnica "registrar e ler", Administrativo e Consulta "não". Não há ponto com
 
 ## Consequências
 
-- A categoria não é cifrada: a listagem filtra por ela (ADR 0113). Só a descrição é cifrada.
+- A categoria não é cifrada: a listagem filtra por ela (ADR 0145). Só a descrição é cifrada.
 - Ligar a violação à pessoa, e não à inserção, mantém o histórico se a pessoa voltar ao serviço por
   outra inserção.
