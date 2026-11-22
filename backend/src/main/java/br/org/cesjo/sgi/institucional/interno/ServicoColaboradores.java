@@ -32,7 +32,8 @@ import br.org.cesjo.sgi.institucional.ResumoColaborador;
 
 /**
  * Cadastro dos colaboradores (RF014 parcial, ADR 0045) e implementação da API pública
- * {@link Colaboradores}. A ligação com a conta de acesso segue o ADR 0046.
+ * {@link Colaboradores}. A ligação com a conta de acesso segue o ADR 0046; contratações e desligamentos
+ * ficam em {@link ServicoVinculos} (ADR 0170).
  */
 @Service
 class ServicoColaboradores implements Colaboradores {
@@ -45,11 +46,14 @@ class ServicoColaboradores implements Colaboradores {
 
 	private final IdentidadeAtual identidadeAtual;
 
+	private final ServicoVinculos vinculos;
+
 	private final Clock relogio = Clock.systemUTC();
 
 	ServicoColaboradores(ColaboradorRepositorio colaboradores, Contas contas, Auditoria auditoria,
-			IdentidadeAtual identidadeAtual) {
+			IdentidadeAtual identidadeAtual, ServicoVinculos vinculos) {
 		this.colaboradores = colaboradores;
+		this.vinculos = vinculos;
 		this.contas = contas;
 		this.auditoria = auditoria;
 		this.identidadeAtual = identidadeAtual;
@@ -115,6 +119,9 @@ class ServicoColaboradores implements Colaboradores {
 		Colaborador colaborador = colaboradores
 			.save(new Colaborador(novo.nome(), novo.funcao(), novo.contaId(), autor(), relogio.instant()));
 		auditoria.registrar(EventoAuditoria.criacao(ENTIDADE, colaborador.getId()));
+		if (novo.dataContratacao() != null) {
+			vinculos.contratar(colaborador.getId(), novo.dataContratacao());
+		}
 		return resposta(colaborador);
 	}
 
@@ -134,6 +141,10 @@ class ServicoColaboradores implements Colaboradores {
 			alterados.add("funcao");
 		}
 		if (colaborador.isAtivo() != edicao.ativo()) {
+			if (edicao.ativo() && vinculos.desligado(colaborador.getId())) {
+				throw new RegraNegocioException(
+						"Este colaborador foi desligado. Registre uma nova contratação para que ele volte à equipe.");
+			}
 			colaborador.alterarAtivo(edicao.ativo(), autor, agora);
 			alterados.add("ativo");
 		}

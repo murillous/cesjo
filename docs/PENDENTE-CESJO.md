@@ -260,6 +260,17 @@ Situação: provisória.
 |---|---|---|
 | O atendimento multiprofissional exige pelo menos dois profissionais, de qualquer função. | `atividades.TipoAtividade` (`ATENDIMENTO_MULTIPROFISSIONAL`) e `TIPOS_ATIVIDADE` em `rotulos.ts` do módulo atividades (frontend) | [0154](adr/0154-atendimentos-e-estudos-de-caso.md) |
 
+## P26. Motivos de desligamento de colaborador (RF014)
+
+> Quais motivos de desligamento de colaborador o Centro-Dia usa (pedido de demissão, fim de
+> contrato, dispensa, aposentadoria)? Precisam aparecer separados em algum relatório?
+
+Situação: provisória.
+
+| Decisão provisória | Onde mudar | ADR |
+|---|---|---|
+| O motivo do desligamento é texto livre obrigatório, guardado cifrado, sem lista fechada. | `institucional.interno.NovoDesligamentoColaborador` e `motivo_desligamento` (`V55`) | [0170](adr/0170-vinculos-dos-colaboradores.md) |
+
 ## P30. Contatos e comunicações (RF011)
 
 > Nos contatos e comunicações, a pessoa ou instituição precisa estar ligada ao cadastro (o usuário

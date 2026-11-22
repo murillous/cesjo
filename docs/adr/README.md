@@ -139,3 +139,5 @@ frente de trabalho paralela não é usado todo.
 - [0163](0163-telas-de-contatos-e-comunicacoes.md) — Telas de contatos e comunicações
 - [0164](0164-oficios-declaracoes-e-encaminhamentos.md) — Ofícios, declarações e encaminhamentos, com direção e anexo opcional (provisório)
 - [0165](0165-telas-de-oficios-declaracoes-e-encaminhamentos.md) — Telas de ofícios, declarações e encaminhamentos
+- [0170](0170-vinculos-dos-colaboradores.md) — Histórico de vínculos: contratações e desligamentos dos colaboradores (provisório)
+- [0171](0171-tela-de-vinculos-dos-colaboradores.md) — Histórico de vínculos na ficha do colaborador
