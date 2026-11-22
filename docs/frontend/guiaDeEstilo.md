@@ -348,6 +348,8 @@ A navegação principal muda de formato conforme a largura da tela:
 * **tablet (768px a 991px):** trilho lateral com todos os módulos, ícone sobre o rótulo;
 * **desktop (992px ou mais):** menu lateral com ícone e rótulo na mesma linha.
 
+A área de conteúdo fica centralizada no espaço ao lado da navegação, com largura máxima de 1200px. O contêiner de cada página que tem largura máxima própria (formulários e fichas) também fica centralizado, com `margin-inline: auto`.
+
 Na barra inferior cada item tem um quinto da largura da tela. Módulos com nome longo devem definir um rótulo curto (por exemplo, "Fila" para "Lista de espera"). O nome completo continua sendo o nome acessível do link.
 
 O item ativo é marcado por um **disco** na cor `accent` atrás do ícone, retirado do selo circular da marca, e pelo rótulo em peso 600. O mesmo disco é usado na página inicial para destacar o dia de hoje. Esse é o único uso do disco: ele não deve virar decoração em outros componentes.
