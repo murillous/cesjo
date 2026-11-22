@@ -1,0 +1,88 @@
+<section class="eventos">
+  <header class="cabecalho">
+    <h1>Reuniões e eventos</h1>
+    @if (podeRegistrar) {
+      <a matButton="filled" routerLink="novo">
+        <mat-icon aria-hidden="true">add</mat-icon>
+        Registrar reunião ou evento
+      </a>
+    }
+  </header>
+
+  <form class="filtros" [formGroup]="filtros" (ngSubmit)="filtrar()" aria-label="Filtros">
+    <mat-form-field appearance="outline">
+      <mat-label>Tipo</mat-label>
+      <mat-select formControlName="tipo">
+        <mat-option value="">Todos os tipos</mat-option>
+        @for (tipo of tipos; track tipo.valor) {
+          <mat-option [value]="tipo.valor">{{ tipo.rotulo }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>De</mat-label>
+      <input matInput [matDatepicker]="seletorDe" formControlName="de" />
+      <mat-datepicker-toggle matIconSuffix [for]="seletorDe" />
+      <mat-datepicker #seletorDe />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Até</mat-label>
+      <input matInput [matDatepicker]="seletorAte" formControlName="ate" />
+      <mat-datepicker-toggle matIconSuffix [for]="seletorAte" />
+      <mat-datepicker #seletorAte />
+    </mat-form-field>
+    <div class="botoes-filtro">
+      <button matButton="outlined" type="submit">Filtrar</button>
+      <button matButton type="button" (click)="limpar()">Limpar</button>
+    </div>
+  </form>
+
+  @if (carregando()) {
+    <mat-progress-bar mode="indeterminate" aria-label="Carregando reuniões e eventos" />
+  }
+  @if (erro(); as mensagem) {
+    <p class="erro" role="alert">{{ mensagem }}</p>
+  }
+
+  @if (pagina(); as dados) {
+    @if (dados.content.length === 0) {
+      <p class="vazio">
+        Nenhuma reunião ou evento encontrado.
+        @if (podeRegistrar) {
+          Registre o primeiro em "Registrar reunião ou evento".
+        }
+      </p>
+    } @else {
+      <ul class="lista" aria-label="Reuniões e eventos">
+        @for (evento of dados.content; track evento.id) {
+          <li>
+            <a class="linha" [routerLink]="evento.id">
+              <span class="data">{{ evento.data | date: 'dd/MM/yyyy' }}</span>
+              <span class="tipo">
+                {{ rotulosTipo[evento.tipo] }}
+                @if (rotuloDirecao(evento.tipo, evento.direcao); as direcao) {
+                  <span class="direcao">{{ direcao }}</span>
+                }
+              </span>
+              <span class="descricao">{{ evento.descricao }}</span>
+              @if (evento.parceiro; as parceiro) {
+                <span class="parceiro">
+                  <mat-icon aria-hidden="true">handshake</mat-icon>
+                  {{ parceiro.nome }}
+                </span>
+              }
+            </a>
+          </li>
+        }
+      </ul>
+      <mat-paginator
+        [length]="dados.page.totalElements"
+        [pageIndex]="dados.page.number"
+        [pageSize]="tamanho()"
+        [pageSizeOptions]="[10, 20, 50]"
+        (page)="mudarPagina($event)"
+        aria-label="Páginas da lista de reuniões e eventos"
+      />
+    }
+  }
+</section>

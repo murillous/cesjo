@@ -1,0 +1,121 @@
+@use 'styles/breakpoints' as bp;
+
+.cabecalho {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sgi-space-2);
+  margin-bottom: var(--sgi-space-2);
+
+  h1 {
+    margin: 0;
+  }
+}
+
+// Celular: filtros empilhados, na largura toda.
+.filtros {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0 var(--sgi-space-2);
+  margin-bottom: var(--sgi-space-1);
+}
+
+.botoes-filtro {
+  display: flex;
+  gap: var(--sgi-space-1);
+  margin-bottom: var(--sgi-space-2);
+
+  button {
+    min-height: 48px;
+  }
+}
+
+.erro {
+  padding: var(--sgi-space-1-5) var(--sgi-space-2);
+  border-left: var(--sgi-space-0-5) solid var(--sgi-color-accent);
+  background: var(--sgi-color-background-secondary);
+}
+
+.vazio {
+  color: var(--sgi-color-text-secondary);
+}
+
+.lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: var(--sgi-border);
+}
+
+// Cada registro: data e tipo em cima, o começo da descrição e o parceiro embaixo.
+.linha {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--sgi-space-0-5) var(--sgi-space-2);
+  padding: var(--sgi-space-2) var(--sgi-space-1);
+  border-bottom: var(--sgi-border);
+  color: inherit;
+  text-decoration: none;
+
+  &:hover,
+  &:focus-visible {
+    background: var(--sgi-color-background-secondary);
+  }
+}
+
+.data {
+  font-weight: var(--sgi-font-weight-semibold);
+  font-variant-numeric: tabular-nums;
+}
+
+.tipo {
+  font-weight: var(--sgi-font-weight-semibold);
+  overflow-wrap: anywhere;
+}
+
+.direcao {
+  display: block;
+  font-size: var(--sgi-font-size-small);
+  font-weight: var(--sgi-font-weight-medium);
+  color: var(--sgi-color-text-secondary);
+}
+
+.descricao {
+  grid-column: 1 / -1;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  color: var(--sgi-color-text-secondary);
+}
+
+.parceiro {
+  grid-column: 1 / -1;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sgi-space-0-5);
+  font-size: var(--sgi-font-size-small);
+
+  mat-icon {
+    width: 18px;
+    height: 18px;
+    font-size: 18px;
+  }
+}
+
+@media (min-width: bp.$tablet) {
+  .filtros {
+    grid-template-columns: 2fr 1fr 1fr auto;
+    align-items: start;
+  }
+
+  .botoes-filtro {
+    padding-top: var(--sgi-space-0-5);
+  }
+
+  .descricao,
+  .parceiro {
+    grid-column: 2;
+  }
+}
