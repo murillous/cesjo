@@ -2,6 +2,7 @@ package br.org.cesjo.sgi.listaespera;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -44,5 +45,20 @@ public interface ListaEspera {
 	 * fila
 	 */
 	DadosInscricao registrarInsercao(UUID inscricaoId, LocalDate dataInsercao);
+
+	/**
+	 * Inscrições com data de cadastro entre {@code inicio} e {@code fim}, inclusive (RF016, ADR 0200).
+	 * Só conta, sem identificar ninguém, então não audita.
+	 */
+	long contarInscricoes(LocalDate inicio, LocalDate fim);
+
+	/** Inscrições na fila (aguardando ou em avaliação) no fim de {@code dia}, pelo histórico (ADR 0200). */
+	long contarNaFilaEm(LocalDate dia);
+
+	/**
+	 * Saídas da lista (situação "saiu") com data entre {@code inicio} e {@code fim}, inclusive, por
+	 * motivo (ADR 0200). Todo motivo aparece, com zero quando não houve.
+	 */
+	Map<MotivoSaida, Long> contarSaidasPorMotivo(LocalDate inicio, LocalDate fim);
 
 }

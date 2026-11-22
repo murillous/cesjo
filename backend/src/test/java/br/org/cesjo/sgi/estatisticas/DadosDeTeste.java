@@ -131,6 +131,28 @@ final class DadosDeTeste {
 		enviar(post("/api/atividades"), dados, 201);
 	}
 
+	/** Muda a situação da inscrição, por exemplo para "saiu" com o motivo. */
+	void mudarSituacao(String inscricaoId, String situacao, LocalDate data, String motivoSaida) throws Exception {
+		Map<String, Object> dados = new LinkedHashMap<>();
+		dados.put("situacao", situacao);
+		dados.put("data", data.toString());
+		dados.put("motivoSaida", motivoSaida);
+		dados.put("observacao", null);
+		enviar(post("/api/lista-espera/inscricoes/{id}/situacao", inscricaoId), dados, 200);
+	}
+
+	/** Registra um contato ou comunicação; {@code direcao} só para ofício, declaração e encaminhamento. */
+	void registrarComunicacao(String tipo, String direcao, LocalDate data) throws Exception {
+		Map<String, Object> dados = new LinkedHashMap<>();
+		dados.put("tipo", tipo);
+		dados.put("direcao", direcao);
+		dados.put("data", data.toString());
+		dados.put("contraparte", "Instituição Fictícia");
+		dados.put("assunto", "Assunto fictício");
+		dados.put("descricao", null);
+		enviar(post("/api/comunicacoes"), dados, 201);
+	}
+
 	String pessoaId(String insercaoId) {
 		return jdbc.queryForObject("select pessoa_id::text from insercao where id = ?::uuid", String.class, insercaoId);
 	}
