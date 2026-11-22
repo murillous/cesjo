@@ -18,6 +18,8 @@ import br.org.cesjo.sgi.atividades.TipoAtividade;
  * @param participantes {@code pessoa_id} dos usuários atendidos que participaram
  * @param profissionais {@code id} dos colaboradores que conduziram a atividade
  */
+// PENDENTE-CESJO(P23): participantes são sempre usuários atendidos ativos (pessoa_id); nas atividades com
+// famílias, o participante indica de qual usuário é a família, sem cadastrar o familiar (ADR 0150).
 record DadosAtividade(@NotNull TipoAtividade tipo,
 		@NotNull @PastOrPresent(message = "a data da atividade não pode ser futura") LocalDate data,
 		@NotBlank @Size(max = 200) String titulo, @NotBlank @Size(max = 10_000) String descricao,

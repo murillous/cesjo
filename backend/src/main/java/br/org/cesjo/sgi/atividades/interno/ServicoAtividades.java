@@ -126,6 +126,8 @@ class ServicoAtividades implements Atividades {
 		return contagem;
 	}
 
+	// PENDENTE-CESJO(P24): só se registra atividade já realizada; a data não pode ser futura, e não há agenda
+	// de atividades planejadas (ADR 0150).
 	private void exigirDataValida(LocalDate data) {
 		if (data.isAfter(LocalDate.now(relogio))) {
 			throw new RegraNegocioException("A data da atividade não pode ser futura.");
