@@ -80,7 +80,11 @@ Situação: provisória.
 
 > Quais campos? CPF, NIS, RG, endereço completo, escolaridade, renda, benefícios, medicamentos?
 
-Situação: aberta.
+Situação: provisória.
+
+| Decisão provisória | Onde mudar | ADR |
+|---|---|---|
+| Cadastro completo com gênero, CPF, NIS, RG, escolaridade, endereço com bairro, renda familiar, BPC, CadÚnico e Bolsa Família; à parte, crença religiosa, medicamentos de uso contínuo e outras informações de saúde. Todos opcionais. | `pessoas.CadastroComplementar`, `pessoas.DadosSensiveis`, `CadastroComplementarPessoa`, migração nova e `formulario-cadastro.ts` (frontend) | [0140](adr/0140-campos-do-cadastro-completo.md) |
 
 ## P7. Cuidador familiar
 
@@ -108,6 +112,8 @@ Situação: provisória.
 | Na fila da lista de espera, o Consulta vê posição, nome, situação e data de cadastro, sem tipo de deficiência, origem nem situação dos documentos, e não filtra por tipo nem origem (`LISTA_ESPERA_FILA_LER`). | `acesso.Perfil` (linha do `CONSULTA`), `ItemFila.basico()` e `ListaEsperaControlador.listar` | [0058](adr/0058-dados-basicos-da-fila-para-o-consulta.md) |
 | O Consulta não exporta a lista de espera (`LISTA_ESPERA_EXPORTAR` só para Coordenador, Equipe Técnica e Administrativo). | `acesso.Perfil` (linha do `CONSULTA`) | [0130](adr/0130-exportacao-da-lista-de-espera.md) |
 | Administrativo e Consulta veem só os dados básicos dos usuários atendidos (`ATENDIDOS_LER_BASICO`). | `acesso.Perfil` | [0082](adr/0082-permissoes-dos-usuarios-atendidos.md) |
+| Crença religiosa e saúde só com `ATENDIDOS_DADOS_SENSIVEIS`, e completar o cadastro só com `ATENDIDOS_EDITAR`, as duas de Coordenador e Equipe Técnica; o Administrativo não tem nenhuma. | `acesso.Perfil` | [0142](adr/0142-permissoes-do-cadastro-completo.md) |
+| Filtros por gênero e bairro na listagem são negados para a visão básica. | `FiltroAtendidos.usaDadoCompleto` | [0142](adr/0142-permissoes-do-cadastro-completo.md) |
 | Na listagem e na ficha dos usuários atendidos, a visão básica traz só nome, situação, turno e data de inserção, e os filtros por tipo de deficiência e faixa etária são negados. | `VisoesAtendido.Basico` e `FiltroAtendidos.usaDadoCompleto` (backend, `atendidos.interno`) | [0083](adr/0083-listagem-e-ficha-dos-usuarios-atendidos.md) |
 
 ## P9. Relatórios (RF016)
@@ -209,6 +215,17 @@ Situação: provisória.
 | Decisão provisória | Onde mudar | ADR |
 |---|---|---|
 | Funções `ASSISTENTE_SOCIAL`, `PSICOLOGO`, `TERAPEUTA_OCUPACIONAL` e `OUTRA`, tiradas do planejamento. | `institucional.FuncaoColaborador`, `ck_colaborador_funcao` (migração nova) e `rotulos.ts` do módulo colaboradores (frontend) | [0045](adr/0045-cadastro-e-api-java-dos-colaboradores.md) |
+
+## P21. Opções de gênero e de escolaridade
+
+> Quais opções de gênero o cadastro do usuário atendido deve oferecer? E quais níveis de
+> escolaridade os relatórios usam?
+
+Situação: provisória.
+
+| Decisão provisória | Onde mudar | ADR |
+|---|---|---|
+| Gênero: feminino, masculino e outro. Escolaridade: sem escolaridade, fundamental, médio e superior, incompletos e completos. Vazio é "não informado". | `pessoas.Genero`, `pessoas.Escolaridade`, restrições da `V40` (migração nova) e `rotulos.ts` do módulo atendidos (frontend) | [0143](adr/0143-opcoes-de-genero-e-escolaridade.md) |
 
 ## P23. Participantes das atividades com famílias
 

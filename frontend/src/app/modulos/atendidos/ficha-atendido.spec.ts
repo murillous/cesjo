@@ -18,6 +18,8 @@ const FICHA: FichaCompleta = {
   dataNascimento: '2004-03-15',
   idade: 22,
   faixaEtaria: 'JOVEM',
+  genero: 'FEMININO',
+  bairro: 'Centro',
   telefone: '31987654321',
   nomeCuidador: 'Cuidadora Fictícia',
   inscricao: { id: 'insc-1', dataCadastro: '2026-11-02', origemEncaminhamento: 'CREAS' },
@@ -27,6 +29,28 @@ const FICHA: FichaCompleta = {
     data: '2026-11-20',
     motivo: 'MUDANCA_MUNICIPIO',
     observacao: 'Observação fictícia.',
+  },
+  cadastro: {
+    genero: 'FEMININO',
+    cpf: '52998224725',
+    nis: null,
+    rg: null,
+    escolaridade: 'MEDIO_COMPLETO',
+    cep: '36000000',
+    logradouro: 'Rua Fictícia',
+    numero: '10',
+    complemento: null,
+    bairro: 'Centro',
+    cidade: 'Juiz de Fora',
+    rendaFamiliar: 1518.5,
+    recebeBpc: true,
+    inscritoCadUnico: true,
+    recebeBolsaFamilia: false,
+  },
+  dadosSensiveis: {
+    crencaReligiosa: 'MATRIZ_AFRICANA',
+    medicamentosUsoContinuo: 'Remédio fictício',
+    observacoesSaude: null,
   },
 };
 
@@ -69,6 +93,25 @@ describe('FichaAtendidoPagina', () => {
     expect(elemento.textContent).toContain('Observação fictícia.');
     expect(elemento.textContent).toContain('Mudança para outro município');
     expect(elemento.textContent).toContain('Observação fictícia.');
+  });
+
+  it('mostra o cadastro completo, com crença e saúde quando a API manda', async () => {
+    const elemento = await abrir(FICHA);
+
+    expect(elemento.textContent).toContain('Feminino');
+    expect(elemento.textContent).toContain('52998224725');
+    expect(elemento.textContent).toContain('Rua Fictícia, 10 – Juiz de Fora – CEP 36000-000');
+    expect(elemento.textContent).toContain('Médio completo');
+    expect(elemento.textContent).toContain('BPC, CadÚnico');
+    expect(elemento.textContent).toContain('Matriz africana');
+    expect(elemento.textContent).toContain('Remédio fictício');
+  });
+
+  it('não mostra crença e saúde sem os dados sensíveis', async () => {
+    const elemento = await abrir({ ...FICHA, dadosSensiveis: null });
+
+    expect(elemento.textContent).toContain('Documentos e endereço');
+    expect(elemento.textContent).not.toContain('Crença religiosa');
   });
 
   it('mostra só os dados básicos quando a API devolve a visão básica', async () => {
