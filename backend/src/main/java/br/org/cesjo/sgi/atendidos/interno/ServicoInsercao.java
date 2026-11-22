@@ -1,9 +1,15 @@
 package br.org.cesjo.sgi.atendidos.interno;
 
+import java.text.Collator;
 import java.time.Clock;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.EnumMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.dao.DataIntegrityViolationException;
@@ -12,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.org.cesjo.sgi.atendidos.SituacaoInsercao;
 import br.org.cesjo.sgi.atendidos.Turno;
+import br.org.cesjo.sgi.atendidos.UsuarioAtivo;
 import br.org.cesjo.sgi.atendidos.UsuariosAtendidos;
 import br.org.cesjo.sgi.auditoria.Auditoria;
 import br.org.cesjo.sgi.auditoria.EventoAuditoria;
@@ -116,6 +123,28 @@ class ServicoInsercao implements UsuariosAtendidos {
 			contagem.put((Turno) linha[0], (Long) linha[1]);
 		}
 		return contagem;
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<UsuarioAtivo> listarAtivos() {
+		List<UUID> pessoaIds = insercoes.findBySituacao(SituacaoInsercao.ATIVA).stream().map(Insercao::getPessoaId).toList();
+		Map<UUID, String> nomes = pessoas.nomes(pessoaIds);
+		Collator ordem = Collator.getInstance(Locale.forLanguageTag("pt-BR"));
+		return pessoaIds.stream()
+			.filter(nomes::containsKey)
+			.map(id -> new UsuarioAtivo(id, nomes.get(id)))
+			.sorted(Comparator.comparing(UsuarioAtivo::nomeCompleto, ordem))
+			.toList();
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public void exigirAtivos(Collection<UUID> pessoaIds) {
+		Set<UUID> distintas = new HashSet<>(pessoaIds);
+		if (!distintas.isEmpty() && insercoes.contarPessoas(distintas, SituacaoInsercao.ATIVA) != distintas.size()) {
+			throw new RegraNegocioException("Escolha somente usuários atendidos ativos.");
+		}
 	}
 
 	private DadosResponsavel cuidador(UUID pessoaId, NovaInsercao nova) {

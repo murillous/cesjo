@@ -80,7 +80,11 @@ Situação: provisória.
 
 > Quais campos? CPF, NIS, RG, endereço completo, escolaridade, renda, benefícios, medicamentos?
 
-Situação: aberta.
+Situação: provisória.
+
+| Decisão provisória | Onde mudar | ADR |
+|---|---|---|
+| Cadastro completo com gênero, CPF, NIS, RG, escolaridade, endereço com bairro, renda familiar, BPC, CadÚnico e Bolsa Família; à parte, crença religiosa, medicamentos de uso contínuo e outras informações de saúde. Todos opcionais. | `pessoas.CadastroComplementar`, `pessoas.DadosSensiveis`, `CadastroComplementarPessoa`, migração nova e `formulario-cadastro.ts` (frontend) | [0140](adr/0140-campos-do-cadastro-completo.md) |
 
 ## P7. Cuidador familiar
 
@@ -108,6 +112,8 @@ Situação: provisória.
 | Na fila da lista de espera, o Consulta vê posição, nome, situação e data de cadastro, sem tipo de deficiência, origem nem situação dos documentos, e não filtra por tipo nem origem (`LISTA_ESPERA_FILA_LER`). | `acesso.Perfil` (linha do `CONSULTA`), `ItemFila.basico()` e `ListaEsperaControlador.listar` | [0058](adr/0058-dados-basicos-da-fila-para-o-consulta.md) |
 | O Consulta não exporta a lista de espera (`LISTA_ESPERA_EXPORTAR` só para Coordenador, Equipe Técnica e Administrativo). | `acesso.Perfil` (linha do `CONSULTA`) | [0130](adr/0130-exportacao-da-lista-de-espera.md) |
 | Administrativo e Consulta veem só os dados básicos dos usuários atendidos (`ATENDIDOS_LER_BASICO`). | `acesso.Perfil` | [0082](adr/0082-permissoes-dos-usuarios-atendidos.md) |
+| Crença religiosa e saúde só com `ATENDIDOS_DADOS_SENSIVEIS`, e completar o cadastro só com `ATENDIDOS_EDITAR`, as duas de Coordenador e Equipe Técnica; o Administrativo não tem nenhuma. | `acesso.Perfil` | [0142](adr/0142-permissoes-do-cadastro-completo.md) |
+| Filtros por gênero e bairro na listagem são negados para a visão básica. | `FiltroAtendidos.usaDadoCompleto` | [0142](adr/0142-permissoes-do-cadastro-completo.md) |
 | Na listagem e na ficha dos usuários atendidos, a visão básica traz só nome, situação, turno e data de inserção, e os filtros por tipo de deficiência e faixa etária são negados. | `VisoesAtendido.Basico` e `FiltroAtendidos.usaDadoCompleto` (backend, `atendidos.interno`) | [0083](adr/0083-listagem-e-ficha-dos-usuarios-atendidos.md) |
 
 ## P9. Relatórios (RF016)
@@ -200,6 +206,7 @@ Situação: provisória.
 | Só o Coordenador insere candidatos no serviço; a Equipe Técnica lê a ficha completa dos usuários atendidos. | `acesso.Perfil` (`ATENDIDOS_INSERIR`) | [0082](adr/0082-permissoes-dos-usuarios-atendidos.md) |
 | Só o Coordenador registra desligamento, porque ele libera vaga. | `acesso.Perfil` (`ATENDIDOS_DESLIGAR`) | [0110](adr/0110-desligamento-do-usuario-atendido.md) |
 | Equipe Técnica e Administrativo não veem nem gerenciam o cadastro de colaboradores; escolhem o profissional pelas telas de visita, escuta e atividade. | `acesso.Perfil` (`COLABORADORES_LER`, `COLABORADORES_GERENCIAR`) | [0047](adr/0047-permissoes-dos-colaboradores.md) |
+| O Administrativo não lista nem registra atividades (`ATIVIDADES_LER` e `ATIVIDADES_REGISTRAR` só para Coordenador e Equipe Técnica). | `acesso.Perfil` (linha do `ADMINISTRATIVO`) | [0152](adr/0152-permissoes-das-atividades.md) |
 | Equipe Técnica e Administrativo não veem nem registram parcerias. | `acesso.Perfil` (`PARCERIAS_LER`, `PARCERIAS_GERENCIAR`) | [0173](adr/0173-permissoes-das-parcerias.md) |
 
 ## P18. Funções dos colaboradores
@@ -213,3 +220,82 @@ Situação: provisória.
 | Decisão provisória | Onde mudar | ADR |
 |---|---|---|
 | Funções `ASSISTENTE_SOCIAL`, `PSICOLOGO`, `TERAPEUTA_OCUPACIONAL` e `OUTRA`, tiradas do planejamento. | `institucional.FuncaoColaborador`, `ck_colaborador_funcao` (migração nova) e `rotulos.ts` do módulo colaboradores (frontend) | [0045](adr/0045-cadastro-e-api-java-dos-colaboradores.md) |
+
+## P21. Opções de gênero e de escolaridade
+
+> Quais opções de gênero o cadastro do usuário atendido deve oferecer? E quais níveis de
+> escolaridade os relatórios usam?
+
+Situação: provisória.
+
+| Decisão provisória | Onde mudar | ADR |
+|---|---|---|
+| Gênero: feminino, masculino e outro. Escolaridade: sem escolaridade, fundamental, médio e superior, incompletos e completos. Vazio é "não informado". | `pessoas.Genero`, `pessoas.Escolaridade`, restrições da `V40` (migração nova) e `rotulos.ts` do módulo atendidos (frontend) | [0143](adr/0143-opcoes-de-genero-e-escolaridade.md) |
+
+## P23. Participantes das atividades com famílias
+
+> Nas atividades com famílias (RF010), o que precisa ser registrado: só de quais usuários atendidos
+> eram as famílias presentes, ou cada familiar que participou (nome, parentesco)?
+
+Situação: provisória.
+
+| Decisão provisória | Onde mudar | ADR |
+|---|---|---|
+| Participantes são sempre usuários atendidos ativos; na atividade com famílias, o participante indica de qual usuário é a família, sem registrar o familiar. | `atividades.interno.DadosAtividade` (`participantes`) e `ficha-atividade.html` (frontend) | [0150](adr/0150-registro-de-atividades.md) |
+
+## P24. Atividades planejadas
+
+> As atividades (RF010) são registradas só depois de realizadas, ou a equipe quer também agendar
+> atividades futuras e marcar depois se aconteceram?
+
+Situação: provisória.
+
+| Decisão provisória | Onde mudar | ADR |
+|---|---|---|
+| Só se registra atividade realizada: a data não pode ser futura e não há agenda de atividades. | `ServicoAtividades.exigirDataValida` (backend) e `[max]` da data em `ficha-atividade.html` (frontend) | [0150](adr/0150-registro-de-atividades.md) |
+
+## P25. Atendimento multiprofissional
+
+> O atendimento multiprofissional (RF010) precisa ter sempre dois ou mais profissionais registrados?
+> Quais funções contam (por exemplo, assistente social e psicóloga juntas)?
+
+Situação: provisória.
+
+| Decisão provisória | Onde mudar | ADR |
+|---|---|---|
+| O atendimento multiprofissional exige pelo menos dois profissionais, de qualquer função. | `atividades.TipoAtividade` (`ATENDIMENTO_MULTIPROFISSIONAL`) e `TIPOS_ATIVIDADE` em `rotulos.ts` do módulo atividades (frontend) | [0154](adr/0154-atendimentos-e-estudos-de-caso.md) |
+
+## P26. Motivos de desligamento de colaborador (RF014)
+
+> Quais motivos de desligamento de colaborador o Centro-Dia usa (pedido de demissão, fim de
+> contrato, dispensa, aposentadoria)? Precisam aparecer separados em algum relatório?
+
+Situação: provisória.
+
+| Decisão provisória | Onde mudar | ADR |
+|---|---|---|
+| O motivo do desligamento é texto livre obrigatório, guardado cifrado, sem lista fechada. | `institucional.interno.NovoDesligamentoColaborador` e `motivo_desligamento` (`V55`) | [0170](adr/0170-vinculos-dos-colaboradores.md) |
+
+## P30. Contatos e comunicações (RF011)
+
+> Nos contatos e comunicações, a pessoa ou instituição precisa estar ligada ao cadastro (o usuário
+> atendido cujo cuidador ligou, a instituição parceira) ou basta o nome? Registram-se só contatos que
+> já aconteceram, ou também contatos agendados?
+
+Situação: provisória.
+
+| Decisão provisória | Onde mudar | ADR |
+|---|---|---|
+| A pessoa ou instituição é texto livre (`contraparte`), sem ligação com usuário atendido nem com cadastro de instituições. | `atividades.interno.DadosComunicacao` e migração nova com `pessoa_id` | [0160](adr/0160-registro-de-contatos-e-comunicacoes.md) |
+| Só se registra o que já aconteceu: a data não pode ser futura. | `ServicoComunicacoes.exigirDataValida` (backend) e `[max]` da data em `ficha-comunicacao.html` (frontend) | [0160](adr/0160-registro-de-contatos-e-comunicacoes.md) |
+
+## P31. Ofícios, declarações e encaminhamentos (RF011)
+
+> Os ofícios e declarações têm número ou protocolo que precisa ser registrado à parte? Cada registro
+> pode ter mais de um anexo (ofício e resposta, por exemplo)? O anexo é obrigatório em algum tipo?
+
+Situação: provisória.
+
+| Decisão provisória | Onde mudar | ADR |
+|---|---|---|
+| Um anexo só por registro, em qualquer tipo, e sempre opcional; o número do ofício vai no assunto. | `ServicoComunicacoes.anexar` (backend), coluna `comunicacao.arquivo_id` (migração nova) e campo de anexo em `ficha-comunicacao.html` (frontend) | [0164](adr/0164-oficios-declaracoes-e-encaminhamentos.md) |

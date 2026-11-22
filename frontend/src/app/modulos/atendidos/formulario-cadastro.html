@@ -1,0 +1,221 @@
+<section class="cadastro">
+  <a matButton [routerLink]="['/atendidos', id()]" class="voltar">
+    <mat-icon aria-hidden="true">arrow_back</mat-icon>
+    Ficha do usuário
+  </a>
+
+  <h1>Completar cadastro</h1>
+  @if (nome()) {
+    <p class="texto-secundario">{{ nome() }}</p>
+  }
+
+  @if (carregando()) {
+    <mat-progress-bar mode="indeterminate" aria-label="Carregando o cadastro" />
+  }
+
+  @if (erro(); as mensagem) {
+    <p class="erro" role="alert">{{ mensagem }}</p>
+  }
+
+  @if (!carregando() && nome()) {
+    <form [formGroup]="formulario" (ngSubmit)="salvar()" novalidate>
+      <fieldset>
+        <legend>Pessoa</legend>
+        <mat-form-field appearance="outline">
+          <mat-label>Nome completo</mat-label>
+          <input matInput formControlName="nomeCompleto" autocomplete="off" />
+          @if (formulario.controls.nomeCompleto.hasError('required')) {
+            <mat-error>Informe o nome completo.</mat-error>
+          }
+        </mat-form-field>
+
+        <div class="linha">
+          <mat-form-field appearance="outline">
+            <mat-label>Data de nascimento</mat-label>
+            <input
+              matInput
+              [matDatepicker]="seletorNascimento"
+              [max]="hoje"
+              formControlName="dataNascimento"
+              (dateChange)="atualizarFaixa()"
+            />
+            <mat-hint>DD/MM/AAAA</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="seletorNascimento" />
+            <mat-datepicker #seletorNascimento />
+            @if (formulario.controls.dataNascimento.hasError('matDatepickerMax')) {
+              <mat-error>A data não pode ser futura.</mat-error>
+            }
+          </mat-form-field>
+          <p class="faixa" aria-live="polite">
+            @if (faixa(); as rotulo) {
+              Faixa etária: <strong>{{ rotulo }}</strong>
+            } @else {
+              Faixa etária calculada pela data de nascimento.
+            }
+          </p>
+        </div>
+
+        <div class="linha">
+          <mat-form-field appearance="outline">
+            <mat-label>Tipo de deficiência</mat-label>
+            <mat-select formControlName="tipoDeficiencia">
+              @for (tipo of tipos; track tipo.valor) {
+                <mat-option [value]="tipo.valor">{{ tipo.rotulo }}</mat-option>
+              }
+            </mat-select>
+            @if (formulario.controls.tipoDeficiencia.hasError('required')) {
+              <mat-error>Escolha o tipo de deficiência.</mat-error>
+            }
+          </mat-form-field>
+
+          <ng-container formGroupName="cadastro">
+            <mat-form-field appearance="outline">
+              <mat-label>Gênero</mat-label>
+              <mat-select formControlName="genero">
+                <mat-option [value]="null">Não informado</mat-option>
+                @for (genero of generos; track genero.valor) {
+                  <mat-option [value]="genero.valor">{{ genero.rotulo }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </ng-container>
+        </div>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Telefone</mat-label>
+          <input matInput formControlName="telefone" type="tel" inputmode="tel" autocomplete="off" />
+          <mat-hint>Com DDD, por exemplo (31) 98765-4321</mat-hint>
+          @if (formulario.controls.telefone.hasError('required')) {
+            <mat-error>Informe o telefone.</mat-error>
+          } @else if (formulario.controls.telefone.hasError('pattern')) {
+            <mat-error>Informe DDD e número, com 10 ou 11 dígitos.</mat-error>
+          }
+        </mat-form-field>
+      </fieldset>
+
+      <ng-container formGroupName="cadastro">
+        <fieldset>
+          <legend>Documentos</legend>
+          <p class="nota">Guardados cifrados.</p>
+          <div class="linha tres">
+            <mat-form-field appearance="outline">
+              <mat-label>CPF</mat-label>
+              <input matInput formControlName="cpf" inputmode="numeric" autocomplete="off" />
+              @if (formulario.controls.cadastro.controls.cpf.invalid) {
+                <mat-error>O CPF tem 11 dígitos.</mat-error>
+              }
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>NIS</mat-label>
+              <input matInput formControlName="nis" inputmode="numeric" autocomplete="off" />
+              @if (formulario.controls.cadastro.controls.nis.invalid) {
+                <mat-error>O NIS tem 11 dígitos.</mat-error>
+              }
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>RG</mat-label>
+              <input matInput formControlName="rg" autocomplete="off" />
+            </mat-form-field>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Endereço</legend>
+          <div class="linha">
+            <mat-form-field appearance="outline">
+              <mat-label>CEP</mat-label>
+              <input matInput formControlName="cep" inputmode="numeric" autocomplete="off" />
+              @if (formulario.controls.cadastro.controls.cep.invalid) {
+                <mat-error>Informe os 8 dígitos do CEP.</mat-error>
+              }
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Bairro</mat-label>
+              <input matInput formControlName="bairro" autocomplete="off" />
+            </mat-form-field>
+          </div>
+          <mat-form-field appearance="outline">
+            <mat-label>Rua ou avenida</mat-label>
+            <input matInput formControlName="logradouro" autocomplete="off" />
+          </mat-form-field>
+          <div class="linha tres">
+            <mat-form-field appearance="outline">
+              <mat-label>Número</mat-label>
+              <input matInput formControlName="numero" autocomplete="off" />
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Complemento</mat-label>
+              <input matInput formControlName="complemento" autocomplete="off" />
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Cidade</mat-label>
+              <input matInput formControlName="cidade" autocomplete="off" />
+            </mat-form-field>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Escolaridade, renda e benefícios</legend>
+          <div class="linha">
+            <mat-form-field appearance="outline">
+              <mat-label>Escolaridade</mat-label>
+              <mat-select formControlName="escolaridade">
+                <mat-option [value]="null">Não informada</mat-option>
+                @for (nivel of escolaridades; track nivel.valor) {
+                  <mat-option [value]="nivel.valor">{{ nivel.rotulo }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Renda familiar mensal (R$)</mat-label>
+              <input matInput type="number" min="0" step="0.01" formControlName="rendaFamiliar" />
+              @if (formulario.controls.cadastro.controls.rendaFamiliar.invalid) {
+                <mat-error>A renda não pode ser negativa.</mat-error>
+              }
+            </mat-form-field>
+          </div>
+          <div class="beneficios">
+            <mat-checkbox formControlName="recebeBpc">Recebe BPC</mat-checkbox>
+            <mat-checkbox formControlName="inscritoCadUnico">Inscrito no CadÚnico</mat-checkbox>
+            <mat-checkbox formControlName="recebeBolsaFamilia">Recebe Bolsa Família</mat-checkbox>
+          </div>
+        </fieldset>
+      </ng-container>
+
+      @if (podeSensiveis) {
+        <fieldset formGroupName="dadosSensiveis" class="sensivel">
+          <legend>
+            <mat-icon aria-hidden="true">lock</mat-icon>
+            Crença religiosa e saúde
+          </legend>
+          <p class="nota">
+            Só Coordenador e Equipe Técnica veem estes dados. Cada leitura fica registrada.
+          </p>
+          <mat-form-field appearance="outline">
+            <mat-label>Crença religiosa</mat-label>
+            <mat-select formControlName="crencaReligiosa">
+              <mat-option [value]="null">Não informada</mat-option>
+              @for (crenca of crencas; track crenca.valor) {
+                <mat-option [value]="crenca.valor">{{ crenca.rotulo }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Medicamentos de uso contínuo</mat-label>
+            <textarea matInput formControlName="medicamentosUsoContinuo" rows="3"></textarea>
+            <mat-hint>Nome, dose e horário. Guardado cifrado.</mat-hint>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Outras informações de saúde</mat-label>
+            <textarea matInput formControlName="observacoesSaude" rows="3"></textarea>
+            <mat-hint>Alergias, restrições, cuidados. Guardado cifrado.</mat-hint>
+          </mat-form-field>
+        </fieldset>
+      }
+
+      <div class="botoes">
+        <button matButton="filled" type="submit" [disabled]="enviando()">Salvar cadastro</button>
+      </div>
+    </form>
+  }
+</section>

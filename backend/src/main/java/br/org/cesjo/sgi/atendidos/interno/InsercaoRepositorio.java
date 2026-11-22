@@ -1,5 +1,6 @@
 package br.org.cesjo.sgi.atendidos.interno;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -13,6 +14,12 @@ interface InsercaoRepositorio extends JpaRepository<Insercao, UUID> {
 	boolean existsByPessoaIdAndSituacao(UUID pessoaId, SituacaoInsercao situacao);
 
 	long countBySituacao(SituacaoInsercao situacao);
+
+	List<Insercao> findBySituacao(SituacaoInsercao situacao);
+
+	/** Pessoas distintas entre {@code pessoaIds} com inserção na situação. */
+	@Query("select count(distinct i.pessoaId) from Insercao i where i.pessoaId in :pessoaIds and i.situacao = :situacao")
+	long contarPessoas(Collection<UUID> pessoaIds, SituacaoInsercao situacao);
 
 	/** Pares turno e quantidade das inserções na situação. */
 	@Query("select i.turno, count(i) from Insercao i where i.situacao = :situacao group by i.turno")
