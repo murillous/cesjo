@@ -1,0 +1,38 @@
+@use 'styles/breakpoints' as bp;
+
+// Escolha do período e aviso de erro dos relatórios estatísticos (mensal, quadrimestral e anual).
+// Mobile first: campos e botão empilhados; no tablet ficam numa linha.
+
+.escolha {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sgi-space-1);
+  margin-bottom: var(--sgi-space-3);
+
+  button {
+    align-self: flex-start;
+    min-height: var(--sgi-alvo-toque);
+  }
+}
+
+.aviso-erro {
+  padding: var(--sgi-space-1) var(--sgi-space-2);
+  border-left: var(--sgi-space-0-5) solid var(--sgi-color-accent);
+  background: var(--sgi-color-background-secondary);
+}
+
+@media (min-width: bp.$tablet) {
+  .escolha {
+    flex-direction: row;
+    align-items: center;
+
+    mat-form-field {
+      width: 12rem;
+    }
+
+    // O rótulo do quadrimestre diz os meses e precisa de mais espaço.
+    .quadrimestre {
+      width: 20rem;
+    }
+  }
+}
