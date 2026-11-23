@@ -4,6 +4,9 @@ Perguntas que a equipe CESJO ainda não respondeu (seção 9 do [planejamento](p
 o sistema faz enquanto isso. Cada decisão provisória segue o [ADR 0006](adr/0006-pendencias-cesjo.md):
 fica num lugar só do código, com o marcador `PENDENTE-CESJO(Pn)`, e tem um ADR com o motivo.
 
+A versão para enviar à equipe CESJO, em linguagem não técnica e dividida por setor, está em
+[perguntas-para-cesjo.md](perguntas-para-cesjo.md). Ao mudar uma pergunta aqui, mude lá também.
+
 Quando uma resposta chegar:
 
 1. Anote a resposta na pergunta, abaixo.
