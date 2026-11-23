@@ -7,6 +7,11 @@
   max-width: 70ch;
 }
 
+.importar {
+  min-height: var(--sgi-alvo-toque);
+  margin-bottom: var(--sgi-space-2);
+}
+
 .filtros {
   display: grid;
   grid-template-columns: 1fr;

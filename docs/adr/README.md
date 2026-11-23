@@ -167,6 +167,16 @@ frente de trabalho paralela não é usado todo.
 - [0210](0210-relatorio-de-transparencia.md) — Relatório de transparência: só números agregados, público, por período livre (provisório)
 - [0211](0211-api-java-de-contagens-institucionais.md) — API Java de contagens do módulo Institucional
 - [0212](0212-tela-do-relatorio-de-transparencia.md) — Tela do relatório de transparência
+- [0205](0205-relatorio-de-intervencao-creas.md) — Relatório de intervenção (CREAS): casos de violação do período e intervenções (provisório)
+- [0206](0206-acesso-e-auditoria-do-relatorio-de-intervencao.md) — Acesso e auditoria do relatório de intervenção (provisório)
+- [0207](0207-tela-do-relatorio-de-intervencao.md) — Tela do relatório de intervenção
+- [0215](0215-importacao-da-lista-de-espera-de-planilha.md) — Importação da lista de espera de planilha: modelo provisório e fluxo em duas etapas (provisório)
+- [0216](0216-permissao-de-importacao-de-planilhas.md) — Permissão de importação de planilhas só para o Coordenador (provisório)
+- [0217](0217-auditoria-da-importacao.md) — Auditoria da importação de planilhas com a ação IMPORTAR
+- [0218](0218-limites-e-planilhas-malformadas.md) — Limites da importação e tratamento de planilhas malformadas
+- [0219](0219-tela-de-importacao-de-planilha.md) — Tela de importação de planilha reutilizável
+- [0220](0220-importacao-dos-usuarios-atendidos.md) — Importação dos usuários atendidos de planilha: modelo provisório e inserção ativa (provisório)
+- [0221](0221-tela-de-importacao-dos-usuarios-atendidos.md) — Tela de importação dos usuários atendidos
 - [0230](0230-volume-esperado-e-massa-simulada.md) — Volume esperado e massa simulada do teste de desempenho (provisório)
 - [0231](0231-como-o-teste-de-desempenho-mede.md) — Como o teste de desempenho mede as consultas
 - [0232](0232-teste-de-desempenho-fora-do-verify.md) — Teste de desempenho fora do `verify` normal, com perfil Maven e execução manual

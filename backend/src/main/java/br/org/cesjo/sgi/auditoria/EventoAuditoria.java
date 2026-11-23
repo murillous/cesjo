@@ -51,6 +51,14 @@ public record EventoAuditoria(AcaoAuditoria acao, String entidade, String entida
 		return new EventoAuditoria(AcaoAuditoria.EXPORTAR, entidade, null, Set.of(), null, null);
 	}
 
+	/**
+	 * Importação de uma planilha confirmada (ADR 0217). {@code entidade} nomeia o que foi importado; cada
+	 * registro criado tem também o seu próprio evento de criação.
+	 */
+	public static EventoAuditoria importacao(String entidade) {
+		return new EventoAuditoria(AcaoAuditoria.IMPORTAR, entidade, null, Set.of(), null, null);
+	}
+
 	public static EventoAuditoria login(UUID contaId, String login) {
 		return new EventoAuditoria(AcaoAuditoria.LOGIN, "conta_acesso", texto(contaId), Set.of(), contaId, login);
 	}

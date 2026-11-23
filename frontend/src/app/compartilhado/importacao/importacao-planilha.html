@@ -1,0 +1,181 @@
+<ol class="passos">
+  <li class="passo">
+    <h2 class="titulo-passo">Baixe o modelo</h2>
+    <p class="texto-secundario">
+      Copie os dados para a aba "Dados" do modelo, uma pessoa por linha. Datas no formato
+      dd/mm/aaaa. A ordem das colunas não importa, mas os títulos precisam ser os do modelo.
+    </p>
+    <div class="acoes">
+      <button
+        matButton="outlined"
+        type="button"
+        [disabled]="baixandoModelo()"
+        (click)="baixarModelo()"
+      >
+        <mat-icon aria-hidden="true">download</mat-icon>
+        Baixar modelo de planilha
+      </button>
+    </div>
+    @if (erroModelo(); as texto) {
+      <p class="aviso-erro" role="alert">{{ texto }}</p>
+    }
+    @if (colunas().length) {
+      <details class="colunas">
+        <summary>O que preencher em cada coluna</summary>
+        <dl>
+          @for (coluna of colunas(); track coluna.titulo) {
+            <div class="coluna">
+              <dt>
+                {{ coluna.titulo }}
+                <span class="obrigatoria">{{
+                  coluna.obrigatoria ? 'obrigatória' : 'opcional'
+                }}</span>
+              </dt>
+              <dd>
+                {{ coluna.formato }}
+                @if (coluna.valoresAceitos.length) {
+                  <span class="aceitos">{{ coluna.valoresAceitos.join(', ') }}.</span>
+                }
+              </dd>
+            </div>
+          }
+        </dl>
+      </details>
+    }
+  </li>
+
+  <li class="passo">
+    <h2 class="titulo-passo">Envie a planilha preenchida</h2>
+    <input
+      #seletor
+      class="seletor"
+      type="file"
+      tabindex="-1"
+      aria-hidden="true"
+      accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      (change)="aoEscolher($event)"
+    />
+    <div class="acoes">
+      <button
+        matButton="filled"
+        type="button"
+        [disabled]="estado() === 'lendo' || estado() === 'gravando'"
+        [attr.aria-describedby]="ids.dica"
+        (click)="escolher()"
+      >
+        <mat-icon aria-hidden="true">upload_file</mat-icon>
+        {{ arquivo() ? 'Escolher outra planilha' : 'Escolher planilha' }}
+      </button>
+      <span class="texto-secundario" [id]="ids.dica">{{ dica }}</span>
+    </div>
+    @if (arquivo(); as escolhido) {
+      <p class="arquivo">
+        <mat-icon aria-hidden="true">table_view</mat-icon>
+        <span>{{ escolhido.name }}</span>
+      </p>
+    }
+    @if (estado() === 'lendo') {
+      <mat-progress-bar mode="indeterminate" aria-label="Lendo a planilha" />
+    }
+    @if (erro() && estado() !== 'previa') {
+      <p class="aviso-erro" role="alert">{{ erro() }}</p>
+    }
+  </li>
+
+  <li class="passo">
+    <h2 class="titulo-passo">Confira e confirme</h2>
+    @if (estado() === 'concluida' && resultado(); as fim) {
+      <div class="concluida" role="status">
+        <mat-icon aria-hidden="true">check_circle</mat-icon>
+        <p>
+          <strong
+            >{{ fim.importadas }}
+            {{ fim.importadas === 1 ? item() + ' importado' : itens() + ' importados' }}.</strong
+          >
+          @if (fim.ignoradas) {
+            {{ fim.ignoradas }}
+            {{ fim.ignoradas === 1 ? 'linha com erro ficou' : 'linhas com erro ficaram' }}
+            de fora: corrija na planilha e importe só essas linhas.
+          }
+        </p>
+      </div>
+      <div class="acoes">
+        <ng-content />
+        <button matButton type="button" (click)="recomecar()">Importar outra planilha</button>
+      </div>
+    } @else if (previa(); as dados) {
+      <p class="resumo" [id]="ids.resumo" aria-live="polite">
+        <span class="contagem valida"
+          >{{ dados.validas }} {{ dados.validas === 1 ? 'linha pronta' : 'linhas prontas' }}</span
+        >
+        <span class="contagem com-erro">{{ dados.comErro }} com erro</span>
+        <span class="texto-secundario"
+          >de {{ dados.total }}. Só as linhas prontas são gravadas.</span
+        >
+      </p>
+
+      @if (dados.comErro) {
+        <mat-checkbox [checked]="soComErro()" (change)="alternarSoComErro($event.checked)">
+          Mostrar só as linhas com erro
+        </mat-checkbox>
+      }
+
+      <ul class="linhas" [attr.aria-describedby]="ids.resumo">
+        @for (item of linhas(); track item.linha) {
+          <li class="linha" [class.com-erro]="item.erros.length">
+            <div class="cabecalho-linha">
+              <span class="numero">Linha {{ item.linha }}</span>
+              <span class="nome">{{ item.valores[0] || 'Sem nome' }}</span>
+              <span class="situacao">
+                <mat-icon aria-hidden="true">{{ item.erros.length ? 'error' : 'check' }}</mat-icon>
+                {{ item.erros.length ? 'Com erro' : 'Pronta' }}
+              </span>
+            </div>
+            @if (item.erros.length) {
+              <ul class="erros" [attr.aria-label]="'Erros da linha ' + item.linha">
+                @for (texto of item.erros; track $index) {
+                  <li>{{ texto }}</li>
+                }
+              </ul>
+            }
+            <dl class="valores">
+              @for (titulo of dados.colunas; track titulo; let i = $index) {
+                @if (i > 0) {
+                  <div>
+                    <dt>{{ titulo }}</dt>
+                    <dd>{{ item.valores[i] || '—' }}</dd>
+                  </div>
+                }
+              }
+            </dl>
+          </li>
+        }
+      </ul>
+
+      @if (erro(); as texto) {
+        <p class="aviso-erro" role="alert">{{ texto }}</p>
+      }
+      <div class="acoes confirmar">
+        <button
+          matButton="filled"
+          type="button"
+          [disabled]="!dados.validas || estado() === 'gravando'"
+          (click)="confirmar()"
+        >
+          Importar {{ dados.validas }} {{ dados.validas === 1 ? 'linha' : 'linhas' }}
+        </button>
+        <button matButton type="button" [disabled]="estado() === 'gravando'" (click)="recomecar()">
+          Cancelar
+        </button>
+      </div>
+      @if (estado() === 'gravando') {
+        <mat-progress-bar mode="indeterminate" aria-label="Importando a planilha" />
+      }
+    } @else {
+      <p class="texto-secundario">
+        Depois de enviar, você vê cada linha com o que precisa ser corrigido. Nada é gravado antes
+        da confirmação.
+      </p>
+    }
+  </li>
+</ol>

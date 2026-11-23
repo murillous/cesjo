@@ -14,6 +14,12 @@
           [parametros]="parametrosExportacao()"
         />
       }
+      @if (podeImportar) {
+        <a matButton="outlined" routerLink="importar">
+          <mat-icon aria-hidden="true">upload_file</mat-icon>
+          Importar planilha
+        </a>
+      }
       @if (podeCadastrar) {
         <a matButton="filled" routerLink="nova" class="cadastrar">
           <mat-icon aria-hidden="true">person_add</mat-icon>

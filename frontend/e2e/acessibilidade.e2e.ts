@@ -43,6 +43,16 @@ const TELAS_LOGADAS = [
   { nome: 'início', caminho: '/', titulo: /Início/ },
   { nome: 'lista de espera', caminho: '/lista-espera', titulo: /Lista de espera/ },
   { nome: 'cadastro de candidato', caminho: '/lista-espera/nova', titulo: /Cadastrar candidato/ },
+  {
+    nome: 'importação da lista de espera',
+    caminho: '/lista-espera/importar',
+    titulo: /Importar lista de espera/,
+  },
+  {
+    nome: 'importação dos usuários atendidos',
+    caminho: '/atendidos/importar',
+    titulo: /Importar usuários atendidos/,
+  },
   { nome: 'contas de acesso', caminho: '/contas', titulo: /Contas de acesso/ },
   { nome: 'nova conta', caminho: '/contas/nova', titulo: /Nova conta/ },
   { nome: 'log de auditoria', caminho: '/auditoria', titulo: /Log de auditoria/ },
@@ -62,6 +72,11 @@ const TELAS_LOGADAS = [
     nome: 'relatório de transparência',
     caminho: '/relatorios/transparencia',
     titulo: /Relatório de transparência/,
+  },
+  {
+    nome: 'relatório de intervenção',
+    caminho: '/relatorios/intervencao',
+    titulo: /Relatório de intervenção/,
   },
   { nome: 'violações de direitos', caminho: '/violacoes', titulo: /Violações de direitos/ },
   { nome: 'página não encontrada', caminho: '/nao-existe', titulo: /não encontrada/ },
@@ -98,6 +113,28 @@ test.describe('acessibilidade', () => {
       await auditar(page);
     });
   }
+
+  test('relatório de intervenção gerado', async ({ page }) => {
+    await simularApi(page);
+    await page.goto('/relatorios/intervencao');
+    await expect(page).toHaveTitle(/Relatório de intervenção/);
+    await page.getByRole('button', { name: 'Gerar relatório' }).click();
+    await expect(page.getByRole('heading', { name: /Relatório de intervenção de/ })).toBeVisible();
+    await auditar(page);
+  });
+
+  test('importação com a pré-visualização e os erros por linha', async ({ page }) => {
+    await simularApi(page);
+    await page.goto('/lista-espera/importar');
+    await page.locator('input[type="file"]').setInputFiles({
+      name: 'lista.xlsx',
+      mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      buffer: Buffer.from('planilha fictícia'),
+    });
+    await expect(page.getByText('1 linha pronta')).toBeVisible();
+    await page.getByText('O que preencher em cada coluna').click();
+    await auditar(page);
+  });
 
   test('cadastro de candidato com erros de validação', async ({ page }) => {
     await simularApi(page);

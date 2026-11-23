@@ -52,6 +52,8 @@ export class PaginaAtendidos implements OnInit {
   private readonly api = inject(AtendidosApi);
 
   protected readonly completo = inject(Sessao).temPermissao('ATENDIDOS_LER');
+  /** Só o Coordenador importa planilhas (ADR 0216). */
+  protected readonly podeImportar = inject(Sessao).temPermissao('PLANILHAS_IMPORTAR');
   protected readonly turnos = TURNOS;
   protected readonly tipos = TIPOS_DEFICIENCIA;
   protected readonly faixas = FAIXAS_ETARIAS;

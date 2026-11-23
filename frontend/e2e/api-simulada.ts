@@ -17,6 +17,8 @@ export const CONTA_COORDENADOR = {
     'LISTA_ESPERA_FILA_LER',
     'RELATORIOS_LER',
     'VIOLACOES_LER',
+    'PLANILHAS_IMPORTAR',
+    'ATENDIDOS_LER_BASICO',
   ],
   trocaSenhaObrigatoria: false,
 };
@@ -166,6 +168,52 @@ const RELATORIO_TRANSPARENCIA = {
   ],
 };
 
+const RELATORIO_INTERVENCAO = {
+  titulo: 'Relatório de intervenção de 01/10/2026 a 31/10/2026',
+  inicio: '2026-10-01',
+  fim: '2026-10-31',
+  geradoEm: '2026-11-20T13:00:00Z',
+  resumo: [
+    ...linhas('Casos', [
+      ['Usuários com violação identificada', 2],
+      ['Violações identificadas', 3],
+    ]),
+    ...linhas('Violações por categoria', [
+      ['Negligência ou abandono', 2],
+      ['Confinamento', 0],
+    ]),
+    ...linhas('Intervenções', [
+      ['Atendimentos individuais aos usuários com violação', 4],
+      ['Encaminhamentos enviados (todos os usuários)', 1],
+    ]),
+  ],
+  casos: [
+    {
+      usuario: 'Ana Fictícia',
+      violacoes: [
+        { categoria: 'Negligência ou abandono', ambito: null, identificadaEm: '2026-10-03' },
+        {
+          categoria: 'Violência física ou psicológica',
+          ambito: 'Intrafamiliar',
+          identificadaEm: '2026-10-10',
+        },
+      ],
+      atendimentos: 4,
+      ultimoAtendimento: '2026-10-20',
+      situacao: 'Ativo no serviço',
+    },
+    {
+      usuario: 'Bruno Fictício',
+      violacoes: [
+        { categoria: 'Negligência ou abandono', ambito: null, identificadaEm: '2026-10-08' },
+      ],
+      atendimentos: 0,
+      ultimoAtendimento: null,
+      situacao: 'Desligado em 25/10/2026: Evasão',
+    },
+  ],
+};
+
 const AUDITORIA = [
   {
     id: '00000000-0000-0000-0000-0000000000a1',
@@ -219,6 +267,38 @@ function json(route: Route, corpo: unknown, status = 200) {
   return route.fulfill({ status, contentType: 'application/json', body: JSON.stringify(corpo) });
 }
 
+const COLUNAS_IMPORTACAO = [
+  {
+    titulo: 'Nome completo',
+    obrigatoria: true,
+    formato: 'Nome da pessoa com deficiência, até 150 caracteres.',
+    exemplo: 'Maria Exemplo da Silva',
+    valoresAceitos: [],
+  },
+  {
+    titulo: 'Origem do encaminhamento',
+    obrigatoria: true,
+    formato: 'Um dos valores aceitos.',
+    exemplo: 'CRAS',
+    valoresAceitos: ['CRAS', 'CREAS', 'Saúde'],
+  },
+];
+
+const PREVIA_IMPORTACAO = {
+  colunas: ['Nome completo', 'Origem do encaminhamento'],
+  linhas: [
+    { linha: 2, valores: ['Pessoa Fictícia Um', 'CRAS'], erros: [] },
+    {
+      linha: 3,
+      valores: ['Pessoa Fictícia Dois', 'Outra'],
+      erros: ['Origem do encaminhamento: "Outra" não é um valor aceito. Use CRAS, CREAS, Saúde.'],
+    },
+  ],
+  total: 2,
+  validas: 1,
+  comErro: 1,
+};
+
 /**
  * Intercepta `/api/**` no navegador. `logado: false` faz `/api/sessao` responder 401, como sem
  * sessão; `trocaSenha: true` simula o primeiro acesso.
@@ -258,9 +338,15 @@ export async function simularApi(
     }
     if (caminho === '/api/estatisticas/relatorios/transparencia')
       return json(route, RELATORIO_TRANSPARENCIA);
+    if (caminho === '/api/estatisticas/relatorios/intervencao')
+      return json(route, RELATORIO_INTERVENCAO);
     if (caminho === '/api/estatisticas/dashboards/atendimento')
       return json(route, PAINEL_ATENDIMENTO);
     if (caminho === '/api/violacoes') return json(route, pagina(VIOLACOES));
+    if (caminho.startsWith('/api/importacao/') && caminho.endsWith('/colunas'))
+      return json(route, COLUNAS_IMPORTACAO);
+    if (caminho.startsWith('/api/importacao/') && caminho.endsWith('/previa'))
+      return json(route, PREVIA_IMPORTACAO);
     return json(route, { title: 'Não simulado no teste', status: 404 }, 404);
   });
 }

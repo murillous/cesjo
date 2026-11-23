@@ -37,6 +37,7 @@ import static br.org.cesjo.sgi.acesso.Permissao.VIOLACOES_REGISTRAR;
 import static br.org.cesjo.sgi.acesso.Permissao.PIA_APROVAR;
 import static br.org.cesjo.sgi.acesso.Permissao.PIA_EDITAR;
 import static br.org.cesjo.sgi.acesso.Permissao.PIA_LER;
+import static br.org.cesjo.sgi.acesso.Permissao.PLANILHAS_IMPORTAR;
 import static br.org.cesjo.sgi.acesso.Permissao.RELATORIOS_LER;
 import static br.org.cesjo.sgi.acesso.Permissao.VISITAS_AGENDAR;
 import static br.org.cesjo.sgi.acesso.Permissao.VISITAS_LER;
@@ -67,7 +68,7 @@ public enum Perfil {
 					PIA_EDITAR, PIA_APROVAR, CAPACIDADE_LER, CAPACIDADE_EDITAR, ATENDIDOS_DESLIGAR, VIOLACOES_REGISTRAR, VIOLACOES_LER, LISTA_ESPERA_EXPORTAR,
 					ATENDIDOS_EDITAR, ATENDIDOS_DADOS_SENSIVEIS, ATIVIDADES_LER, ATIVIDADES_REGISTRAR, COMUNICACOES_LER,
 					COMUNICACOES_REGISTRAR, PARCERIAS_LER, PARCERIAS_GERENCIAR, EVENTOS_LER, EVENTOS_REGISTRAR, DOACOES_LER,
-					DOACOES_REGISTRAR, RELATORIOS_LER)),
+					DOACOES_REGISTRAR, RELATORIOS_LER, PLANILHAS_IMPORTAR)),
 
 	// PENDENTE-CESJO(P17): a Equipe Técnica não vê relatórios nem dashboards (ADR 0015 e ADR 0196).
 	// PENDENTE-CESJO(P17): a Equipe Técnica não vê o cadastro de colaboradores (gestão institucional, ADR 0047)
@@ -85,6 +86,7 @@ public enum Perfil {
 	// PENDENTE-CESJO(P17): o Administrativo não vê o cadastro de colaboradores (gestão institucional, ADR 0047)
 	// nem registra parcerias (ADR 0173) nem reuniões e eventos institucionais (ADR 0176) nem doações (ADR 0179).
 	// PENDENTE-CESJO(P17): o Administrativo não vê as atividades (RF010), ponto com (?) na matriz (ADR 0152).
+	// PENDENTE-CESJO(P17): o Administrativo não importa planilhas, ponto com (?) na matriz (ADR 0216).
 	// PENDENTE-CESJO(P8): o Administrativo agenda, cancela e reagenda visitas, mas não registra a realização
 	// nem lê as observações, que são sensíveis (ADR 0074).
 	// PENDENTE-CESJO(P8): o Administrativo não completa o cadastro do usuário atendido e não vê crença

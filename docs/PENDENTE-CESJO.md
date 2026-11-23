@@ -128,6 +128,8 @@ Situação: provisória.
 | Relatório mensal com quantitativos de lista de espera (novas inscrições, fila no último dia, saídas por motivo), usuários (inserções, atendidos no período, ativos no último dia), atendimentos e atividades por tipo, contatos e comunicações por tipo e direção, e desligamentos por motivo. Sem violações. | `estatisticas.interno.IndicadoresDoRelatorio` (uma linha por indicador) | [0200](adr/0200-relatorio-estatistico-mensal.md) |
 | Relatórios quadrimestral e anual com o mesmo conteúdo do mensal. Quadrimestres do ano civil: janeiro a abril, maio a agosto e setembro a dezembro. | `estatisticas.interno.PeriodoDoRelatorio.quadrimestral` e `QUADRIMESTRES` em `relatorio-periodo.ts` (frontend) | [0203](adr/0203-relatorios-quadrimestral-e-anual.md) |
 | Relatório de transparência público, só com números agregados e sem nenhum dado pessoal, por período livre: usuários atendidos, lista de espera, atendimentos e atividades por tipo, parcerias vigentes e articulações, eventos institucionais por tipo, doações recebidas por tipo e valor em dinheiro, doações feitas e equipe por função. O sistema só gera; publicar ou enviar é feito fora dele. | `estatisticas.interno.IndicadoresDaTransparencia` (uma linha por item) | [0210](adr/0210-relatorio-de-transparencia.md) |
+| Relatório de intervenção (CREAS) de um período livre: um caso por usuário com violação identificada no período (categoria, âmbito e data, sem a descrição), com os atendimentos individuais, o último atendimento e a situação no serviço no fim do período; resumo com violações por categoria, atendimentos, encaminhamentos do período (de todos os usuários, P30) e desligados. | `estatisticas.interno.ConteudoDoRelatorioDeIntervencao` | [0205](adr/0205-relatorio-de-intervencao-creas.md) |
+| O relatório de intervenção é gerado e baixado só por quem tem `RELATORIOS_LER` e `VIOLACOES_LER` (hoje só o Coordenador). Gerar registra leitura sensível e baixar registra exportação, as duas em `relatorio_intervencao`. | `estatisticas.interno.RelatorioIntervencaoControlador` (`PODE_GERAR`) e rota `intervencao` em `relatorios.routes.ts` (frontend) | [0206](adr/0206-acesso-e-auditoria-do-relatorio-de-intervencao.md) |
 
 ## P10. Parcerias (RF013)
 
@@ -166,7 +168,12 @@ O levantamento dos meios de acesso, dos requisitos legais e das perguntas de det
 > A lista de espera e o cadastro de usuários existem hoje em Excel? Podem enviar um exemplo com dados
 > fictícios?
 
-Situação: aberta.
+Situação: provisória.
+
+| Decisão provisória | Onde mudar | ADR |
+|---|---|---|
+| A lista de espera é importada de um modelo próprio, com download na tela: nome, data de nascimento, tipo de deficiência, telefone, responsável, origem e data de cadastro, datas em dd/mm/aaaa e opções pelos rótulos das telas. | `importacao.interno.ModeloListaEspera` | [0215](adr/0215-importacao-da-lista-de-espera-de-planilha.md) |
+| Os usuários atendidos são importados de um modelo próprio: os campos da lista de espera, com o responsável como cuidador e a data de cadastro opcional, mais data de inserção e turno. Cada linha vira inscrição e inserção ativa. | `importacao.interno.ModeloAtendidos` | [0220](adr/0220-importacao-dos-usuarios-atendidos.md) |
 
 ## P14. LGPD
 
@@ -226,6 +233,7 @@ Situação: provisória.
 | Equipe Técnica e Administrativo não veem nem registram reuniões e eventos institucionais. | `acesso.Perfil` (`EVENTOS_LER`, `EVENTOS_REGISTRAR`) | [0176](adr/0176-permissoes-das-reunioes-e-eventos.md) |
 | Equipe Técnica e Administrativo não veem nem registram doações. | `acesso.Perfil` (`DOACOES_LER`, `DOACOES_REGISTRAR`) | [0179](adr/0179-permissoes-das-doacoes.md) |
 | Só Coordenador e Consulta veem relatórios e dashboards; Equipe Técnica e Administrativo ficam sem acesso. | `acesso.Perfil` (`RELATORIOS_LER`) e `relatorios.modulo.ts` (frontend) | [0196](adr/0196-permissao-dos-relatorios-e-dashboards.md) |
+| Só o Coordenador importa planilhas; o Administrativo fica sem importação. | `acesso.Perfil` (`PLANILHAS_IMPORTAR`) | [0216](adr/0216-permissao-de-importacao-de-planilhas.md) |
 
 ## P18. Funções dos colaboradores
 

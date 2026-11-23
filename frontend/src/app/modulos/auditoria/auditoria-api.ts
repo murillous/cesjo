@@ -9,6 +9,7 @@ export type AcaoAuditoria =
   | 'EXCLUIR'
   | 'LER_SENSIVEL'
   | 'EXPORTAR'
+  | 'IMPORTAR'
   | 'LOGIN'
   | 'LOGIN_FALHO'
   | 'LOGOUT';
@@ -20,6 +21,7 @@ export const ROTULOS_ACAO: Readonly<Record<AcaoAuditoria, string>> = {
   EXCLUIR: 'Exclusão',
   LER_SENSIVEL: 'Leitura de dado sensível',
   EXPORTAR: 'Exportação',
+  IMPORTAR: 'Importação de planilha',
   LOGIN: 'Login',
   LOGIN_FALHO: 'Falha de login',
   LOGOUT: 'Saída',
