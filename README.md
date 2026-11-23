@@ -40,6 +40,31 @@ cd backend
 ./mvnw verify            # testes de integração sobem o Postgres via Testcontainers
 ```
 
+### Dados de demonstração
+
+Para apresentar o sistema com dados fictícios, suba o backend com o perfil `demo` e o banco vazio
+([ADR 0237](docs/adr/0237-carga-de-demonstracao.md)):
+
+```bash
+cd backend
+./mvnw spring-boot:run -Dspring-boot.run.profiles=demo
+```
+
+A carga grava cerca de dois anos de uso: 220 pessoas na lista de espera, 150 delas inseridas no
+serviço, além de visitas, escutas, PIAs, atividades, comunicações, parcerias, eventos, doações e o log
+de auditoria. Ela cria uma conta por perfil, todas com a senha `demonstracao` e sem troca obrigatória:
+
+| Login | Perfil |
+|---|---|
+| `coordenador` | Coordenador |
+| `equipe.tecnica` | Equipe Técnica |
+| `administrativo` | Administrativo |
+| `consulta` | Consulta |
+
+A carga só roda quando o banco não tem nenhuma pessoa nem conta e se recusa a subir com o perfil
+`prod`. Para recomeçar, apague o volume do Postgres local (`docker compose down -v` na pasta
+`backend`) e os arquivos em `backend/dados/arquivos`.
+
 ### Chave de criptografia
 
 Texto sensível e arquivos são cifrados com AES-256-GCM na aplicação

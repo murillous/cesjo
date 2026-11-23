@@ -23,7 +23,7 @@ class ModularidadeTests {
 		assertThat(modulos.stream().map(ApplicationModule::getIdentifier).map(Object::toString))
 			.containsExactlyInAnyOrder("acesso", "auditoria", "arquivos", "notificacoes", "pessoas", "listaespera",
 					"atendimento", "atendidos", "atividades", "institucional", "relatorios", "estatisticas", "importacao",
-					"compartilhado");
+					"demonstracao", "compartilhado");
 	}
 
 }

@@ -17,10 +17,11 @@ import org.testcontainers.utility.DockerImageName;
  * Banco só do teste de desempenho (ADR 0231): um Postgres 18 novo, separado do Postgres compartilhado
  * pelos outros testes, para a massa simulada não se misturar com os dados deles. Com Docker, um
  * contêiner {@code postgres:18-alpine}; sem Docker, uma instância nativa do embedded-postgres (como no
- * ADR 0008), parada quando o contexto fecha.
+ * ADR 0008), parada quando o contexto fecha. O teste da carga de demonstração (ADR 0237) usa o mesmo
+ * banco isolado.
  */
 @TestConfiguration(proxyBeanMethods = false)
-class BancoDoDesempenho {
+public class BancoDoDesempenho {
 
 	@Bean
 	@ServiceConnection
