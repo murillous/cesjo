@@ -184,3 +184,4 @@ frente de trabalho paralela não é usado todo.
 - [0234](0234-indice-proposto-para-o-log-de-auditoria.md) — Índice proposto para a consulta do log de auditoria por login (substituído pelo 0235)
 - [0235](0235-indices-das-consultas-lentas.md) — Índices das consultas lentas do teste de desempenho
 - [0236](0236-contagem-limitada-no-log-de-auditoria.md) — Contagem limitada na listagem do log de auditoria
+- [0237](0237-carga-de-demonstracao.md) — Carga de dados fictícios para demonstração, no perfil `demo`
