@@ -68,6 +68,11 @@ const TELAS_LOGADAS = [
     caminho: '/relatorios/transparencia',
     titulo: /Relatório de transparência/,
   },
+  {
+    nome: 'relatório de intervenção',
+    caminho: '/relatorios/intervencao',
+    titulo: /Relatório de intervenção/,
+  },
   { nome: 'violações de direitos', caminho: '/violacoes', titulo: /Violações de direitos/ },
   { nome: 'página não encontrada', caminho: '/nao-existe', titulo: /não encontrada/ },
 ];
@@ -103,6 +108,15 @@ test.describe('acessibilidade', () => {
       await auditar(page);
     });
   }
+
+  test('relatório de intervenção gerado', async ({ page }) => {
+    await simularApi(page);
+    await page.goto('/relatorios/intervencao');
+    await expect(page).toHaveTitle(/Relatório de intervenção/);
+    await page.getByRole('button', { name: 'Gerar relatório' }).click();
+    await expect(page.getByRole('heading', { name: /Relatório de intervenção de/ })).toBeVisible();
+    await auditar(page);
+  });
 
   test('importação com a pré-visualização e os erros por linha', async ({ page }) => {
     await simularApi(page);
