@@ -9,9 +9,19 @@ integrações e não diz mais nada sobre elas:
 - Sistema de gestão do BPC;
 - Sistemas municipais de saúde e educação.
 
-O documento também não diz o município do Centro-Dia nem a natureza jurídica da CESJO (órgão público
-ou organização da sociedade civil). As duas coisas mudam o que é possível. Este levantamento assume
-São José dos Campos (SP), como hipótese a confirmar na P12, e trata os dois casos de natureza jurídica.
+O documento não diz o município do Centro-Dia nem a natureza jurídica da CESJO (órgão público ou
+organização da sociedade civil). As duas coisas mudam o que é possível.
+
+- **Município: São Luís (MA).** Informado pela equipe do projeto em 2026-11-23
+  ([ADR 0237](adr/0237-centro-dia-em-sao-luis.md)).
+- **Natureza jurídica: provavelmente órgão público municipal, a confirmar.** Notícias de 2017 descrevem
+  o Centro-Dia de São Luís como serviço da Prefeitura, administrado pela Secretaria Municipal da
+  Criança e Assistência Social (Semcas), no Centro Educacional São José Operário, na Cidade Operária,
+  para pessoas com deficiência de 18 a 59 anos
+  ([O Imparcial, 2017](https://oimparcial.com.br/noticias/2017/03/centro-dia-completa-tres-anos-de-funcionamento/),
+  [O Imparcial, 2017](https://oimparcial.com.br/noticias/2017/08/prefeitura-expande-servicos-para-criancas-com-microcefalia/)).
+  A sigla CESJO bate com o nome do centro educacional. Não foi encontrada fonte oficial atual. Este
+  levantamento continua tratando os dois casos, mas o de órgão público passa a ser o mais provável.
 
 Este documento é só um levantamento. Nenhuma integração foi implementada. A pergunta P12 continua
 aberta em [PENDENTE-CESJO.md](PENDENTE-CESJO.md#p12-integrações-seção-51).
@@ -80,6 +90,10 @@ Valem para qualquer integração que vier depois da P12.
    [Conecta para Estados e Municípios](https://www.gov.br/governodigital/pt-br/infraestrutura-nacional-de-dados/interoperabilidade/conecta-gov.br/conecta-para-estados-e-municipios)
    lista as APIs do CadÚnico para estados, mas não para municípios. Municípios só aderem se forem
    capitais ou tiverem mais de 500 mil habitantes. Não há acesso para entidade privada.
+
+   São Luís é capital, então a Prefeitura pode aderir ao Conecta. Não foi encontrado registro de que
+   já tenha aderido. Mesmo com adesão, as APIs do CadÚnico não aparecem na lista para municípios; isso
+   precisa ser confirmado com a equipe do Conecta (conecta@gestao.gov.br).
 2. **Cessão de dados identificados** pelo órgão gestor do CadÚnico:
    - em nível federal, pelo [SolicitaCad](https://www.gov.br/pt-br/servicos/solicitar-cessao-de-dados-identificados-do-cadastro-unico),
      só para órgãos públicos (gestão de políticas) e órgãos de pesquisa. Pedidos sobre um município vão
@@ -87,6 +101,14 @@ Valem para qualquer integração que vier depois da P12.
      seguro. Não é API;
    - em nível municipal, pelo órgão gestor do CadÚnico do município, com os termos da Portaria MC
      810/2022. O formato (planilha, extração do CECAD ou outro) é o que o município fornecer.
+
+   Em São Luís, a Semcas faz as inscrições e atualizações do CadÚnico
+   ([O Imparcial, 2020](https://oimparcial.com.br/economia/2020/05/inscricoes-e-atualizacoes-no-cadastro-unico-podem-ser-feitas-por-telefone-em-sao-luis/),
+   [O Imparcial, 2021](https://oimparcial.com.br/cidades/2021/11/prazo-para-atualizacao-do-cadunico-e-prorrogado-ate-30-de-novembro/)).
+   Se o Centro-Dia também for da Semcas, gestor do CadÚnico e serviço estão na mesma secretaria. O
+   uso da base do município para gestão de política pública é permitido ao próprio gestor (Decreto
+   11.016/2022, art. 13, §3º), então não seria cessão a terceiro. Ainda assim vale formalizar o uso
+   num ato interno, com o mínimo necessário e com o registro da operação (LGPD, art. 37).
 3. **Consulta manual pela família**: o [comprovante do Cadastro Único](https://www.gov.br/pt-br/servicos/emitir-comprovante-do-cadastro-unico)
    sai na web, no aplicativo Cadastro Único ou no CRAS. A folha resumo sai no órgão gestor municipal.
 4. **Dados agregados**: CECAD e Observatório do Cadastro Único dão números do município, sem
@@ -127,12 +149,11 @@ conecta@gestao.gov.br. Contato técnico para a CESJO: a confirmar com a equipe C
 
 ## Sistemas municipais de saúde
 
-**Meio de acesso que existe:** nenhum aberto. A Prefeitura de São José dos Campos tem prontuário
-eletrônico em implantação na rede ([notícia de 2021](https://www.sjc.sp.gov.br/noticias/2021/setembro/27/hm-tera-prontuario-eletronico-e-gestao-totalmente-informatizada/),
-[notícia de 2026](https://www.sjc.sp.gov.br/noticias/2026/julho/23/telemedicina-avanca-e-amplia-acesso-a-saude-em-sao-jose/))
-e um decreto municipal de 2025 sobre saúde digital
-([DE 2025 00019996](https://servicos.sjc.sp.gov.br/Legislacao/Arquivos/Decretos/2025/DE_2025_00019996.pdf),
-PDF em imagem, sem texto legível; o conteúdo não foi conferido). Não há API publicada.
+**Meio de acesso que existe:** nenhum aberto. Não foi encontrado qual prontuário eletrônico a
+Secretaria Municipal de Saúde de São Luís (Semus) usa, nem API publicada. Um estudo sobre as unidades
+básicas de São Luís relata conexão precária e prontuário eletrônico em poucas unidades
+([preprint SciELO](https://preprints.scielo.org/index.php/scielo/preprint/download/12356/22684/23361));
+o dado é antigo e não descreve a rede atual.
 
 Em nível federal, a [RNDS](https://www.gov.br/saude/pt-br/composicao/seidigi/rnds) é a plataforma de
 interoperabilidade do SUS, regulamentada pelo
@@ -164,15 +185,19 @@ escolar pouco útil: o que o sistema precisa é a escolaridade, que já é decla
    anexado. Não precisa de convênio, não traz dado de terceiro e funciona para OSC.
 2. **Arquivo cedido pela gestão municipal**, só se a P12 confirmar um termo de cessão (Portaria MC
    810/2022) ou um termo de colaboração que preveja o compartilhamento. Importação de planilha, com
-   o mesmo mecanismo da importação de planilhas (item 53, P13).
+   o mesmo mecanismo da importação de planilhas (item 53, P13). Se o Centro-Dia for da Semcas, o
+   arquivo vem da própria secretaria e o instrumento é um ato interno, não um termo de cessão.
 3. **API**, só se a CESJO for órgão público aderente ao Conecta ou se um órgão público consumir a API e
-   repassar o resultado por instrumento formal. Hoje nenhuma das APIs atende uma OSC nem um município.
+   repassar o resultado por instrumento formal. Hoje nenhuma das APIs atende uma OSC. São Luís, por ser capital, pode aderir ao
+   Conecta, mas as APIs do CadÚnico e do BPC não estão na lista para municípios.
 4. **Saúde e educação**: sem integração. Encaminhamentos, ofícios e contrarreferência continuam nos
    módulos de atividades e comunicações.
 
 ## Perguntas para a P12
 
-- Qual é o município do Centro-Dia e a natureza jurídica da CESJO (órgão público ou OSC)?
+- O Centro-Dia é serviço da Prefeitura de São Luís, ligado à Semcas, ou é uma OSC conveniada?
+- O setor do CadÚnico da Semcas fornece hoje alguma lista à equipe do Centro-Dia?
+- A Prefeitura de São Luís tem adesão ao Conecta gov.br?
 - Existe termo de colaboração ou convênio com o município? Ele prevê compartilhamento de dados?
 - A gestão municipal do CadÚnico cede hoje alguma lista ou relatório à CESJO? Em que formato?
 - A equipe confere CadÚnico e BPC pelo comprovante da família, pelo CRAS ou por outro meio?

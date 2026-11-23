@@ -159,6 +159,10 @@ Situação: provisória.
 
 Situação: aberta.
 
+Resposta parcial (2026-11-23): o Centro-Dia fica em São Luís (MA). Fontes públicas indicam que é
+serviço da Prefeitura, ligado à Semcas, que também faz o CadÚnico no município. A natureza jurídica,
+o meio de acesso e o contato técnico continuam sem resposta ([ADR 0237](adr/0237-centro-dia-em-sao-luis.md)).
+
 Nenhuma integração é implementada antes da resposta ([ADR 0225](adr/0225-nenhuma-integracao-antes-da-p12.md)).
 O levantamento dos meios de acesso, dos requisitos legais e das perguntas de detalhe está em
 [integracoes.md](integracoes.md).
