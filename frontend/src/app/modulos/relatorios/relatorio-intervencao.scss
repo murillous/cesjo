@@ -1,0 +1,193 @@
+@use 'styles/breakpoints' as bp;
+
+// Mobile first: período, casos e resumo empilhados, um caso embaixo do outro. No tablet o período fica
+// numa linha e os dados de cada caso lado a lado; no desktop, os casos em duas colunas e os grupos do
+// resumo em três.
+
+.periodo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sgi-space-1);
+  margin-bottom: var(--sgi-space-2);
+
+  button {
+    align-self: flex-start;
+    min-height: var(--sgi-alvo-toque);
+  }
+}
+
+.sigilo {
+  max-width: 70ch;
+  margin: 0 0 var(--sgi-space-3);
+  padding: var(--sgi-space-1) var(--sgi-space-2);
+  border-left: var(--sgi-space-0-5) solid var(--sgi-color-primary);
+  background: var(--sgi-color-background-secondary);
+  font-size: var(--sgi-font-size-small);
+}
+
+.cabecalho {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sgi-space-1-5);
+  margin-bottom: var(--sgi-space-3);
+
+  h2 {
+    margin: 0;
+    font-size: var(--sgi-font-size-h2);
+  }
+
+  p {
+    margin: var(--sgi-space-0-5) 0 0;
+  }
+}
+
+.casos,
+.resumo {
+  margin-bottom: var(--sgi-space-4);
+
+  h3 {
+    margin: 0 0 var(--sgi-space-2);
+    font-size: var(--sgi-font-size-h3);
+  }
+}
+
+.lista-casos {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--sgi-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+// Cada caso é um bloco: o nome, as violações do período e o que o serviço fez.
+.caso {
+  padding: var(--sgi-space-2);
+  border: var(--sgi-border);
+  border-top: var(--sgi-space-0-5) solid var(--sgi-color-accent);
+  border-radius: var(--sgi-radius-md);
+
+  h4 {
+    margin: 0 0 var(--sgi-space-1);
+    font-size: var(--sgi-font-size-body);
+    font-weight: var(--sgi-font-weight-semibold);
+  }
+}
+
+.violacoes {
+  margin: 0 0 var(--sgi-space-2);
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: var(--sgi-space-1);
+    padding: var(--sgi-space-0-5) 0;
+  }
+
+  .categoria {
+    font-weight: var(--sgi-font-weight-medium);
+  }
+}
+
+.intervencao {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--sgi-space-1);
+  margin: 0;
+  padding-top: var(--sgi-space-1-5);
+  border-top: var(--sgi-border);
+
+  dt {
+    color: var(--sgi-color-text-secondary);
+    font-size: var(--sgi-font-size-small);
+  }
+
+  dd {
+    margin: 0;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.grupos {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--sgi-space-3);
+}
+
+.grupo {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+
+  caption {
+    padding-bottom: var(--sgi-space-1);
+    border-bottom: var(--sgi-space-0-5) solid var(--sgi-color-primary);
+    color: var(--sgi-color-primary-dark);
+    font-size: var(--sgi-font-size-body);
+    font-weight: var(--sgi-font-weight-semibold);
+    text-align: left;
+  }
+
+  th,
+  td {
+    padding: var(--sgi-space-1) 0;
+    border-bottom: var(--sgi-border);
+  }
+
+  th {
+    font-weight: var(--sgi-font-weight-regular);
+    text-align: left;
+  }
+
+  td {
+    padding-left: var(--sgi-space-2);
+    font-weight: var(--sgi-font-weight-semibold);
+    text-align: right;
+  }
+
+  // Zero continua visível, mais apagado, para o relatório mostrar que a linha foi contada.
+  .zero td {
+    color: var(--sgi-color-text-secondary);
+    font-weight: var(--sgi-font-weight-regular);
+  }
+}
+
+.aviso-erro {
+  padding: var(--sgi-space-1) var(--sgi-space-2);
+  border-left: var(--sgi-space-0-5) solid var(--sgi-color-accent);
+  background: var(--sgi-color-background-secondary);
+}
+
+@media (min-width: bp.$tablet) {
+  .periodo {
+    flex-direction: row;
+    align-items: center;
+
+    mat-form-field {
+      width: 20rem;
+    }
+  }
+
+  .cabecalho {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
+  .intervencao {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: bp.$desktop) {
+  .lista-casos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .grupos {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--sgi-space-3) var(--sgi-space-4);
+  }
+}

@@ -1,0 +1,120 @@
+<form class="periodo" [formGroup]="periodo" (ngSubmit)="gerar()" aria-label="Período do relatório">
+  <mat-form-field subscriptSizing="dynamic">
+    <mat-label>Período</mat-label>
+    <mat-date-range-input [rangePicker]="seletorPeriodo" [max]="maximo">
+      <input matStartDate formControlName="inicio" placeholder="Início" />
+      <input matEndDate formControlName="fim" placeholder="Fim" />
+    </mat-date-range-input>
+    <mat-hint>dd/mm/aaaa – dd/mm/aaaa</mat-hint>
+    <mat-datepicker-toggle matIconSuffix [for]="seletorPeriodo" />
+    <mat-date-range-picker #seletorPeriodo />
+    @if (periodo.invalid && periodo.touched) {
+      <mat-error>Informe o início e o fim do período.</mat-error>
+    }
+  </mat-form-field>
+  <button matButton="filled" type="submit" [disabled]="carregando()">Gerar relatório</button>
+</form>
+
+<p class="sigilo">
+  O relatório mostra o nome de quem teve violação de direitos identificada no período. Cada geração
+  e cada download ficam registrados na auditoria. A descrição das violações não entra.
+</p>
+
+@if (erro(); as mensagem) {
+  <p class="aviso-erro" role="alert">{{ mensagem }}</p>
+} @else if (relatorio(); as dados) {
+  <article class="relatorio" aria-labelledby="titulo-relatorio">
+    <header class="cabecalho">
+      <div>
+        <h2 id="titulo-relatorio">{{ dados.titulo }}</h2>
+        <p class="texto-secundario" aria-live="polite">
+          Gerado em {{ dados.geradoEm | date: "dd/MM/yyyy 'às' HH:mm" }}.
+        </p>
+      </div>
+      <app-botao-exportar
+        rotulo="Baixar relatório"
+        [url]="urlExportacao"
+        [parametros]="{ inicio: gerado()?.inicio, fim: gerado()?.fim }"
+      />
+    </header>
+
+    <section class="casos" aria-labelledby="titulo-casos">
+      <h3 id="titulo-casos">Casos no período</h3>
+      @if (dados.casos.length === 0) {
+        <p class="texto-secundario">Nenhuma violação de direitos foi identificada neste período.</p>
+      } @else {
+        <ul class="lista-casos">
+          @for (caso of dados.casos; track $index) {
+            <li class="caso">
+              <h4>{{ caso.usuario }}</h4>
+              <ul class="violacoes" aria-label="Violações identificadas">
+                @for (violacao of caso.violacoes; track $index) {
+                  <li>
+                    <span class="categoria"
+                      >{{ violacao.categoria
+                      }}{{ violacao.ambito ? ', ' + violacao.ambito.toLowerCase() : '' }}</span
+                    >
+                    <span class="texto-secundario">
+                      identificada em {{ violacao.identificadaEm | date: 'dd/MM/yyyy' }}</span
+                    >
+                  </li>
+                }
+              </ul>
+              <dl class="intervencao">
+                <div>
+                  <dt>Atendimentos no período</dt>
+                  <dd>{{ caso.atendimentos }}</dd>
+                </div>
+                <div>
+                  <dt>Último atendimento</dt>
+                  <dd>
+                    {{
+                      caso.ultimoAtendimento
+                        ? (caso.ultimoAtendimento | date: 'dd/MM/yyyy')
+                        : 'Nenhum no período'
+                    }}
+                  </dd>
+                </div>
+                <div>
+                  <dt>Situação no fim do período</dt>
+                  <dd>{{ caso.situacao }}</dd>
+                </div>
+              </dl>
+            </li>
+          }
+        </ul>
+      }
+    </section>
+
+    <section class="resumo" aria-labelledby="titulo-resumo">
+      <h3 id="titulo-resumo">Resumo do período</h3>
+      <div class="grupos">
+        @for (grupo of grupos(); track grupo.nome) {
+          <table class="grupo">
+            <caption>
+              {{
+                grupo.nome
+              }}
+            </caption>
+            <thead class="cdk-visually-hidden">
+              <tr>
+                <th scope="col">Indicador</th>
+                <th scope="col">Quantidade</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (linha of grupo.linhas; track linha.indicador) {
+                <tr [class.zero]="linha.quantidade === 0">
+                  <th scope="row">{{ linha.indicador }}</th>
+                  <td>{{ linha.quantidade }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        }
+      </div>
+    </section>
+  </article>
+} @else if (carregando()) {
+  <p class="texto-secundario">Gerando…</p>
+}

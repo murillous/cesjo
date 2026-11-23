@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
+import { Sessao } from '../../acesso/sessao';
 import { ABAS } from './abas';
 
 /** Casca da área de relatórios: título, abas e o painel da aba aberta (ADR 0197). */
@@ -13,7 +14,7 @@ import { ABAS } from './abas';
     <section class="relatorios" aria-labelledby="titulo-relatorios">
       <h1 id="titulo-relatorios">Relatórios</h1>
       <nav mat-tab-nav-bar [tabPanel]="painel" aria-label="Relatórios disponíveis">
-        @for (aba of abas; track aba.caminho) {
+        @for (aba of abas(); track aba.caminho) {
           <a
             mat-tab-link
             [routerLink]="aba.caminho"
@@ -37,5 +38,9 @@ import { ABAS } from './abas';
   `,
 })
 export class PaginaRelatorios {
-  protected readonly abas = ABAS;
+  private readonly sessao = inject(Sessao);
+
+  protected readonly abas = computed(() =>
+    ABAS.filter((aba) => !aba.permissao || this.sessao.temPermissao(aba.permissao)),
+  );
 }

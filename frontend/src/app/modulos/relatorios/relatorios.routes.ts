@@ -1,5 +1,7 @@
 import { Routes } from '@angular/router';
 
+import { exigePermissao } from '../../acesso/permissao.guard';
+
 export const RELATORIOS_ROUTES: Routes = [
   {
     path: '',
@@ -31,6 +33,14 @@ export const RELATORIOS_ROUTES: Routes = [
         title: 'Relatório de transparência | CESJO SGI',
         loadComponent: () =>
           import('./relatorio-transparencia').then((m) => m.RelatorioTransparencia),
+      },
+      {
+        path: 'intervencao',
+        title: 'Relatório de intervenção | CESJO SGI',
+        // PENDENTE-CESJO(P9): como no backend, pede também VIOLACOES_LER (ADR 0206).
+        canMatch: [exigePermissao('VIOLACOES_LER')],
+        loadComponent: () =>
+          import('./relatorio-intervencao').then((m) => m.RelatorioIntervencao),
       },
     ],
   },
