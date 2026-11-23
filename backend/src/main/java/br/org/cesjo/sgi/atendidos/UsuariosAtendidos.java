@@ -20,6 +20,17 @@ public interface UsuariosAtendidos {
 	/** Nome da entidade inserção no log de auditoria. */
 	String ENTIDADE = "insercao";
 
+	/**
+	 * Insere no serviço o candidato da fila com o responsável do cadastro (RF001) como cuidador familiar,
+	 * com as mesmas regras da inserção pela tela (ADR 0080). Usado pela importação de planilha (ADR 0220).
+	 * Participa da transação de quem chama e audita a criação.
+	 *
+	 * @return o {@code id} da inserção
+	 * @throws br.org.cesjo.sgi.compartilhado.web.RegraNegocioException quando a inscrição não está na
+	 * fila, a data é anterior ao cadastro ou a pessoa já é usuária ativa
+	 */
+	UUID inserirComOResponsavel(UUID inscricaoId, LocalDate dataInsercao, Turno turno);
+
 	/** Total de inserções ativas, que ocupam vaga. */
 	long contarAtivos();
 

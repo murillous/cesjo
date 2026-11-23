@@ -172,3 +172,5 @@ frente de trabalho paralela não é usado todo.
 - [0217](0217-auditoria-da-importacao.md) — Auditoria da importação de planilhas com a ação IMPORTAR
 - [0218](0218-limites-e-planilhas-malformadas.md) — Limites da importação e tratamento de planilhas malformadas
 - [0219](0219-tela-de-importacao-de-planilha.md) — Tela de importação de planilha reutilizável
+- [0220](0220-importacao-dos-usuarios-atendidos.md) — Importação dos usuários atendidos de planilha: modelo provisório e inserção ativa (provisório)
+- [0221](0221-tela-de-importacao-dos-usuarios-atendidos.md) — Tela de importação dos usuários atendidos

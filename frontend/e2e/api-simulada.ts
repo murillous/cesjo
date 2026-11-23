@@ -18,6 +18,7 @@ export const CONTA_COORDENADOR = {
     'RELATORIOS_LER',
     'VIOLACOES_LER',
     'PLANILHAS_IMPORTAR',
+    'ATENDIDOS_LER_BASICO',
   ],
   trocaSenhaObrigatoria: false,
 };
