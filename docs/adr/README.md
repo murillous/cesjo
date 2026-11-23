@@ -161,3 +161,4 @@ frente de trabalho paralela não é usado todo.
 - [0200](0200-relatorio-estatistico-mensal.md) — Relatório estatístico mensal: indicadores numa lista só e período parametrizável (provisório)
 - [0201](0201-tela-do-relatorio-mensal.md) — Tela do relatório mensal
 - [0202](0202-conteudo-centralizado-ao-lado-da-navegacao.md) — Conteúdo centralizado ao lado da navegação
+- [0225](0225-nenhuma-integracao-antes-da-p12.md) — Nenhuma integração externa antes da resposta da P12
