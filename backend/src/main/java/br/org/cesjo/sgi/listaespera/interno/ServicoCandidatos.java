@@ -23,6 +23,7 @@ import br.org.cesjo.sgi.listaespera.CandidatoAtivo;
 import br.org.cesjo.sgi.listaespera.DadosInscricao;
 import br.org.cesjo.sgi.listaespera.ListaEspera;
 import br.org.cesjo.sgi.listaespera.MotivoSaida;
+import br.org.cesjo.sgi.listaespera.NovoCandidato;
 import br.org.cesjo.sgi.listaespera.SituacaoInscricao;
 import br.org.cesjo.sgi.pessoas.Pessoas;
 
@@ -44,9 +45,13 @@ class ServicoCandidatos implements ListaEspera {
 
 	private final Clock relogio = Clock.systemUTC();
 
+	private final ServicoListaEspera cadastro;
+
 	ServicoCandidatos(InscricaoRepositorio inscricoes, HistoricoSituacaoRepositorio historicos, Pessoas pessoas,
-			Auditoria auditoria, IdentidadeAtual identidadeAtual, ContagensListaEspera contagens) {
+			Auditoria auditoria, IdentidadeAtual identidadeAtual, ContagensListaEspera contagens,
+			ServicoListaEspera cadastro) {
 		this.inscricoes = inscricoes;
+		this.cadastro = cadastro;
 		this.contagens = contagens;
 		this.historicos = historicos;
 		this.pessoas = pessoas;
@@ -61,6 +66,14 @@ class ServicoCandidatos implements ListaEspera {
 			.findBySituacaoInOrderByDataCadastroAscCriadoEmAsc(SituacaoInscricao.ATIVAS);
 		Map<UUID, String> nomes = pessoas.nomes(ativas.stream().map(InscricaoListaEspera::getPessoaId).toList());
 		return ativas.stream().map(inscricao -> candidato(inscricao, nomes.get(inscricao.getPessoaId()))).toList();
+	}
+
+	@Override
+	@Transactional
+	public UUID inscrever(NovoCandidato novo) {
+		return cadastro.inscrever(new NovaInscricao(novo.nomeCompleto(), novo.dataNascimento(),
+				novo.tipoDeficiencia(), novo.telefone(), novo.nomeResponsavel(), novo.origemEncaminhamento(),
+				novo.dataCadastro(), null, null)).id();
 	}
 
 	@Override

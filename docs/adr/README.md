@@ -161,3 +161,8 @@ frente de trabalho paralela não é usado todo.
 - [0200](0200-relatorio-estatistico-mensal.md) — Relatório estatístico mensal: indicadores numa lista só e período parametrizável (provisório)
 - [0201](0201-tela-do-relatorio-mensal.md) — Tela do relatório mensal
 - [0202](0202-conteudo-centralizado-ao-lado-da-navegacao.md) — Conteúdo centralizado ao lado da navegação
+- [0215](0215-importacao-da-lista-de-espera-de-planilha.md) — Importação da lista de espera de planilha: modelo provisório e fluxo em duas etapas (provisório)
+- [0216](0216-permissao-de-importacao-de-planilhas.md) — Permissão de importação de planilhas só para o Coordenador (provisório)
+- [0217](0217-auditoria-da-importacao.md) — Auditoria da importação de planilhas com a ação IMPORTAR
+- [0218](0218-limites-e-planilhas-malformadas.md) — Limites da importação e tratamento de planilhas malformadas
+- [0219](0219-tela-de-importacao-de-planilha.md) — Tela de importação de planilha reutilizável
