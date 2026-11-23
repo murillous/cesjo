@@ -1,0 +1,39 @@
+<article class="relatorio" aria-labelledby="titulo-relatorio">
+  <header class="cabecalho">
+    <div>
+      <h2 id="titulo-relatorio">{{ relatorio().titulo }}</h2>
+      <p class="texto-secundario" aria-live="polite">
+        De {{ relatorio().inicio | date: 'dd/MM/yyyy' }} a
+        {{ relatorio().fim | date: 'dd/MM/yyyy' }}. Gerado em
+        {{ relatorio().geradoEm | date: "dd/MM/yyyy 'às' HH:mm" }}.
+      </p>
+    </div>
+    <app-botao-exportar rotulo="Baixar relatório" [url]="url()" [parametros]="parametros()" />
+  </header>
+
+  <div class="grupos">
+    @for (grupo of grupos(); track grupo.nome) {
+      <table class="grupo">
+        <caption>
+          {{
+            grupo.nome
+          }}
+        </caption>
+        <thead class="cdk-visually-hidden">
+          <tr>
+            <th scope="col">Indicador</th>
+            <th scope="col">Quantidade</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (linha of grupo.linhas; track linha.indicador) {
+            <tr [class.zero]="linha.quantidade === 0">
+              <th scope="row">{{ linha.indicador }}</th>
+              <td>{{ linha.quantidade }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+</article>

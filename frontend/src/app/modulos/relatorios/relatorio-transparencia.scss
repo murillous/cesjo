@@ -1,7 +1,8 @@
 @use 'styles/breakpoints' as bp;
 
-// Mobile first: mês, ano e botão empilhados; um grupo de indicadores embaixo do outro. No tablet a
-// escolha fica numa linha e, no desktop, os grupos em duas colunas.
+// Mobile first: período e botão empilhados; um grupo embaixo do outro. No tablet a escolha fica numa
+// linha e, no desktop, os grupos em duas colunas. Mesma base visual do relatório mensal; a diferença
+// é o aviso de que o conteúdo é público e a linha em reais, que ganha destaque.
 
 .escolha {
   display: flex;
@@ -19,7 +20,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--sgi-space-1-5);
-  margin-bottom: var(--sgi-space-3);
+  margin-bottom: var(--sgi-space-2);
 
   h2 {
     margin: 0;
@@ -29,6 +30,14 @@
   p {
     margin: var(--sgi-space-0-5) 0 0;
   }
+}
+
+.publico {
+  max-width: 60ch;
+  margin: 0 0 var(--sgi-space-3);
+  padding: var(--sgi-space-1) var(--sgi-space-2);
+  border-left: var(--sgi-space-0-5) solid var(--sgi-color-primary);
+  background: var(--sgi-color-background-secondary);
 }
 
 .grupos {
@@ -67,12 +76,19 @@
     font-size: var(--sgi-font-size-h3);
     font-weight: var(--sgi-font-weight-semibold);
     text-align: right;
+    white-space: nowrap;
   }
 
   // Zero continua visível, mais apagado, para o relatório mostrar que a área foi contada.
   .zero td {
     color: var(--sgi-color-text-secondary);
     font-weight: var(--sgi-font-weight-regular);
+  }
+
+  // O total em dinheiro é o número que financiadores procuram primeiro.
+  .reais td {
+    color: var(--sgi-color-primary-dark);
+    font-weight: var(--sgi-font-weight-semibold);
   }
 }
 
@@ -88,7 +104,7 @@
     align-items: center;
 
     mat-form-field {
-      width: 12rem;
+      width: 18rem;
     }
   }
 
