@@ -156,6 +156,10 @@ Situação: provisória.
 
 Situação: aberta.
 
+Nenhuma integração é implementada antes da resposta ([ADR 0225](adr/0225-nenhuma-integracao-antes-da-p12.md)).
+O levantamento dos meios de acesso, dos requisitos legais e das perguntas de detalhe está em
+[integracoes.md](integracoes.md).
+
 ## P13. Planilhas (seção 5.2)
 
 > A lista de espera e o cadastro de usuários existem hoje em Excel? Podem enviar um exemplo com dados
