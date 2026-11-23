@@ -358,3 +358,15 @@ Situação: provisória.
 | Decisão provisória | Onde mudar | ADR |
 |---|---|---|
 | Não. A contagem de violações só aparece para quem também tem `VIOLACOES_LER` (hoje só o Coordenador). | `estatisticas.interno.DashboardsControlador.atendimento` | [0199](adr/0199-violacoes-no-dashboard-so-para-quem-le-violacoes.md) |
+
+## P40. Volume esperado de uso (RNF 3.2)
+
+> Quantas pessoas o Centro-Dia atende ao mesmo tempo e quantas entram na lista de espera por ano?
+> Quantas atividades, atendimentos e contatos a equipe registra por mês? Quantas pessoas usam o
+> sistema ao mesmo tempo nos horários de pico?
+
+Situação: provisória.
+
+| Decisão provisória | Onde mudar | ADR |
+|---|---|---|
+| Volume de 5 anos de um Centro-Dia com cerca de 60 vagas: 600 pessoas na lista de espera, 200 inserções, 6.000 atividades, 6.000 comunicações e 200 mil registros de auditoria; o teste de desempenho usa 10 vezes isso. | `desempenho.MassaSimulada.ESPERADO` (teste do backend) | [0230](adr/0230-volume-esperado-e-massa-simulada.md) |

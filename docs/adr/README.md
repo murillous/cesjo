@@ -177,3 +177,8 @@ frente de trabalho paralela não é usado todo.
 - [0219](0219-tela-de-importacao-de-planilha.md) — Tela de importação de planilha reutilizável
 - [0220](0220-importacao-dos-usuarios-atendidos.md) — Importação dos usuários atendidos de planilha: modelo provisório e inserção ativa (provisório)
 - [0221](0221-tela-de-importacao-dos-usuarios-atendidos.md) — Tela de importação dos usuários atendidos
+- [0230](0230-volume-esperado-e-massa-simulada.md) — Volume esperado e massa simulada do teste de desempenho (provisório)
+- [0231](0231-como-o-teste-de-desempenho-mede.md) — Como o teste de desempenho mede as consultas
+- [0232](0232-teste-de-desempenho-fora-do-verify.md) — Teste de desempenho fora do `verify` normal, com perfil Maven e execução manual
+- [0233](0233-relatorios-e-dashboards-numa-transacao-de-leitura.md) — Relatórios e dashboards numa transação só de leitura
+- [0234](0234-indice-proposto-para-o-log-de-auditoria.md) — Índice proposto para a consulta do log de auditoria por login (proposto)

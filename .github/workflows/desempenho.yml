@@ -1,0 +1,66 @@
+name: Desempenho
+
+# Teste de desempenho das consultas (issue #25, RNF 3.2, ADR 0232). Só roda à mão, pela aba Actions:
+# gera a massa simulada, mede listagens, relatórios e dashboards com usuários simultâneos e publica a
+# tabela de tempos no resumo da execução e como artefato.
+on:
+  workflow_dispatch:
+    inputs:
+      fator:
+        description: Quantas vezes o volume esperado (docs/desempenho.md)
+        default: '10'
+      usuarios:
+        description: Usuários simultâneos
+        default: '20'
+      rodadas:
+        description: Rodadas de todas as consultas por usuário
+        default: '5'
+
+permissions:
+  contents: read
+
+jobs:
+  desempenho:
+    name: desempenho
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Configurar JDK 25 (Temurin)
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: maven
+          cache-dependency-path: backend/pom.xml
+
+      - name: Teste de desempenho
+        env:
+          FATOR: ${{ inputs.fator }}
+          USUARIOS: ${{ inputs.usuarios }}
+          RODADAS: ${{ inputs.rodadas }}
+        run: >-
+          ./mvnw -B verify -Pdesempenho
+          -Ddesempenho.fator="$FATOR" -Ddesempenho.usuarios="$USUARIOS" -Ddesempenho.rodadas="$RODADAS"
+
+      - name: Publicar resultado no resumo
+        if: always()
+        run: |
+          if [ -f target/desempenho/resultado.md ]; then
+            cat target/desempenho/resultado.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Guardar resultado
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: resultado-desempenho
+          path: |
+            backend/target/desempenho/
+            backend/target/surefire-reports/
+          if-no-files-found: ignore
+          retention-days: 30

@@ -8,6 +8,7 @@ import java.util.function.Function;
 import java.util.function.ToLongFunction;
 
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.org.cesjo.sgi.atendidos.MotivoDesligamento;
 import br.org.cesjo.sgi.atendidos.UsuariosAtendidos;
@@ -70,7 +71,11 @@ class IndicadoresDoRelatorio {
 						p -> atendidos.contarDesligamentosPorMotivo(p.inicio(), p.fim())));
 	}
 
-	/** Todas as linhas do relatório no período, na ordem da lista. */
+	/**
+	 * Todas as linhas do relatório no período, na ordem da lista. Uma transação só de leitura para o
+	 * relatório todo: as contagens usam a mesma conexão do pool em vez de uma por indicador (ADR 0233).
+	 */
+	@Transactional(readOnly = true)
 	List<LinhaRelatorio> calcular(Periodo periodo) {
 		List<LinhaRelatorio> linhas = new ArrayList<>();
 		for (Indicador indicador : indicadores) {

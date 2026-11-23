@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.org.cesjo.sgi.atendidos.FaixaEtaria;
 import br.org.cesjo.sgi.atendidos.MotivoDesligamento;
@@ -22,9 +23,11 @@ import br.org.cesjo.sgi.pessoas.TipoDeficiencia;
 
 /**
  * Dashboards de RF017 (ADR 0195). Lê os outros módulos só pelas APIs Java públicas e recalcula a cada
- * acesso, sem cache. A permissão fica no controlador.
+ * acesso, sem cache. A permissão fica no controlador. Cada painel roda numa transação só de leitura,
+ * com uma conexão do pool para todas as contagens (ADR 0233).
  */
 @Service
+@Transactional(readOnly = true)
 class ServicoDashboards {
 
 	private final UsuariosAtendidos atendidos;
