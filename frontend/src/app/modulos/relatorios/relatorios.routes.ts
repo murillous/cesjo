@@ -22,6 +22,11 @@ export const RELATORIOS_ROUTES: Routes = [
         loadComponent: () => import('./relatorio-mensal').then((m) => m.RelatorioMensal),
       },
       {
+        path: 'quadrimestral-e-anual',
+        title: 'Relatórios quadrimestral e anual | CESJO SGI',
+        loadComponent: () => import('./relatorio-periodo').then((m) => m.RelatorioPeriodo),
+      },
+      {
         path: 'transparencia',
         title: 'Relatório de transparência | CESJO SGI',
         loadComponent: () =>

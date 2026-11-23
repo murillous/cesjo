@@ -54,6 +54,11 @@ const TELAS_LOGADAS = [
   },
   { nome: 'relatório mensal', caminho: '/relatorios/mensal', titulo: /Relatório mensal/ },
   {
+    nome: 'relatórios quadrimestral e anual',
+    caminho: '/relatorios/quadrimestral-e-anual',
+    titulo: /quadrimestral e anual/,
+  },
+  {
     nome: 'relatório de transparência',
     caminho: '/relatorios/transparencia',
     titulo: /Relatório de transparência/,

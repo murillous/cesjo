@@ -21,48 +21,11 @@
 @if (erro(); as mensagem) {
   <p class="aviso-erro" role="alert">{{ mensagem }}</p>
 } @else if (relatorio(); as dados) {
-  <article class="relatorio" aria-labelledby="titulo-relatorio">
-    <header class="cabecalho">
-      <div>
-        <h2 id="titulo-relatorio">{{ dados.titulo }}</h2>
-        <p class="texto-secundario" aria-live="polite">
-          De {{ dados.inicio | date: 'dd/MM/yyyy' }} a {{ dados.fim | date: 'dd/MM/yyyy' }}. Gerado
-          em {{ dados.geradoEm | date: "dd/MM/yyyy 'às' HH:mm" }}.
-        </p>
-      </div>
-      <app-botao-exportar
-        rotulo="Baixar relatório"
-        [url]="urlExportacao"
-        [parametros]="{ mes: mesGerado() }"
-      />
-    </header>
-
-    <div class="grupos">
-      @for (grupo of grupos(); track grupo.nome) {
-        <table class="grupo">
-          <caption>
-            {{
-              grupo.nome
-            }}
-          </caption>
-          <thead class="cdk-visually-hidden">
-            <tr>
-              <th scope="col">Indicador</th>
-              <th scope="col">Quantidade</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (linha of grupo.linhas; track linha.indicador) {
-              <tr [class.zero]="linha.quantidade === 0">
-                <th scope="row">{{ linha.indicador }}</th>
-                <td>{{ linha.quantidade }}</td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      }
-    </div>
-  </article>
+  <app-quadro-relatorio
+    [relatorio]="dados"
+    [url]="urlExportacao"
+    [parametros]="{ mes: mesGerado() }"
+  />
 } @else {
   <p class="texto-secundario">Gerando…</p>
 }
