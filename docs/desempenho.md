@@ -6,9 +6,10 @@ consultas, com vários usuários ao mesmo tempo. A issue fixa o critério: com u
 usuários simultâneos.
 
 **Resultado: critério atendido.** Na máquina de desenvolvimento, sem outra carga, o pior tempo de
-todas as consultas foi 2,7 s (auditoria filtrada por login). Fora a auditoria, nenhuma consulta
-passou de 1 s. Com o índice proposto no [ADR 0234](adr/0234-indice-proposto-para-o-log-de-auditoria.md),
-o pior tempo cai para 1,5 s.
+todas as consultas foi 1,9 s (auditoria filtrada por login), e 2,7 s na execução mais lenta das
+que passaram. Fora a auditoria, nenhuma consulta passou de 1 s. Com o índice proposto no
+[ADR 0234](adr/0234-indice-proposto-para-o-log-de-auditoria.md), a auditoria por login cai para
+0,3 s, e o pior tempo de todas as consultas fica em 1,5 s (auditoria sem filtro).
 
 Decisões: [ADR 0230](adr/0230-volume-esperado-e-massa-simulada.md) (volume e massa),
 [ADR 0231](adr/0231-como-o-teste-de-desempenho-mede.md) (como mede),
@@ -74,41 +75,46 @@ repetido. Depois da gravação, o teste roda `vacuum analyze`.
 
 - 20 usuários simultâneos (threads), autenticados como Coordenador, sem pausa entre requisições:
   sempre 20 requisições em andamento.
-- Cada usuário faz 5 rodadas de todas as 23 consultas, em ordem aleatória: 100 requisições por
-  consulta, 2.300 no total.
+- Cada usuário faz 5 rodadas de todas as 24 consultas, em ordem aleatória: 100 requisições por
+  consulta, 2.400 no total.
 - Antes, 3 rodadas de aquecimento sem medição e a mediana de 5 execuções de cada consulta sozinha.
 - Requisições por MockMvc: passam por Spring MVC, segurança, serviços, Hibernate e Postgres, mas não
   pela rede.
 
 ## Resultado (2026-11-23)
 
-Sem o índice proposto, com a máquina sem outra carga. Duração da carga: 38 s.
+Sem o índice proposto, com a máquina sem outra carga. Duração da carga: 33 s.
 
 | Grupo | Consulta | Sozinha (ms) | p50 (ms) | p95 (ms) | Máximo (ms) |
 |---|---|---:|---:|---:|---:|
-| Listagem | Lista de espera | 132 | 404 | 577 | 939 |
-| Listagem | Lista de espera, busca por nome e situação | 22 | 188 | 364 | 441 |
-| Listagem | Lista de espera, página 50 | 121 | 408 | 585 | 676 |
-| Listagem | Usuários atendidos | 10 | 152 | 315 | 355 |
-| Listagem | Usuários atendidos, filtros da ficha completa | 7 | 129 | 315 | 543 |
-| Listagem | Usuários atendidos, busca por nome | 6 | 156 | 308 | 616 |
-| Listagem | Atividades | 22 | 188 | 392 | 493 |
-| Listagem | Atividades, último ano e tipo | 18 | 172 | 333 | 532 |
-| Listagem | Atividades de um usuário | 18 | 195 | 374 | 591 |
-| Listagem | Atividades de um profissional | 6 | 163 | 345 | 440 |
-| Listagem | Comunicações | 10 | 188 | 402 | 606 |
-| Listagem | Comunicações, período e contraparte | 21 | 186 | 330 | 596 |
-| Listagem | Auditoria | 145 | 764 | 1.111 | 2.361 |
-| Listagem | Auditoria, login e página 100 | 179 | 1.484 | 2.094 | 2.679 |
-| Listagem | Auditoria, entidade, ação e período | 78 | 715 | 1.086 | 1.318 |
-| Relatório | Mensal, mês corrente | 47 | 257 | 454 | 675 |
-| Relatório | Mensal, 2 anos atrás | 32 | 227 | 424 | 553 |
-| Relatório | Quadrimestral, quadrimestre corrente | 48 | 281 | 509 | 680 |
-| Relatório | Anual, ano passado | 53 | 253 | 415 | 587 |
-| Relatório | Transparência, 12 meses | 49 | 290 | 473 | 583 |
-| Dashboard | Perfil dos atendidos | 5 | 159 | 376 | 634 |
-| Dashboard | Atendimento, mês corrente | 5 | 164 | 301 | 459 |
-| Dashboard | Atendimento, 5 anos | 25 | 189 | 415 | 585 |
+| Listagem | Lista de espera | 129 | 343 | 492 | 548 |
+| Listagem | Lista de espera, busca por nome e situação | 23 | 141 | 299 | 419 |
+| Listagem | Lista de espera, página 50 | 121 | 367 | 557 | 684 |
+| Listagem | Usuários atendidos | 10 | 133 | 351 | 390 |
+| Listagem | Usuários atendidos, filtros da ficha completa | 7 | 119 | 265 | 369 |
+| Listagem | Usuários atendidos, busca por nome | 6 | 132 | 256 | 437 |
+| Listagem | Atividades | 23 | 143 | 289 | 393 |
+| Listagem | Atividades, último ano e tipo | 19 | 124 | 297 | 369 |
+| Listagem | Atividades de um usuário | 16 | 126 | 340 | 477 |
+| Listagem | Atividades de um profissional | 7 | 149 | 348 | 434 |
+| Listagem | Comunicações | 14 | 157 | 349 | 477 |
+| Listagem | Comunicações, período e contraparte | 21 | 151 | 298 | 418 |
+| Listagem | Auditoria | 118 | 645 | 909 | 1.399 |
+| Listagem | Auditoria, login e página 100 | 175 | 1.101 | 1.531 | 1.865 |
+| Listagem | Auditoria, entidade, ação e período | 79 | 554 | 840 | 961 |
+| Relatório | Mensal, mês corrente | 46 | 199 | 386 | 480 |
+| Relatório | Mensal, 2 anos atrás | 33 | 189 | 318 | 427 |
+| Relatório | Quadrimestral, quadrimestre corrente | 49 | 208 | 371 | 524 |
+| Relatório | Anual, ano passado | 54 | 232 | 388 | 453 |
+| Relatório | Transparência, 12 meses | 49 | 226 | 429 | 530 |
+| Relatório | Intervenção (CREAS), 12 meses | 113 | 463 | 646 | 863 |
+| Dashboard | Perfil dos atendidos | 5 | 126 | 236 | 434 |
+| Dashboard | Atendimento, mês corrente | 5 | 113 | 244 | 355 |
+| Dashboard | Atendimento, 5 anos | 25 | 191 | 300 | 414 |
+
+Os tempos variam entre execuções na mesma máquina. Em quatro execuções com a máquina sem outra carga
+(antes de o relatório de intervenção entrar na lista), o máximo da auditoria por login ficou entre
+1,8 s e 2,7 s, e o das consultas fora da auditoria não passou de 1,3 s.
 
 "Sozinha" é a mediana da consulta sem carga. A diferença para o p50 sob carga é quase toda espera:
 pelo pool de 10 conexões e pela CPU, ocupada pelas consultas da auditoria.
@@ -116,7 +122,8 @@ pelo pool de 10 conexões e pela CPU, ocupada pelas consultas da auditoria.
 ### Com o índice proposto (ADR 0234)
 
 Mesma massa e carga, com o índice `auditoria_login_cobertura_idx` criado só no banco do teste
-(`-Ddesempenho.indices-propostos=true`). Duração da carga: 25 s.
+(`-Ddesempenho.indices-propostos=true`), ainda sem o relatório de intervenção na lista. Duração
+da carga: 25 s.
 
 | Consulta | Sozinha (ms) | p50 (ms) | p95 (ms) | Máximo (ms) |
 |---|---:|---:|---:|---:|

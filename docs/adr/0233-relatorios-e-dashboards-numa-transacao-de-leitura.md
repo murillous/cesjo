@@ -22,8 +22,9 @@ Alternativas consideradas:
 
 ## Decisão
 
-- `IndicadoresDoRelatorio.calcular`, `IndicadoresDaTransparencia.calcular` e `ServicoDashboards`
-  ficam `@Transactional(readOnly = true)`.
+- `IndicadoresDoRelatorio.calcular`, `IndicadoresDaTransparencia.calcular`,
+  `ConteudoDoRelatorioDeIntervencao.calcular` e `ServicoDashboards` ficam
+  `@Transactional(readOnly = true)`.
 - A exportação continua fora dessa transação: o cálculo termina antes de a base de exportação
   gravar o registro de auditoria.
 

@@ -237,6 +237,8 @@ class DesempenhoConsultasTests {
 						"/api/estatisticas/relatorios/anual?ano=" + (HOJE.getYear() - 1)),
 				new Consulta("Relatório", "Relatório de transparência, 12 meses",
 						"/api/estatisticas/relatorios/transparencia?inicio=" + umAnoAtras + "&fim=" + HOJE),
+				new Consulta("Relatório", "Relatório de intervenção, 12 meses",
+						"/api/estatisticas/relatorios/intervencao?inicio=" + umAnoAtras + "&fim=" + HOJE),
 				new Consulta("Dashboard", "Perfil dos atendidos", "/api/estatisticas/dashboards/perfil"),
 				new Consulta("Dashboard", "Atendimento, mês corrente",
 						"/api/estatisticas/dashboards/atendimento?inicio=" + inicioDoMes + "&fim=" + HOJE),

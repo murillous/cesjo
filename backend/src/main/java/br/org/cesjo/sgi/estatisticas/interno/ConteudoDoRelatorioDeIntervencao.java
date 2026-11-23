@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.org.cesjo.sgi.atendidos.CasoDeViolacao;
 import br.org.cesjo.sgi.atendidos.CasosDeViolacao;
@@ -51,6 +52,8 @@ class ConteudoDoRelatorioDeIntervencao {
 	// Casos pela data de identificação da violação; intervenções são os atendimentos individuais do usuário
 	// no período, a situação no serviço no fim do período e, no resumo, os encaminhamentos do período, que
 	// não são ligados ao usuário (P30). A descrição da violação não entra.
+	// Uma transação só de leitura para o relatório todo, com uma conexão do pool (ADR 0233).
+	@Transactional(readOnly = true)
 	Conteudo calcular(Periodo periodo) {
 		List<CasoDeViolacao> casos = casosDeViolacao.casosNoPeriodo(periodo.inicio(), periodo.fim());
 		Map<UUID, AtendimentosIndividuais.Resumo> atendidos = atendimentos
