@@ -127,6 +127,7 @@ Situação: provisória.
 |---|---|---|
 | Relatório mensal com quantitativos de lista de espera (novas inscrições, fila no último dia, saídas por motivo), usuários (inserções, atendidos no período, ativos no último dia), atendimentos e atividades por tipo, contatos e comunicações por tipo e direção, e desligamentos por motivo. Sem violações. | `estatisticas.interno.IndicadoresDoRelatorio` (uma linha por indicador) | [0200](adr/0200-relatorio-estatistico-mensal.md) |
 | Relatórios quadrimestral e anual com o mesmo conteúdo do mensal. Quadrimestres do ano civil: janeiro a abril, maio a agosto e setembro a dezembro. | `estatisticas.interno.PeriodoDoRelatorio.quadrimestral` e `QUADRIMESTRES` em `relatorio-periodo.ts` (frontend) | [0203](adr/0203-relatorios-quadrimestral-e-anual.md) |
+| Relatório de transparência público, só com números agregados e sem nenhum dado pessoal, por período livre: usuários atendidos, lista de espera, atendimentos e atividades por tipo, parcerias vigentes e articulações, eventos institucionais por tipo, doações recebidas por tipo e valor em dinheiro, doações feitas e equipe por função. O sistema só gera; publicar ou enviar é feito fora dele. | `estatisticas.interno.IndicadoresDaTransparencia` (uma linha por item) | [0210](adr/0210-relatorio-de-transparencia.md) |
 
 ## P10. Parcerias (RF013)
 
