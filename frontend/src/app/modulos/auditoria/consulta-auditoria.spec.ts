@@ -22,8 +22,12 @@ const REGISTRO: RegistroAuditoria = {
 function pagina(
   registros: readonly RegistroAuditoria[],
   total = registros.length,
+  totalExato = true,
 ): PaginaAuditoria {
-  return { content: registros, page: { size: 20, number: 0, totalElements: total, totalPages: 1 } };
+  return {
+    content: registros,
+    page: { size: 20, number: 0, totalElements: total, totalPages: 1, totalExato },
+  };
 }
 
 describe('ConsultaAuditoria', () => {
@@ -63,6 +67,16 @@ describe('ConsultaAuditoria', () => {
     expect(cartao?.textContent).toContain('nome, perfil');
     expect(elemento.querySelectorAll('.tabela-rolagem tr[mat-row]').length).toBe(1);
     expect(elemento.querySelector('.total')?.textContent).toContain('1 registro');
+  });
+
+  it('avisa quando o servidor só contou até o teto e mostra "mais de" no paginador', async () => {
+    const { fixture, elemento } = await renderizar(pagina([REGISTRO], 10_000, false));
+    fixture.detectChanges();
+
+    expect(elemento.querySelector('.total')?.textContent).toContain('Mais de 10.000 registros');
+    expect(elemento.querySelector('.mat-mdc-paginator-range-label')?.textContent).toContain(
+      '1 a 20 de mais de 10.000',
+    );
   });
 
   it('envia os filtros com o período convertido para instantes do dia local', async () => {

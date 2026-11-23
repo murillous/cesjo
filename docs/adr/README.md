@@ -181,4 +181,6 @@ frente de trabalho paralela não é usado todo.
 - [0231](0231-como-o-teste-de-desempenho-mede.md) — Como o teste de desempenho mede as consultas
 - [0232](0232-teste-de-desempenho-fora-do-verify.md) — Teste de desempenho fora do `verify` normal, com perfil Maven e execução manual
 - [0233](0233-relatorios-e-dashboards-numa-transacao-de-leitura.md) — Relatórios e dashboards numa transação só de leitura
-- [0234](0234-indice-proposto-para-o-log-de-auditoria.md) — Índice proposto para a consulta do log de auditoria por login (proposto)
+- [0234](0234-indice-proposto-para-o-log-de-auditoria.md) — Índice proposto para a consulta do log de auditoria por login (substituído pelo 0235)
+- [0235](0235-indices-das-consultas-lentas.md) — Índices das consultas lentas do teste de desempenho
+- [0236](0236-contagem-limitada-no-log-de-auditoria.md) — Contagem limitada na listagem do log de auditoria

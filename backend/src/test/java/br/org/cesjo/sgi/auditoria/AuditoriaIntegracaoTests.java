@@ -111,9 +111,31 @@ class AuditoriaIntegracaoTests {
 		consultar("entidade", entidade, "ate", agora.minus(1, ChronoUnit.HOURS).toString())
 			.andExpect(jsonPath("$.page.totalElements").value(0));
 		consultar("entidade", entidade, "size", "2").andExpect(jsonPath("$.content", hasSize(2)))
-			.andExpect(jsonPath("$.page.totalPages").value(2));
+			.andExpect(jsonPath("$.page.totalPages").value(2))
+			.andExpect(jsonPath("$.page.totalExato").value(true));
 
 		mvc.perform(get("/api/auditoria/entidades")).andExpect(status().isOk()).andExpect(jsonPath("$", hasItem(entidade)));
+	}
+
+	@Test
+	@ComConta(perfil = Perfil.COORDENADOR, login = COORDENADOR)
+	void contaOTotalSoAteOTetoEContinuaPaginando() throws Exception {
+		String entidade = entidadeUnica();
+		// Mais registros que o teto (ADR 0236), gravados direto: o log é só de inserção.
+		jdbc.sql("""
+				insert into auditoria (id, ocorrido_em, acao, entidade, entidade_id)
+				select gen_random_uuid(), now() - make_interval(secs => n), 'CRIAR', :entidade, n::text
+				from generate_series(1, 10005) as n""").param("entidade", entidade).update();
+
+		consultar("entidade", entidade, "size", "50").andExpect(status().isOk())
+			.andExpect(jsonPath("$.content", hasSize(50)))
+			.andExpect(jsonPath("$.content[0].entidadeId").value("1"))
+			.andExpect(jsonPath("$.page.totalElements").value(10_000))
+			.andExpect(jsonPath("$.page.totalPages").value(200))
+			.andExpect(jsonPath("$.page.totalExato").value(false));
+		consultar("entidade", entidade, "acao", "CRIAR", "size", "50", "page", "199")
+			.andExpect(jsonPath("$.content", hasSize(50)))
+			.andExpect(jsonPath("$.content[49].entidadeId").value("10000"));
 	}
 
 	@Test

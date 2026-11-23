@@ -18,7 +18,7 @@ import {
   RegistroAuditoria,
   ROTULOS_ACAO,
 } from './auditoria-api';
-import { PaginadorPtBr } from '../../compartilhado/paginador-pt-br';
+import { formatarNumero, PaginadorAuditoria } from './paginador-auditoria';
 
 /** Ações que pedem atenção de quem revisa o log: dado sensível, saída de dados e tentativa negada. */
 const ACOES_EM_DESTAQUE: ReadonlySet<AcaoAuditoria> = new Set([
@@ -44,13 +44,14 @@ const ACOES_EM_DESTAQUE: ReadonlySet<AcaoAuditoria> = new Set([
     MatSelectModule,
     MatTableModule,
   ],
-  providers: [{ provide: MatPaginatorIntl, useClass: PaginadorPtBr }],
+  providers: [PaginadorAuditoria, { provide: MatPaginatorIntl, useExisting: PaginadorAuditoria }],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './consulta-auditoria.html',
   styleUrl: './consulta-auditoria.scss',
 })
 export class ConsultaAuditoria implements OnInit {
   private readonly api = inject(AuditoriaApi);
+  private readonly paginador = inject(PaginadorAuditoria);
 
   protected readonly rotulosAcao = ROTULOS_ACAO;
   protected readonly acoes = Object.keys(ROTULOS_ACAO) as AcaoAuditoria[];
@@ -68,6 +69,9 @@ export class ConsultaAuditoria implements OnInit {
   protected readonly entidades = signal<readonly string[]>([]);
   protected readonly registros = signal<readonly RegistroAuditoria[]>([]);
   protected readonly total = signal(0);
+  /** Falso quando o servidor só contou até o teto (ADR 0236). */
+  protected readonly totalExato = signal(true);
+  protected readonly formatarNumero = formatarNumero;
   protected readonly pagina = signal(0);
   protected readonly tamanho = signal(20);
   protected readonly carregando = signal(false);
@@ -105,11 +109,15 @@ export class ConsultaAuditoria implements OnInit {
       next: (resposta) => {
         this.registros.set(resposta.content);
         this.total.set(resposta.page.totalElements);
+        this.totalExato.set(resposta.page.totalExato);
+        this.paginador.definirTotalExato(resposta.page.totalExato);
         this.carregando.set(false);
       },
       error: () => {
         this.registros.set([]);
         this.total.set(0);
+        this.totalExato.set(true);
+        this.paginador.definirTotalExato(true);
         this.erro.set(true);
         this.carregando.set(false);
       },

@@ -25,7 +25,7 @@ export const CONTA_COORDENADOR = {
 
 const pagina = <T>(content: T[]) => ({
   content,
-  page: { size: 20, number: 0, totalElements: content.length, totalPages: 1 },
+  page: { size: 20, number: 0, totalElements: content.length, totalPages: 1, totalExato: true },
 });
 
 const CONTAS = [
