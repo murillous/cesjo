@@ -279,6 +279,12 @@ Nenhuma destas respostas foi inventada. Issues que dependem delas recebem o rót
     social, psicólogo(a) e terapeuta ocupacional, há outras que precisam aparecer separadas nos
     relatórios (cuidador, monitor, motorista, coordenação, estagiário)?
 
+Perguntas acrescentadas depois, com o número da pendência em [PENDENTE-CESJO](PENDENTE-CESJO.md):
+
+40. **Volume esperado de uso (RNF 3.2)**: quantas pessoas o Centro-Dia atende ao mesmo tempo, quantas
+    entram na lista de espera por ano, quantas atividades e contatos a equipe registra por mês e
+    quantas pessoas usam o sistema ao mesmo tempo no pico?
+
 ## 10. Backlog
 
 Rótulos: `epic`, um rótulo por área (`fundacao`, `operacao`, `lista-espera`, `atendimento`,

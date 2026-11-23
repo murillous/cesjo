@@ -7,6 +7,7 @@ import java.util.function.Function;
 import java.util.function.ToLongFunction;
 
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.org.cesjo.sgi.atendidos.UsuariosAtendidos;
 import br.org.cesjo.sgi.atividades.Atividades;
@@ -89,7 +90,11 @@ class IndicadoresDaTransparencia {
 						p -> institucional.contarColaboradoresPorFuncaoEm(p.fim())));
 	}
 
-	/** Todas as linhas do relatório no período, na ordem da lista. */
+	/**
+	 * Todas as linhas do relatório no período, na ordem da lista. Uma transação só de leitura para o
+	 * relatório todo: as contagens usam a mesma conexão do pool em vez de uma por indicador (ADR 0233).
+	 */
+	@Transactional(readOnly = true)
 	List<LinhaTransparencia> calcular(Periodo periodo) {
 		List<LinhaTransparencia> linhas = new ArrayList<>();
 		for (Item item : itens) {

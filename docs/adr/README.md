@@ -167,3 +167,8 @@ frente de trabalho paralela não é usado todo.
 - [0210](0210-relatorio-de-transparencia.md) — Relatório de transparência: só números agregados, público, por período livre (provisório)
 - [0211](0211-api-java-de-contagens-institucionais.md) — API Java de contagens do módulo Institucional
 - [0212](0212-tela-do-relatorio-de-transparencia.md) — Tela do relatório de transparência
+- [0230](0230-volume-esperado-e-massa-simulada.md) — Volume esperado e massa simulada do teste de desempenho (provisório)
+- [0231](0231-como-o-teste-de-desempenho-mede.md) — Como o teste de desempenho mede as consultas
+- [0232](0232-teste-de-desempenho-fora-do-verify.md) — Teste de desempenho fora do `verify` normal, com perfil Maven e execução manual
+- [0233](0233-relatorios-e-dashboards-numa-transacao-de-leitura.md) — Relatórios e dashboards numa transação só de leitura
+- [0234](0234-indice-proposto-para-o-log-de-auditoria.md) — Índice proposto para a consulta do log de auditoria por login (proposto)
