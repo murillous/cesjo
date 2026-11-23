@@ -136,6 +136,36 @@ const RELATORIO_MENSAL = {
   ],
 };
 
+const quantidades = (grupo: string, pares: [string, number][]) =>
+  pares.map(([indicador, valor]) => ({ grupo, indicador, valor, unidade: 'QUANTIDADE' }));
+
+const RELATORIO_TRANSPARENCIA = {
+  titulo: 'Relatório de transparência de 2025',
+  inicio: '2025-01-01',
+  fim: '2025-12-31',
+  geradoEm: '2026-11-20T13:00:00Z',
+  linhas: [
+    ...quantidades('Usuários atendidos', [
+      ['Usuários atendidos no período', 31],
+      ['Inserções no serviço', 8],
+    ]),
+    ...quantidades('Doações recebidas', [
+      ['Dinheiro', 4],
+      ['Alimentos', 0],
+    ]),
+    {
+      grupo: 'Doações recebidas',
+      indicador: 'Valor recebido em dinheiro',
+      valor: 1750.5,
+      unidade: 'REAIS',
+    },
+    ...quantidades('Equipe no último dia', [
+      ['Assistente social', 2],
+      ['Psicólogo(a)', 1],
+    ]),
+  ],
+};
+
 const AUDITORIA = [
   {
     id: '00000000-0000-0000-0000-0000000000a1',
@@ -218,6 +248,8 @@ export async function simularApi(
     if (caminho === '/api/auditoria') return json(route, pagina(AUDITORIA));
     if (caminho === '/api/estatisticas/dashboards/perfil') return json(route, PAINEL_PERFIL);
     if (caminho === '/api/estatisticas/relatorios/mensal') return json(route, RELATORIO_MENSAL);
+    if (caminho === '/api/estatisticas/relatorios/transparencia')
+      return json(route, RELATORIO_TRANSPARENCIA);
     if (caminho === '/api/estatisticas/dashboards/atendimento')
       return json(route, PAINEL_ATENDIMENTO);
     if (caminho === '/api/violacoes') return json(route, pagina(VIOLACOES));
