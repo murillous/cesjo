@@ -170,3 +170,8 @@ frente de trabalho paralela não é usado todo.
 - [0205](0205-relatorio-de-intervencao-creas.md) — Relatório de intervenção (CREAS): casos de violação do período e intervenções (provisório)
 - [0206](0206-acesso-e-auditoria-do-relatorio-de-intervencao.md) — Acesso e auditoria do relatório de intervenção (provisório)
 - [0207](0207-tela-do-relatorio-de-intervencao.md) — Tela do relatório de intervenção
+- [0215](0215-importacao-da-lista-de-espera-de-planilha.md) — Importação da lista de espera de planilha: modelo provisório e fluxo em duas etapas (provisório)
+- [0216](0216-permissao-de-importacao-de-planilhas.md) — Permissão de importação de planilhas só para o Coordenador (provisório)
+- [0217](0217-auditoria-da-importacao.md) — Auditoria da importação de planilhas com a ação IMPORTAR
+- [0218](0218-limites-e-planilhas-malformadas.md) — Limites da importação e tratamento de planilhas malformadas
+- [0219](0219-tela-de-importacao-de-planilha.md) — Tela de importação de planilha reutilizável

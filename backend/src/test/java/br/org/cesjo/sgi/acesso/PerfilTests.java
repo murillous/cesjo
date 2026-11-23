@@ -18,6 +18,12 @@ class PerfilTests {
 	}
 
 	@Test
+	void soCoordenadorImportaPlanilhas() {
+		assertThat(Arrays.stream(Perfil.values()).filter(perfil -> perfil.tem(Permissao.PLANILHAS_IMPORTAR)))
+			.containsExactly(Perfil.COORDENADOR);
+	}
+
+	@Test
 	void documentosConformeAMatriz() {
 		assertThat(Arrays.stream(Perfil.values()).filter(perfil -> perfil.tem(Permissao.DOCUMENTOS_LER)))
 			.containsExactlyInAnyOrder(Perfil.COORDENADOR, Perfil.EQUIPE_TECNICA, Perfil.ADMINISTRATIVO);

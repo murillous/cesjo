@@ -168,7 +168,11 @@ O levantamento dos meios de acesso, dos requisitos legais e das perguntas de det
 > A lista de espera e o cadastro de usuários existem hoje em Excel? Podem enviar um exemplo com dados
 > fictícios?
 
-Situação: aberta.
+Situação: provisória.
+
+| Decisão provisória | Onde mudar | ADR |
+|---|---|---|
+| A lista de espera é importada de um modelo próprio, com download na tela: nome, data de nascimento, tipo de deficiência, telefone, responsável, origem e data de cadastro, datas em dd/mm/aaaa e opções pelos rótulos das telas. | `importacao.interno.ModeloListaEspera` | [0215](adr/0215-importacao-da-lista-de-espera-de-planilha.md) |
 
 ## P14. LGPD
 
@@ -228,6 +232,7 @@ Situação: provisória.
 | Equipe Técnica e Administrativo não veem nem registram reuniões e eventos institucionais. | `acesso.Perfil` (`EVENTOS_LER`, `EVENTOS_REGISTRAR`) | [0176](adr/0176-permissoes-das-reunioes-e-eventos.md) |
 | Equipe Técnica e Administrativo não veem nem registram doações. | `acesso.Perfil` (`DOACOES_LER`, `DOACOES_REGISTRAR`) | [0179](adr/0179-permissoes-das-doacoes.md) |
 | Só Coordenador e Consulta veem relatórios e dashboards; Equipe Técnica e Administrativo ficam sem acesso. | `acesso.Perfil` (`RELATORIOS_LER`) e `relatorios.modulo.ts` (frontend) | [0196](adr/0196-permissao-dos-relatorios-e-dashboards.md) |
+| Só o Coordenador importa planilhas; o Administrativo fica sem importação. | `acesso.Perfil` (`PLANILHAS_IMPORTAR`) | [0216](adr/0216-permissao-de-importacao-de-planilhas.md) |
 
 ## P18. Funções dos colaboradores
 

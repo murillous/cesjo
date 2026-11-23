@@ -22,6 +22,15 @@ public interface ListaEspera {
 	/** Candidatos ativos ({@link SituacaoInscricao#ATIVAS}), na ordem da fila. */
 	List<CandidatoAtivo> listarCandidatosAtivos();
 
+	/**
+	 * Cadastra a pessoa e a inscreve na fila, aguardando, com a data de cadastro informada, como o
+	 * cadastro pela tela (ADR 0215). Participa da transação de quem chama. Audita a criação da pessoa, da
+	 * inscrição e do histórico.
+	 *
+	 * @return o {@code id} da inscrição
+	 */
+	UUID inscrever(NovoCandidato novo);
+
 	/** Inscrição ativa da pessoa, se houver. */
 	Optional<CandidatoAtivo> candidatoAtivo(UUID pessoaId);
 

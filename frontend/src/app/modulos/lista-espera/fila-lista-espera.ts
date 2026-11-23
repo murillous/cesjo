@@ -71,6 +71,8 @@ export class FilaListaEspera implements OnInit {
   private readonly sessao = inject(Sessao);
 
   protected readonly podeCadastrar = this.sessao.temPermissao('LISTA_ESPERA_CADASTRAR');
+  /** Só o Coordenador importa planilhas (ADR 0216). */
+  protected readonly podeImportar = this.sessao.temPermissao('PLANILHAS_IMPORTAR');
   protected readonly podeVerVagas = this.sessao.temPermissao('CAPACIDADE_LER');
   /** O Consulta não exporta (ADR 0130). */
   protected readonly podeExportar = this.sessao.temPermissao('LISTA_ESPERA_EXPORTAR');
