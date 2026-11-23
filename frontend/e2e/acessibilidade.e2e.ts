@@ -48,6 +48,11 @@ const TELAS_LOGADAS = [
     caminho: '/lista-espera/importar',
     titulo: /Importar lista de espera/,
   },
+  {
+    nome: 'importação dos usuários atendidos',
+    caminho: '/atendidos/importar',
+    titulo: /Importar usuários atendidos/,
+  },
   { nome: 'contas de acesso', caminho: '/contas', titulo: /Contas de acesso/ },
   { nome: 'nova conta', caminho: '/contas/nova', titulo: /Nova conta/ },
   { nome: 'log de auditoria', caminho: '/auditoria', titulo: /Log de auditoria/ },

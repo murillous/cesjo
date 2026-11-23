@@ -118,6 +118,18 @@ class ServicoInsercao implements UsuariosAtendidos {
 	}
 
 	@Override
+	@Transactional
+	public UUID inserirComOResponsavel(UUID inscricaoId, LocalDate dataInsercao, Turno turno) {
+		DadosInscricao inscricao = inscricao(inscricaoId);
+		DadosResponsavel principal = pessoas.responsaveis(inscricao.pessoaId())
+			.stream()
+			.filter(DadosResponsavel::principal)
+			.findFirst()
+			.orElseThrow(() -> new RegraNegocioException("A pessoa não tem responsável cadastrado."));
+		return inserir(new NovaInsercao(inscricaoId, dataInsercao, turno, principal.id(), null)).id();
+	}
+
+	@Override
 	@Transactional(readOnly = true)
 	public long contarAtivos() {
 		return insercoes.countBySituacao(SituacaoInsercao.ATIVA);

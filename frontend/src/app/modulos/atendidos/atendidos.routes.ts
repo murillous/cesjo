@@ -10,6 +10,12 @@ export const ATENDIDOS_ROUTES: Routes = [
     loadComponent: () => import('./pagina-atendidos').then((m) => m.PaginaAtendidos),
   },
   {
+    path: 'importar',
+    title: 'Importar usuários atendidos | CESJO SGI',
+    canMatch: [exigePermissao('PLANILHAS_IMPORTAR')],
+    loadComponent: () => import('./importar-atendidos').then((m) => m.ImportarAtendidos),
+  },
+  {
     path: 'inserir/:inscricaoId',
     title: 'Inserir no serviço | CESJO SGI',
     canMatch: [exigePermissao('ATENDIDOS_INSERIR')],

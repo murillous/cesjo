@@ -5,6 +5,12 @@
       Quem está ou esteve no serviço. Para inserir alguém, comece pelo candidato na fila da lista de
       espera.
     </p>
+    @if (podeImportar) {
+      <a matButton="outlined" routerLink="importar" class="importar">
+        <mat-icon aria-hidden="true">upload_file</mat-icon>
+        Importar planilha
+      </a>
+    }
   </header>
 
   <form class="filtros" [formGroup]="filtros" (ngSubmit)="filtrar()" aria-label="Filtros">

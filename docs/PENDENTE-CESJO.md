@@ -173,6 +173,7 @@ Situação: provisória.
 | Decisão provisória | Onde mudar | ADR |
 |---|---|---|
 | A lista de espera é importada de um modelo próprio, com download na tela: nome, data de nascimento, tipo de deficiência, telefone, responsável, origem e data de cadastro, datas em dd/mm/aaaa e opções pelos rótulos das telas. | `importacao.interno.ModeloListaEspera` | [0215](adr/0215-importacao-da-lista-de-espera-de-planilha.md) |
+| Os usuários atendidos são importados de um modelo próprio: os campos da lista de espera, com o responsável como cuidador e a data de cadastro opcional, mais data de inserção e turno. Cada linha vira inscrição e inserção ativa. | `importacao.interno.ModeloAtendidos` | [0220](adr/0220-importacao-dos-usuarios-atendidos.md) |
 
 ## P14. LGPD
 

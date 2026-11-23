@@ -3,11 +3,7 @@ package br.org.cesjo.sgi.importacao.interno;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -73,23 +69,12 @@ class ServicoImportacaoListaEspera {
 	private Analise<NovoCandidato> analisar(byte[] arquivo) {
 		List<LinhaPlanilha> linhas = leitor.ler(arquivo, modelo.colunas());
 		LocalDate hoje = LocalDate.now(relogio);
-		Set<String> naFila = new HashSet<>();
-		for (CandidatoAtivo candidato : listaEspera.listarCandidatosAtivos()) {
-			naFila.add(Texto.normalizar(candidato.nomeCompleto()));
-		}
-		Map<String, Integer> vistos = new HashMap<>();
+		NomesRepetidos repetidos = new NomesRepetidos().cadastrados(
+				listaEspera.listarCandidatosAtivos().stream().map(CandidatoAtivo::nomeCompleto).toList(),
+				"Já há um candidato com este nome na lista de espera.");
 		return Analise.de(modelo, linhas, linha -> {
 			NovoCandidato candidato = modelo.converter(linha, hoje);
-			String nome = Texto.normalizar(linha.exibido(ModeloListaEspera.NOME));
-			if (!nome.isEmpty()) {
-				Integer anterior = vistos.putIfAbsent(nome, linha.numero());
-				if (anterior != null) {
-					linha.erro("Nome repetido: já aparece na linha " + anterior + " da planilha.");
-				}
-				else if (naFila.contains(nome)) {
-					linha.erro("Já há um candidato com este nome na lista de espera.");
-				}
-			}
+			repetidos.conferir(linha, ModeloListaEspera.NOME);
 			return linha.valida() ? candidato : null;
 		});
 	}
