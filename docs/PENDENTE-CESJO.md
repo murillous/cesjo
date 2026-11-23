@@ -126,6 +126,7 @@ Situação: provisória.
 | Decisão provisória | Onde mudar | ADR |
 |---|---|---|
 | Relatório mensal com quantitativos de lista de espera (novas inscrições, fila no último dia, saídas por motivo), usuários (inserções, atendidos no período, ativos no último dia), atendimentos e atividades por tipo, contatos e comunicações por tipo e direção, e desligamentos por motivo. Sem violações. | `estatisticas.interno.IndicadoresDoRelatorio` (uma linha por indicador) | [0200](adr/0200-relatorio-estatistico-mensal.md) |
+| Relatórios quadrimestral e anual com o mesmo conteúdo do mensal. Quadrimestres do ano civil: janeiro a abril, maio a agosto e setembro a dezembro. | `estatisticas.interno.PeriodoDoRelatorio.quadrimestral` e `QUADRIMESTRES` em `relatorio-periodo.ts` (frontend) | [0203](adr/0203-relatorios-quadrimestral-e-anual.md) |
 
 ## P10. Parcerias (RF013)
 
