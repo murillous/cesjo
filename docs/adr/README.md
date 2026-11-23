@@ -164,6 +164,9 @@ frente de trabalho paralela não é usado todo.
 - [0203](0203-relatorios-quadrimestral-e-anual.md) — Relatórios quadrimestral e anual: mesmo conteúdo, novos recortes do período
 - [0204](0204-tela-dos-relatorios-quadrimestral-e-anual.md) — Tela dos relatórios quadrimestral e anual
 - [0225](0225-nenhuma-integracao-antes-da-p12.md) — Nenhuma integração externa antes da resposta da P12
+- [0210](0210-relatorio-de-transparencia.md) — Relatório de transparência: só números agregados, público, por período livre (provisório)
+- [0211](0211-api-java-de-contagens-institucionais.md) — API Java de contagens do módulo Institucional
+- [0212](0212-tela-do-relatorio-de-transparencia.md) — Tela do relatório de transparência
 - [0205](0205-relatorio-de-intervencao-creas.md) — Relatório de intervenção (CREAS): casos de violação do período e intervenções (provisório)
 - [0206](0206-acesso-e-auditoria-do-relatorio-de-intervencao.md) — Acesso e auditoria do relatório de intervenção (provisório)
 - [0207](0207-tela-do-relatorio-de-intervencao.md) — Tela do relatório de intervenção

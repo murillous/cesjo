@@ -59,6 +59,11 @@ const TELAS_LOGADAS = [
     titulo: /quadrimestral e anual/,
   },
   {
+    nome: 'relatório de transparência',
+    caminho: '/relatorios/transparencia',
+    titulo: /Relatório de transparência/,
+  },
+  {
     nome: 'relatório de intervenção',
     caminho: '/relatorios/intervencao',
     titulo: /Relatório de intervenção/,

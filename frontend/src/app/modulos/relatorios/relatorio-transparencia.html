@@ -1,0 +1,76 @@
+<form class="escolha" [formGroup]="periodo" (ngSubmit)="gerar()" aria-label="Período do relatório">
+  <mat-form-field subscriptSizing="dynamic">
+    <mat-label>Período</mat-label>
+    <mat-date-range-input [rangePicker]="seletorPeriodo" [max]="hoje">
+      <input matStartDate formControlName="inicio" placeholder="Início" />
+      <input matEndDate formControlName="fim" placeholder="Fim" />
+    </mat-date-range-input>
+    <mat-hint>dd/mm/aaaa – dd/mm/aaaa</mat-hint>
+    <mat-datepicker-toggle matIconSuffix [for]="seletorPeriodo" />
+    <mat-date-range-picker #seletorPeriodo />
+    @if (periodo.invalid && periodo.touched) {
+      <mat-error>Informe o início e o fim do período.</mat-error>
+    }
+  </mat-form-field>
+  <button matButton="filled" type="submit" [disabled]="carregando()">Gerar relatório</button>
+</form>
+
+@if (erro(); as mensagem) {
+  <p class="aviso-erro" role="alert">{{ mensagem }}</p>
+} @else if (relatorio(); as dados) {
+  <article class="relatorio" aria-labelledby="titulo-transparencia">
+    <header class="cabecalho">
+      <div>
+        <h2 id="titulo-transparencia">{{ dados.titulo }}</h2>
+        <p class="texto-secundario" aria-live="polite">
+          De {{ dados.inicio | date: 'dd/MM/yyyy' }} a {{ dados.fim | date: 'dd/MM/yyyy' }}. Gerado
+          em {{ dados.geradoEm | date: "dd/MM/yyyy 'às' HH:mm" }}.
+        </p>
+      </div>
+      <app-botao-exportar
+        rotulo="Baixar relatório"
+        [url]="urlExportacao"
+        [parametros]="periodoGerado() ?? {}"
+      />
+    </header>
+
+    <p class="publico">
+      Só números somados, sem nome nem dado de nenhuma pessoa. Pode ser publicado ou enviado a
+      financiadores e conselhos.
+    </p>
+
+    <div class="grupos">
+      @for (grupo of grupos(); track grupo.nome) {
+        <table class="grupo">
+          <caption>
+            {{
+              grupo.nome
+            }}
+          </caption>
+          <thead class="cdk-visually-hidden">
+            <tr>
+              <th scope="col">Indicador</th>
+              <th scope="col">Valor</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (linha of grupo.linhas; track linha.indicador) {
+              <tr [class.zero]="linha.valor === 0" [class.reais]="linha.unidade === 'REAIS'">
+                <th scope="row">{{ linha.indicador }}</th>
+                <td>
+                  @if (linha.unidade === 'REAIS') {
+                    {{ linha.valor | currency: 'BRL' : 'symbol' : '1.2-2' }}
+                  } @else {
+                    {{ linha.valor }}
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+    </div>
+  </article>
+} @else {
+  <p class="texto-secundario">Gerando…</p>
+}
