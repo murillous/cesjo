@@ -136,6 +136,52 @@ const RELATORIO_MENSAL = {
   ],
 };
 
+const RELATORIO_INTERVENCAO = {
+  titulo: 'Relatório de intervenção de 01/10/2026 a 31/10/2026',
+  inicio: '2026-10-01',
+  fim: '2026-10-31',
+  geradoEm: '2026-11-20T13:00:00Z',
+  resumo: [
+    ...linhas('Casos', [
+      ['Usuários com violação identificada', 2],
+      ['Violações identificadas', 3],
+    ]),
+    ...linhas('Violações por categoria', [
+      ['Negligência ou abandono', 2],
+      ['Confinamento', 0],
+    ]),
+    ...linhas('Intervenções', [
+      ['Atendimentos individuais aos usuários com violação', 4],
+      ['Encaminhamentos enviados (todos os usuários)', 1],
+    ]),
+  ],
+  casos: [
+    {
+      usuario: 'Ana Fictícia',
+      violacoes: [
+        { categoria: 'Negligência ou abandono', ambito: null, identificadaEm: '2026-10-03' },
+        {
+          categoria: 'Violência física ou psicológica',
+          ambito: 'Intrafamiliar',
+          identificadaEm: '2026-10-10',
+        },
+      ],
+      atendimentos: 4,
+      ultimoAtendimento: '2026-10-20',
+      situacao: 'Ativo no serviço',
+    },
+    {
+      usuario: 'Bruno Fictício',
+      violacoes: [
+        { categoria: 'Negligência ou abandono', ambito: null, identificadaEm: '2026-10-08' },
+      ],
+      atendimentos: 0,
+      ultimoAtendimento: null,
+      situacao: 'Desligado em 25/10/2026: Evasão',
+    },
+  ],
+};
+
 const AUDITORIA = [
   {
     id: '00000000-0000-0000-0000-0000000000a1',
@@ -218,6 +264,8 @@ export async function simularApi(
     if (caminho === '/api/auditoria') return json(route, pagina(AUDITORIA));
     if (caminho === '/api/estatisticas/dashboards/perfil') return json(route, PAINEL_PERFIL);
     if (caminho === '/api/estatisticas/relatorios/mensal') return json(route, RELATORIO_MENSAL);
+    if (caminho === '/api/estatisticas/relatorios/intervencao')
+      return json(route, RELATORIO_INTERVENCAO);
     if (caminho === '/api/estatisticas/dashboards/atendimento')
       return json(route, PAINEL_ATENDIMENTO);
     if (caminho === '/api/violacoes') return json(route, pagina(VIOLACOES));
