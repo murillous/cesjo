@@ -40,9 +40,19 @@ export interface RegistroAuditoria {
   ip: string | null;
 }
 
+/**
+ * Página do log. O servidor conta só até um teto (ADR 0236): acima dele, `totalElements` é o teto e
+ * `totalExato` vem falso.
+ */
 export interface PaginaAuditoria {
   content: readonly RegistroAuditoria[];
-  page: { size: number; number: number; totalElements: number; totalPages: number };
+  page: {
+    size: number;
+    number: number;
+    totalElements: number;
+    totalPages: number;
+    totalExato: boolean;
+  };
 }
 
 /**

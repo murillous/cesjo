@@ -69,7 +69,12 @@
       </div>
     } @else {
       <p class="total texto-secundario" aria-live="polite">
-        {{ total() }} {{ total() === 1 ? 'registro' : 'registros' }}
+        @if (totalExato()) {
+          {{ total() }} {{ total() === 1 ? 'registro' : 'registros' }}
+        } @else {
+          Mais de {{ formatarNumero(total()) }} registros. Filtre por período, login, entidade ou
+          ação para ver o total exato.
+        }
       </p>
 
       <ol class="cartoes" aria-label="Registros do log">

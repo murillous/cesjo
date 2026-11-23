@@ -49,8 +49,7 @@ import br.org.cesjo.sgi.compartilhado.criptografia.Cifrador;
  * <p>
  * Fica fora do {@code ./mvnw verify} normal pela tag {@code desempenho}; roda com
  * {@code ./mvnw verify -Pdesempenho}. Parâmetros opcionais por propriedade de sistema:
- * {@code desempenho.fator} (10), {@code desempenho.usuarios} (20), {@code desempenho.rodadas} (5) e
- * {@code desempenho.indices-propostos} (falso).
+ * {@code desempenho.fator} (10), {@code desempenho.usuarios} (20) e {@code desempenho.rodadas} (5).
  * O resultado sai no console e em {@code target/desempenho/resultado.md}. Só dados fictícios.
  */
 @Tag("desempenho")
@@ -68,18 +67,6 @@ class DesempenhoConsultasTests {
 	private static final int USUARIOS = Integer.getInteger("desempenho.usuarios", 20);
 
 	private static final int RODADAS = Integer.getInteger("desempenho.rodadas", 5);
-
-	/**
-	 * Com {@code -Ddesempenho.indices-propostos=true}, cria no banco do teste o índice proposto no
-	 * ADR 0234, sem migração, para medir o ganho antes de propor a migração.
-	 */
-	private static final boolean INDICES_PROPOSTOS = Boolean.getBoolean("desempenho.indices-propostos");
-
-	/** Índice proposto no ADR 0234 para a auditoria filtrada por login. Não é migração. */
-	private static final List<String> SQL_INDICES_PROPOSTOS = List.of("""
-			create index auditoria_login_cobertura_idx
-			    on auditoria (lower(conta_login), ocorrido_em desc, id desc) include (conta_login)""",
-			"drop index auditoria_login_idx", "vacuum analyze auditoria");
 
 	/** Requisições de aquecimento por consulta antes da medição (JIT, caches do Hibernate e do Postgres). */
 	private static final int AQUECIMENTO = 3;
@@ -120,9 +107,6 @@ class DesempenhoConsultasTests {
 		long inicioMassa = System.nanoTime();
 		Map<String, Long> linhas = new MassaSimulada(jdbc, cifrador.cifrarTexto("Texto fictício cifrado da massa."))
 			.gravar(volume, HOJE);
-		if (INDICES_PROPOSTOS) {
-			SQL_INDICES_PROPOSTOS.forEach(jdbc::execute);
-		}
 		Duration tempoMassa = Duration.ofNanos(System.nanoTime() - inicioMassa);
 
 		List<Consulta> consultas = consultas();
@@ -274,7 +258,6 @@ class DesempenhoConsultasTests {
 			.append(" anos, gravada em ")
 			.append(tempoMassa.toSeconds())
 			.append(" s\n");
-		texto.append("- Índice proposto no ADR 0234: ").append(INDICES_PROPOSTOS ? "criado" : "não criado").append('\n');
 		texto.append("- Carga: ")
 			.append(USUARIOS)
 			.append(" usuários simultâneos, ")

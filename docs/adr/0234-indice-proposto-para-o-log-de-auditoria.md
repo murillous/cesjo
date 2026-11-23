@@ -1,6 +1,6 @@
 # ADR 0234 — Índice proposto para a consulta do log de auditoria por login
 
-**Status:** Proposto (2026-11-23) · Issue #25
+**Status:** Substituído por ADR 0235 (2026-11-23) · Issue #25
 
 ## Contexto
 

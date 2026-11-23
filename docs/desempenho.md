@@ -5,17 +5,18 @@ consultas, com vários usuários ao mesmo tempo. A issue fixa o critério: com u
 10 vezes o volume esperado, listagens, relatórios e dashboards respondem em até 3 segundos com 20
 usuários simultâneos.
 
-**Resultado: critério atendido.** Na máquina de desenvolvimento, sem outra carga, o pior tempo de
-todas as consultas foi 1,9 s (auditoria filtrada por login), e 2,7 s na execução mais lenta das
-que passaram. Fora a auditoria, nenhuma consulta passou de 1 s. Com o índice proposto no
-[ADR 0234](adr/0234-indice-proposto-para-o-log-de-auditoria.md), a auditoria por login cai para
-0,3 s, e o pior tempo de todas as consultas fica em 1,5 s (auditoria sem filtro).
+**Resultado: critério atendido.** Na máquina de desenvolvimento, sem outra carga, com os índices da
+`V60` e a contagem limitada da auditoria, o pior tempo de todas as consultas foi 1,2 s (lista de
+espera). A auditoria, que era o gargalo, ficou abaixo de 0,8 s com qualquer filtro. Antes dessas
+mudanças, o pior tempo era 1,9 s (auditoria filtrada por login), e 2,7 s na execução mais lenta.
 
 Decisões: [ADR 0230](adr/0230-volume-esperado-e-massa-simulada.md) (volume e massa),
 [ADR 0231](adr/0231-como-o-teste-de-desempenho-mede.md) (como mede),
 [ADR 0232](adr/0232-teste-de-desempenho-fora-do-verify.md) (como roda),
-[ADR 0233](adr/0233-relatorios-e-dashboards-numa-transacao-de-leitura.md) (correção feita) e
-[ADR 0234](adr/0234-indice-proposto-para-o-log-de-auditoria.md) (índice proposto).
+[ADR 0233](adr/0233-relatorios-e-dashboards-numa-transacao-de-leitura.md) (correção feita),
+[ADR 0234](adr/0234-indice-proposto-para-o-log-de-auditoria.md) (índice proposto, substituído),
+[ADR 0235](adr/0235-indices-das-consultas-lentas.md) (índices) e
+[ADR 0236](adr/0236-contagem-limitada-no-log-de-auditoria.md) (contagem limitada da auditoria).
 
 ## Como rodar de novo
 
@@ -29,9 +30,11 @@ cd backend
 - Usa um Postgres próprio, novo a cada execução: contêiner `postgres:18-alpine` com Docker, ou
   Postgres nativo do embedded-postgres sem Docker. Não toca no banco de desenvolvimento.
 - A tabela de resultado sai no console e em `backend/target/desempenho/resultado.md`.
-- Parâmetros opcionais: `-Ddesempenho.fator=10` (vezes o volume esperado), `-Ddesempenho.usuarios=20`,
-  `-Ddesempenho.rodadas=5` e `-Ddesempenho.indices-propostos=true` (cria o índice do ADR 0234 só no
-  banco do teste). Para um teste rápido: `-Ddesempenho.fator=1 -Ddesempenho.rodadas=1`.
+- Parâmetros opcionais: `-Ddesempenho.fator=10` (vezes o volume esperado), `-Ddesempenho.usuarios=20`
+  e `-Ddesempenho.rodadas=5`. Para um teste rápido: `-Ddesempenho.fator=1 -Ddesempenho.rodadas=1`.
+- Para ver o plano de cada consulta lenta, acrescente
+  `"-Dspring.datasource.hikari.connection-init-sql=LOAD 'auto_explain'; SET auto_explain.log_min_duration = 15; SET auto_explain.log_analyze = on"`:
+  o Postgres escreve no log do teste o plano de toda consulta acima de 15 ms.
 - No GitHub: aba Actions, workflow **Desempenho**, botão *Run workflow*. O resultado aparece no resumo
   da execução e no artefato `resultado-desempenho`.
 - Rode numa máquina sem outros builds ou testes em paralelo. Com a CPU ocupada por outros processos,
@@ -83,7 +86,39 @@ repetido. Depois da gravação, o teste roda `vacuum analyze`.
 
 ## Resultado (2026-11-23)
 
-Sem o índice proposto, com a máquina sem outra carga. Duração da carga: 33 s.
+Com os índices da `V60` (ADR 0235) e a contagem limitada da auditoria (ADR 0236), com a máquina sem
+outra carga. Duração da carga: 16 s. Nenhuma requisição passou de 1,3 s.
+
+| Grupo | Consulta | Sozinha (ms) | p50 (ms) | p95 (ms) | Máximo (ms) |
+|---|---|---:|---:|---:|---:|
+| Listagem | Lista de espera | 138 | 330 | 529 | 1.240 |
+| Listagem | Lista de espera, busca por nome e situação | 25 | 85 | 208 | 637 |
+| Listagem | Lista de espera, página 50 | 123 | 323 | 515 | 630 |
+| Listagem | Usuários atendidos | 6 | 58 | 121 | 301 |
+| Listagem | Usuários atendidos, filtros da ficha completa | 8 | 46 | 200 | 387 |
+| Listagem | Usuários atendidos, busca por nome | 7 | 41 | 126 | 237 |
+| Listagem | Atividades | 26 | 73 | 214 | 334 |
+| Listagem | Atividades, último ano e tipo | 19 | 76 | 293 | 467 |
+| Listagem | Atividades de um usuário | 18 | 66 | 197 | 307 |
+| Listagem | Atividades de um profissional | 8 | 54 | 172 | 477 |
+| Listagem | Comunicações | 12 | 60 | 263 | 620 |
+| Listagem | Comunicações, período e contraparte | 23 | 89 | 297 | 387 |
+| Listagem | Auditoria | 7 | 56 | 208 | 305 |
+| Listagem | Auditoria, login e página 100 | 8 | 55 | 185 | 380 |
+| Listagem | Auditoria, entidade, ação e período | 7 | 57 | 189 | 749 |
+| Relatório | Mensal, mês corrente | 51 | 166 | 345 | 717 |
+| Relatório | Mensal, 2 anos atrás | 35 | 127 | 286 | 477 |
+| Relatório | Quadrimestral, quadrimestre corrente | 50 | 178 | 345 | 498 |
+| Relatório | Anual, ano passado | 57 | 193 | 335 | 501 |
+| Relatório | Transparência, 12 meses | 51 | 188 | 356 | 699 |
+| Relatório | Intervenção (CREAS), 12 meses | 37 | 144 | 326 | 681 |
+| Dashboard | Perfil dos atendidos | 6 | 48 | 132 | 365 |
+| Dashboard | Atendimento, mês corrente | 6 | 48 | 142 | 229 |
+| Dashboard | Atendimento, 5 anos | 26 | 106 | 277 | 382 |
+
+### Antes dos índices e da contagem limitada
+
+Mesma massa e carga, sem a `V60` e com a contagem exata da auditoria. Duração da carga: 33 s.
 
 | Grupo | Consulta | Sozinha (ms) | p50 (ms) | p95 (ms) | Máximo (ms) |
 |---|---|---:|---:|---:|---:|
@@ -119,21 +154,14 @@ Os tempos variam entre execuções na mesma máquina. Em quatro execuções com 
 "Sozinha" é a mediana da consulta sem carga. A diferença para o p50 sob carga é quase toda espera:
 pelo pool de 10 conexões e pela CPU, ocupada pelas consultas da auditoria.
 
-### Com o índice proposto (ADR 0234)
+### Só com os índices, sem a contagem limitada
 
-Mesma massa e carga, com o índice `auditoria_login_cobertura_idx` criado só no banco do teste
-(`-Ddesempenho.indices-propostos=true`), ainda sem o relatório de intervenção na lista. Duração
-da carga: 25 s.
-
-| Consulta | Sozinha (ms) | p50 (ms) | p95 (ms) | Máximo (ms) |
-|---|---:|---:|---:|---:|
-| Auditoria | 169 | 757 | 1.285 | 1.517 |
-| Auditoria, login e página 100 | 17 | 130 | 264 | 334 |
-| Auditoria, entidade, ação e período | 83 | 639 | 908 | 1.083 |
-| Relatório mensal, mês corrente | 46 | 193 | 309 | 404 |
-| Lista de espera | 128 | 340 | 469 | 663 |
-
-As outras consultas ficaram entre 100 e 350 ms de p50 e abaixo de 750 ms de máximo.
+Com a `V60` e ainda com a contagem exata, as consultas filtradas da auditoria ficaram rápidas
+(máximo de 380 a 706 ms por login e de 292 a 448 ms por entidade, ação e período, em três execuções).
+A auditoria sem filtro, porém, piorou: máximo de 3,4 s, 3,9 s e 3,3 s, contra 1,5 s sem os índices
+na mesma máquina e no mesmo dia. Contar o log inteiro é uma Parallel Seq Scan de 2 milhões de linhas
+que nenhum índice evita. Com as outras consultas mais rápidas, mais contagens dessas rodavam ao mesmo
+tempo e disputavam a CPU. Esse foi o motivo da contagem limitada (ADR 0236).
 
 ### Antes da correção do ADR 0233
 
@@ -152,32 +180,30 @@ mas mostra que a auditoria é a primeira consulta a estourar quando a CPU falta.
 
 ## Achados
 
-1. **Log de auditoria é o gargalo.** A listagem conta o total de registros a cada página. Na massa,
-   o `explain (analyze, buffers)` mostrou:
-   - filtro por login: o índice `auditoria_login_idx` acha as linhas, mas a contagem lê 42 mil
-     páginas da tabela (cerca de 285 ms). Com o índice proposto, a contagem passa a Index Only Scan
-     (cerca de 15 a 25 ms), e a página continua em cerca de 1 ms;
-   - sem filtro: contar 2 milhões de linhas leva cerca de 160 ms (Parallel Seq Scan). Cresce com o
-     log; índice não resolve. Se o log crescer muito além disso, a saída é não contar o total exato
-     nessa listagem (ADR 0234);
-   - entidade, ação e período: 100 a 200 ms quando a combinação tem poucas linhas.
-
-   **Proposta (sem migração nesta issue):**
-
-   ```sql
-   CREATE INDEX auditoria_login_cobertura_idx
-       ON auditoria (lower(conta_login), ocorrido_em DESC, id DESC) INCLUDE (conta_login);
-   DROP INDEX auditoria_login_idx;
-   ```
-
+1. **O log de auditoria era o gargalo.** A listagem contava o total exato a cada página. O
+   `auto_explain` na massa mostrou:
+   - filtro por login: o índice antigo achava as linhas, mas a contagem lia a tabela (cerca de
+     340 ms). Resolvido com `auditoria_login_cobertura_idx`, que permite Index Only Scan;
+   - entidade, ação e período: o índice antigo, `(entidade, ocorrido_em)`, achava 100 mil linhas e
+     descartava 67 mil de outras ações (cerca de 120 ms). Resolvido com
+     `auditoria_entidade_acao_idx`;
+   - sem filtro: contar 2 milhões de linhas é uma Parallel Seq Scan (cerca de 160 ms) e cresce com o
+     log. Resolvido contando só até 10.000 (ADR 0236).
+   Os dois índices estão na `V60` (ADR 0235). Depois deles, a auditoria fica em menos de 10 ms
+   sozinha, com qualquer filtro.
 2. **Relatórios e dashboards esperavam pelo pool.** Corrigido: cada relatório e painel roda numa
    transação só de leitura, com uma conexão (ADR 0233).
 3. **A lista de espera pagina em memória.** `FilaListaEspera` lê todas as inscrições do filtro e
    os nomes, para calcular a posição de cada candidato (ADR 0057). Com 6.000 inscrições, leva cerca
    de 130 ms sozinha e cresce de forma linear. Não é problema no volume testado; passa a ser se a
    lista histórica chegar a dezenas de milhares de inscrições.
-4. **As outras listagens** (usuários atendidos, atividades, comunicações) filtram e paginam no
-   banco e ficam em 6 a 30 ms sozinhas, com qualquer filtro.
+4. **O relatório de intervenção procurava a inserção vigente de cada caso** lendo a tabela inteira
+   de inserções, porque não havia índice em `insercao.pessoa_id` (cerca de 110 ms). Resolvido com
+   `ix_insercao_pessoa` na `V60`: sozinho, o relatório caiu de 113 ms para 37 ms.
+5. **As outras listagens** (usuários atendidos, atividades, comunicações) filtram e paginam no
+   banco e ficam em 6 a 30 ms sozinhas, com qualquer filtro. As contagens dos relatórios acima de
+   15 ms já usam índice e gastam o tempo lendo as linhas do período. Um índice novo ganharia pouco e
+   deixaria as gravações mais caras (ADR 0235).
 
 ## Limites do teste
 
