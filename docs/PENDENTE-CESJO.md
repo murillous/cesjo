@@ -126,6 +126,8 @@ Situação: provisória.
 | Decisão provisória | Onde mudar | ADR |
 |---|---|---|
 | Relatório mensal com quantitativos de lista de espera (novas inscrições, fila no último dia, saídas por motivo), usuários (inserções, atendidos no período, ativos no último dia), atendimentos e atividades por tipo, contatos e comunicações por tipo e direção, e desligamentos por motivo. Sem violações. | `estatisticas.interno.IndicadoresDoRelatorio` (uma linha por indicador) | [0200](adr/0200-relatorio-estatistico-mensal.md) |
+| Relatório de intervenção (CREAS) de um período livre: um caso por usuário com violação identificada no período (categoria, âmbito e data, sem a descrição), com os atendimentos individuais, o último atendimento e a situação no serviço no fim do período; resumo com violações por categoria, atendimentos, encaminhamentos do período (de todos os usuários, P30) e desligados. | `estatisticas.interno.ConteudoDoRelatorioDeIntervencao` | [0205](adr/0205-relatorio-de-intervencao-creas.md) |
+| O relatório de intervenção é gerado e baixado só por quem tem `RELATORIOS_LER` e `VIOLACOES_LER` (hoje só o Coordenador). Gerar registra leitura sensível e baixar registra exportação, as duas em `relatorio_intervencao`. | `estatisticas.interno.RelatorioIntervencaoControlador` (`PODE_GERAR`) e rota `intervencao` em `relatorios.routes.ts` (frontend) | [0206](adr/0206-acesso-e-auditoria-do-relatorio-de-intervencao.md) |
 
 ## P10. Parcerias (RF013)
 
