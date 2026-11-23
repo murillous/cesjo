@@ -1,0 +1,44 @@
+<form class="escolha" [formGroup]="escolha" (ngSubmit)="gerar()" aria-label="Período do relatório">
+  <mat-form-field subscriptSizing="dynamic">
+    <mat-label>Relatório</mat-label>
+    <mat-select formControlName="recorte">
+      <mat-option value="quadrimestral">Quadrimestral</mat-option>
+      <mat-option value="anual">Anual</mat-option>
+    </mat-select>
+  </mat-form-field>
+  @if (recorte() === 'quadrimestral') {
+    <mat-form-field class="quadrimestre" subscriptSizing="dynamic">
+      <mat-label>Quadrimestre</mat-label>
+      <mat-select formControlName="quadrimestre">
+        @for (opcao of quadrimestres; track opcao.numero) {
+          <mat-option [value]="opcao.numero" [disabled]="quadrimestreFuturo(opcao.numero)">
+            {{ opcao.rotulo }}
+          </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  }
+  <mat-form-field subscriptSizing="dynamic">
+    <mat-label>Ano</mat-label>
+    <mat-select formControlName="ano">
+      @for (ano of anos; track ano) {
+        <mat-option [value]="ano">{{ ano }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+  <button matButton="filled" type="submit" [disabled]="carregando()">Gerar relatório</button>
+</form>
+
+@if (erro(); as mensagem) {
+  <p class="aviso-erro" role="alert">{{ mensagem }}</p>
+} @else if (relatorio(); as dados) {
+  @if (gerado(); as exportacao) {
+    <app-quadro-relatorio
+      [relatorio]="dados"
+      [url]="exportacao.url"
+      [parametros]="exportacao.parametros"
+    />
+  }
+} @else {
+  <p class="texto-secundario">Gerando…</p>
+}
