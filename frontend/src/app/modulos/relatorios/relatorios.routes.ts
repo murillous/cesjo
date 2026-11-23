@@ -24,6 +24,11 @@ export const RELATORIOS_ROUTES: Routes = [
         loadComponent: () => import('./relatorio-mensal').then((m) => m.RelatorioMensal),
       },
       {
+        path: 'quadrimestral-e-anual',
+        title: 'Relatórios quadrimestral e anual | CESJO SGI',
+        loadComponent: () => import('./relatorio-periodo').then((m) => m.RelatorioPeriodo),
+      },
+      {
         path: 'intervencao',
         title: 'Relatório de intervenção | CESJO SGI',
         // PENDENTE-CESJO(P9): como no backend, pede também VIOLACOES_LER (ADR 0206).

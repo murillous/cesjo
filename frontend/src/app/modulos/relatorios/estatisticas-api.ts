@@ -61,6 +61,10 @@ export interface RelatorioEstatistico {
 /** Endpoint da exportação do relatório mensal, para o `app-botao-exportar`. */
 export const URL_EXPORTACAO_MENSAL = '/api/estatisticas/relatorios/mensal/exportacao';
 
+/** Endpoints da exportação dos relatórios quadrimestral e anual (ADR 0203). */
+export const URL_EXPORTACAO_QUADRIMESTRAL = '/api/estatisticas/relatorios/quadrimestral/exportacao';
+export const URL_EXPORTACAO_ANUAL = '/api/estatisticas/relatorios/anual/exportacao';
+
 /** Dashboards e relatórios estatísticos do módulo `estatisticas` do backend. */
 @Injectable({ providedIn: 'root' })
 export class EstatisticasApi {
@@ -81,5 +85,18 @@ export class EstatisticasApi {
   mensal(mes: string): Observable<RelatorioEstatistico> {
     const params = new HttpParams().set('mes', mes);
     return this.http.get<RelatorioEstatistico>('/api/estatisticas/relatorios/mensal', { params });
+  }
+
+  /** `quadrimestre` de 1 a 3: janeiro a abril, maio a agosto e setembro a dezembro. */
+  quadrimestral(ano: number, quadrimestre: number): Observable<RelatorioEstatistico> {
+    const params = new HttpParams().set('ano', ano).set('quadrimestre', quadrimestre);
+    return this.http.get<RelatorioEstatistico>('/api/estatisticas/relatorios/quadrimestral', {
+      params,
+    });
+  }
+
+  anual(ano: number): Observable<RelatorioEstatistico> {
+    const params = new HttpParams().set('ano', ano);
+    return this.http.get<RelatorioEstatistico>('/api/estatisticas/relatorios/anual', { params });
   }
 }

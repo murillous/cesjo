@@ -1,18 +1,10 @@
 @use 'styles/breakpoints' as bp;
 
-// Mobile first: mês, ano e botão empilhados; um grupo de indicadores embaixo do outro. No tablet a
-// escolha fica numa linha e, no desktop, os grupos em duas colunas.
+// Mobile first: um grupo de indicadores embaixo do outro; no tablet o cabeçalho fica numa linha e, no
+// desktop, os grupos em duas colunas.
 
-.escolha {
-  display: flex;
-  flex-direction: column;
-  gap: var(--sgi-space-1);
-  margin-bottom: var(--sgi-space-3);
-
-  button {
-    align-self: flex-start;
-    min-height: var(--sgi-alvo-toque);
-  }
+:host {
+  display: block;
 }
 
 .cabecalho {
@@ -76,22 +68,7 @@
   }
 }
 
-.aviso-erro {
-  padding: var(--sgi-space-1) var(--sgi-space-2);
-  border-left: var(--sgi-space-0-5) solid var(--sgi-color-accent);
-  background: var(--sgi-color-background-secondary);
-}
-
 @media (min-width: bp.$tablet) {
-  .escolha {
-    flex-direction: row;
-    align-items: center;
-
-    mat-form-field {
-      width: 12rem;
-    }
-  }
-
   .cabecalho {
     flex-direction: row;
     align-items: flex-start;

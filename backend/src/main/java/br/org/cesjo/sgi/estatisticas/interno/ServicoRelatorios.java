@@ -2,6 +2,7 @@ package br.org.cesjo.sgi.estatisticas.interno;
 
 import java.time.Clock;
 import java.time.LocalDate;
+import java.time.Year;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -47,6 +48,27 @@ class ServicoRelatorios {
 		return exportar(mensal(mes), formato);
 	}
 
+	/** Relatório do quadrimestre (1 a 3); o quadrimestre corrente sai parcial e um futuro é recusado. */
+	RelatorioEstatistico quadrimestral(Year ano, int quadrimestre) {
+		if (quadrimestre < 1 || quadrimestre > PeriodoDoRelatorio.QUADRIMESTRES_NO_ANO) {
+			throw new RegraNegocioException("O quadrimestre deve ser 1, 2 ou 3.");
+		}
+		return calcular(exigirInicioPassadoOuHoje(PeriodoDoRelatorio.quadrimestral(ano, quadrimestre)));
+	}
+
+	ArquivoExportado exportarQuadrimestral(Year ano, int quadrimestre, FormatoExportacao formato) {
+		return exportar(quadrimestral(ano, quadrimestre), formato);
+	}
+
+	/** Relatório do ano; o ano corrente sai parcial e um ano futuro é recusado. */
+	RelatorioEstatistico anual(Year ano) {
+		return calcular(exigirInicioPassadoOuHoje(PeriodoDoRelatorio.anual(ano)));
+	}
+
+	ArquivoExportado exportarAnual(Year ano, FormatoExportacao formato) {
+		return exportar(anual(ano), formato);
+	}
+
 	private RelatorioEstatistico calcular(PeriodoDoRelatorio recorte) {
 		Periodo periodo = recorte.periodo();
 		return new RelatorioEstatistico(recorte.titulo(), periodo.inicio(), periodo.fim(), relogio.instant(),
@@ -65,8 +87,20 @@ class ServicoRelatorios {
 		return exportacao.exportar(ENTIDADE, tabela, formato);
 	}
 
+	private PeriodoDoRelatorio exigirInicioPassadoOuHoje(PeriodoDoRelatorio recorte) {
+		if (recorte.periodo().inicio().isAfter(hoje())) {
+			throw new RegraNegocioException(
+					"O relatório só pode ser gerado para o período corrente ou para períodos passados.");
+		}
+		return recorte;
+	}
+
+	private LocalDate hoje() {
+		return LocalDate.now(relogio.withZone(Fuso.CENTRO_DIA));
+	}
+
 	private YearMonth exigirMesPassadoOuCorrente(YearMonth mes) {
-		if (mes.isAfter(YearMonth.from(LocalDate.now(relogio.withZone(Fuso.CENTRO_DIA))))) {
+		if (mes.isAfter(YearMonth.from(hoje()))) {
 			throw new RegraNegocioException("O relatório só pode ser gerado para o mês corrente ou para meses passados.");
 		}
 		return mes;

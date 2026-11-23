@@ -1,29 +1,13 @@
-import { DatePipe } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  OnInit,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 
 import { mensagemDeErro } from '../../acesso/problema';
-import { BotaoExportar } from '../../compartilhado/exportacao/botao-exportar';
-import {
-  EstatisticasApi,
-  LinhaRelatorio,
-  RelatorioEstatistico,
-  URL_EXPORTACAO_MENSAL,
-} from './estatisticas-api';
-import { mesAnterior, MESES, mesIso } from './periodo';
-
-/** Primeiro ano oferecido na escolha do mês. */
-const PRIMEIRO_ANO = 2020;
+import { EstatisticasApi, RelatorioEstatistico, URL_EXPORTACAO_MENSAL } from './estatisticas-api';
+import { anosOferecidos, mesAnterior, MESES, mesIso } from './periodo';
+import { QuadroRelatorio } from './quadro-relatorio';
 
 /**
  * Relatório estatístico mensal (RF016, issue #58, ADR 0200): a pessoa escolhe o mês, vê os
@@ -32,26 +16,22 @@ const PRIMEIRO_ANO = 2020;
 @Component({
   selector: 'app-relatorio-mensal',
   imports: [
-    BotaoExportar,
-    DatePipe,
     MatButtonModule,
     MatFormFieldModule,
     MatSelectModule,
+    QuadroRelatorio,
     ReactiveFormsModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './relatorio-mensal.html',
-  styleUrl: './relatorio-mensal.scss',
+  styleUrl: './escolha-relatorio.scss',
 })
 export class RelatorioMensal implements OnInit {
   private readonly api = inject(EstatisticasApi);
   private readonly hoje = new Date();
 
   protected readonly meses = MESES;
-  protected readonly anos = Array.from(
-    { length: this.hoje.getFullYear() - PRIMEIRO_ANO + 1 },
-    (_, i) => this.hoje.getFullYear() - i,
-  );
+  protected readonly anos = anosOferecidos(this.hoje);
   protected readonly urlExportacao = URL_EXPORTACAO_MENSAL;
 
   protected readonly escolha = new FormGroup({
@@ -64,20 +44,6 @@ export class RelatorioMensal implements OnInit {
   protected readonly mesGerado = signal<string | null>(null);
   protected readonly erro = signal<string | null>(null);
   protected readonly carregando = signal(false);
-
-  /** Linhas agrupadas por área, na ordem em que vêm do servidor. */
-  protected readonly grupos = computed(() => {
-    const grupos: { nome: string; linhas: LinhaRelatorio[] }[] = [];
-    for (const linha of this.relatorio()?.linhas ?? []) {
-      const ultimo = grupos.at(-1);
-      if (ultimo?.nome === linha.grupo) {
-        ultimo.linhas.push(linha);
-      } else {
-        grupos.push({ nome: linha.grupo, linhas: [linha] });
-      }
-    }
-    return grupos;
-  });
 
   ngOnInit(): void {
     this.gerar();

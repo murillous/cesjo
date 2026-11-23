@@ -264,6 +264,14 @@ export async function simularApi(
     if (caminho === '/api/auditoria') return json(route, pagina(AUDITORIA));
     if (caminho === '/api/estatisticas/dashboards/perfil') return json(route, PAINEL_PERFIL);
     if (caminho === '/api/estatisticas/relatorios/mensal') return json(route, RELATORIO_MENSAL);
+    if (caminho === '/api/estatisticas/relatorios/quadrimestral') {
+      return json(route, {
+        ...RELATORIO_MENSAL,
+        titulo: 'Relatório quadrimestral de maio a agosto de 2026',
+        inicio: '2026-05-01',
+        fim: '2026-08-31',
+      });
+    }
     if (caminho === '/api/estatisticas/relatorios/intervencao')
       return json(route, RELATORIO_INTERVENCAO);
     if (caminho === '/api/estatisticas/dashboards/atendimento')
