@@ -30,6 +30,27 @@ O planejamento completo (arquitetura, modelo de dados, permissões, ordem de ent
 [docs/adr](docs/adr/README.md). Decisões provisórias, tomadas enquanto a equipe CESJO não responde, ficam
 marcadas no código com `PENDENTE-CESJO` (`git grep -n "PENDENTE-CESJO"`).
 
+## Subir tudo de uma vez
+
+Pré-requisitos: Docker e Node 24. O script instala as dependências, faz o build do backend na imagem
+do `backend/Dockerfile` (não precisa de JDK local), sobe o Postgres e o backend em contêineres e o
+frontend com `ng serve`. Gera a chave de criptografia local se ela ainda não existir. Ctrl+C encerra
+tudo.
+
+```bash
+scripts/iniciar.sh          # banco de desenvolvimento
+scripts/iniciar.sh --demo   # banco separado com os dados de demonstração (ver abaixo)
+```
+
+No Windows, pelo PowerShell na raiz do repositório:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\iniciar.ps1          # ou com --demo
+```
+
+Frontend em http://localhost:4200, backend em http://localhost:8080. O `--demo` usa outro projeto
+compose (`cesjo-demo`), então o banco de desenvolvimento fica intacto.
+
 ## Rodar o backend
 
 Pré-requisitos: JDK 25 e Docker em execução.
