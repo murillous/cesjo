@@ -101,6 +101,8 @@ try {
 		Write-Host "==> Demo: entre em http://localhost:4200 com 'coordenador' / 'demonstracao' (a carga roda na primeira subida)"
 	}
 	# shortcut: diferente do iniciar.sh, se o backend cair o frontend continua; os logs mostram a queda.
+	# Sem a pergunta de analytics do CLI na primeira subida.
+	$env:NG_CLI_ANALYTICS = 'false'
 	npm start
 }
 finally {
