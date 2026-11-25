@@ -86,7 +86,8 @@ docker run --rm --name "$app" \
 	-e "SGI_CRIPTOGRAFIA_CHAVES_${chave_ativa^^}=$chave" \
 	-e SGI_COORDENADOR_LOGIN -e SGI_COORDENADOR_SENHA -e SGI_COORDENADOR_NOME \
 	"$app" &
-npm start &
+# Em segundo plano o ng serve não tem terminal: a pergunta de analytics do CLI aborta a subida.
+NG_CLI_ANALYTICS=false npm start &
 
 if $demo; then
 	echo "==> Demo: entre em http://localhost:4200 com 'coordenador' / 'demonstracao' (a carga roda na primeira subida)"
