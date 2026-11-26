@@ -8,6 +8,7 @@ frontend/dist/
 # Ambiente local
 .env
 *.log
+logs/
 
 # IDE e sistema operacional
 .idea/
