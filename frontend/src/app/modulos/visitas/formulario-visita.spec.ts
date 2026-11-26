@@ -4,9 +4,14 @@ import { TestBed } from '@angular/core/testing';
 import { MATERIAL_ANIMATIONS, provideNativeDateAdapter } from '@angular/material/core';
 import { provideRouter, Router } from '@angular/router';
 
+import { hoje } from '../lista-espera/datas';
+import { dataIso, somarDias } from './datas-visita';
 import { FormularioVisita } from './formulario-visita';
 import { Candidato } from './visitas-api';
 import { visitaFicticia } from './visita-ficticia';
+
+// O formulário só aceita hoje ou um dia futuro: data fixa quebra o teste quando o calendário passa dela.
+const AMANHA = somarDias(hoje(), 1);
 
 const CANDIDATO: Candidato = {
   inscricaoId: 'i1',
@@ -72,7 +77,7 @@ describe('FormularioVisita', () => {
     const componente = await criar();
     componente.formulario.patchValue({
       candidato: CANDIDATO,
-      data: new Date(2026, 10, 25),
+      data: AMANHA,
       hora: '14:30',
       profissionais: ['c1'],
     });
@@ -81,19 +86,21 @@ describe('FormularioVisita', () => {
     const pedido = controle.expectOne('/api/visitas');
     expect(pedido.request.body).toEqual({
       pessoaId: 'p1',
-      dataHora: '2026-11-25T14:30',
+      dataHora: `${dataIso(AMANHA)}T14:30`,
       profissionais: ['c1'],
     });
     pedido.flush(visitaFicticia());
 
-    expect(navegar).toHaveBeenCalledWith(['/visitas'], { queryParams: { semana: '2026-11-25' } });
+    expect(navegar).toHaveBeenCalledWith(['/visitas'], {
+      queryParams: { semana: dataIso(AMANHA) },
+    });
   });
 
   it('exige escolher o candidato na lista', async () => {
     const componente = await criar();
     componente.formulario.patchValue({
       candidato: 'Nome digitado',
-      data: new Date(2026, 10, 25),
+      data: AMANHA,
       hora: '14:30',
       profissionais: ['c1'],
     });
