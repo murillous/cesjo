@@ -32,20 +32,19 @@ marcadas no código com `PENDENTE-CESJO` (`git grep -n "PENDENTE-CESJO"`).
 
 ## Subir tudo de uma vez
 
-Pré-requisitos: Docker e Node 24. O script instala as dependências, faz o build do backend na imagem
-do `backend/Dockerfile` (não precisa de JDK local), sobe o Postgres e o backend em contêineres e o
-frontend com `ng serve`. Gera a chave de criptografia local se ela ainda não existir. Ctrl+C encerra
-tudo.
+Pré-requisitos: Docker, Node 24 e Python 3 (Linux, macOS ou Windows; no Windows use `py` no lugar
+de `python3`). O `scripts/dev.py` instala as
+dependências, faz o build do backend na imagem do `backend/Dockerfile` (não precisa de JDK local),
+sobe o Postgres e o backend em contêineres e o frontend com `ng serve`, tudo em segundo plano. Gera a
+chave de criptografia local se ela ainda não existir.
 
 ```bash
-scripts/iniciar.sh          # banco de desenvolvimento
-scripts/iniciar.sh --demo   # banco separado com os dados de demonstração (ver abaixo)
-```
-
-No Windows, pelo PowerShell na raiz do repositório:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts\iniciar.ps1          # ou com --demo
+python3 scripts/dev.py start          # banco de desenvolvimento
+python3 scripts/dev.py start --demo   # banco separado com os dados de demonstração (ver abaixo)
+python3 scripts/dev.py logs           # acompanha os logs (logs/backend.log e logs/frontend.log)
+python3 scripts/dev.py status
+python3 scripts/dev.py stop
+python3 scripts/dev.py                # lista os outros comandos (restart, clean, purge)
 ```
 
 Frontend em http://localhost:4200, backend em http://localhost:8080. O `--demo` usa outro projeto
